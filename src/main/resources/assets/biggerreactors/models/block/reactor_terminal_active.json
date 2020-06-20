@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "biggerreactors:block/reactor_terminal_active"
+  }
+}

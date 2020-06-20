@@ -1,0 +1,44 @@
+{
+  "textures": {
+    "all": "biggerreactors:block/reactor_casing_disassembled"
+  },
+  "AssemblyState": {
+    "assembled": {
+      "Position": {
+        "corner": {
+          "textures": {
+            "all": "biggerreactors:block/reactor_casing_corner"
+          }
+        },
+        "frame_x": {
+          "textures": {
+            "all": "biggerreactors:block/reactor_casing_frame"
+          },
+          "rotations": {
+            "all": 1
+          }
+        },
+        "frame_y": {
+          "textures": {
+            "all": "biggerreactors:block/reactor_casing_frame"
+          }
+        },
+        "frame_z": {
+          "textures": {
+            "all": "biggerreactors:block/reactor_casing_frame"
+          },
+          "rotations": {
+            "all": 1,
+            "north" : 0,
+            "south" : 0
+          }
+        },
+        "face": {
+          "textures": {
+            "all": "biggerreactors:block/reactor_casing_face"
+          }
+        }
+      }
+    }
+  }
+}
