@@ -12,8 +12,4 @@ public class ReactorCasingTile extends ReactorBaseTile {
     public ReactorCasingTile() {
         super(TYPE);
     }
-    @Override
-    public boolean doBlockStateUpdate() {
-        return false;
-    }
 }
