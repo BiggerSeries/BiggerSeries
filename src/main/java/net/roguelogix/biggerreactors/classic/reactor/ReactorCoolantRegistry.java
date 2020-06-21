@@ -2,8 +2,6 @@ package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -41,19 +39,23 @@ public class ReactorCoolantRegistry {
         return blocks.get(block);
     }
 
-    public static void registerBlocks(String tagString){
-        Tag<Block> tag = BlockTags.getCollection().get(new ResourceLocation(tagString));
-        if(tag != null){
-            tag.getAllElements().forEach(block -> {
-                if(block instanceof IBlockCoolantPropertiesProvider){
-                    registerBlock(((IBlockCoolantPropertiesProvider) block).blockCoolantProperties());
-                }
-            });
+    public static void registerBlock(String location) {
+        registerBlock(new ResourceLocation(location));
+    }
+
+    public static void registerBlock(ResourceLocation location) {
+        Block block = ForgeRegistries.BLOCKS.getValue(location);
+        if (block instanceof IBlockCoolantPropertiesProvider) {
+            registerBlock(((IBlockCoolantPropertiesProvider) block).blockCoolantProperties());
         }
     }
 
-    public static void registerBlocks(String tag, float absorption, float heatEfficiency, float moderation, float conductivity) {
-        BlockTags.getCollection().get(new ResourceLocation(tag)).getAllElements().forEach(block -> registerBlock(block, absorption, heatEfficiency, moderation, conductivity));
+    public static void registerBlock(String location, float absorption, float heatEfficiency, float moderation, float conductivity) {
+        registerBlock(new ResourceLocation(location), absorption, heatEfficiency, moderation, conductivity);
+    }
+
+    public static void registerBlock(ResourceLocation location, float absorption, float heatEfficiency, float moderation, float conductivity) {
+        registerBlock(ForgeRegistries.BLOCKS.getValue(location), absorption, heatEfficiency, moderation, conductivity);
     }
 
     public static void registerBlock(Block block, float absorption, float heatEfficiency, float moderation, float conductivity) {
@@ -65,6 +67,6 @@ public class ReactorCoolantRegistry {
     }
 
     static {
-        registerBlock(new BlockCoolantProperties(Blocks.AIR, 0.1f, 0.25f, 1.1f, 0.05f));
+        registerBlock(Blocks.AIR, 0.1f, 0.25f, 1.1f, 0.05f);
     }
 }
