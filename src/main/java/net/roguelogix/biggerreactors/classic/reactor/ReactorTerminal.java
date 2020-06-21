@@ -3,10 +3,12 @@ package net.roguelogix.biggerreactors.classic.reactor;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
+import net.roguelogix.phosphophyllite.registry.CreativeTabBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
 import javax.annotation.Nullable;
 
+@CreativeTabBlock
 @RegisterBlock(name = "reactor_terminal", tileEntityClass = ReactorTerminalTile.class)
 public class ReactorTerminal extends ReactorBaseBlock {
 
