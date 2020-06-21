@@ -34,7 +34,16 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             return block instanceof ReactorTerminal || block instanceof ReactorControlRod || block instanceof ReactorGlass;
         });
         interiorValidator = block -> {
-            return !(exteriorValidator.validate(block));
+            if(block instanceof ReactorFuelRod){
+                return true;
+            }
+            if(!ReactorCoolantRegistry.isBlockAllowed(block)){
+                return false;
+            }
+            if(exteriorValidator.validate(block)){
+                return false;
+            }
+            return true;
         };
         setAssemblyValidator(genericController -> {
             ReactorMultiblockController reactorController = (ReactorMultiblockController) genericController;
