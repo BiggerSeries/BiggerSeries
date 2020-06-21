@@ -13,6 +13,6 @@ public class Phosphophyllite {
     public static final Logger LOGGER = LogManager.getLogger("Phosphophyllite/Main");
 
     public Phosphophyllite() {
-        Quartz.onModLoad();
+//        Quartz.onModLoad();
     }
 }
