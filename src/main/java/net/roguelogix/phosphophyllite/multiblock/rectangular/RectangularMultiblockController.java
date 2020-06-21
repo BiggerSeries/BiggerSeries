@@ -69,9 +69,9 @@ public class RectangularMultiblockController extends MultiblockController {
             // see the below bounds checks
             if ((controller.maxLength | controller.maxWidth | controller.maxHeight) > 0) {
                 if (
-                        dimensions.getX() > controller.minLength ||
-                                dimensions.getY() > controller.minWidth ||
-                                dimensions.getZ() > controller.minHeight
+                        dimensions.getX() > controller.maxLength ||
+                                dimensions.getY() > controller.maxWidth ||
+                                dimensions.getZ() > controller.maxHeight
                 ) {
                     dimensions = null;
                     continue;
