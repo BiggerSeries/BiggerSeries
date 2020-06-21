@@ -37,6 +37,8 @@ public class BiggerReactors {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().register(RegistryEvents.class);
         MinecraftForge.EVENT_BUS.register(this);
+
+        Config.onLoad();
     }
 
     @SuppressWarnings("unused")
@@ -58,12 +60,6 @@ public class BiggerReactors {
         public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> tileEntityTypeRegisteryEvent) {
             Registry.registerTileEntities(tileEntityTypeRegisteryEvent);
         }
-
-        @SubscribeEvent
-        public static void onModConfigEvent(final ModConfig.ModConfigEvent event) {
-            System.out.println("CONFIG TIME!");
-        }
-
 
     }
 
