@@ -12,6 +12,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -92,13 +93,16 @@ public class BiggerReactors {
 
     @SubscribeEvent
     public void onTick(TickEvent.WorldTickEvent e) {
-        if (e.world.isRemote) {
+        if (e.side != LogicalSide.SERVER) {
+            return;
+        }
+        if (e.phase!= TickEvent.Phase.END) {
             return;
         }
         long timeNow = System.nanoTime();
         float ms = (float) (timeNow - lastTime) / 1_000_000f;
         if (ms > 50) {
-            System.out.println("Over tick time! " + (ms));
+//            System.out.println("Over tick time! " + (ms));
         }
         lastTime = timeNow;
         tick++;
