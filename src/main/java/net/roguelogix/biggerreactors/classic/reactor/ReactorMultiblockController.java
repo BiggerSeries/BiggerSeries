@@ -3,6 +3,7 @@ package net.roguelogix.biggerreactors.classic.reactor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
@@ -23,6 +24,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     public ReactorMultiblockController(World world) {
         super(world);
         minWidth = minHeight = minLength = 3;
+        maxLength = Config.ReactorMaxLength;
+        maxWidth = Config.ReactorMaxWidth;
+        maxHeight = Config.ReactorMaxHeight;
         tileAttachValidator = tile -> {
             return tile instanceof ReactorBaseTile;
         };
@@ -31,7 +35,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         };
         cornerValidator = frameValidator;
         exteriorValidator = Validator.or(frameValidator, block -> {
-            return block instanceof ReactorTerminal || block instanceof ReactorControlRod || block instanceof ReactorGlass;
+            return block instanceof ReactorTerminal || block instanceof ReactorControlRod || block instanceof ReactorGlass || block instanceof ReactorPowerPort;
         });
         interiorValidator = block -> {
             if(block instanceof ReactorFuelRod){
