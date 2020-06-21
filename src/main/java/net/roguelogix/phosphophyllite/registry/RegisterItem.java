@@ -10,6 +10,8 @@ public @interface RegisterItem {
 
     boolean creativeTab() default true;
 
+    String tag() default "";
+
     @Retention(RetentionPolicy.RUNTIME)
     @interface Instance {
 

@@ -14,6 +14,8 @@ public @interface RegisterBlock {
 
     Class<?> tileEntityClass() default RegisterBlock.class;
 
+    String tag() default "";
+
     @Retention(RetentionPolicy.RUNTIME)
     @interface Instance {
 
