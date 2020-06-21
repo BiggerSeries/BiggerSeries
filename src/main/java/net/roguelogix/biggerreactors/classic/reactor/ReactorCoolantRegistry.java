@@ -8,7 +8,19 @@ import java.util.HashMap;
 public class ReactorCoolantRegistry {
 
     public static class BlockCoolantProperties{
-        Block block;
+        final Block block;
+        final float absorption;
+        final float heatEfficiency;
+        final float moderation;
+        final float conductivity;
+
+        public BlockCoolantProperties(Block block, float absorption, float heatEfficiency, float moderation, float conductivity) {
+            this.block = block;
+            this.absorption = absorption;
+            this.heatEfficiency = heatEfficiency;
+            this.moderation = moderation;
+            this.conductivity = conductivity;
+        }
     }
 
     private final static HashMap<Block, BlockCoolantProperties> blocks = new HashMap<>();
@@ -21,7 +33,11 @@ public class ReactorCoolantRegistry {
         return blocks.get(block);
     }
 
+    public static void registerBlock(BlockCoolantProperties properties){
+        blocks.put(properties.block, properties);
+    }
+
     static {
-        blocks.put(Blocks.AIR, new BlockCoolantProperties());
+        registerBlock(new BlockCoolantProperties(Blocks.AIR, 0.1f, 0.25f, 1.1f, 0.05f));
     }
 }
