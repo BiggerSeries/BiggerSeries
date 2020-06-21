@@ -1,5 +1,7 @@
 package net.roguelogix.biggerreactors;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
@@ -13,15 +15,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Comparator;
 
 @SuppressWarnings("unused")
 @Mod(BiggerReactors.modid)
@@ -30,11 +30,11 @@ public class BiggerReactors {
     public static final String modid = "biggerreactors";
 
     private static final Logger LOGGER = LogManager.getLogger();
-
     public BiggerReactors() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onTextureStitch);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onLoadComplete);
         FMLJavaModLoadingContext.get().getModEventBus().register(RegistryEvents.class);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -71,6 +71,9 @@ public class BiggerReactors {
         Registry.onClientSetup(e);
     }
 
+    public void onLoadComplete(final FMLLoadCompleteEvent e) { Registry.registerWorldGen(); }
+
+    @SubscribeEvent
     public void onTextureStitch(final TextureStitchEvent.Pre event) {
         Registry.onTextureStitch(event);
     }
