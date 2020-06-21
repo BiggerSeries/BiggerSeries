@@ -238,7 +238,7 @@ public class RectangularMultiblockController extends MultiblockController {
 
     @Override
     protected final void onAssembled() {
-//        assembledBlockStates();
+        assembledBlockStates();
         onAssembly();
     }
 
@@ -247,7 +247,7 @@ public class RectangularMultiblockController extends MultiblockController {
 
     @Override
     protected final void onDisassembled() {
-//        disassembledBlockStates();
+        disassembledBlockStates();
         onDisassembly();
     }
 
@@ -256,7 +256,7 @@ public class RectangularMultiblockController extends MultiblockController {
 
     @Override
     protected final void onPaused() {
-//        disassembledBlockStates();
+        disassembledBlockStates();
         onPause();
     }
 }
