@@ -1,0 +1,15 @@
+{
+  "itemGroup.net.roguelogix.biggerreactors.BiggerReactors": "Bigger Reactors",
+
+  "block.biggerreactors.yellorite_ore": "Yellorite Ore",
+  "block.biggerreactors.yellorium_block": "Yellorium Block",
+  "item.biggerreactors.yellorium_dust": "Yellorium Dust",
+  "item.biggerreactors.yellorium_ingot": "Yellorium Ingot",
+
+  "block.biggerreactors.reactor_casing": "Reactor Casing",
+  "block.biggerreactors.reactor_glass": "Reactor Glass",
+  "block.biggerreactors.reactor_terminal": "Reactor Terminal",
+  "block.biggerreactors.reactor_control_rod": "Reactor Control Rod",
+  "block.biggerreactors.reactor_fuel_rod": "Reactor Fuel Rod",
+  "block.biggerreactors.reactor_power_port": "Reactor Fuel Rod"
+}
