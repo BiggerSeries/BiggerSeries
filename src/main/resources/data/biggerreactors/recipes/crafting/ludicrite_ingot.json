@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "biggerreactors:ludicrite_block"
+    }
+  ],
+  "result": {
+    "item": "biggerreactors:ludicrite_ingot",
+    "count": 9
+  }
+}

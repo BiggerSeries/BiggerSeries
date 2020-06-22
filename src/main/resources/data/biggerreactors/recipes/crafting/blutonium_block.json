@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "biggerreactors:blutonium_ingot"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:blutonium_block"
+  }
+}

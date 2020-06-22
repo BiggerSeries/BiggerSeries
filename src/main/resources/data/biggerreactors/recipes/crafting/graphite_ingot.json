@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "biggerreactors:graphite_block"
+    }
+  ],
+  "result": {
+    "item": "biggerreactors:graphite_ingot",
+    "count": 9
+  }
+}

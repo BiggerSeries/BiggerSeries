@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": [
+    {
+      "item": "biggerreactors:ludicrite_dust"
+    }
+  ],
+  "result": "biggerreactors:ludicrite_ingot",
+  "experience": 0.35,
+  "cookingtime": 200
+}

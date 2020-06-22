@@ -1,16 +1,16 @@
-package net.roguelogix.biggerreactors.classic.blocks;
+package net.roguelogix.biggerreactors.classic.blocks.materials;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
-@RegisterBlock(name = "yellorium_block")
-public class YelloriumBlock extends Block {
+@RegisterBlock(name = "cyanite_block")
+public class CyaniteBlock extends Block {
 
-    public YelloriumBlock() {
+    public CyaniteBlock() {
         super(
-            Properties.create(Material.ROCK)
+            Properties.create(Material.IRON)
                 .sound(SoundType.STONE)
                 .hardnessAndResistance(1.0F)
         );

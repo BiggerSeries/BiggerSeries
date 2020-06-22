@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": [
+    {
+      "item": "biggerreactors:cyanite_dust"
+    }
+  ],
+  "result": "biggerreactors:cyanite_ingot",
+  "experience": 0.35,
+  "cookingtime": 200
+}
