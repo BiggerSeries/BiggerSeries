@@ -6,6 +6,18 @@
   "item.biggerreactors.yellorium_dust": "Yellorium Dust",
   "item.biggerreactors.yellorium_ingot": "Yellorium Ingot",
 
+  "item.biggerreactors.blutonium_dust": "Blutonium Dust",
+  "item.biggerreactors.blutonium_ingot": "Blutonium Ingot",
+
+  "item.biggerreactors.cyanite_dust": "Cyanite Dust",
+  "item.biggerreactors.cyanite_ingot": "Cyanite Ingot",
+
+  "item.biggerreactors.graphite_dust": "Graphite Dust",
+  "item.biggerreactors.graphite_ingot": "Graphite Ingot",
+
+  "item.biggerreactors.ludicrite_dust": "Ludicrite Dust",
+  "item.biggerreactors.ludicrite_ingot": "Ludicrite Ingot",
+
   "block.biggerreactors.reactor_casing": "Reactor Casing",
   "block.biggerreactors.reactor_glass": "Reactor Glass",
   "block.biggerreactors.reactor_terminal": "Reactor Terminal",
