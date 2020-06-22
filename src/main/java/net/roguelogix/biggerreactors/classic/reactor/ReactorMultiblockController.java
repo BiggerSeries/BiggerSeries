@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.blocks.reactor;
+package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;

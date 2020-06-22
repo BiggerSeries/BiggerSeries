@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.blocks.reactor;
+package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -7,8 +7,8 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockTile;
 
-import static net.roguelogix.biggerreactors.classic.blocks.reactor.ReactorState.INACTIVE;
-import static net.roguelogix.biggerreactors.classic.blocks.reactor.ReactorState.REACTOR_STATE_MODEL_PROPERTY;
+import static net.roguelogix.biggerreactors.classic.reactor.ReactorState.INACTIVE;
+import static net.roguelogix.biggerreactors.classic.reactor.ReactorState.REACTOR_STATE_MODEL_PROPERTY;
 
 public class ReactorBaseTile extends RectangularMultiblockTile {
 

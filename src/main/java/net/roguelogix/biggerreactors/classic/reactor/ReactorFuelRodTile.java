@@ -1,15 +1,15 @@
-package net.roguelogix.biggerreactors.classic.blocks.reactor;
+package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
-@RegisterTileEntity(name = "reactor_glass")
-public class ReactorGlassTile extends ReactorBaseTile {
+@RegisterTileEntity(name = "reactor_fuel_rod")
+public class ReactorFuelRodTile extends ReactorBaseTile {
 
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
 
-    public ReactorGlassTile() {
+    public ReactorFuelRodTile() {
         super(TYPE);
     }
 
