@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CGC",
+    "GRG",
+    "CYC"
+  ],
+  "key": {
+    "C": {
+      "item": "biggerreactors:reactor_casing"
+    },
+    "Y": {
+      "item": "biggerreactors:yellorium_ingot"
+    },
+    "G": {
+      "item": "biggerreactors:graphite_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:reactor_control_rod"
+  }
+}

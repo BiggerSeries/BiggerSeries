@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C C",
+    "YDY",
+    "CRC"
+  ],
+  "key": {
+    "C": {
+      "item": "biggerreactors:reactor_casing"
+    },
+    "Y": {
+      "item": "biggerreactors:yellorium_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:reactor_terminal"
+  }
+}

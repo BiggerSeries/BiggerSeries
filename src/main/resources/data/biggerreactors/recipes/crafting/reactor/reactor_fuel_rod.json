@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IGI",
+    "IYI",
+    "IGI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "biggerreactors:graphite_ingot"
+    },
+    "Y": {
+      "item": "biggerreactors:yellorium_ingot"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:reactor_fuel_rod"
+  }
+}
