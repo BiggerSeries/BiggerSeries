@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "biggerreactors:yellorium_ingot"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:yellorium_block"
+  }
+}
