@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.reactor;
+package net.roguelogix.biggerreactors.classic.blocks.reactor;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;

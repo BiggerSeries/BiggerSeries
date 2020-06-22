@@ -1,6 +1,6 @@
 package net.roguelogix.biggerreactors;
 
-import net.roguelogix.biggerreactors.classic.reactor.ReactorCoolantRegistry;
+import net.roguelogix.biggerreactors.classic.blocks.reactor.ReactorCoolantRegistry;
 import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.registry.RegisterConfig;
 
