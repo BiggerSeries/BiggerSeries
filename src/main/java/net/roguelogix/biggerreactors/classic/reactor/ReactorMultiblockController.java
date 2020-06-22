@@ -83,6 +83,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorTerminalTile> terminals = new HashSet<>();
     private final Set<ReactorControlRodTile> controlRods = new HashSet<>();
     private final Set<ReactorFuelRodTile> fuelRods = new HashSet<>();
+    private final Set<ReactorPowerPortTile> powerPorts = new HashSet<>();
 
     @Override
     protected void onPartAdded(MultiblockTile tile) {
@@ -94,6 +95,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof ReactorFuelRodTile) {
             fuelRods.add((ReactorFuelRodTile) tile);
+        }
+        if (tile instanceof ReactorPowerPortTile) {
+            powerPorts.add((ReactorPowerPortTile) tile);
         }
     }
 
@@ -107,6 +111,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof ReactorFuelRodTile) {
             fuelRods.remove(tile);
+        }
+        if (tile instanceof ReactorPowerPortTile) {
+            powerPorts.remove(tile);
         }
     }
 
