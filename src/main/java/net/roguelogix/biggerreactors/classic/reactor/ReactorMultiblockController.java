@@ -38,7 +38,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         };
         cornerValidator = frameValidator;
         exteriorValidator = Validator.or(frameValidator, block -> {
-            return block instanceof ReactorTerminal || block instanceof ReactorControlRod || block instanceof ReactorGlass || block instanceof ReactorPowerTap;
+            return block instanceof ReactorTerminal ||
+                    block instanceof ReactorControlRod ||
+                    block instanceof ReactorGlass ||
+                    block instanceof ReactorAccessPort ||
+                    block instanceof ReactorPowerTap;
         });
         interiorValidator = block -> {
             if(block instanceof ReactorFuelRod){
