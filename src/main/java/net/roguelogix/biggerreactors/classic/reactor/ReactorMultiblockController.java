@@ -38,7 +38,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         };
         cornerValidator = frameValidator;
         exteriorValidator = Validator.or(frameValidator, block -> {
-            return block instanceof ReactorTerminal || block instanceof ReactorControlRod || block instanceof ReactorGlass || block instanceof ReactorPowerPort;
+            return block instanceof ReactorTerminal || block instanceof ReactorControlRod || block instanceof ReactorGlass || block instanceof ReactorPowerTap;
         });
         interiorValidator = block -> {
             if(block instanceof ReactorFuelRod){
@@ -86,7 +86,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorTerminalTile> terminals = new HashSet<>();
     private final Set<ReactorControlRodTile> controlRods = new HashSet<>();
     private final Set<ReactorFuelRodTile> fuelRods = new HashSet<>();
-    private final Set<ReactorPowerPortTile> powerPorts = new HashSet<>();
+    private final Set<ReactorPowerTapTile> powerPorts = new HashSet<>();
 
     @Override
     protected void onPartAdded(MultiblockTile tile) {
@@ -99,8 +99,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (tile instanceof ReactorFuelRodTile) {
             fuelRods.add((ReactorFuelRodTile) tile);
         }
-        if (tile instanceof ReactorPowerPortTile) {
-            powerPorts.add((ReactorPowerPortTile) tile);
+        if (tile instanceof ReactorPowerTapTile) {
+            powerPorts.add((ReactorPowerTapTile) tile);
         }
     }
 
@@ -115,7 +115,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (tile instanceof ReactorFuelRodTile) {
             fuelRods.remove(tile);
         }
-        if (tile instanceof ReactorPowerPortTile) {
+        if (tile instanceof ReactorPowerTapTile) {
             powerPorts.remove(tile);
         }
     }
@@ -155,7 +155,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
 
     @Override
     protected void onAssembly() {
-        for (ReactorPowerPortTile powerPort : powerPorts) {
+        for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
         }
     }
@@ -163,7 +163,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     @Override
     protected void onDisassembly() {
         setActive(ReactorState.INACTIVE);
-        for (ReactorPowerPortTile powerPort : powerPorts) {
+        for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
         }
     }
@@ -176,7 +176,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
 
         }
 
-        for (ReactorPowerPortTile powerPort : powerPorts) {
+        for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.distributePower(1000);
         }
     }

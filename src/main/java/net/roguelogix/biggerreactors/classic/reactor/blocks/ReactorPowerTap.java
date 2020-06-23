@@ -7,20 +7,20 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.IBlockReader;
-import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorPowerPortTile;
+import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorPowerTapTile;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
 import javax.annotation.Nullable;
 
-import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorPowerPort.ConnectionState.CONNECTION_STATE_ENUM_PROPERTY;
+import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorPowerTap.ConnectionState.CONNECTION_STATE_ENUM_PROPERTY;
 
-@RegisterBlock(name = "reactor_power_port", tileEntityClass = ReactorPowerPortTile.class)
-public class ReactorPowerPort extends ReactorBaseBlock{
+@RegisterBlock(name = "reactor_power_tap", tileEntityClass = ReactorPowerTapTile.class)
+public class ReactorPowerTap extends ReactorBaseBlock{
 
     @RegisterBlock.Instance
-    public static ReactorPowerPort INSTANCE;
+    public static ReactorPowerTap INSTANCE;
 
-    public ReactorPowerPort() {
+    public ReactorPowerTap() {
         super();
         setDefaultState(getDefaultState().with(CONNECTION_STATE_ENUM_PROPERTY, ConnectionState.DISCONNECTED));
     }
@@ -46,6 +46,6 @@ public class ReactorPowerPort extends ReactorBaseBlock{
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ReactorPowerPortTile();
+        return new ReactorPowerTapTile();
     }
 }

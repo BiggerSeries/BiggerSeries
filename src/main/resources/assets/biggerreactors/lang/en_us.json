@@ -27,5 +27,5 @@
   "block.biggerreactors.reactor_terminal": "Reactor Terminal",
   "block.biggerreactors.reactor_control_rod": "Reactor Control Rod",
   "block.biggerreactors.reactor_fuel_rod": "Reactor Fuel Rod",
-  "block.biggerreactors.reactor_power_port": "Reactor Power Port"
+  "block.biggerreactors.reactor_power_tap": "Reactor Power Tap"
 }

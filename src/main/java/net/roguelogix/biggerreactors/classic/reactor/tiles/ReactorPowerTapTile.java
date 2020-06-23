@@ -3,7 +3,6 @@ package net.roguelogix.biggerreactors.classic.reactor.tiles;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -15,15 +14,15 @@ import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorPowerPort.ConnectionState.*;
+import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorPowerTap.ConnectionState.*;
 
 
 @RegisterTileEntity(name = "reactor_power_port")
-public class ReactorPowerPortTile extends ReactorBaseTile implements IEnergyStorage {
+public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStorage {
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
 
-    public ReactorPowerPortTile() {
+    public ReactorPowerTapTile() {
         super(TYPE);
     }
 
