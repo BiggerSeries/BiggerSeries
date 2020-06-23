@@ -7,7 +7,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 public class CyaniteIngot extends Item {
 
     @RegisterItem.Instance
-    CyaniteIngot INSTANCE;
+    public static CyaniteIngot INSTANCE;
 
     public CyaniteIngot(Properties properties) {
         super(properties);

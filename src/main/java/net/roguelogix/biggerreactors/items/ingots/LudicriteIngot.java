@@ -7,7 +7,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 public class LudicriteIngot extends Item {
 
     @RegisterItem.Instance
-    LudicriteIngot INSTANCE;
+    public static LudicriteIngot INSTANCE;
 
     public LudicriteIngot(Properties properties) {
         super(properties);

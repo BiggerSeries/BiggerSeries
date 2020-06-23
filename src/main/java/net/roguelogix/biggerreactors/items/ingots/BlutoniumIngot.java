@@ -7,7 +7,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 public class BlutoniumIngot extends Item {
 
     @RegisterItem.Instance
-    BlutoniumIngot INSTANCE;
+    public static BlutoniumIngot INSTANCE;
 
     public BlutoniumIngot(Properties properties) {
         super(properties);

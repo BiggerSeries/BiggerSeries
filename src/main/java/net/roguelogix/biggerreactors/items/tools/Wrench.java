@@ -8,7 +8,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 public class Wrench extends Item {
 
     @RegisterItem.Instance
-    Wrench INSTANCE;
+    public static Wrench INSTANCE;
 
     public Wrench(Properties properties) {
         super(properties);

@@ -7,7 +7,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 public class GraphiteIngot extends Item {
 
     @RegisterItem.Instance
-    GraphiteIngot INSTANCE;
+    public static GraphiteIngot INSTANCE;
 
     public GraphiteIngot(Properties properties) {
         super(properties);

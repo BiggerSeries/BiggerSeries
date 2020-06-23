@@ -7,7 +7,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 public class YelloriumIngot extends Item {
 
     @RegisterItem.Instance
-    YelloriumIngot INSTANCE;
+    public static YelloriumIngot INSTANCE;
 
     public YelloriumIngot(Properties properties) {
         super(properties);

@@ -8,7 +8,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 public class DebugTool extends Item {
 
     @RegisterItem.Instance
-    DebugTool INSTANCE;
+    public static DebugTool INSTANCE;
 
     public DebugTool(Properties properties) {
         super(properties);
