@@ -64,6 +64,7 @@ public class Config {
             new ReactorModeratorConfigValues("minecraft:glass", 0.2f, 0.25f, 1.1f, 0.3f),
             new ReactorModeratorConfigValues("minecraft:ice", 0.33f, 0.33f, 1.15f, 0.1f),
             new ReactorModeratorConfigValues("minecraft:snow_block", 0.15f, 0.33f, 1.05f, 0.05f),
+            new ReactorModeratorConfigValues("minecraft:water", 0.33f, 0.5f, 1.33f, 0.1f),
 
             new ReactorModeratorConfigValues("biggerreactors:graphite_block", 0.1f, 0.5f, 2f, 2f),
     };
