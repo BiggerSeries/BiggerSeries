@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "portdirection=inlet": {
       "model": "biggerreactors:block/reactor_access_port_inlet"
+    },
+    "portdirection=outlet": {
+      "model": "biggerreactors:block/reactor_access_port_outlet"
     }
   }
 }
