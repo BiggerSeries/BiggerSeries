@@ -11,7 +11,6 @@ import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 import javax.annotation.Nullable;
 
 import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort.PortDirection.INLET;
-import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort.PortDirection.PORT_DIRECTION_ENUM_PROPERTY;
 
 @RegisterTileEntity(name = "reactor_access_port")
 public class ReactorAccessPortTile extends ReactorBaseTile{
@@ -32,8 +31,5 @@ public class ReactorAccessPortTile extends ReactorBaseTile{
     @Override
     public void onLoad() {
         super.onLoad();
-        assert world != null;
-        BlockState state = world.getBlockState(pos);
-        direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
     }
 }
