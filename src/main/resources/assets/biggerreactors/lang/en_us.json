@@ -1,6 +1,9 @@
 {
   "itemGroup.net.roguelogix.biggerreactors.BiggerReactors": "Bigger Reactors",
 
+  "item.biggerreactors.debug_tool": "Debeefer",
+  "item.biggerreactors.wrench": "Reactor Wrench",
+  
   "block.biggerreactors.yellorite_ore": "Yellorite Ore",
   "block.biggerreactors.yellorium_block": "Yellorium Block",
   "item.biggerreactors.yellorium_dust": "Yellorium Dust",
