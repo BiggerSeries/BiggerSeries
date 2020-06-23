@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorBaseTile;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorState;
+import net.roguelogix.biggerreactors.items.tools.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockBlock;
 
 public class ReactorBaseBlock extends RectangularMultiblockBlock {
@@ -44,7 +45,7 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
             return ActionResultType.PASS;
         }
         TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof ReactorBaseTile){
+        if (te instanceof ReactorBaseTile && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE){
             ((ReactorBaseTile) te).onActivated(player);
         }
         return ActionResultType.PASS;
