@@ -2,41 +2,46 @@ package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 
-public class ReactorCoolantRegistry {
+public class ReactorModeratorRegistry {
 
-    public static class BlockCoolantProperties {
-        final Block block;
-        final float absorption;
-        final float heatEfficiency;
-        final float moderation;
-        final float conductivity;
+    public static class ModeratorProperties {
 
-        public BlockCoolantProperties(Block block, float absorption, float heatEfficiency, float moderation, float conductivity) {
-            this.block = block;
+        public final float absorption;
+        public final float heatEfficiency;
+        public final float moderation;
+        public final float conductivity;
+
+        public ModeratorProperties(float absorption, float heatEfficiency, float moderation, float conductivity) {
             this.absorption = absorption;
             this.heatEfficiency = heatEfficiency;
             this.moderation = moderation;
             this.conductivity = conductivity;
         }
-    }
 
-    public interface IBlockCoolantPropertiesProvider{
-        BlockCoolantProperties blockCoolantProperties();
     }
+    public interface IModeratorPropertiesProvider {
 
-    private final static HashMap<Block, BlockCoolantProperties> blocks = new HashMap<>();
+        ModeratorProperties blockModeratorProperties();
+    }
+    private final static HashMap<Block, ModeratorProperties> blocks = new HashMap<>();
 
     public static boolean isBlockAllowed(Block block) {
         return blocks.containsKey(block);
     }
 
-    public static BlockCoolantProperties blockCoolantProperties(Block block) {
+    public static ModeratorProperties blockModeratorProperties(Block block) {
         return blocks.get(block);
+    }
+
+    // TODO: 6/22/20 FLUID
+    public static ModeratorProperties fluidModeratorProperties(Fluid fluid) {
+        return null;
     }
 
     public static void registerBlock(String location) {
@@ -45,8 +50,8 @@ public class ReactorCoolantRegistry {
 
     public static void registerBlock(ResourceLocation location) {
         Block block = ForgeRegistries.BLOCKS.getValue(location);
-        if (block instanceof IBlockCoolantPropertiesProvider) {
-            registerBlock(((IBlockCoolantPropertiesProvider) block).blockCoolantProperties());
+        if (block instanceof IModeratorPropertiesProvider) {
+            registerBlock(block, ((IModeratorPropertiesProvider) block).blockModeratorProperties());
         }
     }
 
@@ -59,11 +64,11 @@ public class ReactorCoolantRegistry {
     }
 
     public static void registerBlock(Block block, float absorption, float heatEfficiency, float moderation, float conductivity) {
-        registerBlock(new BlockCoolantProperties(block, absorption, heatEfficiency, moderation, conductivity));
+        registerBlock(block, new ModeratorProperties(absorption, heatEfficiency, moderation, conductivity));
     }
 
-    public static void registerBlock(BlockCoolantProperties properties) {
-        blocks.put(properties.block, properties);
+    public static void registerBlock(Block block, ModeratorProperties properties) {
+        blocks.put(block, properties);
     }
 
     static {

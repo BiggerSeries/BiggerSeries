@@ -1,6 +1,6 @@
 package net.roguelogix.biggerreactors;
 
-import net.roguelogix.biggerreactors.classic.reactor.ReactorCoolantRegistry;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.registry.RegisterConfig;
 
@@ -24,6 +24,9 @@ public class Config {
     public static final int ReactorMaxWidth = 32;
     @PhosphophylliteConfig.Value(min = 3, max = 48)
     public static final int ReactorMaxHeight = 48;
+
+    @PhosphophylliteConfig.Value(min = 1)
+    public static float fuelUsageMultiplier;
 
     @PhosphophylliteConfig.Value(min = 5, max = 32)
     public static final int TurbineMaxLength = 32;
@@ -69,7 +72,7 @@ public class Config {
     @PhosphophylliteConfig.OnLoad
     public static void onLoad() {
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
-            ReactorCoolantRegistry.registerBlock(reactorModerator.location, reactorModerator.absorption, reactorModerator.heatEfficiency, reactorModerator.moderation, reactorModerator.conductivity);
+            ReactorModeratorRegistry.registerBlock(reactorModerator.location, reactorModerator.absorption, reactorModerator.heatEfficiency, reactorModerator.moderation, reactorModerator.conductivity);
         }
     }
 }
