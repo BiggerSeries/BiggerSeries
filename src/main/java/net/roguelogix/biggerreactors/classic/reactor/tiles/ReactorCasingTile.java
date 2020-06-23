@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.reactor;
+package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;

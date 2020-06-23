@@ -1,12 +1,12 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.roguelogix.biggerreactors.Config;
+import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
+import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
@@ -44,7 +44,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             if(block instanceof ReactorFuelRod){
                 return true;
             }
-            if(!ReactorCoolantRegistry.isBlockAllowed(block)){
+            if(!ReactorModeratorRegistry.isBlockAllowed(block)){
                 return false;
             }
             if(exteriorValidator.validate(block)){
@@ -156,33 +156,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     @Override
     protected void onAssembly() {
         for (ReactorPowerPortTile powerPort : powerPorts) {
-            BlockPos pos = powerPort.getPos();
-            if(pos.getX() == minX()){
-                powerPort.powerOutputDirection = Direction.WEST;
-                continue;
-            }
-            if(pos.getX() == maxX()){
-                powerPort.powerOutputDirection = Direction.EAST;
-                continue;
-            }
-            if(pos.getY() == minY()){
-                powerPort.powerOutputDirection = Direction.DOWN;
-                continue;
-            }
-            if(pos.getY() == maxY()){
-                powerPort.powerOutputDirection = Direction.UP;
-                continue;
-            }
-            if(pos.getZ() == minZ()){
-                powerPort.powerOutputDirection = Direction.NORTH;
-                continue;
-            }
-            if(pos.getZ() == maxZ()){
-                powerPort.powerOutputDirection = Direction.SOUTH;
-                continue;
-            }
-            // todo error out, shouldn't happen
-            return;
+            powerPort.updateOutputDirection();
         }
     }
 
@@ -190,7 +164,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     protected void onDisassembly() {
         setActive(ReactorState.INACTIVE);
         for (ReactorPowerPortTile powerPort : powerPorts) {
-            powerPort.powerOutputDirection = null;
+            powerPort.updateOutputDirection();
         }
     }
 

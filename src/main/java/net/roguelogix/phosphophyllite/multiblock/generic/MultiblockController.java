@@ -243,7 +243,11 @@ public class MultiblockController {
     public void tick() {
     }
 
-    enum AssemblyState {
+    public AssemblyState assemblyState() {
+        return state;
+    }
+
+    public enum AssemblyState {
         ASSEMBLED,
         DISASSEMBLED,
         PAUSED,

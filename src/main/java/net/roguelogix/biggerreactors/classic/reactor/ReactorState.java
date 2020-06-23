@@ -4,7 +4,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.client.model.data.ModelProperty;
 
-enum ReactorState implements IStringSerializable {
+public enum ReactorState implements IStringSerializable {
     ACTIVE,
     INACTIVE;
 

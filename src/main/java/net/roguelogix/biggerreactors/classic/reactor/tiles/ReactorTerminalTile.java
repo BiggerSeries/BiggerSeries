@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.reactor;
+package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntityType;

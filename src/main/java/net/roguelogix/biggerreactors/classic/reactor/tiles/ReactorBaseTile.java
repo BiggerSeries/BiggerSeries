@@ -1,9 +1,11 @@
-package net.roguelogix.biggerreactors.classic.reactor;
+package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.model.data.ModelDataMap;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorState;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockTile;
 

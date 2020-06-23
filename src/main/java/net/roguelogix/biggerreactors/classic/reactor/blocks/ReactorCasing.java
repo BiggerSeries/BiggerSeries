@@ -1,15 +1,10 @@
-package net.roguelogix.biggerreactors.classic.reactor;
+package net.roguelogix.biggerreactors.classic.reactor.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockReader;
-import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBakedModel;
-import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
+import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorCasingTile;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
-import net.roguelogix.biggerreactors.BiggerReactors;
 
 import javax.annotation.Nullable;
 

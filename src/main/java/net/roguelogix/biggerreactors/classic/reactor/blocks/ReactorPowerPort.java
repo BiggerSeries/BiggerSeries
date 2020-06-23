@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.reactor;
+package net.roguelogix.biggerreactors.classic.reactor.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -6,14 +6,13 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorPowerPortTile;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
 import javax.annotation.Nullable;
 
-import static net.roguelogix.biggerreactors.classic.reactor.ReactorPowerPort.ConnectionState.CONNECTION_STATE_ENUM_PROPERTY;
+import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorPowerPort.ConnectionState.CONNECTION_STATE_ENUM_PROPERTY;
 
 @RegisterBlock(name = "reactor_power_port", tileEntityClass = ReactorPowerPortTile.class)
 public class ReactorPowerPort extends ReactorBaseBlock{
@@ -26,7 +25,7 @@ public class ReactorPowerPort extends ReactorBaseBlock{
         setDefaultState(getDefaultState().with(CONNECTION_STATE_ENUM_PROPERTY, ConnectionState.DISCONNECTED));
     }
 
-    enum ConnectionState implements IStringSerializable {
+    public enum ConnectionState implements IStringSerializable {
         CONNECTED,
         DISCONNECTED;
 
