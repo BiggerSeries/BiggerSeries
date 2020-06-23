@@ -39,7 +39,6 @@ public class BiggerReactors {
         FMLJavaModLoadingContext.get().getModEventBus().register(RegistryEvents.class);
         MinecraftForge.EVENT_BUS.register(this);
 
-        Config.onLoad();
     }
 
     @SuppressWarnings("unused")
@@ -48,6 +47,7 @@ public class BiggerReactors {
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             Registry.registerBlocks(blockRegistryEvent);
+            Config.onLoad();
         }
 
         @SuppressWarnings("unused")
