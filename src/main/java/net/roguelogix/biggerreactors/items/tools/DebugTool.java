@@ -11,6 +11,6 @@ public class DebugTool extends Item {
     public static DebugTool INSTANCE;
 
     public DebugTool(Properties properties) {
-        super(properties);
+        super(properties.maxStackSize(1));
     }
 }

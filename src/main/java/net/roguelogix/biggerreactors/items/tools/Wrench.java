@@ -11,6 +11,6 @@ public class Wrench extends Item {
     public static Wrench INSTANCE;
 
     public Wrench(Properties properties) {
-        super(properties);
+        super(properties.maxStackSize(1));
     }
 }
