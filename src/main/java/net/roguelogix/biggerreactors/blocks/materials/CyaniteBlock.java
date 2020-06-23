@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.blocks.materials;
+package net.roguelogix.biggerreactors.blocks.materials;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

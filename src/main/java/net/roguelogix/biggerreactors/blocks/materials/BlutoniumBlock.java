@@ -1,14 +1,14 @@
-package net.roguelogix.biggerreactors.classic.blocks.materials;
+package net.roguelogix.biggerreactors.blocks.materials;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
-@RegisterBlock(name = "graphite_block")
-public class GraphiteBlock extends Block {
+@RegisterBlock(name = "blutonium_block")
+public class BlutoniumBlock extends Block {
 
-    public GraphiteBlock() {
+    public BlutoniumBlock() {
         super(
             Properties.create(Material.IRON)
                 .sound(SoundType.STONE)
