@@ -6,6 +6,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorState;
+import net.roguelogix.biggerreactors.items.tools.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockTile;
 
@@ -36,7 +37,7 @@ public class ReactorBaseTile extends RectangularMultiblockTile {
     }
 
     public void onActivated(PlayerEntity player) {
-        if (controller != null) {
+        if (controller != null && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
 //            player.sendMessage(new StringTextComponent(world.getBlockState(getPos()).toString()));
             player.sendMessage(new StringTextComponent(controller.getInfo()));
         }

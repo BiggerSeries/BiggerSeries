@@ -45,7 +45,7 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
             return ActionResultType.PASS;
         }
         TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof ReactorBaseTile && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE){
+        if (te instanceof ReactorBaseTile){
             ((ReactorBaseTile) te).onActivated(player);
         }
         return ActionResultType.PASS;
