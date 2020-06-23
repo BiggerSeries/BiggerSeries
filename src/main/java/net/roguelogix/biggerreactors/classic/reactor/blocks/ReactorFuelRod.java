@@ -3,7 +3,10 @@ package net.roguelogix.biggerreactors.classic.reactor.blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorFuelRodTile;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
@@ -29,4 +32,14 @@ public class ReactorFuelRod extends ReactorBaseBlock {
     RenderType renderLayer() {
         return RenderType.getCutout();
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        return 1.0F;
+    }
+
+    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+        return true;
+    }
+
 }
