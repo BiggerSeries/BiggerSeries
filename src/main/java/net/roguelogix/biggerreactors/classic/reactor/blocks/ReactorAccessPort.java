@@ -64,6 +64,12 @@ public class ReactorAccessPort extends ReactorBaseBlock{
                 PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
                 direction = direction == INLET ? OUTLET : INLET;
                 worldIn.setBlockState(pos, state.with(PORT_DIRECTION_ENUM_PROPERTY, direction));
+
+                TileEntity te = worldIn.getTileEntity(pos);
+                if(te instanceof ReactorAccessPortTile){
+                    ((ReactorAccessPortTile) te).setDirection(direction);
+                }
+
                 return ActionResultType.SUCCESS;
             }
         }
