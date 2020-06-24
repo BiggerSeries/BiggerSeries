@@ -4,19 +4,24 @@ buildscript {
 
         jcenter()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'com.github.johnrengelman.shadow'
 
-version = '1.0'
-group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'modid'
+version = '0.0.0-alpha'
+group = 'net.roguelogix.biggerreactors' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'biggerreactors-1.15.2'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -44,7 +49,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                BiggerReactors {
                     source sourceSets.main
                 }
             }
@@ -60,7 +65,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                BiggerReactors {
                     source sourceSets.main
                 }
             }
@@ -78,7 +83,7 @@ minecraft {
 //            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
 
             mods {
-                examplemod {
+                BiggerReactors {
                     source sourceSets.main
                 }
             }
@@ -97,13 +102,19 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.21'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.22'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
-    compile "org.reflections:reflections:0.9.12"
-    compile "org.joml:joml:1.9.24"
+
+    // the runtimeOnly duplicate is for
+
+    shadow "org.reflections:reflections:0.9.11"
+    runtimeOnly "org.reflections:reflections:0.9.11"
+
+    shadow group: 'org.joml', name: 'joml', version: '1.9.24'
+    runtimeOnly group: 'org.joml', name: 'joml', version: '1.9.24'
 
     // Real examples
     // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
@@ -116,6 +127,7 @@ dependencies {
     // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
 //    runtime ""
+    runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -127,20 +139,36 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "examplemod",
-                "Specification-Vendor"    : "examplemodsareus",
+                "Specification-Title"     : "BiggerReactors",
+//                "Specification-Vendor"    : "examplemodsareus",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "examplemodsareus",
+//                "Implementation-Vendor"   : "examplemodsareus",
 //                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }
 
+
+shadowJar {
+    project.configurations.shadow.setTransitive(true);
+    configurations = [project.configurations.shadow]
+
+    classifier '' // Replace the default JAR
+
+    relocate "org.joml", "net.roguelogix.phosphophyllite.repack.org.joml"
+    relocate "org.reflections", "net.roguelogix.phosphophyllite.repack.org.reflections"
+
+}
+
+reobf {
+    shadowJar {} // Reobfuscate the shadowed JAR
+}
+
 // Example configuration to allow publishing using the maven-publish task
 // This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
+//jar.finalizedBy('reobfJar')
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 //publish.dependsOn('reobfJar')
 
