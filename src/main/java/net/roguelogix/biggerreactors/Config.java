@@ -19,32 +19,37 @@ public class Config {
     //TODO: remove max, its only there because of the render system
     //      multiblock system can take *much* larger structures
     @PhosphophylliteConfig.Value(min = 3, max = 32)
-    public static final int ReactorMaxLength = 32;
+    public static int ReactorMaxLength = 32;
     @PhosphophylliteConfig.Value(min = 3, max = 32)
-    public static final int ReactorMaxWidth = 32;
+    public static int ReactorMaxWidth = 32;
     @PhosphophylliteConfig.Value(min = 3, max = 48)
-    public static final int ReactorMaxHeight = 48;
+    public static int ReactorMaxHeight = 48;
 
     @PhosphophylliteConfig.Value(min = 1)
     public static float fuelUsageMultiplier;
 
     @PhosphophylliteConfig.Value(min = 5, max = 32)
-    public static final int TurbineMaxLength = 32;
+    public static int TurbineMaxLength = 32;
     @PhosphophylliteConfig.Value(min = 5, max = 32)
-    public static final int TurbineMaxWidth = 32;
+    public static int TurbineMaxWidth = 32;
     @PhosphophylliteConfig.Value(min = 3, max = 48)
-    public static final int TurbineMaxHeight = 48;
+    public static int TurbineMaxHeight = 48;
 
     @PhosphophylliteConfig
     public static class ReactorModeratorConfigValues {
+        @PhosphophylliteConfig.Value
         public final String location;
-        final float absorption;
-        final float heatEfficiency;
-        final float moderation;
-        final float conductivity;
+        @PhosphophylliteConfig.Value
+        public final float absorption;
+        @PhosphophylliteConfig.Value
+        public final float heatEfficiency;
+        @PhosphophylliteConfig.Value
+        public final float moderation;
+        @PhosphophylliteConfig.Value
+        public final float conductivity;
 
-        public ReactorModeratorConfigValues(String tag, float absorption, float heatEfficiency, float moderation, float conductivity) {
-            this.location = tag;
+        public ReactorModeratorConfigValues(String location, float absorption, float heatEfficiency, float moderation, float conductivity) {
+            this.location = location;
             this.absorption = absorption;
             this.heatEfficiency = heatEfficiency;
             this.moderation = moderation;
@@ -53,8 +58,7 @@ public class Config {
     }
 
     @PhosphophylliteConfig.Value
-    static
-    ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
+    public static ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
             new ReactorModeratorConfigValues("minecraft:air", 0.1f, 0.25f, 1.1f, 0.05f),
 
             new ReactorModeratorConfigValues("minecraft:iron_block", 0.5f, 0.75f, 1.4f, 0.6f),
@@ -64,6 +68,7 @@ public class Config {
             new ReactorModeratorConfigValues("minecraft:glass", 0.2f, 0.25f, 1.1f, 0.3f),
             new ReactorModeratorConfigValues("minecraft:ice", 0.33f, 0.33f, 1.15f, 0.1f),
             new ReactorModeratorConfigValues("minecraft:snow_block", 0.15f, 0.33f, 1.05f, 0.05f),
+
             new ReactorModeratorConfigValues("minecraft:water", 0.33f, 0.5f, 1.33f, 0.1f),
 
             new ReactorModeratorConfigValues("biggerreactors:graphite_block", 0.1f, 0.5f, 2f, 2f),
