@@ -131,6 +131,9 @@ public abstract class MultiblockTile extends TileEntity {
         if(compound.contains("bakedmodeldata")){
             updateBakedModelState(compound.getCompound("bakedmodeldata"));
         }
+        if(compound.contains("userdata")){
+            readNBT(compound.getCompound("userdata"));
+        }
     }
 
     @Override
@@ -140,6 +143,7 @@ public abstract class MultiblockTile extends TileEntity {
             compound.put("controllerData", controller.getNBT());
         }
         compound.put("bakedmodeldata", getBakedModelState());
+        compound.put("userdata", writeNBT());
         return compound;
     }
 
