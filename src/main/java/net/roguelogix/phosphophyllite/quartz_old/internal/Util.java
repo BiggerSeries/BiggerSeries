@@ -54,7 +54,7 @@ public class Util {
                 int chunkZ = Z >> 4;
                 Chunk chunk = world.getChunk(chunkX, chunkZ);
                 ChunkSection[] chunkSections = chunk.getSections();
-                for (int Y = start.y; Y < ((start.y + 16) & 0xFFFFFFF0); Y += 16) {
+                for (int Y = start.y; Y < ((end.y + 16) & 0xFFFFFFF0); Y += 16) {
                     int chunkSectionIndex = Y >> 4;
                     ChunkSection chunkSection = chunkSections[chunkSectionIndex];
                     int sectionMinX = Math.max((X) & 0xFFFFFFF0, start.x);
