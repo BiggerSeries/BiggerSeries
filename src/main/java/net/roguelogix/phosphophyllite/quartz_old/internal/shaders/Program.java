@@ -5,7 +5,7 @@ import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.threading.Event;
 
 import static net.roguelogix.phosphophyllite.quartz_old.internal.Renderer.secondaryWorkQueue;
-import static net.roguelogix.phosphophyllite.quartz_old.internal.Util.readResourceLocation;
+import static net.roguelogix.phosphophyllite.util.Util.readResourceLocation;
 import static org.lwjgl.opengl.GL21.*;
 
 public class Program {

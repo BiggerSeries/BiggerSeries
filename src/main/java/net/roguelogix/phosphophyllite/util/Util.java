@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.quartz_old.internal;
+package net.roguelogix.phosphophyllite.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

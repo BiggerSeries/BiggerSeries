@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static net.roguelogix.phosphophyllite.quartz_old.internal.Renderer.tertiaryWorkQueue;
-import static net.roguelogix.phosphophyllite.quartz_old.internal.Util.readJSONFile;
+import static net.roguelogix.phosphophyllite.util.Util.readJSONFile;
 
 public class RenderStateBuilding {
     private static final ArrayList<QuartzState> cache = new ArrayList<>();

@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
-import net.roguelogix.phosphophyllite.quartz_old.internal.Util;
+import net.roguelogix.phosphophyllite.util.Util;
 import org.joml.Vector3i;
 
 import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;

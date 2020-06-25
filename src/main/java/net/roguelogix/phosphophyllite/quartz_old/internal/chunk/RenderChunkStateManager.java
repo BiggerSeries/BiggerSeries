@@ -15,7 +15,7 @@ import org.joml.Vector3ic;
 
 import java.util.HashMap;
 
-import static net.roguelogix.phosphophyllite.quartz_old.internal.Util.chunkCachedBlockStateIteration;
+import static net.roguelogix.phosphophyllite.util.Util.chunkCachedBlockStateIteration;
 
 public class RenderChunkStateManager {
 
