@@ -113,10 +113,10 @@ public abstract class MultiblockTile extends TileEntity {
 
     public abstract MultiblockController createController();
 
-    void readNBT(CompoundNBT compound) {
+    protected void readNBT(CompoundNBT compound) {
     }
 
-    CompoundNBT writeNBT() {
+    protected CompoundNBT writeNBT() {
         return new CompoundNBT();
     }
 
