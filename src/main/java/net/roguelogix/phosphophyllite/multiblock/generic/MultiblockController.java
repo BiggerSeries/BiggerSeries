@@ -173,6 +173,10 @@ public class MultiblockController {
             updateAssemblyAtTick = Long.MAX_VALUE;
         }
 
+        if(blocks.isEmpty()){
+            checkForDetachments = false;
+        }
+
         if (checkForDetachments) {
             MultiblockTile firstBlock = blocks.iterator().next();
 
