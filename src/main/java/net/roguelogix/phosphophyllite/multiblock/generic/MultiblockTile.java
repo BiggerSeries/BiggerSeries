@@ -193,4 +193,7 @@ public abstract class MultiblockTile extends TileEntity {
 
     protected void appendModelData(ModelDataMap.Builder builder){
     }
+
+    protected void onAssemblyAttempted(){
+    }
 }

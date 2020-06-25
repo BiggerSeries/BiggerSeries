@@ -280,6 +280,9 @@ public class MultiblockController {
                 updateNBT();
             }
         }
+        for (MultiblockTile block : blocks) {
+            block.onAssemblyAttempted();
+        }
     }
 
     protected void onAssembled() {
