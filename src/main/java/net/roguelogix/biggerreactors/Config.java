@@ -25,8 +25,11 @@ public class Config {
     @PhosphophylliteConfig.Value(min = 3, max = 48)
     public static int ReactorMaxHeight = 48;
 
-    @PhosphophylliteConfig.Value(min = 1)
-    public static float fuelUsageMultiplier;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorPowerOutputMultiplier = 1;
+
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelUsageMultiplier = 1;
 
     @PhosphophylliteConfig.Value(min = 5, max = 32)
     public static int TurbineMaxLength = 32;

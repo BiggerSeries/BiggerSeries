@@ -73,7 +73,7 @@ public class RadiationHelper {
 		float radHardness = 0.2f + (float)(0.8 * radiationPenaltyBase);
 
 		// Calculate based on propagation-to-self
-		float rawFuelUsage = (fuelPerRadiationUnit * rawRadIntensity / getFertilityModifier()) * Config.fuelUsageMultiplier; // Not a typo. Fuel usage is thus penalized at high heats.
+		float rawFuelUsage = (fuelPerRadiationUnit * rawRadIntensity / getFertilityModifier()) * Config.ReactorFuelUsageMultiplier	; // Not a typo. Fuel usage is thus penalized at high heats.
 		data.fuelRfChange = rfPerRadiationUnit * effectiveRadIntensity;
 		data.environmentRfChange = 0f;
 
