@@ -224,7 +224,7 @@ public class Registry {
         String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
         HashSet<Block> blocksRegistered = Registry.blocksRegistered.get(modNamespace);
         for (Block block : blocksRegistered) {
-            if (!block.isSolid(null)) {
+            if (!block.getDefaultState().isSolid()) {
                 for (Method declaredMethod : block.getClass().getDeclaredMethods()) {
                     if (declaredMethod.isAnnotationPresent(RegisterBlock.RenderLayer.class)) {
                         try {

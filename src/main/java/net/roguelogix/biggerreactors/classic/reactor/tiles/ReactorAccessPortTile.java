@@ -11,6 +11,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort;
+import net.roguelogix.biggerreactors.items.tools.DebugTool;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nonnull;
@@ -57,7 +58,9 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
 
     @Override
     public void onActivated(PlayerEntity player) {
-        player.sendMessage(new StringTextComponent(direction.toString()));
+        if (controller != null && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
+            player.sendMessage(new StringTextComponent(direction.toString()), player.getUniqueID());
+        }
     }
 
     @Override

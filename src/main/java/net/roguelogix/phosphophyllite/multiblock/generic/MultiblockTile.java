@@ -1,5 +1,6 @@
 package net.roguelogix.phosphophyllite.multiblock.generic;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -122,9 +123,9 @@ public abstract class MultiblockTile extends TileEntity {
 
     CompoundNBT controllerData = null;
 
-    @Override
+//    @Override
     public final void read(CompoundNBT compound) {
-        super.read(compound);
+//        super.read(compound);
         if (compound.contains("controllerData")) {
             controllerData = compound.getCompound("controllerData");
         }
@@ -134,6 +135,13 @@ public abstract class MultiblockTile extends TileEntity {
         if(compound.contains("userdata")){
             readNBT(compound.getCompound("userdata"));
         }
+    }
+
+    // TODO: 6/25/20 mappings 
+    @Override
+    public void func_230337_a_(BlockState blockState, CompoundNBT compoundNBT) {
+        super.func_230337_a_(blockState, compoundNBT);
+        read(compoundNBT);
     }
 
     @Override
