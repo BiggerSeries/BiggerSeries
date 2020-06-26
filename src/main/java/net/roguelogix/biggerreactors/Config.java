@@ -24,13 +24,48 @@ public class Config {
     public static int ReactorMaxWidth = 32;
     @PhosphophylliteConfig.Value(min = 3, max = 48)
     public static int ReactorMaxHeight = 48;
-
-    @PhosphophylliteConfig.Value(min = 0)
-    public static float ReactorPowerOutputMultiplier = 1;
-
+    
     @PhosphophylliteConfig.Value(min = 0)
     public static float ReactorFuelUsageMultiplier = 1;
-
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorPowerOutputMultiplier = 0.5f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorAmbientTemperature = 20.0f;
+    @PhosphophylliteConfig.Value(min = 1)
+    public static long ReactorPerFuelRodCapacity = 4000;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelFertilityMinimumDecay = 0.1f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelFertilityDecayDenominator = 20;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelFertilityDecayDenominatorInactiveMultiplier = 200;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelReactivity = 1.05f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFissionEventsPerFuelUnit = 0.01f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFEPerRadiationUnit = 10f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelPerRadiationUnit = 0.0007f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static long ReactorIrradiationDistance = 4;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelHardnessDivisor = 1f;
+    @PhosphophylliteConfig.Value(min = 0, max = 1)
+    public static float ReactorFuelAbsorptionCoefficient = 0.5f;
+    @PhosphophylliteConfig.Value(min = 1)
+    public static float ReactorFuelModerationFactor = 1.5f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFEPerCentigradePerUnitVolume = 10.0f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorFuelToCasingTransferCoefficientMultiplier = 1.0f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorCasingToCoolantSystemCoefficientMultiplier = 0.6f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorHeatLossCoefficientMultiplier = 0.001f;
+    @PhosphophylliteConfig.Value(min = 0)
+    public static float ReactorPassiveCoolingTransferEfficiency = 0.2f;
+    
     @PhosphophylliteConfig.Value(min = 5, max = 32)
     public static int TurbineMaxLength = 32;
     @PhosphophylliteConfig.Value(min = 5, max = 32)
