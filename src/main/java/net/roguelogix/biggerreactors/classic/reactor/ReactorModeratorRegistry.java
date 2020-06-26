@@ -15,13 +15,13 @@ public class ReactorModeratorRegistry {
         public final float absorption;
         public final float heatEfficiency;
         public final float moderation;
-        public final float conductivity;
+        public final float heatConductivity;
 
-        public ModeratorProperties(float absorption, float heatEfficiency, float moderation, float conductivity) {
+        public ModeratorProperties(float absorption, float heatEfficiency, float moderation, float heatConductivity) {
             this.absorption = absorption;
             this.heatEfficiency = heatEfficiency;
             this.moderation = moderation;
-            this.conductivity = conductivity;
+            this.heatConductivity = heatConductivity;
         }
 
     }
