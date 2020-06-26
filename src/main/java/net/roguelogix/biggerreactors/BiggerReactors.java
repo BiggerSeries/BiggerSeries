@@ -3,6 +3,7 @@ package net.roguelogix.biggerreactors;
 import java.util.ArrayList;
 import java.util.Comparator;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -18,6 +19,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorContainer;
+import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorScreen;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.registry.Registry;
@@ -65,7 +68,10 @@ public class BiggerReactors {
     }
 
     public void onClientSetup(final FMLClientSetupEvent e) {
+
         Registry.onClientSetup(e);
+        ScreenManager.registerFactory(CyaniteReprocessorContainer.INSTANCE,
+            CyaniteReprocessorScreen::new);
     }
 
     public void onLoadComplete(final FMLLoadCompleteEvent e) { Registry.registerWorldGen(); }

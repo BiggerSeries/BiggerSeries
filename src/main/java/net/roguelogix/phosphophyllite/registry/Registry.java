@@ -16,10 +16,14 @@ import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.feature.Feature;
@@ -29,6 +33,7 @@ import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -163,6 +168,41 @@ public class Registry {
                     }
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static synchronized void registerContainers(RegistryEvent.Register<ContainerType<?>> containerTypeRegistryEvent) {
+        String callerClass = new Exception().getStackTrace()[1].getClassName();
+        String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
+        String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
+        Reflections ref = new Reflections(callerPackage);
+        Set<Class<?>> containers = ref.getTypesAnnotatedWith(RegisterContainer.class);
+
+        for (Class<?> container : containers) {
+            try {
+                Constructor<?> constructor = container.getConstructor(int.class, BlockPos.class, PlayerEntity.class);
+                constructor.setAccessible(true);
+                Object newObject = constructor.newInstance(/* Need Paremeters Here, Cannot be Null */);
+                if (!(newObject instanceof Container)) {
+                    // interesting...
+                    //todo print error
+                    continue;
+                }
+
+                Container containerInstance = (Container) newObject;
+                RegisterContainer containerAnnotation = container.getAnnotation(RegisterContainer.class);
+                ContainerType<?> containerType = IForgeContainerType.create(((windowId, inv, data) -> containerInstance));
+                containerType.setRegistryName(modNamespace + ":" + containerAnnotation.name());
+                containerTypeRegistryEvent.getRegistry().register(containerType);
+
+                for (Field declaredField : container.getDeclaredFields()) {
+                    if (declaredField.isAnnotationPresent(RegisterContainer.Instance.class)) {
+                        declaredField.set(null, containerType);
+                    }
+                }
+            } catch (NullPointerException | InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
