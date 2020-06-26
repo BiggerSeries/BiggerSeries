@@ -17,8 +17,10 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.AbstractFurnaceContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.FurnaceContainer;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -184,16 +186,31 @@ public class Registry {
             try {
                 Constructor<?> constructor = container.getConstructor(int.class, BlockPos.class, PlayerEntity.class);
                 constructor.setAccessible(true);
-                Object newObject = constructor.newInstance(/* Need Paremeters Here, Cannot be Null */);
-                if (!(newObject instanceof Container)) {
-                    // interesting...
-                    //todo print error
-                    continue;
-                }
 
-                Container containerInstance = (Container) newObject;
+                //Object newObject = IForgeContainerType.create(((windowId, inv, data) -> {
+                //    return constructor.newInstance(windowId, data.readBlockPos(), inv.player.world);
+                //}));
+
+                // TODO: This shit here.
+                ContainerType<?> newObject = IForgeContainerType.create(((windowId, inv, data) -> {
+                    try {
+                        return constructor.newInstance(windowId, data.readBlockPos(), inv.player.world);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        return (Container) new NullPointerException();
+                    }
+                }));
+
+
+                //Object newObject = constructor.newInstance(/* Need Paremeters Here, Cannot be Null */);
+                //if (!(newObject instanceof Container)) {
+                //    // interesting...
+                //    //todo print error
+                //    continue;
+                //}
+
+                //Container containerInstance = (Container) newObject;
                 RegisterContainer containerAnnotation = container.getAnnotation(RegisterContainer.class);
-                ContainerType<?> containerType = IForgeContainerType.create(((windowId, inv, data) -> containerInstance));
+                //ContainerType<?> containerType = IForgeContainerType.create(((windowId, inv, data) -> containerInstance));
                 containerType.setRegistryName(modNamespace + ":" + containerAnnotation.name());
                 containerTypeRegistryEvent.getRegistry().register(containerType);
 
