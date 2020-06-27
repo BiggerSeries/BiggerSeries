@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -63,6 +64,12 @@ public class BiggerReactors {
         @SubscribeEvent
         public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> tileEntityTypeRegisteryEvent) {
             Registry.registerTileEntities(tileEntityTypeRegisteryEvent);
+        }
+
+        @SuppressWarnings("unused")
+        @SubscribeEvent
+        public static void onContainerRegistry(final RegistryEvent.Register<ContainerType<?>> containerTypeRegistryEvent) {
+            Registry.registerContainers(containerTypeRegistryEvent);
         }
 
     }

@@ -31,6 +31,9 @@
   "block.biggerreactors.reactor_control_rod": "Reactor Control Rod",
   "block.biggerreactors.reactor_fuel_rod": "Reactor Fuel Rod",
   "block.biggerreactors.reactor_power_tap": "Reactor Power Tap",
-  "block.biggerreactors.reactor_access_port": "Reactor Access Port"
+  "block.biggerreactors.reactor_access_port": "Reactor Access Port",
+
+  "screen.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
+  "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor"
 
 }

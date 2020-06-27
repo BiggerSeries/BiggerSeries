@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -40,6 +41,8 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessor;
+import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorContainer;
 import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBakedModel;
 import org.reflections.Reflections;
@@ -187,30 +190,15 @@ public class Registry {
                 Constructor<?> constructor = container.getConstructor(int.class, BlockPos.class, PlayerEntity.class);
                 constructor.setAccessible(true);
 
-                //Object newObject = IForgeContainerType.create(((windowId, inv, data) -> {
-                //    return constructor.newInstance(windowId, data.readBlockPos(), inv.player.world);
-                //}));
-
-                // TODO: This shit here.
-                ContainerType<?> newObject = IForgeContainerType.create(((windowId, inv, data) -> {
+                RegisterContainer containerAnnotation = container.getAnnotation(RegisterContainer.class);
+                ContainerType<?> containerType = IForgeContainerType.create(((windowId, playerInventory, data) -> {
                     try {
-                        return constructor.newInstance(windowId, data.readBlockPos(), inv.player.world);
+                        return (Container) constructor.newInstance(windowId, data.readBlockPos(), playerInventory.player);
                     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        return (Container) new NullPointerException();
+                        throw new NullPointerException();
                     }
                 }));
 
-
-                //Object newObject = constructor.newInstance(/* Need Paremeters Here, Cannot be Null */);
-                //if (!(newObject instanceof Container)) {
-                //    // interesting...
-                //    //todo print error
-                //    continue;
-                //}
-
-                //Container containerInstance = (Container) newObject;
-                RegisterContainer containerAnnotation = container.getAnnotation(RegisterContainer.class);
-                //ContainerType<?> containerType = IForgeContainerType.create(((windowId, inv, data) -> containerInstance));
                 containerType.setRegistryName(modNamespace + ":" + containerAnnotation.name());
                 containerTypeRegistryEvent.getRegistry().register(containerType);
 
@@ -219,7 +207,7 @@ public class Registry {
                         declaredField.set(null, containerType);
                     }
                 }
-            } catch (NullPointerException | InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            } catch (NullPointerException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -232,8 +220,6 @@ public class Registry {
         String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
         Reflections ref = new Reflections(callerPackage);
         Set<Class<?>> tileEntities = ref.getTypesAnnotatedWith(RegisterTileEntity.class);
-
-//        tileEntityTypeRegistryEvent.getRegistry().register();
 
         for (Class<?> tileEntity : tileEntities) {
 

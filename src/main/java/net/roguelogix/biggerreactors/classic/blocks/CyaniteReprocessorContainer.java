@@ -3,12 +3,16 @@ package net.roguelogix.biggerreactors.classic.blocks;
 import javax.annotation.Nonnull;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.IWorldPosCallable;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -17,29 +21,49 @@ import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
 @RegisterContainer(name = "cyanite_reprocessor")
 public class CyaniteReprocessorContainer extends Container {
-
-  private World world;
-  private PlayerInventory playerInventory;
-  private TileEntity tileEntity;
-  private int size;
+  // Slot 0 = Input, Slot 1 = Output
+  private IInventory machineInventory;
+  // Data 0 = workTime, Data 2 = workTimeTotal, Data 3 = energy, Data 4 = water
+  private IIntArray machineData;
+  private CyaniteReprocessorTile tileEntity;
+  private static final int GUI_OFFSET = 93;
 
   @RegisterContainer.Instance
   public static ContainerType<CyaniteReprocessorContainer> INSTANCE;
 
   public CyaniteReprocessorContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
+    this(windowId, blockPos, player, new Inventory(2), new IntArray(4));
+  }
+  public CyaniteReprocessorContainer(int windowId, BlockPos blockPos, PlayerEntity player, IInventory machineInventory, IIntArray machineData) {
     super(INSTANCE, windowId);
-    this.world = player.world;
-    this.playerInventory = player.inventory;
-    this.tileEntity = this.world.getTileEntity(blockPos);
-    this.size = 2;
+    assertInventorySize(machineInventory, 2);
+    this.machineInventory = machineInventory;
+    assertIntArraySize(machineData, 4);
+    this.machineData = machineData;
+    this.tileEntity = (CyaniteReprocessorTile) player.world.getTileEntity(blockPos);
 
-    if(tileEntity != null) {
-      tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handle -> {
-        this.addSlot(new SlotItemHandler(handle, 0, 55, 35));  // INPUT
-        this.addSlot(new SlotItemHandler(handle, 1, 115, 35)); // OUTPUT
+    if(this.tileEntity != null) {
+      tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+        // Add input slot.
+        this.addSlot(new SlotItemHandler(handler, 0, 44, 41));
+        // Add output slot.
+        this.addSlot(new SlotItemHandler(handler, 1, 116, 41));
       });
     }
-    this.addPlayerInventorySlots();
+
+    // Add player inventory;
+    for(int rowIndex = 0; rowIndex < 3; rowIndex++) {
+      for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
+        this.addSlot(new Slot(player.inventory, (columnIndex + rowIndex * 9 + 9),
+            (8 + columnIndex * 18), (GUI_OFFSET + rowIndex * 18)));
+      }
+    }
+    // Add player hotbar.
+    for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
+      this.addSlot(new Slot(player.inventory, columnIndex, (8 + columnIndex * 18), (GUI_OFFSET + 58)));
+    }
+
+    this.trackIntArray(machineData);
   }
 
   @Override
@@ -53,17 +77,18 @@ public class CyaniteReprocessorContainer extends Container {
   public ItemStack transferStackInSlot(PlayerEntity player, int index) {
     ItemStack itemStackA = ItemStack.EMPTY;
     Slot slot = this.inventorySlots.get(index);
+    int inventorySize = this.machineInventory.getSizeInventory();
 
     if (slot != null && slot.getHasStack()) {
       ItemStack itemStackB = slot.getStack();
       itemStackA = itemStackB.copy();
 
-      if (index <  size) {
-        if (!this.mergeItemStack(itemStackB, size, this.inventorySlots.size(), true)) {
+      if (index < inventorySize) {
+        if (!this.mergeItemStack(itemStackB, inventorySize, this.inventorySlots.size(), true)) {
           return ItemStack.EMPTY;
         }
       }
-      else if (!this.mergeItemStack(itemStackB, 0, size, false)) {
+      else if (!this.mergeItemStack(itemStackB, 0, inventorySize, false)) {
         return ItemStack.EMPTY;
       }
 
@@ -77,49 +102,4 @@ public class CyaniteReprocessorContainer extends Container {
 
     return itemStackA;
   }
-
-  public void addPlayerInventorySlots() {
-    for(int rowIndex = 0; rowIndex < 3; ++rowIndex) {
-      for(int columnIndex = 0; columnIndex < 9; ++columnIndex) {
-        this.addSlot(new Slot(this.playerInventory, columnIndex + rowIndex * 9 + 9, 8 + columnIndex * 18, 84 + rowIndex * 18));
-      }
-    }
-
-    for(int hotbarIndex = 0; hotbarIndex < 9; ++hotbarIndex) {
-      this.addSlot(new Slot(this.playerInventory, hotbarIndex, 8 + hotbarIndex * 18, 142));
-    }
-  }
-
-  /*
-  // [0] Input, [1] Output
-  private final IInventory machineInventory;
-  // [0] runTime, [1] runTimeTotal, [2] powerStored, [3] waterStored
-  private final IIntArray machineData;
-  private final World world;
-
-  public CyaniteReprocessorContainer(ContainerType<?> containerType, int windowId, PlayerInventory playerInventory) {
-    this(containerType, windowId, playerInventory, new Inventory(2), new IntArray(4));
-  }
-
-  public CyaniteReprocessorContainer(ContainerType<?> containerType, int windowId, PlayerInventory playerInventory, IInventory machineInventory, IIntArray machineData) {
-    super(containerType, windowId);
-    assertInventorySize(machineInventory, 2);
-    assertIntArraySize(machineData, 4);
-    this.machineInventory = machineInventory;
-    this.machineData = machineData;
-    this.world = playerInventory.player.world;
-
-
-  }
-
-  @Override
-  public boolean canInteractWith(PlayerEntity playerIn) {
-    return this.;
-  }
-
-  @Override
-  public void onContainerClosed(PlayerEntity player) {
-    super.onContainerClosed(player);
-  }
-  */
 }
