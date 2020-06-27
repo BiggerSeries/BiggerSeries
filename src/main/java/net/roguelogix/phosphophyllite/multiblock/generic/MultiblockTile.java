@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
-import net.roguelogix.biggerreactors.BiggerReactors;
+import net.roguelogix.phosphophyllite.Phosphophyllite;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ public abstract class MultiblockTile extends TileEntity {
         controller = null;
         attemptAttach = true;
         if (!world.isRemote) {
-            BiggerReactors.tilesToAttach.add(this);
+            Phosphophyllite.tilesToAttach.add(this);
         }
     }
 
