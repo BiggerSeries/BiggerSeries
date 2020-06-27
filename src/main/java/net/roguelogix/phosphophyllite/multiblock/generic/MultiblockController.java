@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.roguelogix.biggerreactors.BiggerReactors;
+import net.roguelogix.phosphophyllite.Phosphophyllite;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +26,7 @@ public class MultiblockController {
 
     public MultiblockController(World world) {
         this.world = world;
-        BiggerReactors.controllersToTick.add(this);
+        Phosphophyllite.controllersToTick.add(this);
     }
 
     private int MinX, MinY, MinZ;
@@ -117,7 +117,7 @@ public class MultiblockController {
         if (toAttach.controllerData != null) {
             onBlockWithNBTAttached(toAttach.controllerData);
         }
-        updateAssemblyAtTick = BiggerReactors.tickNumber() + 5;
+        updateAssemblyAtTick = Phosphophyllite.tickNumber() + 5;
     }
 
     protected void onPartAdded(MultiblockTile toAttach) {
@@ -138,11 +138,11 @@ public class MultiblockController {
         }
 
         if (blocks.isEmpty()) {
-            BiggerReactors.controllersToTick.remove(this);
+            Phosphophyllite.controllersToTick.remove(this);
         }
 
         checkForDetachments = true;
-        updateAssemblyAtTick = BiggerReactors.tickNumber() + 5;
+        updateAssemblyAtTick = Phosphophyllite.tickNumber() + 5;
     }
 
     protected void onPartRemoved(MultiblockTile tile) {
@@ -162,10 +162,10 @@ public class MultiblockController {
     long lastTick = -1;
 
     public void update() {
-        if (lastTick >= BiggerReactors.tickNumber()) {
+        if (lastTick >= Phosphophyllite.tickNumber()) {
             return;
         }
-        lastTick = BiggerReactors.tickNumber();
+        lastTick = Phosphophyllite.tickNumber();
 
         if (updateAssemblyAtTick < lastTick) {
             updateMinMaxCoordinates();
@@ -174,6 +174,8 @@ public class MultiblockController {
         }
 
         if(blocks.isEmpty()){
+            // why are we being ticked?
+            Phosphophyllite.controllersToTick.remove(this);
             checkForDetachments = false;
         }
 
@@ -225,7 +227,7 @@ public class MultiblockController {
             checkForDetachments = false;
         }
         for (MultiblockController otherController : controllersToMerge) {
-            BiggerReactors.controllersToTick.remove(otherController);
+            Phosphophyllite.controllersToTick.remove(otherController);
             otherController.controllersToMerge.clear();
             this.onMerge(otherController);
             this.blocks.addAll(otherController.blocks);
