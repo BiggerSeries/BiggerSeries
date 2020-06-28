@@ -1,12 +1,15 @@
 package net.roguelogix.biggerreactors.classic.reactor.simulation;
 
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import org.joml.Vector2i;
 
+import javax.naming.ldap.Control;
 import java.util.ArrayList;
 
-public class ClassicReactorSimulation {
+public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     
     private int x, y, z;
     
@@ -17,19 +20,19 @@ public class ClassicReactorSimulation {
     private ReactorModeratorRegistry.ModeratorProperties[][][] moderatorProperties;
     
     private class ControlRod {
+        
         final int x;
         final int z;
         float insertion = 0;
-        
         private ControlRod(int x, int z) {
             this.x = x;
             this.z = z;
         }
+        
     }
-    
     private final ArrayList<ControlRod> controlRods = new ArrayList<>();
-    private ControlRod[][] controlRodsXZ;
     
+    private ControlRod[][] controlRodsXZ;
     float fuelRodVolume() {
         return controlRods.size() * y;
     }
@@ -52,47 +55,57 @@ public class ClassicReactorSimulation {
         controlRods.clear();
     }
     
-    void setModeratorProperties(int x, int y, int z, ReactorModeratorRegistry.ModeratorProperties properties) {
+    public void setModeratorProperties(int x, int y, int z, ReactorModeratorRegistry.ModeratorProperties properties) {
         moderatorProperties[x][y][z] = properties;
     }
     
-    int setControlRod(int x, int z) {
-        controlRods.add(new ControlRod(x, z));
-        return controlRods.size() - 1;
+    public void setControlRod(int x, int z) {
+        ControlRod rod = new ControlRod(x, z);
+        controlRods.add(rod);
+        controlRodsXZ[x][z] = rod;
     }
     
-    int controlRodCount() {
+    public int controlRodCount() {
         return controlRods.size();
     }
     
-    void setControlRodInsertion(int x, int z, float insertion) {
+    public void setControlRodInsertion(int x, int z, float insertion) {
         controlRodsXZ[x][z].insertion = insertion;
     }
     
     public final FuelTank fuelTank = new FuelTank();
     
     private float fuelToReactorHeatTransferCoefficient = 0;
+    
     private float reactorToCoolantSystemHeatTransferCoefficient = 0;
     private float reactorHeatLossCoefficient = 0;
-    
     public void updateInternalValues() {
-        fuelTank.setCapacity(Config.ReactorPerFuelRodCapacity * controlRods.size() * y);
+        fuelTank.setCapacity(Config.Reactor.PerFuelRodCapacity * controlRods.size() * y);
         
         fuelToReactorHeatTransferCoefficient = 0;
         for (ControlRod controlRod : controlRods) {
             for (int i = 0; i < y; i++) {
                 for (Vector2i direction : directions) {
-                    fuelToReactorHeatTransferCoefficient += moderatorProperties[controlRod.x + direction.x][i][controlRod.z + direction.y].heatConductivity;
+                    if (controlRod.x + direction.x < 0 || controlRod.x + direction.x >= x || controlRod.z + direction.y < 0 || controlRod.z + direction.y >= z) {
+                        fuelToReactorHeatTransferCoefficient += 0.6f;
+                        continue;
+                    }
+                    ReactorModeratorRegistry.ModeratorProperties properties = moderatorProperties[controlRod.x + direction.x][i][controlRod.z + direction.y];
+                    if (properties != null) {
+                        fuelToReactorHeatTransferCoefficient += properties.heatConductivity;
+                    }else{
+                        fuelToReactorHeatTransferCoefficient += 1f;
+                    }
                 }
             }
         }
-        fuelToReactorHeatTransferCoefficient *= Config.ReactorFuelToCasingTransferCoefficientMultiplier;
+        fuelToReactorHeatTransferCoefficient *= Config.Reactor.FuelToCasingTransferCoefficientMultiplier;
         
-        reactorToCoolantSystemHeatTransferCoefficient = 2 * (x * y + x * z + z * y) * Config.ReactorCasingToCoolantSystemCoefficientMultiplier;
+        reactorToCoolantSystemHeatTransferCoefficient = 2 * (x * y + x * z + z * y) * Config.Reactor.CasingToCoolantSystemCoefficientMultiplier;
         
-        reactorHeatLossCoefficient = 2 * ((x + 2) * (y + 2) + (x + 2) * (z + 2) + (z + 2) * (y + 2)) * Config.ReactorHeatLossCoefficientMultiplier;
-        
-        
+        reactorHeatLossCoefficient = 2 * ((x + 2) * (y + 2) + (x + 2) * (z + 2) + (z + 2) * (y + 2)) * Config.Reactor.HeatLossCoefficientMultiplier;
+    
+    
     }
     
     private boolean active = false;
@@ -101,11 +114,12 @@ public class ClassicReactorSimulation {
         this.active = active;
     }
     
-    private float fuelFertility = 0f;
-    private float fuelHeat = 0f;
-    private float reactorHeat = 0f;
+    private float fuelFertility = 1f;
     
+    private float fuelHeat = Config.Reactor.AmbientTemperature;
+    private float reactorHeat = Config.Reactor.AmbientTemperature;
     public float fuelConsumedLastTick = 0f;
+    
     public float FEProducedLastTick = 0f;
     
     public void tick() {
@@ -115,14 +129,14 @@ public class ClassicReactorSimulation {
         
         {
             // decay fertility, RadiationHelper.tick in old BR, this is copied, mostly
-            float denominator = Config.ReactorFuelFertilityDecayDenominator;
+            float denominator = Config.Reactor.FuelFertilityDecayDenominator;
             if (!active) {
                 // Much slower decay when off
-                denominator *= Config.ReactorFuelFertilityDecayDenominatorInactiveMultiplier;
+                denominator *= Config.Reactor.FuelFertilityDecayDenominatorInactiveMultiplier;
             }
             
             // Fertility decay, at least 0.1 rad/t, otherwise halve it every 10 ticks
-            fuelFertility = Math.max(0f, fuelFertility - Math.max(Config.ReactorFuelFertilityMinimumDecay, fuelFertility / denominator));
+            fuelFertility = Math.max(0f, fuelFertility - Math.max(Config.Reactor.FuelFertilityMinimumDecay, fuelFertility / denominator));
         }
         
         // Heat Transfer: Fuel Pool <> Reactor Environment
@@ -147,8 +161,8 @@ public class ClassicReactorSimulation {
             float reactorRf = getRFFromVolumeAndTemp(reactorVolume(), reactorHeat);
             
             if (isPassivelyCooled()) {
-                rfTransferred *= Config.ReactorPassiveCoolingTransferEfficiency;
-                FEProducedLastTick = rfTransferred * Config.ReactorPowerOutputMultiplier;
+                rfTransferred *= Config.Reactor.PassiveCoolingTransferEfficiency;
+                FEProducedLastTick = rfTransferred * Config.Reactor.PowerOutputMultiplier;
             } else {
 //                rfTransferred -= coolantContainer.onAbsorbHeat(rfTransferred);
 //                energyGeneratedLastTick = coolantContainer.getFluidVaporizedLastTick(); // Piggyback so we don't have useless stuff in the update packet
@@ -159,7 +173,7 @@ public class ClassicReactorSimulation {
         }
         
         // Do passive heat loss - this is always versus external environment
-        tempDiff = reactorHeat - Config.ReactorAmbientTemperature;
+        tempDiff = reactorHeat - Config.Reactor.AmbientTemperature;
         if (tempDiff > 0.000001f) {
             float rfLost = Math.max(1f, tempDiff * reactorHeatLossCoefficient); // Lose at least 1RF/t
             float reactorNewRf = Math.max(0f, getRFFromVolumeAndTemp(reactorVolume(), reactorHeat) - rfLost);
@@ -181,12 +195,12 @@ public class ClassicReactorSimulation {
     
     private float getCoolantTemperature() {
         // TODO: 6/26/20 active reactor
-        return Config.ReactorAmbientTemperature;
+        return Config.Reactor.AmbientTemperature;
     }
     
     private int rodToIrradiate = 0;
-    private int yLevelToIrradiate = 0;
     
+    private int yLevelToIrradiate = 0;
     private final Vector2i[] directions = new Vector2i[]{
             new Vector2i(1, 0),
             new Vector2i(-1, 0),
@@ -196,14 +210,15 @@ public class ClassicReactorSimulation {
     
     private void radiate() {
         // ok, so, this is doing basically the same thing as what old BR did, marked with where the functionality is in old BR
-        
+    
+        rodToIrradiate++;
         // MultiblockReactor.updateServer
         // this is a different method, but im just picking a fuel rod to radiate from
         if (rodToIrradiate == controlRods.size()) {
             rodToIrradiate = 0;
             yLevelToIrradiate++;
         }
-        
+    
         if (yLevelToIrradiate == y) {
             yLevelToIrradiate = 0;
         }
@@ -227,13 +242,13 @@ public class ClassicReactorSimulation {
         long baseFuelAmount = fuelTank.getFuelAmount() + (fuelTank.getWasteAmount() / 100);
         
         // Intensity = how strong the radiation is, hardness = how energetic the radiation is (penetration)
-        float rawRadIntensity = (float) baseFuelAmount * Config.ReactorFissionEventsPerFuelUnit;
+        float rawRadIntensity = (float) baseFuelAmount * Config.Reactor.FissionEventsPerFuelUnit;
         
         // Scale up the "effective" intensity of radiation, to provide an incentive for bigger reactors in general.
-        float scaledRadIntensity = (float) Math.pow((rawRadIntensity), Config.ReactorFuelReactivity);
+        float scaledRadIntensity = (float) Math.pow((rawRadIntensity), Config.Reactor.FuelReactivity);
         
         // Scale up a second time based on scaled amount in each fuel rod. Provides an incentive for making reactors that aren't just pancakes.
-        scaledRadIntensity = (float) Math.pow((scaledRadIntensity / controlRods.size()), Config.ReactorFuelReactivity) * controlRods.size();
+        scaledRadIntensity = (float) Math.pow((scaledRadIntensity / controlRods.size()), Config.Reactor.FuelReactivity) * controlRods.size();
         
         // Apply control rod moderation of radiation to the quantity of produced radiation. 100% insertion = 100% reduction.
         float controlRodModifier = (100 - controlRods.get(rodToIrradiate).insertion) / 100f;
@@ -248,8 +263,8 @@ public class ClassicReactorSimulation {
         float radHardness = 0.2f + (float) (0.8 * radiationPenaltyBase);
         
         // Calculate based on propagation-to-self
-        float rawFuelUsage = (Config.ReactorFuelPerRadiationUnit * rawRadIntensity / (fuelFertility <= 1 ? 1f : (float) Math.log10(fuelFertility) + 1f)) * Config.ReactorFuelUsageMultiplier; // Not a typo. Fuel usage is thus penalized at high heats.
-        float fuelRfChange = Config.ReactorFEPerRadiationUnit * effectiveRadIntensity;
+        float rawFuelUsage = (Config.Reactor.FuelPerRadiationUnit * rawRadIntensity / getFertility()) * Config.Reactor.FuelUsageMultiplier; // Not a typo. Fuel usage is thus penalized at high heats.
+        float fuelRfChange = Config.Reactor.FEPerRadiationUnit * effectiveRadIntensity;
         float environmentRfChange = 0f;
         
         effectiveRadIntensity *= 0.25f; // We're going to do this four times, no need to repeat
@@ -264,10 +279,10 @@ public class ClassicReactorSimulation {
             float hardness = radHardness;
             float intensity = effectiveRadIntensity;
             
-            for (int i = 0; i < Config.ReactorIrradiationDistance && intensity > 0.0001f; i++) {
+            for (int i = 0; i < Config.Reactor.IrradiationDistance && intensity > 0.0001f; i++) {
                 position.add(direction);
                 // out of bounds
-                if (position.x < 0 || position.x > x || position.y < 0 || position.y > z) {
+                if (position.x < 0 || position.x >= x || position.y < 0 || position.y >= z) {
                     break;
                 }
                 
@@ -278,7 +293,7 @@ public class ClassicReactorSimulation {
                     float radiationAbsorbed = intensity * properties.absorption * (1f - hardness);
                     intensity = Math.max(0f, intensity - radiationAbsorbed);
                     hardness /= properties.moderation;
-                    environmentRfChange += properties.heatEfficiency * radiationAbsorbed * Config.ReactorFEPerRadiationUnit;
+                    environmentRfChange += properties.heatEfficiency * radiationAbsorbed * Config.Reactor.FEPerRadiationUnit;
                     
                 } else {
                     // oh, oh ok, its a fuel rod
@@ -289,10 +304,10 @@ public class ClassicReactorSimulation {
                     // Fuel absorptiveness is determined by control rod + a heat modifier.
                     // Starts at 1 and decays towards 0.05, reaching 0.6 at 1000 and just under 0.2 at 2000. Inflection point at about 500-600.
                     // Harder radiation makes absorption more difficult.
-                    float baseAbsorption = (float) (1.0 - (0.95 * Math.exp(-10 * Math.exp(-0.0022 * fuelHeat)))) * (1f - (hardness / Config.ReactorFuelHardnessDivisor));
+                    float baseAbsorption = (float) (1.0 - (0.95 * Math.exp(-10 * Math.exp(-0.0022 * fuelHeat)))) * (1f - (hardness / Config.Reactor.FuelHardnessDivisor));
                     
                     // Some fuels are better at absorbing radiation than others
-                    float scaledAbsorption = Math.min(1f, baseAbsorption * Config.ReactorFuelAbsorptionCoefficient);
+                    float scaledAbsorption = Math.min(1f, baseAbsorption * Config.Reactor.FuelAbsorptionCoefficient);
                     
                     // Control rods increase total neutron absorption, but decrease the total neutrons which fertilize the fuel
                     // Absorb up to 50% better with control rods inserted.
@@ -302,21 +317,21 @@ public class ClassicReactorSimulation {
                     float radiationAbsorbed = (scaledAbsorption + controlRodBonus) * intensity;
                     float fertilityAbsorbed = (scaledAbsorption - controlRodPenalty) * intensity;
                     
-                    float fuelModerationFactor = Config.ReactorFuelModerationFactor;
+                    float fuelModerationFactor = Config.Reactor.FuelModerationFactor;
                     fuelModerationFactor += fuelModerationFactor * controlRodInsertion + controlRodInsertion; // Full insertion doubles the moderation factor of the fuel as well as adding its own level
                     
                     intensity = Math.max(0f, intensity - radiationAbsorbed);
                     hardness /= fuelModerationFactor;
                     
                     // Being irradiated both heats up the fuel and also enhances its fertility
-                    fuelRfChange += radiationAbsorbed * Config.ReactorFuelPerRadiationUnit;
+                    fuelRfChange += radiationAbsorbed * Config.Reactor.FEPerRadiationUnit;
                     fuelAbsorbedRadiation += fertilityAbsorbed;
                 }
             }
-            
-            fuelFertility += fuelAbsorbedRadiation;
-            fuelTank.burn(rawFuelUsage);
         }
+        
+        fuelFertility += fuelAbsorbedRadiation;
+        fuelTank.burn(rawFuelUsage);
         
         // back to MultiblockReactor.updateServer, after it calls RadiationHelper.radiate
         addFuelHeat(getTempFromVolumeAndRF(fuelRodVolume(), fuelRfChange));
@@ -325,6 +340,7 @@ public class ClassicReactorSimulation {
     }
     
     // these two are copied from MultiblockReactor
+    
     protected void addReactorHeat(float newCasingHeat) {
         if (Float.isNaN(newCasingHeat)) {
             return;
@@ -336,7 +352,6 @@ public class ClassicReactorSimulation {
             reactorHeat = 0.0f;
         }
     }
-    
     protected void addFuelHeat(float additionalHeat) {
         if (Float.isNaN(additionalHeat)) {
             return;
@@ -350,10 +365,60 @@ public class ClassicReactorSimulation {
     }
     
     public static float getRFFromVolumeAndTemp(float volume, float temperature) {
-        return temperature * volume * Config.ReactorFEPerCentigradePerUnitVolume;
+        return temperature * volume * Config.Reactor.FEPerCentigradePerUnitVolume;
     }
     
     public static float getTempFromVolumeAndRF(float volume, float rf) {
-        return rf / (volume * Config.ReactorFEPerCentigradePerUnitVolume);
+        return rf / (volume * Config.Reactor.FEPerCentigradePerUnitVolume);
+    }
+    
+    public float getFertility() {
+        if (fuelFertility <= 1f) {
+            return 1f;
+        } else {
+            return (float) (Math.log10(fuelFertility) + 1);
+        }
+    }
+    
+    public float getFuelHeat() {
+        return fuelHeat;
+    }
+    
+    public float getReactorHeat() {
+        return reactorHeat;
+    }
+    
+    public float getFuelConsumedLastTick() {
+        return fuelConsumedLastTick;
+    }
+    
+    public float getFEProducedLastTick() {
+        return FEProducedLastTick;
+    }
+    
+    @Override
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.put("fuelTank", fuelTank.serializeNBT());
+        nbt.putFloat("fuelFertility", fuelFertility);
+        nbt.putFloat("fuelHeat", fuelHeat);
+        nbt.putFloat("reactorHeat", reactorHeat);
+        return nbt;
+    }
+    
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        if (nbt.contains("fuelTank")) {
+            fuelTank.deserializeNBT(nbt.getCompound("fuelTank"));
+        }
+        if (nbt.contains("fuelFertility")) {
+            fuelFertility = nbt.getFloat("fuelFertility");
+        }
+        if (nbt.contains("fuelHeat")) {
+            fuelHeat = nbt.getFloat("fuelHeat");
+        }
+        if (nbt.contains("reactorHeat")) {
+            reactorHeat = nbt.getFloat("reactorHeat");
+        }
     }
 }

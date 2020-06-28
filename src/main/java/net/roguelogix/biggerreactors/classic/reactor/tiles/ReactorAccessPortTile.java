@@ -11,6 +11,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort;
+import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
+import net.roguelogix.biggerreactors.items.ingots.YelloriumIngot;
 import net.roguelogix.biggerreactors.items.tools.DebugTool;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
@@ -47,19 +49,29 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if(compound.contains("direction")){
             direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
         }
+        if(compound.contains("inSlot")){
+            inSlot.deserializeNBT(compound.getCompound("inSlot"));
+        }
+        if(compound.contains("outSlot")){
+            outSlot.deserializeNBT(compound.getCompound("outSlot"));
+        }
     }
 
     @Override
     protected CompoundNBT writeNBT() {
         CompoundNBT NBT = new CompoundNBT();
         NBT.putString("direction", String.valueOf(direction));
+        NBT.put("inSlot", inSlot.serializeNBT());
+        NBT.put("outSlot", outSlot.serializeNBT());
         return NBT;
     }
 
     @Override
     public void onActivated(PlayerEntity player) {
         if (controller != null && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
-            player.sendMessage(new StringTextComponent(direction.toString()), player.getUniqueID());
+            player.sendMessage(new StringTextComponent(direction.toString() + "\n" +
+                    "In: " + inSlot.toString() + "\n" +
+                    "Out: " + outSlot.toString()), player.getUniqueID());
         }
     }
 
@@ -79,8 +91,8 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         return super.getCapability(cap, side);
     }
 
-    ItemStack inSlot;
-    ItemStack outSlot;
+    ItemStack inSlot = new ItemStack(()-> YelloriumIngot.INSTANCE, 0);
+    ItemStack outSlot = new ItemStack(()-> CyaniteIngot.INSTANCE, 0);
 
     @Override
     public int getSlots() {
@@ -96,6 +108,16 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        stack = stack.copy();
+        if(stack.getItem() == YelloriumIngot.INSTANCE){
+            int canAccept = inSlot.getMaxStackSize() - inSlot.getCount();
+            if(canAccept > 0){
+                ItemStack accepted = stack.split(canAccept);
+                if(!simulate) {
+                    inSlot.setCount(inSlot.getCount() + accepted.getCount());
+                }
+            }
+        }
         return stack;
     }
 
@@ -113,5 +135,9 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return false;
+    }
+    
+    public long refuel(long maxIngots) {
+        return inSlot.split((int)maxIngots).getCount();
     }
 }

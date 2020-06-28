@@ -1,15 +1,17 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
+import net.roguelogix.biggerreactors.classic.reactor.simulation.ClassicReactorSimulation;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
+import net.roguelogix.phosphophyllite.util.Util;
+import org.joml.Vector3i;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,8 +19,6 @@ import java.util.Set;
 
 /* TODO
 
-Internal simulation
-internal coolant checking
 assembly errors
 
  */
@@ -27,9 +27,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     public ReactorMultiblockController(World world) {
         super(world);
         minWidth = minHeight = minLength = 3;
-        maxLength = Config.ReactorMaxLength;
-        maxWidth = Config.ReactorMaxWidth;
-        maxHeight = Config.ReactorMaxHeight;
+        maxLength = Config.Reactor.MaxLength;
+        maxWidth = Config.Reactor.MaxWidth;
+        maxHeight = Config.Reactor.MaxHeight;
         tileAttachValidator = tile -> {
             return tile instanceof ReactorBaseTile;
         };
@@ -86,11 +86,12 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
 
     private ReactorState reactorState = ReactorState.INACTIVE;
-
+    
     private final Set<ReactorTerminalTile> terminals = new HashSet<>();
     private final Set<ReactorControlRodTile> controlRods = new HashSet<>();
     private final Set<ReactorFuelRodTile> fuelRods = new HashSet<>();
     private final Set<ReactorPowerTapTile> powerPorts = new HashSet<>();
+    private final Set<ReactorAccessPortTile> accessPorts = new HashSet<>();
 
     @Override
     protected void onPartAdded(MultiblockTile tile) {
@@ -105,6 +106,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof ReactorPowerTapTile) {
             powerPorts.add((ReactorPowerTapTile) tile);
+        }
+        if (tile instanceof ReactorAccessPortTile) {
+            accessPorts.add((ReactorAccessPortTile) tile);
         }
     }
 
@@ -122,6 +126,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (tile instanceof ReactorPowerTapTile) {
             powerPorts.remove(tile);
         }
+        if (tile instanceof ReactorAccessPortTile) {
+            accessPorts.remove(tile);
+        }
     }
 
     public void updateBlockStates() {
@@ -136,6 +143,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             reactorState = newState;
             updateBlockStates();
         }
+        simulation.setActive(reactorState == ReactorState.ACTIVE);
     }
 
     public void toggleActive() {
@@ -145,7 +153,13 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     protected void read(CompoundNBT compound) {
         if (compound.contains("reactorState")) {
             reactorState = ReactorState.valueOf(compound.getString("reactorState").toUpperCase());
+            simulation.setActive(reactorState == ReactorState.ACTIVE);
         }
+        
+        if(compound.contains("simulationData")){
+            simulation.deserializeNBT(compound.getCompound("simulationData"));
+        }
+        
         updateBlockStates();
     }
 
@@ -153,6 +167,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         CompoundNBT compound = new CompoundNBT();
         {
             compound.putString("reactorState", reactorState.toString());
+            compound.put("simulationData", simulation.serializeNBT());
         }
         return compound;
     }
@@ -162,8 +177,23 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
         }
+        simulation.resize(maxX() - minX() - 1, maxY() - minY() - 1, maxZ() - minZ() - 1);
+        Vector3i start = new Vector3i(minX() + 1, minY() + 1, minZ() + 1);
+        Vector3i end = new Vector3i(maxX() - 1, maxY() - 1, maxZ() - 1);
+        Util.chunkCachedBlockStateIteration(start, end, world, (state, pos) -> {
+            pos.sub(start);
+            if (state.getBlock() != ReactorFuelRod.INSTANCE) {
+                simulation.setModeratorProperties(pos.x, pos.y, pos.z, ReactorModeratorRegistry.blockModeratorProperties(state.getBlock()));
+            }
+            return true;
+        });
+        for (ReactorControlRodTile controlRod : controlRods) {
+            BlockPos rodPos = controlRod.getPos();
+            simulation.setControlRod(rodPos.getX() - start.x, rodPos.getZ() - start.z);
+        }
+        simulation.updateInternalValues();
     }
-
+    
     @Override
     protected void onDisassembly() {
         setActive(ReactorState.INACTIVE);
@@ -171,17 +201,54 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             powerPort.updateOutputDirection();
         }
     }
-
-
+    
+    
+    private ClassicReactorSimulation simulation = new ClassicReactorSimulation();
+    
+    private long storedPower = 0;
+    
     @Override
     public void tick() {
-
-        if(reactorState == ReactorState.ACTIVE){
-
+        
+        simulation.tick();
+        if (!Float.isNaN(simulation.FEProducedLastTick)) {
+            storedPower += simulation.FEProducedLastTick;
+            if (storedPower > Config.Reactor.PassiveBatterySize) {
+                storedPower = Config.Reactor.PassiveBatterySize;
+            }
         }
-
+        
+        if (simulation.fuelTank.spaceAvailable() >= 1000) {
+            // for now, its ingots only
+            for (ReactorAccessPortTile accessPort : accessPorts) {
+                long maxIngots = simulation.fuelTank.spaceAvailable() / 1000;
+                if (maxIngots == 0) {
+                    break;
+                }
+                long ingots = accessPort.refuel(maxIngots);
+                simulation.fuelTank.insertFuel(ingots * 1000, false);
+            }
+        }
+        
         for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.distributePower(1000);
         }
+    }
+    
+    @Override
+    public String getInfo() {
+        return super.getInfo() +
+                "State: " + reactorState.toString() + "\n" +
+                "StoredPower: " + storedPower + "\n" +
+                "PowerProduction: " + simulation.getFEProducedLastTick() + "\n" +
+                "FuelUsage: " + simulation.getFuelConsumedLastTick() + "\n" +
+                "ReactantCapacity: " + simulation.fuelTank.getCapacity() + "\n" +
+                "TotalReactant: " + simulation.fuelTank.getTotalAmount() + "\n" +
+                "Fuel: " + simulation.fuelTank.getFuelAmount() + "\n" +
+                "Waste: " + simulation.fuelTank.getWasteAmount() + "\n" +
+                "Fertility: " + simulation.getFertility() + "\n" +
+                "FuelHeat: " + simulation.getFuelHeat() + "\n" +
+                "ReactorHeat: " + simulation.getReactorHeat() + "\n" +
+                "";
     }
 }
