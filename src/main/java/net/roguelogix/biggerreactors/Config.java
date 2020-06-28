@@ -15,10 +15,10 @@ public class Config {
     @PhosphophylliteConfig.Value(min = 5)
     public static final int YelloriteOreMaxSpawnY = 50;
     
-    
-    //TODO: remove max, its only there because of the render system
-    //      multiblock system can take *much* larger structures
+    @PhosphophylliteConfig
     public static class Reactor {
+        //TODO: remove max, its only there because of the render system
+        //      multiblock system can take *much* larger structures
         @PhosphophylliteConfig.Value(min = 3, max = 32)
         public static int MaxLength = 32;
         @PhosphophylliteConfig.Value(min = 3, max = 32)
