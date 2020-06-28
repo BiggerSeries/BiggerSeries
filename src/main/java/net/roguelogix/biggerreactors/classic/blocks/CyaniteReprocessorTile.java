@@ -103,7 +103,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
   // Read
   public void func_230337_a_(BlockState blockState, CompoundNBT compound) {
     super.func_230337_a_(blockState, compound);
-    machineInventory.deserializeNBT(compound);
+    machineInventory.deserializeNBT(compound.getCompound("inventory"));
     this.workTime = compound.getInt("workTime");
     this.workTimeTotal = compound.getInt("workTimeTotal");
     this.energy = compound.getInt("energy");
