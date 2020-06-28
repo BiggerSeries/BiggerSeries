@@ -91,47 +91,4 @@ public class BiggerReactors {
     public void onModelBake(final ModelBakeEvent event) {
         Registry.onModelBake(event);
     }
-
-    public static final ArrayList<MultiblockController> controllersToTick = new ArrayList<>();
-    public static final ArrayList<MultiblockTile> tilesToAttach = new ArrayList<>();
-
-    // used to ensure i dont tick things twice
-    private static long tick = 0;
-
-    public static long tickNumber() {
-        return tick;
-    }
-
-    public static long lastTime = 0;
-
-    @SubscribeEvent
-    public void onTick(TickEvent.WorldTickEvent e) {
-        if (e.side != LogicalSide.SERVER) {
-            return;
-        }
-        if (e.phase!= TickEvent.Phase.END) {
-            return;
-        }
-        long timeNow = System.nanoTime();
-        float ms = (float) (timeNow - lastTime) / 1_000_000f;
-        if (ms > 50) {
-//            System.out.println("Over tick time! " + (ms));
-        }
-        lastTime = timeNow;
-        tick++;
-        ArrayList<MultiblockController> controllersToTick = new ArrayList<>(BiggerReactors.controllersToTick);
-        ArrayList<MultiblockTile> tilesToAttach = new ArrayList<>(BiggerReactors.tilesToAttach);
-        BiggerReactors.tilesToAttach.clear();
-        tilesToAttach.sort(Comparator.comparing(TileEntity::getPos));
-        for (MultiblockController controller : controllersToTick) {
-            if (controller != null) {
-                controller.update();
-            }
-        }
-        for (MultiblockTile toAttach : tilesToAttach) {
-            if (toAttach != null) {
-                toAttach.attachToNeighbors();
-            }
-        }
-    }
 }
