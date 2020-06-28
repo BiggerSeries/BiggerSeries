@@ -1,17 +1,13 @@
 package net.roguelogix.phosphophyllite;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.config.ConfigLoader;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
-import net.roguelogix.phosphophyllite.quartz.Quartz;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,12 +21,17 @@ public class Phosphophyllite {
     public static final Logger LOGGER = LogManager.getLogger("Phosphophyllite/Main");
 
     public Phosphophyllite() {
+        MinecraftForge.EVENT_BUS.register(this);
 //        Quartz.onModLoad();
     }
     
+    @SubscribeEvent
     void onWorldUnload(final WorldEvent.Unload worldUnloadEvent){
         if(!worldUnloadEvent.getWorld().isRemote()){
-        
+            ArrayList<MultiblockController> controllersToTick = new ArrayList<>(Phosphophyllite.controllersToTick);
+            for (MultiblockController multiblockController : controllersToTick) {
+                multiblockController.suicide();
+            }
         }
     }
     
@@ -47,8 +48,8 @@ public class Phosphophyllite {
     public static long lastTime = 0;
     
     @SubscribeEvent
-    public void onTick(TickEvent.WorldTickEvent e) {
-        if (e.side != LogicalSide.SERVER) {
+    public void onTick(TickEvent.ServerTickEvent e) {
+        if (!e.side.isServer()) {
             return;
         }
         if (e.phase!= TickEvent.Phase.END) {
@@ -59,6 +60,7 @@ public class Phosphophyllite {
         if (ms > 50) {
 //            System.out.println("Over tick time! " + (ms));
         }
+//        System.out.println(ms);
         lastTime = timeNow;
         tick++;
         ArrayList<MultiblockController> controllersToTick = new ArrayList<>(Phosphophyllite.controllersToTick);

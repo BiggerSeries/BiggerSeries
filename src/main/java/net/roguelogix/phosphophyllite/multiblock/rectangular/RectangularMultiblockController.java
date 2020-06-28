@@ -256,7 +256,6 @@ public class RectangularMultiblockController extends MultiblockController {
 
     @Override
     protected final void onPaused() {
-        disassembledBlockStates();
         onPause();
     }
 }

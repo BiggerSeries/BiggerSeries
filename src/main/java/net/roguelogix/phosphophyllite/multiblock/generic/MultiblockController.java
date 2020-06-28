@@ -252,7 +252,14 @@ public class MultiblockController {
     public AssemblyState assemblyState() {
         return state;
     }
-
+    
+    public void suicide() {
+        Set<MultiblockTile> blocks = new HashSet<>(this.blocks);
+        for (MultiblockTile block : blocks) {
+            block.onChunkUnloaded();
+        }
+    }
+    
     public enum AssemblyState {
         ASSEMBLED,
         DISASSEMBLED,
