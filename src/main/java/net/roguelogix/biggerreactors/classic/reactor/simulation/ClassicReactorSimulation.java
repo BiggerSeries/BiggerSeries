@@ -170,6 +170,8 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
             
             reactorRf -= rfTransferred;
             reactorHeat = getTempFromVolumeAndRF(reactorVolume(), reactorRf);
+        }else{
+            FEProducedLastTick = 0;
         }
         
         // Do passive heat loss - this is always versus external environment
@@ -180,12 +182,12 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
             reactorHeat = getTempFromVolumeAndRF(reactorVolume(), reactorNewRf);
         }
         
-        // Prevent cryogenics
-        if (reactorHeat < 0f) {
-            reactorHeat = 0;
+        // Prevent cryogenics, and clamp when really close
+        if (reactorHeat < Config.Reactor.AmbientTemperature + 0.01f) {
+            reactorHeat = Config.Reactor.AmbientTemperature;
         }
-        if (fuelHeat < 0f) {
-            fuelHeat = 0;
+        if (fuelHeat < Config.Reactor.AmbientTemperature + 0.01f) {
+            fuelHeat = Config.Reactor.AmbientTemperature;
         }
     }
     

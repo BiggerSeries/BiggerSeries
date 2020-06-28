@@ -68,6 +68,8 @@ public class Config {
         public static float PassiveCoolingTransferEfficiency = 0.2f;
         @PhosphophylliteConfig.Value(min = 0)
         public static long PassiveBatterySize = 10_000_000;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long FuelMBPerIngot = 1000;
     }
     
     @PhosphophylliteConfig.Value(min = 5, max = 32)

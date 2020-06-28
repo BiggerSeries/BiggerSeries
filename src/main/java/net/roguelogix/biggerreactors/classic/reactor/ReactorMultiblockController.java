@@ -209,7 +209,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     @Override
     public void tick() {
-        
+    
         simulation.tick();
         if (!Float.isNaN(simulation.FEProducedLastTick)) {
             storedPower += simulation.FEProducedLastTick;
@@ -217,26 +217,31 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 storedPower = Config.Reactor.PassiveBatterySize;
             }
         }
+    
+        for (ReactorAccessPortTile accessPort : accessPorts) {
+            // todo, output to inputs if there aren't any outputs left
+            if (accessPort.isInlet()) {
+                continue;
+            }
+            long wasteSpaceAvailable = accessPort.wasteSpaceAvailable();
+            simulation.fuelTank.extractWaste(accessPort.dumpWaste(simulation.fuelTank.extractWaste(wasteSpaceAvailable, true)), false);
         
-        if (simulation.fuelTank.spaceAvailable() >= 1000) {
-            // for now, its ingots only
+        }
+    
+        if (simulation.fuelTank.spaceAvailable() > 0) {
             for (ReactorAccessPortTile accessPort : accessPorts) {
-                long maxIngots = simulation.fuelTank.spaceAvailable() / 1000;
-                if (maxIngots == 0) {
-                    break;
-                }
-                long ingots = accessPort.refuel(maxIngots);
-                simulation.fuelTank.insertFuel(ingots * 1000, false);
+                long ingots = accessPort.refuel(simulation.fuelTank.spaceAvailable());
+                simulation.fuelTank.insertFuel(ingots, false);
             }
         }
-        
-        
+    
+    
         long totalPowerRequested = 0;
         for (ReactorPowerTapTile powerPort : powerPorts) {
             totalPowerRequested += powerPort.distributePower(storedPower, true);
         }
     
-        float distributionMultiplier = Math.min(1f, (float)storedPower/(float)totalPowerRequested);
+        float distributionMultiplier = Math.min(1f, (float) storedPower / (float) totalPowerRequested);
         for (ReactorPowerTapTile powerPort : powerPorts) {
             long powerRequested = powerPort.distributePower(storedPower, true);
             powerRequested *= distributionMultiplier;
@@ -254,6 +259,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 "FuelUsage: " + simulation.getFuelConsumedLastTick() + "\n" +
                 "ReactantCapacity: " + simulation.fuelTank.getCapacity() + "\n" +
                 "TotalReactant: " + simulation.fuelTank.getTotalAmount() + "\n" +
+                "PercentFull: " + (float) simulation.fuelTank.getTotalAmount() * 100 / simulation.fuelTank.getCapacity() + "\n" +
                 "Fuel: " + simulation.fuelTank.getFuelAmount() + "\n" +
                 "Waste: " + simulation.fuelTank.getWasteAmount() + "\n" +
                 "Fertility: " + simulation.getFertility() + "\n" +

@@ -10,6 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort;
 import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
 import net.roguelogix.biggerreactors.items.ingots.YelloriumIngot;
@@ -32,8 +33,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         super(TYPE);
     }
 
-    ReactorAccessPort.PortDirection direction = INLET;
+    private ReactorAccessPort.PortDirection direction = INLET;
 
+    public boolean isInlet(){
+        return direction == INLET;
+    }
+    
     public void setDirection(ReactorAccessPort.PortDirection direction){
         this.direction = direction;
         this.markDirty();
@@ -108,6 +113,9 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        if(!isInlet()){
+            return stack;
+        }
         stack = stack.copy();
         if(stack.getItem() == YelloriumIngot.INSTANCE){
             int canAccept = inSlot.getMaxStackSize() - inSlot.getCount();
@@ -124,12 +132,19 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return ItemStack.EMPTY;
+        if(isInlet()){
+            return ItemStack.EMPTY;
+        }
+        ItemStack stack = outSlot;
+        if(simulate){
+            stack = stack.copy();
+        }
+        return stack.split(amount);
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return 0;
+        return inSlot.getMaxStackSize();
     }
 
     @Override
@@ -137,7 +152,18 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         return false;
     }
     
-    public long refuel(long maxIngots) {
-        return inSlot.split((int)maxIngots).getCount();
+    public long refuel(long maxAmount) {
+        long ingots = maxAmount / Config.Reactor.FuelMBPerIngot;
+        return inSlot.split((int)ingots).getCount() * Config.Reactor.FuelMBPerIngot;
+    }
+    
+    public long wasteSpaceAvailable() {
+        return (outSlot.getMaxStackSize() - outSlot.getCount()) * Config.Reactor.FuelMBPerIngot;
+    }
+    
+    public long dumpWaste(long wasteMB) {
+        long ingots = wasteMB / Config.Reactor.FuelMBPerIngot;
+        outSlot.setCount((int) (outSlot.getCount() + ingots));
+        return (ingots * Config.Reactor.FuelMBPerIngot);
     }
 }
