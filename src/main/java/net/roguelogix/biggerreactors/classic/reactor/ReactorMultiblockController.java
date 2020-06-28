@@ -230,8 +230,18 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             }
         }
         
+        
+        long totalPowerRequested = 0;
         for (ReactorPowerTapTile powerPort : powerPorts) {
-            powerPort.distributePower(1000);
+            totalPowerRequested += powerPort.distributePower(storedPower, true);
+        }
+    
+        float distributionMultiplier = Math.min(1f, (float)storedPower/(float)totalPowerRequested);
+        for (ReactorPowerTapTile powerPort : powerPorts) {
+            long powerRequested = powerPort.distributePower(storedPower, true);
+            powerRequested *= distributionMultiplier;
+            powerRequested = Math.min(storedPower, powerRequested); // just in case
+            storedPower -= powerPort.distributePower(powerRequested, false);
         }
     }
     

@@ -6,7 +6,10 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorPowerTapTile;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
@@ -53,5 +56,14 @@ public class ReactorPowerTap extends ReactorBaseBlock{
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new ReactorPowerTapTile();
+    }
+    
+    @Override
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
+        TileEntity te = worldIn.getTileEntity(pos);
+        if(te instanceof ReactorPowerTapTile){
+            ((ReactorPowerTapTile) te).neighborChanged();
+        }
     }
 }

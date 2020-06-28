@@ -38,6 +38,8 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
 
     private boolean connected = false;
     Direction powerOutputDirection = null;
+    
+    private static final EnergyStorage ENERGY_ZERO = new EnergyStorage(0);
 
     private void setConnected(boolean newState){
         if(newState != connected){
@@ -45,57 +47,62 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
             world.setBlockState(pos, getBlockState().with(CONNECTION_STATE_ENUM_PROPERTY, connected ? CONNECTED : DISCONNECTED));
         }
     }
-
-    public long distributePower(long toDistribute) {
+    
+    LazyOptional<IEnergyStorage> energyOutput = LazyOptional.empty();
+    
+    // TODO: 6/27/20 dont query the world every time
+    public void neighborChanged(){
         if (powerOutputDirection == null) {
             setConnected(false);
-            return 0;
+            return;
         }
         assert world != null;
         TileEntity te = world.getTileEntity(pos.offset(powerOutputDirection));
         if (te == null) {
             setConnected(false);
-            return 0;
+            return;
         }
-        IEnergyStorage e = te.getCapability(CapabilityEnergy.ENERGY, powerOutputDirection.getOpposite()).orElse(new EnergyStorage(0));
+        energyOutput= te.getCapability(CapabilityEnergy.ENERGY, powerOutputDirection.getOpposite());
+        setConnected(energyOutput.orElse(ENERGY_ZERO).canReceive());
+    }
+    
+    public long distributePower(long toDistribute, boolean simulate) {
+        IEnergyStorage e = energyOutput.orElse(ENERGY_ZERO);
         if (e.canReceive()) {
-            setConnected(true);
-            return e.receiveEnergy((int) toDistribute, false);
+            return e.receiveEnergy((int) toDistribute, simulate);
         }
-        setConnected(false);
         return 0;
     }
-
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         return 0;
     }
-
+    
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         return 0;
     }
-
+    
     @Override
     public int getEnergyStored() {
         return 0;
     }
-
+    
     @Override
     public int getMaxEnergyStored() {
         return 0;
     }
-
+    
     @Override
     public boolean canExtract() {
         return false;
     }
-
+    
     @Override
     public boolean canReceive() {
         return false;
     }
-
+    
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED){
             powerOutputDirection = null;
@@ -123,5 +130,6 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
         if(pos.getZ() == controller.maxZ()){
             powerOutputDirection = Direction.SOUTH;
         }
+        neighborChanged();
     }
 }
