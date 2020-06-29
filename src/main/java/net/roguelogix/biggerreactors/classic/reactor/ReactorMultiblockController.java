@@ -42,6 +42,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                     block instanceof ReactorControlRod ||
                     block instanceof ReactorGlass ||
                     block instanceof ReactorAccessPort ||
+                    block instanceof ReactorCoolantPort ||
                     block instanceof ReactorPowerTap;
         });
         interiorValidator = block -> {
@@ -92,7 +93,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorFuelRodTile> fuelRods = new HashSet<>();
     private final Set<ReactorPowerTapTile> powerPorts = new HashSet<>();
     private final Set<ReactorAccessPortTile> accessPorts = new HashSet<>();
-
+    private final Set<ReactorCoolantPortTile> coolantPorts = new HashSet<>();
+    
     @Override
     protected void onPartAdded(MultiblockTile tile) {
         if (tile instanceof ReactorTerminalTile) {
@@ -110,8 +112,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (tile instanceof ReactorAccessPortTile) {
             accessPorts.add((ReactorAccessPortTile) tile);
         }
+        if (tile instanceof ReactorCoolantPortTile) {
+            coolantPorts.add((ReactorCoolantPortTile) tile);
+        }
     }
-
+    
     @Override
     protected void onPartRemoved(MultiblockTile tile) {
         if (tile instanceof ReactorTerminalTile) {
@@ -129,8 +134,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (tile instanceof ReactorAccessPortTile) {
             accessPorts.remove(tile);
         }
+        if (tile instanceof ReactorCoolantPortTile) {
+            coolantPorts.remove(tile);
+        }
     }
-
+    
     public void updateBlockStates() {
         terminals.forEach(terminal -> {
             world.setBlockState(terminal.getPos(), terminal.getBlockState().with(ReactorState.REACTOR_STATE_ENUM_PROPERTY, reactorState));
@@ -177,6 +185,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
         }
+        for (ReactorCoolantPortTile coolantPort : coolantPorts) {
+            coolantPort.updateOutputDirection();
+        }
         simulation.resize(maxX() - minX() - 1, maxY() - minY() - 1, maxZ() - minZ() - 1);
         Vector3i start = new Vector3i(minX() + 1, minY() + 1, minZ() + 1);
         Vector3i end = new Vector3i(maxX() - 1, maxY() - 1, maxZ() - 1);
@@ -191,6 +202,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             BlockPos rodPos = controlRod.getPos();
             simulation.setControlRod(rodPos.getX() - start.x, rodPos.getZ() - start.z);
         }
+        simulation.setPassivelyCooled(coolantPorts.isEmpty());
         simulation.updateInternalValues();
     }
     
@@ -200,12 +212,23 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
         }
+        for (ReactorCoolantPortTile coolantPort : coolantPorts) {
+            coolantPort.updateOutputDirection();
+        }
     }
     
     
-    private ClassicReactorSimulation simulation = new ClassicReactorSimulation();
+    private final ClassicReactorSimulation simulation = new ClassicReactorSimulation();
     
     private long storedPower = 0;
+    
+    public long addCoolant(long coolant, boolean simulated) {
+        return simulation.coolantTank.insertWater(coolant, simulated);
+    }
+    
+    public long extractSteam(long steam, boolean simulated) {
+        return simulation.coolantTank.extractSteam(steam, simulated);
+    }
     
     @Override
     public void tick() {
@@ -248,6 +271,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             powerRequested = Math.min(storedPower, powerRequested); // just in case
             storedPower -= powerPort.distributePower(powerRequested, false);
         }
+    
+        for (ReactorCoolantPortTile coolantPort : coolantPorts) {
+            simulation.coolantTank.extractSteam(coolantPort.pushSteam(simulation.coolantTank.extractSteam(Integer.MAX_VALUE, true)), true);
+        }
     }
     
     @Override
@@ -265,6 +292,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 "Fertility: " + simulation.getFertility() + "\n" +
                 "FuelHeat: " + simulation.getFuelHeat() + "\n" +
                 "ReactorHeat: " + simulation.getReactorHeat() + "\n" +
+                "CoolantTankSize: " + simulation.coolantTank.getPerSideCapacity() + "\n" +
+                "Water: " + simulation.coolantTank.getWaterAmount() + "\n" +
+                "Steam: " + simulation.coolantTank.getSteamAmount() + "\n" +
                 "";
     }
 }

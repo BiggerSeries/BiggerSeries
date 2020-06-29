@@ -77,6 +77,8 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0)
         public static long MaxActiveTankSize = 50_000;
         @PhosphophylliteConfig.Value(min = 0)
+        public static long CoolantTankAmountPerExternalBlock = 100;
+        @PhosphophylliteConfig.Value(min = 0)
         public static float CoolantBoilingPoint = 100;
         @PhosphophylliteConfig.Value(min = 0)
         public static float CoolantVaporizationEnergy = 4;

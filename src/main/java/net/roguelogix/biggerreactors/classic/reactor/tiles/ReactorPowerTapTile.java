@@ -50,7 +50,6 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
     
     LazyOptional<IEnergyStorage> energyOutput = LazyOptional.empty();
     
-    // TODO: 6/27/20 dont query the world every time
     public void neighborChanged(){
         if (powerOutputDirection == null) {
             setConnected(false);
