@@ -67,9 +67,19 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0)
         public static float PassiveCoolingTransferEfficiency = 0.2f;
         @PhosphophylliteConfig.Value(min = 0)
+        public static float CasingHeatTransferCoefficient = 0.6f;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float FuelRodHeatTransferCoefficient = 1f;
+        @PhosphophylliteConfig.Value(min = 0)
         public static long PassiveBatterySize = 10_000_000;
         @PhosphophylliteConfig.Value(min = 1)
         public static long FuelMBPerIngot = 1000;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static long MaxActiveTankSize = 50_000;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float CoolantBoilingPoint = 100;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float CoolantVaporizationEnergy = 4;
     }
     
     @PhosphophylliteConfig.Value(min = 5, max = 32)

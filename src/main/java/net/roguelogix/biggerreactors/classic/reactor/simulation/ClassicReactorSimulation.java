@@ -74,6 +74,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     }
     
     public final FuelTank fuelTank = new FuelTank();
+    public final CoolantTank coolantTank = new CoolantTank();
     
     private float fuelToReactorHeatTransferCoefficient = 0;
     
@@ -87,14 +88,14 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
             for (int i = 0; i < y; i++) {
                 for (Vector2i direction : directions) {
                     if (controlRod.x + direction.x < 0 || controlRod.x + direction.x >= x || controlRod.z + direction.y < 0 || controlRod.z + direction.y >= z) {
-                        fuelToReactorHeatTransferCoefficient += 0.6f;
+                        fuelToReactorHeatTransferCoefficient += Config.Reactor.CasingHeatTransferCoefficient;
                         continue;
                     }
                     ReactorModeratorRegistry.ModeratorProperties properties = moderatorProperties[controlRod.x + direction.x][i][controlRod.z + direction.y];
                     if (properties != null) {
                         fuelToReactorHeatTransferCoefficient += properties.heatConductivity;
                     }else{
-                        fuelToReactorHeatTransferCoefficient += 1f;
+                        fuelToReactorHeatTransferCoefficient += Config.Reactor.FuelRodHeatTransferCoefficient   ;
                     }
                 }
             }
@@ -127,6 +128,8 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
             radiate();
         }
         
+        FEProducedLastTick = 0;
+        
         {
             // decay fertility, RadiationHelper.tick in old BR, this is copied, mostly
             float denominator = Config.Reactor.FuelFertilityDecayDenominator;
@@ -134,7 +137,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
                 // Much slower decay when off
                 denominator *= Config.Reactor.FuelFertilityDecayDenominatorInactiveMultiplier;
             }
-            
+        
             // Fertility decay, at least 0.1 rad/t, otherwise halve it every 10 ticks
             fuelFertility = Math.max(0f, fuelFertility - Math.max(Config.Reactor.FuelFertilityMinimumDecay, fuelFertility / denominator));
         }
@@ -160,18 +163,16 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
             float rfTransferred = tempDiff * reactorToCoolantSystemHeatTransferCoefficient;
             float reactorRf = getRFFromVolumeAndTemp(reactorVolume(), reactorHeat);
             
-            if (isPassivelyCooled()) {
+            if (passive) {
                 rfTransferred *= Config.Reactor.PassiveCoolingTransferEfficiency;
                 FEProducedLastTick = rfTransferred * Config.Reactor.PowerOutputMultiplier;
             } else {
-//                rfTransferred -= coolantContainer.onAbsorbHeat(rfTransferred);
-//                energyGeneratedLastTick = coolantContainer.getFluidVaporizedLastTick(); // Piggyback so we don't have useless stuff in the update packet
+                rfTransferred -= coolantTank.absorbHeat(rfTransferred);
+                FEProducedLastTick = coolantTank.getFluidVaporizedLastTick(); // Piggyback so we don't have useless stuff in the update packet
             }
             
             reactorRf -= rfTransferred;
             reactorHeat = getTempFromVolumeAndRF(reactorVolume(), reactorRf);
-        }else{
-            FEProducedLastTick = 0;
         }
         
         // Do passive heat loss - this is always versus external environment
@@ -191,13 +192,17 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         }
     }
     
-    private boolean isPassivelyCooled() {
-        return true;
+    private boolean passive = true;
+    
+    public void setPassivelyCooled(boolean passivelyCooled){
+        passive = passivelyCooled;
     }
     
     private float getCoolantTemperature() {
-        // TODO: 6/26/20 active reactor
-        return Config.Reactor.AmbientTemperature;
+        if(passive){
+            return Config.Reactor.AmbientTemperature;
+        }
+        return coolantTank.getCoolantTemperature(reactorHeat);
     }
     
     private int rodToIrradiate = 0;
@@ -402,6 +407,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.put("fuelTank", fuelTank.serializeNBT());
+        nbt.put("coolantTank", coolantTank.serializeNBT());
         nbt.putFloat("fuelFertility", fuelFertility);
         nbt.putFloat("fuelHeat", fuelHeat);
         nbt.putFloat("reactorHeat", reactorHeat);
@@ -412,6 +418,9 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     public void deserializeNBT(CompoundNBT nbt) {
         if (nbt.contains("fuelTank")) {
             fuelTank.deserializeNBT(nbt.getCompound("fuelTank"));
+        }
+        if (nbt.contains("coolantTank")) {
+            coolantTank.deserializeNBT(nbt.getCompound("coolantTank"));
         }
         if (nbt.contains("fuelFertility")) {
             fuelFertility = nbt.getFloat("fuelFertility");
