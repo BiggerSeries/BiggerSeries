@@ -22,6 +22,7 @@ public class BiggerReactors {
     public BiggerReactors() {
         Registry.onModLoad();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
     }
     
     public void onCommonSetup(final FMLCommonSetupEvent e) {
