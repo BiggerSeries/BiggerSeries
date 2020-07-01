@@ -9,11 +9,11 @@ import net.roguelogix.phosphophyllite.registry.RegisterConfig;
 public class Config {
     
     @PhosphophylliteConfig.Value(min = 1)
-    public static final int YelloriteOreMaxClustersPerChunk = 5;
+    public static int YelloriteOreMaxClustersPerChunk = 5;
     @PhosphophylliteConfig.Value(min = 1)
-    public static final int YelloriteMaxOrePerCluster = 10;
+    public static int YelloriteMaxOrePerCluster = 10;
     @PhosphophylliteConfig.Value(min = 5)
-    public static final int YelloriteOreMaxSpawnY = 50;
+    public static int YelloriteOreMaxSpawnY = 50;
     
     @PhosphophylliteConfig
     public static class Reactor {
