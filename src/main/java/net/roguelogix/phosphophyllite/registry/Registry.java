@@ -460,14 +460,10 @@ public class Registry {
     }
     
     private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Reflections ref) {
-        Registry.registerWorldGen();
+        Registry.registerWorldGen(modNamespace, ref);
     }
     
-    private static synchronized void registerWorldGen() {
-        String callerClass = new Exception().getStackTrace()[1].getClassName();
-        String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
-        String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
-        Reflections ref = new Reflections(callerPackage);
+    private static synchronized void registerWorldGen(String modNamespace, Reflections ref) {
         Set<Class<?>> ores = ref.getTypesAnnotatedWith(RegisterOre.class);
         HashSet<Block> blocksRegistered = Registry.blocksRegistered
                 .computeIfAbsent(modNamespace, k -> new HashSet<>());
@@ -494,7 +490,7 @@ public class Registry {
                             continue;
                         }
                     }
-    
+                    
                     FillerBlockType fillerBlock = oreInfo.isNetherOre() ? FillerBlockType.NETHERRACK : FillerBlockType.NATURAL_STONE;
                     biome.addFeature(Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(
                             new OreFeatureConfig(fillerBlock, oreInstance.getDefaultState(), oreInfo.size()))
