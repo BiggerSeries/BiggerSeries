@@ -49,6 +49,8 @@ import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBakedModel;
 import org.reflections.Reflections;
 
+import javax.annotation.Nonnull;
+
 public class Registry {
     
     private static final HashMap<String, HashSet<Block>> blocksRegistered = new HashMap<>();
@@ -186,6 +188,7 @@ public class Registry {
             }
             block = b1;
             group = new ItemGroup(groupName) {
+                @Nonnull
                 @Override
                 public ItemStack createIcon() {
                     return new ItemStack(ForgeRegistries.ITEMS.getValue(block.getRegistryName()));
@@ -234,7 +237,7 @@ public class Registry {
                     //todo print error
                     continue;
                 }
-
+                
                 Item newItem = (Item) newObject;
                 RegisterItem itemAnnotation = item.getAnnotation(RegisterItem.class);
                 newItem.setRegistryName(modNamespace + ":" + itemAnnotation.name());
@@ -319,7 +322,7 @@ public class Registry {
                         throw new NullPointerException();
                     }
                 }));
-
+                
                 containerType.setRegistryName(modNamespace + ":" + containerAnnotation.name());
                 containerTypeRegistryEvent.getRegistry().register(containerType);
                 
@@ -412,7 +415,7 @@ public class Registry {
         for (Block block : blocksRegistered) {
             IBakedModel model = bakedModelsToRegister.get(block);
             if (model != null) {
-                event.getModelRegistry().put(new ModelResourceLocation(block.getRegistryName(), ""), model);
+                event.getModelRegistry().put(new ModelResourceLocation(Objects.requireNonNull(block.getRegistryName()), ""), model);
             }
         }
     }
@@ -472,7 +475,7 @@ public class Registry {
             try {
                 RegisterOre oreAnnotation = ore.getAnnotation(RegisterOre.class);
                 RegisterBlock blockAnnotation = ore.getAnnotation(RegisterBlock.class);
-
+                
                 Block oreInstance = null;
                 for (Block block : blocksRegistered) {
                     if (Objects.requireNonNull(block.getRegistryName())
@@ -480,7 +483,7 @@ public class Registry {
                         oreInstance = block;
                     }
                 }
-
+                
                 for (Biome biome : ForgeRegistries.BIOMES) {
                     if (oreAnnotation.spawnBiomes().length > 0) {
                         if (!Arrays.asList(oreAnnotation.spawnBiomes()).contains(
@@ -488,7 +491,7 @@ public class Registry {
                             continue;
                         }
                     }
-
+                    
                     assert oreInstance != null;
                     FillerBlockType fillerBlock = oreAnnotation.isNetherOre() ? FillerBlockType.NETHERRACK : FillerBlockType.NATURAL_STONE;
                     biome.addFeature(Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(

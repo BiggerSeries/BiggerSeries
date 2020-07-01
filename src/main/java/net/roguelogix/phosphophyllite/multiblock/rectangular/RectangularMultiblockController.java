@@ -56,7 +56,7 @@ public class RectangularMultiblockController extends MultiblockController {
                 dimensions = new BlockPos(dimensions.getY(), dimensions.getZ(), dimensions.getX());
             }
             // if all are positive, technically zero is valid for them
-            // dont know why you would use zero, but thats not my problem
+            // dont know why you would use zero, but that's not my problem
             // i guess to lock out using the machine?
             if ((controller.minLength | controller.minWidth | controller.minHeight) > 0) {
                 if (
@@ -85,7 +85,7 @@ public class RectangularMultiblockController extends MultiblockController {
         // dimension check failed in all orientations
         if (dimensions == null) {
             // TODO: 6/29/20 dimensions error
-            throw new ValidationError("TODO: dimentions error");
+            throw new ValidationError("TODO: dimensions error");
         }
         // or it didnt, at this point i dont know, and you dont either
         

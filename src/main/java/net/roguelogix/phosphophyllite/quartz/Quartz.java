@@ -16,20 +16,20 @@ public class Quartz {
         QuartzRenderer.onModLoad();
         MinecraftForge.EVENT_BUS.post(new QuartzLoad());
     }
-
-    public static void reloadTextures(){
-
+    
+    public static void reloadTextures() {
+    
     }
-
-    public static void reloadShaders(){
-
+    
+    public static void reloadShaders() {
+    
     }
-
-    public static void reloadModels(){
-
+    
+    public static void reloadModels() {
+    
     }
-
-    public static void processShaders(){
+    
+    public static void processShaders() {
         System.out.println("SHADERS!");
     }
 }

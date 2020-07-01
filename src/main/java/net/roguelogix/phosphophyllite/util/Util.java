@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
 public class Util {
     public static String readResourceLocation(ResourceLocation location) {
@@ -31,22 +30,22 @@ public class Util {
         }
         return null;
     }
-
-    public static JsonObject readJSONFile(ResourceLocation location){
-        if(location.getPath().lastIndexOf(".json") != location.getPath().length() - 5){
+    
+    public static JsonObject readJSONFile(ResourceLocation location) {
+        if (location.getPath().lastIndexOf(".json") != location.getPath().length() - 5) {
             location = new ResourceLocation(location.getNamespace(), location.getPath() + ".json");
         }
         String jsonString = readResourceLocation(location);
-        if(jsonString == null){
+        if (jsonString == null) {
             return null;
         }
         JsonElement element = new JsonParser().parse(jsonString);
-        if(element instanceof JsonObject){
+        if (element instanceof JsonObject) {
             return (JsonObject) element;
         }
         return null;
     }
-
+    
     public static void chunkCachedBlockStateIteration(Vector3i start, Vector3i end, World world, BiConsumer<BlockState, Vector3i> func) {
         Vector3i currentPosition = new Vector3i();
         for (int X = start.x; X < ((end.x + 16) & 0xFFFFFFF0); X += 16) {

@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.memAddress;
 
 public class RenderChunk {
     final Vector3i position = new Vector3i();
-
+    
     private final HashMap<Vector3i, Integer> blockBufferPositions = new HashMap<>();
     private final ArrayList<Vector3i> bufferPositions = new ArrayList<>(4096);
     private int nextBufferPosition = 0;
@@ -30,7 +30,7 @@ public class RenderChunk {
     private final int positionsBuffer;
     private final IntBuffer textureBufferData = BufferUtils.createIntBuffer(4096 * 6);
     private final int textureBuffer;
-    private final int textureBufferTexure;
+    private final int textureBufferTexture;
     private final ShortBuffer lightingBufferData = BufferUtils.createShortBuffer(4096 * 6 * 5);
     private final int lightingBuffer;
     private final int lightingBufferTexture;
@@ -41,9 +41,9 @@ public class RenderChunk {
     // not final because the primary work queue has to make it
     private int drawVAO;
     private int cullQuery;
-
+    
     private Event setupDone;
-
+    
     public RenderChunk(Vector3i position) {
         position.set(position);
         for (int i = 0; i < 4096; i++) {
@@ -52,15 +52,15 @@ public class RenderChunk {
         switch (OperationMode.mode()) {
             case GL45: {
                 positionsBuffer = glCreateBuffers();
-
+                
                 textureBuffer = glCreateBuffers();
-                textureBufferTexure = glCreateTextures(GL_TEXTURE_BUFFER);
-                glTextureBuffer(textureBufferTexure, GL_R32UI, textureBuffer);
-
+                textureBufferTexture = glCreateTextures(GL_TEXTURE_BUFFER);
+                glTextureBuffer(textureBufferTexture, GL_R32UI, textureBuffer);
+                
                 lightingBuffer = glCreateBuffers();
                 lightingBufferTexture = glCreateTextures(GL_TEXTURE_BUFFER);
                 glTextureBuffer(lightingBufferTexture, GL_R16UI, lightingBuffer);
-
+                
                 drawCommandBuffer = glCreateBuffers();
                 drawCommandBufferData.put(72);
                 drawCommandBufferData.put(0);
@@ -69,33 +69,33 @@ public class RenderChunk {
                 drawCommandBufferData.put(0);
                 drawCommandBufferData.rewind();
                 glNamedBufferStorage(drawCommandBuffer, drawCommandBufferData, GL_DYNAMIC_STORAGE_BIT);
-
+                
                 setupDone = primaryWorkQueue.enqueue(() -> {
                     drawVAO = glCreateVertexArrays();
                     cullQuery = glCreateQueries(GL_ANY_SAMPLES_PASSED);
-
+                    
                     glVertexArrayElementBuffer(drawVAO, cubeElementBuffer);
-
+                    
                     glVertexArrayVertexBuffer(drawVAO, 0, cubeBuffer, 0, 24);
                     glVertexArrayAttribBinding(drawVAO, 0, 0);
                     glVertexArrayAttribBinding(drawVAO, 1, 0);
                     glVertexArrayAttribBinding(drawVAO, 2, 0);
-
+                    
                     glVertexArrayAttribFormat(drawVAO, 0, 3, GL_FLOAT, false, 0);
                     glVertexArrayAttribFormat(drawVAO, 1, 2, GL_FLOAT, false, 12);
                     glVertexArrayAttribFormat(drawVAO, 2, 1, GL_FLOAT, false, 20);
-
+                    
                     glVertexArrayVertexBuffer(drawVAO, 1, positionsBuffer, 0, 12);
                     glVertexArrayBindingDivisor(drawVAO, 1, 1);
                     glVertexArrayAttribBinding(drawVAO, 3, 1);
                     glVertexArrayAttribIFormat(drawVAO, 3, 3, GL_INT, 0);
-
+                    
                     glEnableVertexArrayAttrib(drawVAO, 0);
                     glEnableVertexArrayAttrib(drawVAO, 1);
                     glEnableVertexArrayAttrib(drawVAO, 2);
                     glEnableVertexArrayAttrib(drawVAO, 3);
                 });
-
+                
             }
             break;
             case GL21:
@@ -104,7 +104,7 @@ public class RenderChunk {
                 throw new IllegalStateException("Unknown operation mode");
         }
     }
-
+    
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
@@ -119,7 +119,7 @@ public class RenderChunk {
             glDeleteSync(updateFence);
         });
     }
-
+    
     private static int nextPowerOfTwo(int v) {
         v--;
         v |= v >> 1;
@@ -130,7 +130,7 @@ public class RenderChunk {
         v++;
         return v;
     }
-
+    
     void setBlocks(BlockRenderInfo... blocks) {
         if (blocks.length == 0) {
             return;
@@ -146,7 +146,7 @@ public class RenderChunk {
             }
             int minBufferPosition = 4096;
             int maxBufferPosition = 0;
-
+            
             for (BlockRenderInfo block : blocks) {
                 int bufferPosition = blockBufferPositions.get(block.location);
                 minBufferPosition = min(minBufferPosition, bufferPosition);
@@ -154,14 +154,14 @@ public class RenderChunk {
                 positionsBufferData.put(bufferPosition * 3, block.x);
                 positionsBufferData.put(bufferPosition * 3 + 1, block.y);
                 positionsBufferData.put(bufferPosition * 3 + 2, block.z);
-
+                
                 textureBufferData.put(bufferPosition * 6, block.textureOffsetRotation0);
                 textureBufferData.put(bufferPosition * 6 + 1, block.textureOffsetRotation1);
                 textureBufferData.put(bufferPosition * 6 + 2, block.textureOffsetRotation2);
                 textureBufferData.put(bufferPosition * 6 + 3, block.textureOffsetRotation3);
                 textureBufferData.put(bufferPosition * 6 + 4, block.textureOffsetRotation4);
                 textureBufferData.put(bufferPosition * 6 + 5, block.textureOffsetRotation5);
-
+                
                 lightingBufferData.put(bufferPosition * 24, block.lightmap00);
                 lightingBufferData.put(bufferPosition * 24 + 1, block.lightmap01);
                 lightingBufferData.put(bufferPosition * 24 + 2, block.lightmap02);
@@ -187,9 +187,9 @@ public class RenderChunk {
                 lightingBufferData.put(bufferPosition * 24 + 22, block.lightmap52);
                 lightingBufferData.put(bufferPosition * 24 + 23, block.lightmap53);
             }
-
+            
             if (bufferSize < blockBufferPositions.size()) {
-                // time to expannd the buffer on the GPU!
+                // time to expand the buffer on the GPU!
                 int newBufferSize = nextPowerOfTwo(blockBufferPositions.size());
                 // yes i know im using the unsafe methods
                 // LWJGL doesnt give me the option to upload only *part* of the buffer
@@ -209,7 +209,7 @@ public class RenderChunk {
             glNamedBufferSubData(drawCommandBuffer, 0, drawCommandBufferData);
         }
     }
-
+    
     void removeBlocks(Vector3i... positions) {
         if (positions.length == 0) {
             return;
@@ -220,7 +220,7 @@ public class RenderChunk {
             for (Vector3i pos : positions) {
                 Integer bufferLocation = blockBufferPositions.remove(pos);
                 if (bufferLocation == null) {
-                    // no gots, try again
+                    // no got, try again
                     return;
                 }
                 instanceCount--;
@@ -265,14 +265,14 @@ public class RenderChunk {
             glNamedBufferSubData(drawCommandBuffer, 0, drawCommandBufferData);
         }
     }
-
+    
     /**
      * Draws the chunk assuming the current matrix state does all transforms except the world position shift
      */
     public void draw() {
         draw(true);
     }
-
+    
     public void draw(boolean conditionallyRender) {
         if (setupDone != null) {
             if (!setupDone.ready()) {
@@ -281,12 +281,12 @@ public class RenderChunk {
             setupDone = null;
         }
         glActiveTexture(GL_TEXTURE12);
-        glBindTexture(GL_TEXTURE_BUFFER, textureBufferTexure);
+        glBindTexture(GL_TEXTURE_BUFFER, textureBufferTexture);
         glActiveTexture(GL_TEXTURE13);
         glBindTexture(GL_TEXTURE_BUFFER, lightingBufferTexture);
-
-        playerOffest.set(position).sub(playerPosition);
-        glUniform3f(0, (float) playerOffest.x, (float) playerOffest.y, (float) playerOffest.z);
+        
+        playerOffset.set(position).sub(playerPosition);
+        glUniform3f(0, (float) playerOffset.x, (float) playerOffset.y, (float) playerOffset.z);
         glBindVertexArray(drawVAO);
         if (conditionallyRender) {
             glBeginConditionalRender(cullQuery, GL_QUERY_WAIT);
@@ -297,7 +297,7 @@ public class RenderChunk {
             glEndConditionalRender();
         }
     }
-
+    
     /**
      * runs the chunk occlusion query assuming the current matrix state does all transforms except the world position shift
      * <p>
@@ -305,41 +305,41 @@ public class RenderChunk {
      */
     public void query() {
         glBeginQuery(GL_ANY_SAMPLES_PASSED, cullQuery);
-
-        playerOffest.set(position).sub(playerPosition);
-        glUniform3f(0, (float) playerOffest.x, (float) playerOffest.y, (float) playerOffest.z);
+        
+        playerOffset.set(position).sub(playerPosition);
+        glUniform3f(0, (float) playerOffset.x, (float) playerOffset.y, (float) playerOffset.z);
         glDrawElements(GL_TRIANGLE_STRIP, 14, GL_UNSIGNED_INT, 0);
-
+        
         glEndQuery(GL_ANY_SAMPLES_PASSED);
     }
-
+    
     private static final Vector4f chunkClipVector = new Vector4f();
     private static final Vector4f chunkClipVectorMin = new Vector4f();
     private static final Vector4f chunkClipVectorMax = new Vector4f();
-
+    
     /**
      * oversized AABB clip check
      *
      * @return true if it should be rendered
      */
     public boolean clip() {
-        playerOffest.set(position).sub(playerPosition);
-
-        chunkClipVector.set(playerOffest.x, playerOffest.y, playerOffest.z, 1);
+        playerOffset.set(position).sub(playerPosition);
+        
+        chunkClipVector.set(playerOffset.x, playerOffset.y, playerOffset.z, 1);
         chunkClipVector.mul(modelViewProjectionMatrix);
         chunkClipVector.div(abs(chunkClipVector.w));
         chunkClipVectorMin.set(chunkClipVector);
         chunkClipVectorMax.set(chunkClipVector);
-
+        
         for (int i = 1; i < 8; i++) {
-            chunkClipVector.set(playerOffest.x, playerOffest.y, playerOffest.z, 1);
+            chunkClipVector.set(playerOffset.x, playerOffset.y, playerOffset.z, 1);
             chunkClipVector.add(((i & 1) * 16), ((i & 2) * 8), ((i & 4) * 4), 0);
             chunkClipVector.mul(modelViewProjectionMatrix);
             chunkClipVector.div(abs(chunkClipVector.w));
             chunkClipVectorMin.min(chunkClipVector);
             chunkClipVectorMax.max(chunkClipVector);
         }
-
+        
         return (chunkClipVectorMin.x <= 1 && chunkClipVectorMax.x >= -1 &&
                 chunkClipVectorMin.y <= 1 && chunkClipVectorMax.y >= -1 &&
                 chunkClipVectorMin.z <= 1 && chunkClipVectorMax.z >= -1

@@ -1,6 +1,8 @@
 package net.roguelogix.biggerreactors.classic.blocks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -29,59 +31,61 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
 @RegisterBlock(name = "cyanite_reprocessor", tileEntityClass = CyaniteReprocessorTile.class)
 public class CyaniteReprocessor extends ContainerBlock {
-
+    
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
-
+    
     @RegisterBlock.Instance
     public static CyaniteReprocessor INSTANCE;
-
+    
     public CyaniteReprocessor() {
         super(
-            Properties.create(Material.IRON)
-                .sound(SoundType.STONE)
-                .hardnessAndResistance(1.0F)
+                Properties.create(Material.IRON)
+                        .sound(SoundType.STONE)
+                        .hardnessAndResistance(1.0F)
         );
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(ENABLED,
-            Boolean.FALSE));
+                Boolean.FALSE));
     }
-
+    
+    @Nonnull
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderType(@Nonnull BlockState state) {
         return BlockRenderType.MODEL;
     }
-
+    
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+    public void onBlockPlacedBy(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity entity, @Nonnull ItemStack stack) {
         if (entity != null) {
             world.setBlockState(pos, state
-                .with(FACING, getFacingFromEntity(pos, entity))
-                // TODO: add enable/lit logic
-                .with(ENABLED, false), 2);
+                    .with(FACING, getFacingFromEntity(pos, entity))
+                    // TODO: add enable/lit logic
+                    .with(ENABLED, false), 2);
         }
     }
-
+    
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
         return Direction.getFacingFromVector((float) (entity.getPosX() - clickedBlock.getX()), 0.0F, (float) (entity.getPosZ() - clickedBlock.getZ()));
     }
-
+    
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING).add(ENABLED);
     }
-
+    
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity createNewTileEntity(@Nonnull IBlockReader worldIn) {
         return new CyaniteReprocessorTile();
     }
-
+    
+    @Nonnull
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        if(!world.isRemote) {
+    public ActionResultType onBlockActivated(@Nonnull BlockState state, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult trace) {
+        if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(blockPos);
-            if(tileEntity instanceof CyaniteReprocessorTile) {
-                NetworkHooks.openGui((ServerPlayerEntity)player, (CyaniteReprocessorTile) tileEntity, tileEntity.getPos());
+            if (tileEntity instanceof CyaniteReprocessorTile) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, (CyaniteReprocessorTile) tileEntity, tileEntity.getPos());
             } else {
                 throw new IllegalStateException("Container not found: cyanite_reprocessor");
             }

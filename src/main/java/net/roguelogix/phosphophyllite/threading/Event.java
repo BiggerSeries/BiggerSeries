@@ -6,11 +6,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Event {
     private final ArrayList<Runnable> callbacks = new ArrayList<>();
     private final AtomicBoolean wasTriggered = new AtomicBoolean(false);
-
-    public boolean ready(){
+    
+    public boolean ready() {
         return wasTriggered.get();
     }
-
+    
     public synchronized void join() {
         if (wasTriggered.get()) {
             return;
@@ -20,7 +20,7 @@ public class Event {
         } catch (InterruptedException ignored) {
         }
     }
-
+    
     public synchronized void trigger() {
         if (wasTriggered.get()) {
             return;
@@ -29,7 +29,7 @@ public class Event {
         callbacks.forEach(Runnable::run);
         notifyAll();
     }
-
+    
     public synchronized void registerCallback(Runnable runnable) {
         if (wasTriggered.get()) {
             runnable.run();
@@ -37,7 +37,7 @@ public class Event {
         }
         callbacks.add(runnable);
     }
-
+    
     @Override
     protected void finalize() throws Throwable {
         trigger();

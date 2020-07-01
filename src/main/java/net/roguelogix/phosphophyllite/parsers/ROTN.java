@@ -12,24 +12,24 @@ public class ROTN {
         iterator.next();
         return parseElement(null, iterator);
     }
-
+    
     private Element parseElement(String name, Iterator<Character> nextCharacter) {
         StringBuilder nextElementType = new StringBuilder();
-        char newChar = 0;
-        while ((newChar = nextCharacter.next()) != ' '){
+        char newChar;
+        while ((newChar = nextCharacter.next()) != ' ') {
             nextElementType.append(newChar);
         }
-        switch (nextElementType.toString()){
-            case "section":{
+        switch (nextElementType.toString()) {
+            case "section": {
                 return parseSection(name, nextCharacter);
             }
-            default:{
+            default: {
                 throw new IllegalArgumentException();
             }
         }
     }
-
-    private Element parseSection(String name, Iterator<Character> nextCharacter){
+    
+    private Element parseSection(String name, Iterator<Character> nextCharacter) {
         ArrayList<Element> elements = new ArrayList<>();
         return null;
     }

@@ -11,8 +11,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -32,6 +30,7 @@ public abstract class MultiblockTile extends TileEntity {
     public void attemptAttach() {
         controller = null;
         attemptAttach = true;
+        assert world != null;
         if (!world.isRemote) {
             Phosphophyllite.tilesToAttach.add(this);
         }
@@ -40,6 +39,7 @@ public abstract class MultiblockTile extends TileEntity {
     private boolean attemptAttach = true;
     private boolean allowAttach = true;
     
+    @SuppressWarnings("CanBeFinal")
     protected Validator<MultiblockController> attachableControllerValidator = c -> true;
     
     public MultiblockTile(TileEntityType<?> tileEntityTypeIn) {
@@ -145,13 +145,13 @@ public abstract class MultiblockTile extends TileEntity {
     
     // TODO: 6/25/20 mappings 
     @Override
-    public void func_230337_a_(BlockState blockState, CompoundNBT compoundNBT) {
+    public void func_230337_a_(@Nonnull BlockState blockState, @Nonnull CompoundNBT compoundNBT) {
         super.func_230337_a_(blockState, compoundNBT);
         read(compoundNBT);
     }
     
     @Override
-    public final CompoundNBT write(CompoundNBT compound) {
+    public final CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
         if (controller != null && controller.blocks.contains(this)) {
             compound.put("controllerData", controller.getNBT());
@@ -169,6 +169,7 @@ public abstract class MultiblockTile extends TileEntity {
     
     }
     
+    @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
         return write(new CompoundNBT());
@@ -190,6 +191,7 @@ public abstract class MultiblockTile extends TileEntity {
             updateBakedModelState(nbt.getCompound("bakedmodeldata"));
         }
         ModelDataManager.requestModelDataRefresh(this);
+        assert world != null;
         world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), BLOCK_UPDATE + NOTIFY_NEIGHBORS);
     }
     
@@ -211,7 +213,7 @@ public abstract class MultiblockTile extends TileEntity {
     protected void onAssemblyAttempted() {
     }
     
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
         if (controller != null && controller.lastValidationError != null && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand() == ItemStack.EMPTY) {
             player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());
             return ActionResultType.SUCCESS;

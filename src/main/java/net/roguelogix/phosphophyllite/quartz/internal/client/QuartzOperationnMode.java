@@ -8,24 +8,24 @@ public enum QuartzOperationnMode {
     GL33,
     GL21,
     UNKNOWN;
-
+    
     private static QuartzOperationnMode mode = UNKNOWN;
-
-    public static QuartzOperationnMode mode(){
+    
+    public static QuartzOperationnMode mode() {
         return mode;
     }
-
-    public static void onGLStartup(){
+    
+    public static void onGLStartup() {
         GLCapabilities capabilities = GL.getCapabilities();
-        if(capabilities.OpenGL45){
+        if (capabilities.OpenGL45) {
             mode = GL45;
             return;
         }
-        if(capabilities.OpenGL33 && capabilities.GL_ARB_explicit_uniform_location){
+        if (capabilities.OpenGL33 && capabilities.GL_ARB_explicit_uniform_location) {
             mode = GL33;
             return;
         }
-        if(capabilities.OpenGL21 && capabilities.GL_EXT_texture_integer){
+        if (capabilities.OpenGL21 && capabilities.GL_EXT_texture_integer) {
             mode = GL21;
             return;
         }

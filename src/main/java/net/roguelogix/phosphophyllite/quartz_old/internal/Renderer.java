@@ -52,45 +52,45 @@ public class Renderer {
      *       - GL3.3
      *       - GL2.1
      */
-
+    
     public static final Logger LOGGER = LogManager.getLogger("Phosphophyllite/Quartz");
-
+    
     public static final boolean useSecondaryThread = false;
-
+    
     // run on the main OpenGL thread (Minecraft's)
     public static final WorkQueue primaryWorkQueue = new WorkQueue();
     // run on the secondary OpenGL thread (mine), context shared with MC's
     public static final WorkQueue secondaryWorkQueue = new WorkQueue();
     // run on daemon threads
     public static final WorkQueue tertiaryWorkQueue = new WorkQueue().addProcessingThreads(4);
-
+    
     public static final Matrix4f projectionMatrix = new Matrix4f();
     public static final FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
-
+    
     public static final Matrix4f modelVewMatrix = new Matrix4f();
     public static final FloatBuffer modelVewMatrixBuffer = BufferUtils.createFloatBuffer(16);
-
+    
     public static final Matrix4f modelViewProjectionMatrix = new Matrix4f();
     public static final FloatBuffer modelViewProjectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
     public static final Matrix4f inverseModelViewProjectionMatrix = new Matrix4f();
-
+    
     public static final Vector3d playerPosition = new Vector3d();
-    public static final Vector3d playerOffest = new Vector3d();
+    public static final Vector3d playerOffset = new Vector3d();
     private static Thread secondaryThread;
     private static long secondaryContextHandle = 0;
-
+    
     static void startup() {
         saveMCState();
         LOGGER.info("Starting up!");
-
+        
         OperationMode.init();
         GLConstants.init();
-
+        
         boundTextures1D = new int[MAX_TEXTURE_UNITS];
         boundTextures2D = new int[MAX_TEXTURE_UNITS];
         boundTextures2DArrays = new int[MAX_TEXTURE_UNITS];
         boundTextures3D = new int[MAX_TEXTURE_UNITS];
-
+        
         // init secondary thread
         LOGGER.info("Creating secondary context");
         glfwDefaultWindowHints();
@@ -104,30 +104,30 @@ public class Renderer {
         LOGGER.info("Starting secondary thread");
         secondaryThread = new Thread(Renderer::secondThreadFunc);
         secondaryThread.setName("BiggerCoreRenderer");
-        if(useSecondaryThread) {
+        if (useSecondaryThread) {
             secondaryThread.start();
         }
         LOGGER.info("Started secondary thread");
-
-
+        
+        
         ShaderRegistry.startup();
         TextureRegistry.startup();
         TextureRegistry.getOrRegister(new ResourceLocation(modid, "textures/test_texture.png"));
-
+        
         ChunkRendering.startup();
-
-
+        
+        
         LOGGER.info("Running primary startup queue");
         primaryWorkQueue.runAll();
         LOGGER.info("Started!");
         loadMCState();
     }
-
+    
     static void shutdown() {
         saveMCState();
         LOGGER.info("Shutting down!");
         ChunkRendering.shutdown();
-
+        
         // secondary thread shutdown
         glfwSetWindowShouldClose(secondaryContextHandle, true);
         try {
@@ -135,26 +135,26 @@ public class Renderer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        
         TextureRegistry.shutdown();
         ShaderRegistry.shutdown();
-
+        
         // RAII cleanup, or trying at least
         System.runFinalization();
         secondaryWorkQueue.runAll();
         primaryWorkQueue.runAll();
-
+        
         LOGGER.info("Shutdown!");
         loadMCState();
     }
-
+    
     static void secondThreadFunc() {
         LOGGER.info("Secondary thread started!");
         glfwMakeContextCurrent(secondaryContextHandle);
         GL.createCapabilities();
         glfwSwapInterval(1);
         while (!glfwWindowShouldClose(secondaryContextHandle)) {
-            if(useSecondaryThread) {
+            if (useSecondaryThread) {
                 secondaryWorkQueue.runAll();
             }
             glfwSwapBuffers(secondaryContextHandle);
@@ -162,12 +162,13 @@ public class Renderer {
         glfwMakeContextCurrent(0);
         LOGGER.info("Secondary thread shutdown!");
     }
-
+    
     static void draw() {
-
+        
         WorldManager.tick();
-
+        
         glClear(GL_COLOR_BUFFER_BIT);
+        assert Minecraft.getInstance().world != null;
         IProfiler iprofiler = Minecraft.getInstance().world.getProfiler();
         iprofiler.endStartSection("biggercorerender");
         iprofiler.startSection("savestate");
@@ -177,43 +178,43 @@ public class Renderer {
             glEnable(GL_DEPTH_TEST);
             glDepthMask(true);
             glDisableClientState(GL_VERTEX_ARRAY);
-
+            
             projectionMatrixBuffer.rewind();
             glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrixBuffer);
             projectionMatrixBuffer.rewind();
             projectionMatrix.set(projectionMatrixBuffer);
-
-
+            
+            
             ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
             MatrixStack matrixStack = new MatrixStack();
             matrixStack.rotate(Vector3f.XP.rotationDegrees(renderInfo.getPitch()));
             matrixStack.rotate(Vector3f.YP.rotationDegrees(renderInfo.getYaw() + 180.0f));
-
+            
             modelVewMatrixBuffer.rewind();
             matrixStack.getLast().getMatrix().write(modelVewMatrixBuffer);
             modelVewMatrixBuffer.rewind();
             modelVewMatrix.set(modelVewMatrixBuffer);
-
+            
             modelViewProjectionMatrix.set(projectionMatrix).mul(modelVewMatrix);
             modelViewProjectionMatrixBuffer.rewind();
             modelViewProjectionMatrix.get(modelViewProjectionMatrixBuffer);
-
+            
             inverseModelViewProjectionMatrix.set(modelViewProjectionMatrix);
             inverseModelViewProjectionMatrix.invert();
-
+            
             net.minecraft.util.math.vector.Vector3d vec3d = renderInfo.getProjectedView();
             playerPosition.set(vec3d.x, vec3d.y, vec3d.z);
-
+            
             iprofiler.endStartSection("draw");
 
 //            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             ChunkRendering.draw();
 //            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
-
+        
         iprofiler.endStartSection("work queue");
         primaryWorkQueue.runAll();
-        if(!useSecondaryThread){
+        if (!useSecondaryThread) {
             iprofiler.endStartSection("secondary work queue");
             secondaryWorkQueue.runAll();
         }
@@ -222,7 +223,7 @@ public class Renderer {
         iprofiler.endSection();
         iprofiler.endStartSection("updatechunks");
     }
-
+    
     private static int activeClientTexutre;
     private static int activeTexture;
     // they use the FFP, so its ok if i only save the amount the FFP can use
@@ -231,8 +232,8 @@ public class Renderer {
     private static int[] boundTextures2DArrays;
     private static int[] boundTextures3D;
     private static int activeProgram;
-
-    private static void saveMCState(){
+    
+    private static void saveMCState() {
         activeClientTexutre = glGetInteger(GL_CLIENT_ACTIVE_TEXTURE);
         activeTexture = glGetInteger(GL_ACTIVE_TEXTURE);
         activeProgram = glGetInteger(GL_CURRENT_PROGRAM);
@@ -241,18 +242,19 @@ public class Renderer {
             boundTextures1D[i] = glGetInteger(GL_TEXTURE_BINDING_1D);
             boundTextures2D[i] = glGetInteger(GL_TEXTURE_BINDING_2D);
             boundTextures3D[i] = glGetInteger(GL_TEXTURE_BINDING_3D);
-            if(OperationMode.mode() == OperationMode.GL45){
+            if (OperationMode.mode() == OperationMode.GL45) {
                 boundTextures2DArrays[i] = glGetInteger(GL_TEXTURE_BINDING_2D_ARRAY);
             }
         }
     }
-    private static void loadMCState(){
+    
+    private static void loadMCState() {
         for (int i = 0; i < MAX_TEXTURE_UNITS; i++) {
             glActiveTexture(GL_TEXTURE0 + i);
             glBindTexture(GL_TEXTURE_1D, boundTextures1D[i]);
             glBindTexture(GL_TEXTURE_2D, boundTextures2D[i]);
             glBindTexture(GL_TEXTURE_3D, boundTextures3D[i]);
-            if(OperationMode.mode() == OperationMode.GL45){
+            if (OperationMode.mode() == OperationMode.GL45) {
                 glBindTexture(GL_TEXTURE_2D_ARRAY, boundTextures2DArrays[i]);
             }
         }

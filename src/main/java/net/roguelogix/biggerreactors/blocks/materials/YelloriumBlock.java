@@ -7,12 +7,12 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
 @RegisterBlock(name = "yellorium_block")
 public class YelloriumBlock extends Block {
-
+    
     public YelloriumBlock() {
         super(
-            Properties.create(Material.IRON)
-                .sound(SoundType.STONE)
-                .hardnessAndResistance(1.0F)
+                Properties.create(Material.IRON)
+                        .sound(SoundType.STONE)
+                        .hardnessAndResistance(1.0F)
         );
     }
 }

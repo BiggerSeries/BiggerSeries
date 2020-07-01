@@ -12,22 +12,22 @@ public class FluidYellorium extends PhosphophylliteFluid {
     
     @RegisterFluid.Instance
     public static FluidYellorium INSTANCE_STILL;
-
-    private ResourceLocation TEXTURE_STILL = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_still");
-    private ResourceLocation TEXTURE_FLOWING = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_flowing");
-    private ResourceLocation TEXTURE_OVERLAY = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_overlay");
-
+    
+    private final ResourceLocation TEXTURE_STILL = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_still");
+    private final ResourceLocation TEXTURE_FLOWING = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_flowing");
+    private final ResourceLocation TEXTURE_OVERLAY = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_overlay");
+    
     public FluidYellorium(Properties properties) {
         super(properties);
     }
-
+    
     @Override
     public FluidAttributes createAttributes() {
         return FluidAttributes.builder(TEXTURE_STILL, TEXTURE_FLOWING)
-            .color(0xBCBA50)
-            .sound(SoundEvents.ITEM_BUCKET_FILL, SoundEvents.ITEM_BUCKET_EMPTY)
-            .overlay(TEXTURE_OVERLAY)
-            .density(1)
-            .build(this);
+                .color(0xBCBA50)
+                .sound(SoundEvents.ITEM_BUCKET_FILL, SoundEvents.ITEM_BUCKET_EMPTY)
+                .overlay(TEXTURE_OVERLAY)
+                .density(1)
+                .build(this);
     }
 }

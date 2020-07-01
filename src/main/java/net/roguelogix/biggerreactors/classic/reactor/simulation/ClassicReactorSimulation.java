@@ -6,33 +6,47 @@ import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import org.joml.Vector2i;
 
-import javax.naming.ldap.Control;
 import java.util.ArrayList;
 
 public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     
+    public final FuelTank fuelTank = new FuelTank();
+    public final CoolantTank coolantTank = new CoolantTank();
+    private final ArrayList<ControlRod> controlRods = new ArrayList<>();
+    private final Vector2i[] directions = new Vector2i[]{
+            new Vector2i(1, 0),
+            new Vector2i(-1, 0),
+            new Vector2i(0, 1),
+            new Vector2i(0, -1),
+    };
+    public float fuelConsumedLastTick = 0f;
+    public float FEProducedLastTick = 0f;
     private int x, y, z;
+    private ReactorModeratorRegistry.ModeratorProperties[][][] moderatorProperties;
+    private ControlRod[][] controlRodsXZ;
+    private float fuelToReactorHeatTransferCoefficient = 0;
+    private float reactorToCoolantSystemHeatTransferCoefficient = 0;
+    private float reactorHeatLossCoefficient = 0;
+    private boolean active = false;
+    private float fuelFertility = 1f;
+    private float fuelHeat = Config.Reactor.AmbientTemperature;
+    private float reactorHeat = Config.Reactor.AmbientTemperature;
+    private boolean passive = true;
+    private int rodToIrradiate = 0;
+    private int yLevelToIrradiate = 0;
+    
+    public static float getRFFromVolumeAndTemp(float volume, float temperature) {
+        return temperature * volume * Config.Reactor.FEPerCentigradePerUnitVolume;
+    }
+    
+    public static float getTempFromVolumeAndRF(float volume, float rf) {
+        return rf / (volume * Config.Reactor.FEPerCentigradePerUnitVolume);
+    }
     
     float reactorVolume() {
         return x * y * z;
     }
     
-    private ReactorModeratorRegistry.ModeratorProperties[][][] moderatorProperties;
-    
-    private class ControlRod {
-        
-        final int x;
-        final int z;
-        float insertion = 0;
-        private ControlRod(int x, int z) {
-            this.x = x;
-            this.z = z;
-        }
-        
-    }
-    private final ArrayList<ControlRod> controlRods = new ArrayList<>();
-    
-    private ControlRod[][] controlRodsXZ;
     float fuelRodVolume() {
         return controlRods.size() * y;
     }
@@ -73,13 +87,6 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         controlRodsXZ[x][z].insertion = insertion;
     }
     
-    public final FuelTank fuelTank = new FuelTank();
-    public final CoolantTank coolantTank = new CoolantTank();
-    
-    private float fuelToReactorHeatTransferCoefficient = 0;
-    
-    private float reactorToCoolantSystemHeatTransferCoefficient = 0;
-    private float reactorHeatLossCoefficient = 0;
     public void updateInternalValues() {
         fuelTank.setCapacity(Config.Reactor.PerFuelRodCapacity * controlRods.size() * y);
         
@@ -94,8 +101,8 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
                     ReactorModeratorRegistry.ModeratorProperties properties = moderatorProperties[controlRod.x + direction.x][i][controlRod.z + direction.y];
                     if (properties != null) {
                         fuelToReactorHeatTransferCoefficient += properties.heatConductivity;
-                    }else{
-                        fuelToReactorHeatTransferCoefficient += Config.Reactor.FuelRodHeatTransferCoefficient   ;
+                    } else {
+                        fuelToReactorHeatTransferCoefficient += Config.Reactor.FuelRodHeatTransferCoefficient;
                     }
                 }
             }
@@ -105,23 +112,13 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         reactorToCoolantSystemHeatTransferCoefficient = 2 * (x * y + x * z + z * y) * Config.Reactor.CasingToCoolantSystemCoefficientMultiplier;
         
         reactorHeatLossCoefficient = 2 * ((x + 2) * (y + 2) + (x + 2) * (z + 2) + (z + 2) * (y + 2)) * Config.Reactor.HeatLossCoefficientMultiplier;
-    
-    
+        
+        
     }
-    
-    private boolean active = false;
     
     public void setActive(boolean active) {
         this.active = active;
     }
-    
-    private float fuelFertility = 1f;
-    
-    private float fuelHeat = Config.Reactor.AmbientTemperature;
-    private float reactorHeat = Config.Reactor.AmbientTemperature;
-    public float fuelConsumedLastTick = 0f;
-    
-    public float FEProducedLastTick = 0f;
     
     public void tick() {
         if (active) {
@@ -137,7 +134,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
                 // Much slower decay when off
                 denominator *= Config.Reactor.FuelFertilityDecayDenominatorInactiveMultiplier;
             }
-        
+            
             // Fertility decay, at least 0.1 rad/t, otherwise halve it every 10 ticks
             fuelFertility = Math.max(0f, fuelFertility - Math.max(Config.Reactor.FuelFertilityMinimumDecay, fuelFertility / denominator));
         }
@@ -192,40 +189,30 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         }
     }
     
-    private boolean passive = true;
-    
-    public void setPassivelyCooled(boolean passivelyCooled){
+    public void setPassivelyCooled(boolean passivelyCooled) {
         passive = passivelyCooled;
     }
     
     private float getCoolantTemperature() {
-        if(passive){
+        if (passive) {
             return Config.Reactor.AmbientTemperature;
         }
         return coolantTank.getCoolantTemperature(reactorHeat);
     }
     
-    private int rodToIrradiate = 0;
-    
-    private int yLevelToIrradiate = 0;
-    private final Vector2i[] directions = new Vector2i[]{
-            new Vector2i(1, 0),
-            new Vector2i(-1, 0),
-            new Vector2i(0, 1),
-            new Vector2i(0, -1),
-    };
+    // these two are copied from MultiblockReactor
     
     private void radiate() {
         // ok, so, this is doing basically the same thing as what old BR did, marked with where the functionality is in old BR
-    
+        
         rodToIrradiate++;
-        // MultiblockReactor.updateServer
+        //  MultiblockReactor.updateServer
         // this is a different method, but im just picking a fuel rod to radiate from
         if (rodToIrradiate == controlRods.size()) {
             rodToIrradiate = 0;
             yLevelToIrradiate++;
         }
-    
+        
         if (yLevelToIrradiate == y) {
             yLevelToIrradiate = 0;
         }
@@ -346,8 +333,6 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         fuelConsumedLastTick = rawFuelUsage;
     }
     
-    // these two are copied from MultiblockReactor
-    
     protected void addReactorHeat(float newCasingHeat) {
         if (Float.isNaN(newCasingHeat)) {
             return;
@@ -359,6 +344,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
             reactorHeat = 0.0f;
         }
     }
+    
     protected void addFuelHeat(float additionalHeat) {
         if (Float.isNaN(additionalHeat)) {
             return;
@@ -369,14 +355,6 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         if (-0.00001f < fuelHeat & fuelHeat < 0.00001f) {
             fuelHeat = 0f;
         }
-    }
-    
-    public static float getRFFromVolumeAndTemp(float volume, float temperature) {
-        return temperature * volume * Config.Reactor.FEPerCentigradePerUnitVolume;
-    }
-    
-    public static float getTempFromVolumeAndRF(float volume, float rf) {
-        return rf / (volume * Config.Reactor.FEPerCentigradePerUnitVolume);
     }
     
     public float getFertility() {
@@ -431,5 +409,18 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         if (nbt.contains("reactorHeat")) {
             reactorHeat = nbt.getFloat("reactorHeat");
         }
+    }
+    
+    private static class ControlRod {
+        
+        final int x;
+        final int z;
+        float insertion = 0;
+        
+        private ControlRod(int x, int z) {
+            this.x = x;
+            this.z = z;
+        }
+        
     }
 }

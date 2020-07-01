@@ -25,43 +25,43 @@ import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccess
 
 @RegisterTileEntity(name = "reactor_access_port")
 public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandler {
-
+    
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-
+    
     public ReactorAccessPortTile() {
         super(TYPE);
     }
-
+    
     private ReactorAccessPort.PortDirection direction = INLET;
-
-    public boolean isInlet(){
+    
+    public boolean isInlet() {
         return direction == INLET;
     }
     
-    public void setDirection(ReactorAccessPort.PortDirection direction){
+    public void setDirection(ReactorAccessPort.PortDirection direction) {
         this.direction = direction;
         this.markDirty();
     }
-
+    
     @Override
     public void onLoad() {
         super.onLoad();
     }
-
+    
     @Override
     protected void readNBT(CompoundNBT compound) {
-        if(compound.contains("direction")){
+        if (compound.contains("direction")) {
             direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
         }
-        if(compound.contains("inSlot")){
+        if (compound.contains("inSlot")) {
             inSlot.deserializeNBT(compound.getCompound("inSlot"));
         }
-        if(compound.contains("outSlot")){
+        if (compound.contains("outSlot")) {
             outSlot.deserializeNBT(compound.getCompound("outSlot"));
         }
     }
-
+    
     @Override
     protected CompoundNBT writeNBT() {
         CompoundNBT NBT = new CompoundNBT();
@@ -70,7 +70,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         NBT.put("outSlot", outSlot.serializeNBT());
         return NBT;
     }
-
+    
     @Override
     public void onActivated(PlayerEntity player) {
         if (controller != null && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
@@ -79,74 +79,75 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
                     "Out: " + outSlot.toString()), player.getUniqueID());
         }
     }
-
+    
     @Override
     protected void onAssemblyAttempted() {
+        assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
     }
-
-    LazyOptional<IItemHandler> itemStackHandler = LazyOptional.of(()-> this);
-
+    
+    LazyOptional<IItemHandler> itemStackHandler = LazyOptional.of(() -> this);
+    
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemStackHandler.cast();
         }
         return super.getCapability(cap, side);
     }
-
-    ItemStack inSlot = new ItemStack(()-> YelloriumIngot.INSTANCE, 0);
-    ItemStack outSlot = new ItemStack(()-> CyaniteIngot.INSTANCE, 0);
-
+    
+    ItemStack inSlot = new ItemStack(() -> YelloriumIngot.INSTANCE, 0);
+    ItemStack outSlot = new ItemStack(() -> CyaniteIngot.INSTANCE, 0);
+    
     @Override
     public int getSlots() {
         return 1;
     }
-
+    
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
         return ItemStack.EMPTY;
     }
-
+    
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        if(!isInlet()){
+        if (!isInlet()) {
             return stack;
         }
         stack = stack.copy();
-        if(stack.getItem() == YelloriumIngot.INSTANCE){
+        if (stack.getItem() == YelloriumIngot.INSTANCE) {
             int canAccept = inSlot.getMaxStackSize() - inSlot.getCount();
-            if(canAccept > 0){
+            if (canAccept > 0) {
                 ItemStack accepted = stack.split(canAccept);
-                if(!simulate) {
+                if (!simulate) {
                     inSlot.setCount(inSlot.getCount() + accepted.getCount());
                 }
             }
         }
         return stack;
     }
-
+    
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if(isInlet()){
+        if (isInlet()) {
             return ItemStack.EMPTY;
         }
         ItemStack stack = outSlot;
-        if(simulate){
+        if (simulate) {
             stack = stack.copy();
         }
         return stack.split(amount);
     }
-
+    
     @Override
     public int getSlotLimit(int slot) {
         return inSlot.getMaxStackSize();
     }
-
+    
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return false;
@@ -154,7 +155,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     public long refuel(long maxAmount) {
         long ingots = maxAmount / Config.Reactor.FuelMBPerIngot;
-        return inSlot.split((int)ingots).getCount() * Config.Reactor.FuelMBPerIngot;
+        return inSlot.split((int) ingots).getCount() * Config.Reactor.FuelMBPerIngot;
     }
     
     public long wasteSpaceAvailable() {

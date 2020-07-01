@@ -20,20 +20,20 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class MultiblockBakedModel implements IDynamicBakedModel {
-
+    
     public static class TextureMap {
         public ResourceLocation spriteLocation;
         public ModelProperty<?> property;
         public final HashMap<Object, TextureMap> map = new HashMap<>();
         public final HashMap<Direction, Boolean> sideRotations = new HashMap<>();
     }
-
+    
     public TextureMap map = new TextureMap();
-
+    
     MultiblockBakedModel(ResourceLocation defaultTexture) {
         map.spriteLocation = defaultTexture;
     }
-
+    
     private void putVertex(BakedQuadBuilder builder, TextureAtlasSprite sprite, float x, float y, float z, float normalx, float normaly, float normalz, float u, float v) {
         ImmutableList<VertexFormatElement> elements = builder.getVertexFormat().getElements();
         for (int i = 0; i < elements.size(); i++) {
@@ -54,11 +54,11 @@ public class MultiblockBakedModel implements IDynamicBakedModel {
                             builder.put(i, sprite.getInterpolatedU(u), sprite.getInterpolatedV(v));
                             break;
                         }
-                        case 2:{
-                            builder.put(i,0.0f/2048f, 0.0f/2048.0f);
+                        case 2: {
+                            builder.put(i, 0.0f / 2048f, 0.0f / 2048.0f);
                             break;
                         }
-                        default:{
+                        default: {
                             builder.put(i);
                             break;
                         }
@@ -69,9 +69,9 @@ public class MultiblockBakedModel implements IDynamicBakedModel {
             }
         }
     }
-
+    
     static HashMap<Direction, float[][][][]> vertexMap = new HashMap<>();
-
+    
     static {
         vertexMap.put(Direction.UP, new float[][][][]{
                 {
@@ -163,7 +163,7 @@ public class MultiblockBakedModel implements IDynamicBakedModel {
                 },
         });
     }
-
+    
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
@@ -184,8 +184,8 @@ public class MultiblockBakedModel implements IDynamicBakedModel {
             }
             map = nextMap;
         }
-
-
+        
+        
         boolean rotate = false;
         if (map.sideRotations.containsKey(side)) {
             rotate = map.sideRotations.get(side);
@@ -195,7 +195,7 @@ public class MultiblockBakedModel implements IDynamicBakedModel {
         TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(map.spriteLocation);
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
         builder.setQuadOrientation(Direction.getFacingFromVector(vertexData[0][1][0], vertexData[0][1][1], vertexData[0][1][2]));
-
+        
         putVertex(builder, sprite, vertexData[0][0][0], vertexData[0][0][1], vertexData[0][0][2], vertexData[0][1][0], vertexData[0][1][1], vertexData[0][1][2], vertexData[0][2][0], vertexData[0][2][1]);
         putVertex(builder, sprite, vertexData[1][0][0], vertexData[1][0][1], vertexData[1][0][2], vertexData[1][1][0], vertexData[1][1][1], vertexData[1][1][2], vertexData[1][2][0], vertexData[1][2][1]);
         putVertex(builder, sprite, vertexData[2][0][0], vertexData[2][0][1], vertexData[2][0][2], vertexData[2][1][0], vertexData[2][1][1], vertexData[2][1][2], vertexData[2][2][0], vertexData[2][2][1]);
@@ -206,32 +206,34 @@ public class MultiblockBakedModel implements IDynamicBakedModel {
 //        System.out.println(ms);
         return quads;
     }
-
+    
     @Override
     public boolean isAmbientOcclusion() {
         return true;
     }
-
+    
     @Override
     public boolean isGui3d() {
         return false;
     }
-
+    
     @Override
     public boolean func_230044_c_() {
         return false;
     }
-
+    
     @Override
     public boolean isBuiltInRenderer() {
         return false;
     }
-
+    
+    @Nonnull
     @Override
     public TextureAtlasSprite getParticleTexture() {
         return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(map.spriteLocation);
     }
-
+    
+    @Nonnull
     @Override
     public ItemOverrideList getOverrides() {
         return null;

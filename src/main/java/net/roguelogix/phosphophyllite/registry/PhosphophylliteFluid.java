@@ -5,7 +5,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.state.StateContainer;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-import java.util.logging.Level;
+import javax.annotation.Nonnull;
 
 public class PhosphophylliteFluid extends ForgeFlowingFluid {
     
@@ -15,7 +15,7 @@ public class PhosphophylliteFluid extends ForgeFlowingFluid {
     }
     
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Fluid, FluidState> builder) {
+    protected void fillStateContainer(@Nonnull StateContainer.Builder<Fluid, FluidState> builder) {
         super.fillStateContainer(builder);
         builder.add(LEVEL_1_8);
     }
@@ -24,7 +24,7 @@ public class PhosphophylliteFluid extends ForgeFlowingFluid {
     PhosphophylliteFluid flowingVariant;
     
     @Override
-    public boolean isSource(FluidState state) {
+    public boolean isSource(@Nonnull FluidState state) {
         return isSource;
     }
     

@@ -10,6 +10,7 @@ import net.roguelogix.phosphophyllite.quartz_old.QuartzState;
 import net.roguelogix.phosphophyllite.quartz_old.internal.chunk.RenderChunkStateManager;
 import org.joml.Vector3i;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static net.roguelogix.phosphophyllite.quartz_old.internal.Renderer.secondaryWorkQueue;
@@ -41,7 +42,7 @@ public class WorldManager {
                 ChunkSection section = chunkSections[i];
                 if (!section.isEmpty()) {
                     position.set(position.x, i * 16, position.z);
-                    loadedChunks.put(new Vector3i(position), RenderChunkStateManager.createFromChunkSection(section, position));
+                    loadedChunks.put(new Vector3i(position), Objects.requireNonNull(RenderChunkStateManager.createFromChunkSection(section, position)));
                 }
             }
         });

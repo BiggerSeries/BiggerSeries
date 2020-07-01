@@ -7,11 +7,11 @@ import java.lang.annotation.RetentionPolicy;
 
 public @interface RegisterTileEntity {
     String name();
-
+    
     @Retention(RetentionPolicy.RUNTIME)
     @interface Type {
     }
-
+    
     @Retention(RetentionPolicy.RUNTIME)
     @interface Renderer {
     }

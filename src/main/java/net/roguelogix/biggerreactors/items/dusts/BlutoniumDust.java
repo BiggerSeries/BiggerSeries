@@ -5,7 +5,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterItem;
 
 @RegisterItem(name = "blutonium_dust")
 public class BlutoniumDust extends Item {
-
+    
     public BlutoniumDust(Properties properties) {
         super(properties);
     }

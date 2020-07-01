@@ -18,9 +18,9 @@ import java.util.Comparator;
 @Mod(Phosphophyllite.modid)
 public class Phosphophyllite {
     public static final String modid = "phosphophyllite";
-
+    
     public static final Logger LOGGER = LogManager.getLogger("Phosphophyllite/Main");
-
+    
     public Phosphophyllite() {
         Registry.onModLoad();
         MinecraftForge.EVENT_BUS.register(this);
@@ -28,8 +28,8 @@ public class Phosphophyllite {
     }
     
     @SubscribeEvent
-    void onWorldUnload(final WorldEvent.Unload worldUnloadEvent){
-        if(!worldUnloadEvent.getWorld().isRemote()){
+    void onWorldUnload(final WorldEvent.Unload worldUnloadEvent) {
+        if (!worldUnloadEvent.getWorld().isRemote()) {
             ArrayList<MultiblockController> controllersToTick = new ArrayList<>(Phosphophyllite.controllersToTick);
             for (MultiblockController multiblockController : controllersToTick) {
                 multiblockController.suicide();
@@ -54,7 +54,7 @@ public class Phosphophyllite {
         if (!e.side.isServer()) {
             return;
         }
-        if (e.phase!= TickEvent.Phase.END) {
+        if (e.phase != TickEvent.Phase.END) {
             return;
         }
         long timeNow = System.nanoTime();

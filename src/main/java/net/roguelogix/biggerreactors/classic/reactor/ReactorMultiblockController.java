@@ -23,7 +23,7 @@ assembly errors
 
  */
 public class ReactorMultiblockController extends RectangularMultiblockController {
-
+    
     public ReactorMultiblockController(World world) {
         super(world);
         minWidth = minHeight = minLength = 3;
@@ -45,16 +45,13 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                     block instanceof ReactorPowerTap;
         });
         interiorValidator = block -> {
-            if(block instanceof ReactorFuelRod){
+            if (block instanceof ReactorFuelRod) {
                 return true;
             }
-            if(!ReactorModeratorRegistry.isBlockAllowed(block)){
+            if (!ReactorModeratorRegistry.isBlockAllowed(block)) {
                 return false;
             }
-            if(exteriorValidator.validate(block)){
-                return false;
-            }
-            return true;
+            return !exteriorValidator.validate(block);
         };
         setAssemblyValidator(genericController -> {
             ReactorMultiblockController reactorController = (ReactorMultiblockController) genericController;
@@ -74,17 +71,17 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                     }
                 }
             }
-
+            
             for (ReactorFuelRodTile fuelRod : fuelRods) {
                 if (!(world.getBlockState(new BlockPos(fuelRod.getPos().getX(), maxY(), fuelRod.getPos().getZ())).getBlock() instanceof ReactorControlRod)) {
                     return false;
                 }
             }
-
+            
             return true;
         });
     }
-
+    
     private ReactorState reactorState = ReactorState.INACTIVE;
     
     private final Set<ReactorTerminalTile> terminals = new HashSet<>();
@@ -144,7 +141,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             terminal.markDirty();
         });
     }
-
+    
     public void setActive(ReactorState newState) {
         if (reactorState != newState) {
             reactorState = newState;
@@ -152,24 +149,24 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         simulation.setActive(reactorState == ReactorState.ACTIVE);
     }
-
+    
     public void toggleActive() {
         setActive(reactorState == ReactorState.ACTIVE ? ReactorState.INACTIVE : ReactorState.ACTIVE);
     }
-
+    
     protected void read(CompoundNBT compound) {
         if (compound.contains("reactorState")) {
             reactorState = ReactorState.valueOf(compound.getString("reactorState").toUpperCase());
             simulation.setActive(reactorState == ReactorState.ACTIVE);
         }
         
-        if(compound.contains("simulationData")){
+        if (compound.contains("simulationData")) {
             simulation.deserializeNBT(compound.getCompound("simulationData"));
         }
         
         updateBlockStates();
     }
-
+    
     protected CompoundNBT write() {
         CompoundNBT compound = new CompoundNBT();
         {
@@ -178,7 +175,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         return compound;
     }
-
+    
     @Override
     protected void onAssembly() {
         for (ReactorPowerTapTile powerPort : powerPorts) {
@@ -230,7 +227,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     @Override
     public void tick() {
-    
+        
         simulation.tick();
         if (!Float.isNaN(simulation.FEProducedLastTick)) {
             storedPower += simulation.FEProducedLastTick;
@@ -238,7 +235,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 storedPower = Config.Reactor.PassiveBatterySize;
             }
         }
-    
+        
         for (ReactorAccessPortTile accessPort : accessPorts) {
             // todo, output to inputs if there aren't any outputs left
             if (accessPort.isInlet()) {
@@ -246,22 +243,22 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             }
             long wasteSpaceAvailable = accessPort.wasteSpaceAvailable();
             simulation.fuelTank.extractWaste(accessPort.dumpWaste(simulation.fuelTank.extractWaste(wasteSpaceAvailable, true)), false);
-        
+            
         }
-    
+        
         if (simulation.fuelTank.spaceAvailable() > 0) {
             for (ReactorAccessPortTile accessPort : accessPorts) {
                 long ingots = accessPort.refuel(simulation.fuelTank.spaceAvailable());
                 simulation.fuelTank.insertFuel(ingots, false);
             }
         }
-    
-    
+        
+        
         long totalPowerRequested = 0;
         for (ReactorPowerTapTile powerPort : powerPorts) {
             totalPowerRequested += powerPort.distributePower(storedPower, true);
         }
-    
+        
         float distributionMultiplier = Math.min(1f, (float) storedPower / (float) totalPowerRequested);
         for (ReactorPowerTapTile powerPort : powerPorts) {
             long powerRequested = powerPort.distributePower(storedPower, true);
@@ -269,7 +266,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             powerRequested = Math.min(storedPower, powerRequested); // just in case
             storedPower -= powerPort.distributePower(powerRequested, false);
         }
-    
+        
         for (ReactorCoolantPortTile coolantPort : coolantPorts) {
             simulation.coolantTank.extractSteam(coolantPort.pushSteam(simulation.coolantTank.extractSteam(Integer.MAX_VALUE, true)), true);
         }

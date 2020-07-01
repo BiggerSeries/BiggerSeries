@@ -4,12 +4,12 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 public enum OperationMode {
-
+    
     GL45,
     GL21;
-
+    
     private static OperationMode mode;
-
+    
     public static void init() {
         GLCapabilities capabilities = GL.getCapabilities();
         if (capabilities.OpenGL45) {
@@ -21,7 +21,7 @@ public enum OperationMode {
             // not supporting GL.21 right now
 //            return;
         }
-
+        
         throw new IllegalStateException("Unsupported OpenGL mode required" +
                 "\n\n" +
                 "See github page linked for more info\n" +
@@ -29,7 +29,7 @@ public enum OperationMode {
                 "<said link, eventually>"
         );
     }
-
+    
     public static OperationMode mode() {
         return mode;
     }

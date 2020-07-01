@@ -4,7 +4,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.settings.ScalingSettings;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 
 import java.util.HashSet;
@@ -64,8 +63,8 @@ public class MultiblockController {
         if (blocks.isEmpty()) {
             return;
         }
-        int minX = 0, minY = 0, minZ = 0;
-        int maxX = 0, maxY = 0, maxZ = 0;
+        int minX, minY, minZ;
+        int maxX, maxY, maxZ;
         BlockPos firstPos = blocks.iterator().next().getPos();
         minX = firstPos.getX();
         minY = firstPos.getY();
@@ -276,7 +275,7 @@ public class MultiblockController {
         System.out.println("VALIDATING! " + this.hashCode());
         long startTime = System.nanoTime();
         boolean validated = false;
-        lastValidationError= null;
+        lastValidationError = null;
         try {
             validated = assemblyValidator.validate(this);
         } catch (ValidationError e) {

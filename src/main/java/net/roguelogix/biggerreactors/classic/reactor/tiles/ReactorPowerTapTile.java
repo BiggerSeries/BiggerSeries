@@ -44,6 +44,7 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
     private void setConnected(boolean newState){
         if(newState != connected){
             connected = newState;
+            assert world != null;
             world.setBlockState(pos, getBlockState().with(CONNECTION_STATE_ENUM_PROPERTY, connected ? CONNECTED : DISCONNECTED));
         }
     }

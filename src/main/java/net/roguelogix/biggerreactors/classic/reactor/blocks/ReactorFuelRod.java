@@ -10,36 +10,37 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorFuelRodTile;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @RegisterBlock(name = "reactor_fuel_rod", tileEntityClass = ReactorFuelRodTile.class)
 public class ReactorFuelRod extends ReactorBaseBlock {
-
+    
     @RegisterBlock.Instance
     public static ReactorFuelRod INSTANCE;
-
+    
     public ReactorFuelRod() {
         super(false);
     }
-
+    
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new ReactorFuelRodTile();
     }
-
+    
     @RegisterBlock.RenderLayer
     RenderType renderLayer() {
         return RenderType.getCutout();
     }
-
+    
     @OnlyIn(Dist.CLIENT)
-    public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float getAmbientOcclusionLightValue(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 1.0F;
     }
-
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    
+    public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
         return true;
     }
-
+    
 }

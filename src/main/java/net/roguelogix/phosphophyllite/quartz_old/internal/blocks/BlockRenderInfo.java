@@ -11,9 +11,9 @@ import org.joml.Vector3i;
 
 public class BlockRenderInfo implements Cloneable {
     public Vector3i location = null;
-
+    
     public int x = -1, y = -1, z = -1;
-
+    
     // west
     public int textureOffsetRotation0 = 0;
     // east
@@ -26,7 +26,7 @@ public class BlockRenderInfo implements Cloneable {
     public int textureOffsetRotation4 = 0;
     // north
     public int textureOffsetRotation5 = 0;
-
+    
     // west
     // low y, low z
     public short lightmap00 = 0xFFF;
@@ -36,7 +36,7 @@ public class BlockRenderInfo implements Cloneable {
     public short lightmap02 = 0xFFF;
     // high y, high z
     public short lightmap03 = 0xFFF;
-
+    
     // east
     // low y, low z
     public short lightmap10 = 0xFFF;
@@ -46,8 +46,8 @@ public class BlockRenderInfo implements Cloneable {
     public short lightmap12 = 0xFFF;
     // high y, high z
     public short lightmap13 = 0xFFF;
-
-
+    
+    
     public short lightmap20 = 0xFFF;
     public short lightmap21 = 0xFFF;
     public short lightmap22 = 0xFFF;
@@ -64,7 +64,7 @@ public class BlockRenderInfo implements Cloneable {
     public short lightmap51 = 0xFFF;
     public short lightmap52 = 0xFFF;
     public short lightmap53 = 0xFFF;
-
+    
     public BlockRenderInfo deepCopy() {
         try {
             BlockRenderInfo newInfo = (BlockRenderInfo) this.clone();
@@ -74,7 +74,7 @@ public class BlockRenderInfo implements Cloneable {
             return null;
         }
     }
-
+    
     public BlockRenderInfo shallowCopy() {
         try {
             return (BlockRenderInfo) this.clone();

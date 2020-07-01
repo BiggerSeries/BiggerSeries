@@ -16,45 +16,48 @@ import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorBaseTile;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorState;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockBlock;
 
+import javax.annotation.Nonnull;
+
 public class ReactorBaseBlock extends RectangularMultiblockBlock {
     public static final Properties PROPERTIES_SOLID = Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2, 10);
     public static final Properties PROPERTIES_GLASS = Properties.create(Material.IRON).sound(SoundType.METAL).notSolid().hardnessAndResistance(2);
-
-
+    
+    
     public ReactorBaseBlock() {
         this(true);
     }
-
+    
     public ReactorBaseBlock(boolean solid) {
         super(solid ? PROPERTIES_SOLID : PROPERTIES_GLASS);
-        if(usesBlockState()) {
+        if (usesBlockState()) {
             setDefaultState(getDefaultState().with(ReactorState.REACTOR_STATE_ENUM_PROPERTY, ReactorState.INACTIVE));
         }
     }
-
+    
     @Override
     public final boolean hasTileEntity(BlockState state) {
         return true;
     }
-
+    
+    @Nonnull
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
+    public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult p_225533_6_) {
         ActionResultType superAction = super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
-        if(superAction != ActionResultType.PASS){
+        if (superAction != ActionResultType.PASS) {
             return superAction;
         }
-        if(handIn != Hand.MAIN_HAND){
+        if (handIn != Hand.MAIN_HAND) {
             return ActionResultType.PASS;
         }
         TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof ReactorBaseTile){
+        if (te instanceof ReactorBaseTile) {
             ((ReactorBaseTile) te).onActivated(player);
         }
         return ActionResultType.PASS;
     }
-
+    
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
         builder.add(ReactorState.REACTOR_STATE_ENUM_PROPERTY);
     }

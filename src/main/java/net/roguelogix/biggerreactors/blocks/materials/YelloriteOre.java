@@ -10,12 +10,12 @@ import net.roguelogix.phosphophyllite.registry.RegisterOre;
 @RegisterBlock(name = "yellorite_ore")
 @RegisterOre(size = Config.YelloriteMaxOrePerCluster, maxLevel = Config.YelloriteOreMaxSpawnY, count = Config.YelloriteOreMaxClustersPerChunk)
 public class YelloriteOre extends Block {
-
-  public YelloriteOre() {
-    super(
-        Properties.create(Material.ROCK)
-        .sound(SoundType.STONE)
-        .hardnessAndResistance(1.0F)
-    );
-  }
+    
+    public YelloriteOre() {
+        super(
+                Properties.create(Material.ROCK)
+                        .sound(SoundType.STONE)
+                        .hardnessAndResistance(1.0F)
+        );
+    }
 }

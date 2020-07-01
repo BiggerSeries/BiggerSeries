@@ -7,18 +7,18 @@ import java.util.function.Supplier;
 
 public class QuartzServeSideConfig {
     QuartzServeSideConfig() {
-
+    
     }
-
+    
     QuartzServeSideConfig(PacketBuffer buf) {
-
+    
     }
-
+    
     public synchronized void toBytes(PacketBuffer buf) {
-
+    
     }
-
+    
     public synchronized void handle(Supplier<NetworkEvent.Context> ctx) {
-
+    
     }
 }

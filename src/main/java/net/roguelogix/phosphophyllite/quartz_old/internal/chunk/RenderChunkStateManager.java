@@ -18,14 +18,14 @@ import java.util.HashMap;
 import static net.roguelogix.phosphophyllite.util.Util.chunkCachedBlockStateIteration;
 
 public class RenderChunkStateManager {
-
+    
     private final RenderChunk chunk;
     private final HashMap<Vector3ic, BlockRenderInfo> blocks = new HashMap<>();
-
+    
     public RenderChunkStateManager(RenderChunk chunk) {
         this.chunk = chunk;
     }
-
+    
     public void updateBlockQuartzState(Block block, QuartzState info, Vector3ic position) {
         BlockRenderInfo newRenderInfo = RenderStateBuilding.buildBaseInfo(block, info);
         assert position != null;
@@ -39,7 +39,7 @@ public class RenderChunkStateManager {
         renderInfo.textureOffsetRotation5 = newRenderInfo.textureOffsetRotation5;
         chunk.setBlocks(renderInfo);
     }
-
+    
     private static BlockState getBlockStateFromChunk(Chunk chunk, BlockPos pos) {
         if (chunk.getPos().x == pos.getX() >> 4 && chunk.getPos().z == pos.getZ() >> 4) {
             return chunk.getBlockState(pos);
@@ -47,14 +47,14 @@ public class RenderChunkStateManager {
         // its not in this chunk, so it has to be looked up from the world
         return chunk.getWorld().getBlockState(pos);
     }
-
+    
     public void updateShownFaces(BlockState state, Vector3ic position) {
         // oh lovely, having to query MC's state
         assert Minecraft.getInstance().world != null;
         Chunk chunk = Minecraft.getInstance().world.getChunk(position.x() >> 4, position.z() >> 4);
         getBlockStateFromChunk(chunk, new BlockPos(position.x(), position.y(), position.z()));
     }
-
+    
     // todo: maybe add ability for single block updates?
     public void updateLighting() {
         final int[][][] lightArray = new int[18][18][18];
@@ -75,15 +75,15 @@ public class RenderChunkStateManager {
             }
         }
     }
-
+    
     private void updateLightLevelsForBlock(Vector3i position, int[][][] lightArray) {
         BlockRenderInfo info = blocks.get(position);
-        if (info != null){
+        if (info != null) {
 //            info.
         }
     }
-
-    public static RenderChunkStateManager createFromChunkSection(ChunkSection section, Vector3i position){
+    
+    public static RenderChunkStateManager createFromChunkSection(ChunkSection section, Vector3i position) {
         RenderChunk renderChunk = new RenderChunk(position);
         RenderChunkStateManager stateManager = new RenderChunkStateManager(renderChunk);
         for (int i = 0; i < 16; i++) {

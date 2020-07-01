@@ -24,9 +24,9 @@ public class Texture {
     final ResourceLocation location;
     private Tuple<int[], ByteBuffer> textureData;
     boolean hasNewData = true;
-
+    
     public Texture(ResourceLocation location) {
-        if(location.getPath().lastIndexOf(".png") != location.getPath().length() - 4){
+        if (location.getPath().lastIndexOf(".png") != location.getPath().length() - 4) {
             location = new ResourceLocation(location.getNamespace(), location.getPath() + ".png");
         }
         this.location = location;
@@ -35,13 +35,13 @@ public class Texture {
             throw new IllegalStateException("Couldn't load texture: " + location.toString());
         }
     }
-
+    
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
         STBImage.stbi_image_free(textureData.getB());
     }
-
+    
     public Event reload() {
         return tertiaryWorkQueue.enqueue(() -> {
             Tuple<int[], ByteBuffer> newData = load(location);
@@ -50,6 +50,7 @@ public class Texture {
                     Phosphophyllite.LOGGER.error("Texture size cannot change at runtime");
                     return;
                 }
+                //noinspection SynchronizeOnNonFinalField
                 synchronized (textureData) {
                     newData.getB().rewind();
                     textureData.getB().rewind();
@@ -64,25 +65,26 @@ public class Texture {
             }
         });
     }
-
+    
     Tuple<int[], ByteBuffer> getTextureData() {
-        synchronized (textureData){
+        //noinspection SynchronizeOnNonFinalField
+        synchronized (textureData) {
             hasNewData = false;
             return textureData;
         }
     }
-
+    
     private static byte[] toByteArray(InputStream inputStream) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[2048];
         int len;
-
+        
         while ((len = inputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, len);
         }
         return outputStream.toByteArray();
     }
-
+    
     private static Tuple<int[], ByteBuffer> load(ResourceLocation location) {
         ByteBuffer byteBuffer;
         try (InputStream inputStream = Minecraft.getInstance().getResourceManager().getResource(location).getInputStream()) {
@@ -92,7 +94,7 @@ public class Texture {
             e.printStackTrace();
             return null;
         }
-
+        
         int[] w = new int[2];
         int[] h = new int[1];
         int[] comp = new int[1];
@@ -103,12 +105,12 @@ public class Texture {
             System.out.println(STBImage.stbi_failure_reason());
             return null;
         }
-
+        
         w[1] = h[0];
-
+        
         return new Tuple<>(w, imageData);
     }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,7 +119,7 @@ public class Texture {
         // i only care about the location, because you shouldn't be reloading individual textures yourself
         return Objects.equals(location, texture.location);
     }
-
+    
     @Override
     public int hashCode() {
         return Objects.hash(location, textureData, hasNewData);

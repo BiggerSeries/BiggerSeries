@@ -17,21 +17,21 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class QuartzEventHandling {
-
-    private static ChunkRenderDispatcher renderDispatcher = null;
+    
+    private static final ChunkRenderDispatcher renderDispatcher = null;
     private static Field renderDispatcherField = null;
-
+    
     private static Queue<Runnable> uploadTasks = null;
-
+    
     public static void onModLoad() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(QuartzEventHandling::onClientSetup);
         MinecraftForge.EVENT_BUS.addListener(QuartzEventHandling::onRenderWorldLastEvent);
         MinecraftForge.EVENT_BUS.addListener(QuartzEventHandling::onChunkLoad);
         MinecraftForge.EVENT_BUS.addListener(QuartzEventHandling::onChunkUnload);
     }
-
+    
     public static void onClientSetup(final FMLClientSetupEvent e) {
-
+        
         Field[] fields = Minecraft.getInstance().worldRenderer.getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.getType().equals(ChunkRenderDispatcher.class)) {
@@ -43,7 +43,7 @@ public class QuartzEventHandling {
         if (renderDispatcherField == null) {
             throw new IllegalStateException("Could not find WorldRenderer.renderDispatcher");
         }
-
+        
         DeferredWorkQueue.runLater(() -> {
             try {
                 QuartzRenderer.GLStartup();
@@ -53,7 +53,7 @@ public class QuartzEventHandling {
             }
         });
     }
-
+    
     public static void onRenderWorldLastEvent(final RenderWorldLastEvent e) {
         try {
             ChunkRenderDispatcher renderDispatcher = (ChunkRenderDispatcher) renderDispatcherField.get(Minecraft.getInstance().worldRenderer);
@@ -72,20 +72,20 @@ public class QuartzEventHandling {
                     }
                 }
             }
-
+            
         } catch (IllegalAccessException noSuchFieldException) {
             noSuchFieldException.printStackTrace();
         }
-
+        
         uploadTasks.add(QuartzRenderer::draw);
     }
-
+    
     public static void onChunkLoad(ChunkEvent.Load event) {
         IChunk iChunk = event.getChunk();
         IWorld world = iChunk.getWorldForge();
-        if(world != null && world.isRemote()){
+        if (world != null && world.isRemote()) {
             // aight, client shit is safe now
-            if(iChunk instanceof Chunk){
+            if (iChunk instanceof Chunk) {
                 Chunk chunk = (Chunk) iChunk;
                 for (int i = 0; i < chunk.getSections().length; i++) {
 //                    chunk.getSections()[i] = new QuartzChunkSection(i * 16, chunk.getSections()[i]);
@@ -94,8 +94,8 @@ public class QuartzEventHandling {
             }
         }
     }
-
+    
     public static void onChunkUnload(ChunkEvent.Unload event) {
-
+    
     }
 }

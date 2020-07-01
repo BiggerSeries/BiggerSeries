@@ -10,35 +10,36 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorGlassTile;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @RegisterBlock(name = "reactor_glass", tileEntityClass = ReactorGlassTile.class)
 public class ReactorGlass extends ReactorBaseBlock {
-
+    
     @RegisterBlock.Instance
     public static ReactorGlass INSTANCE;
-
+    
     public ReactorGlass() {
         super(false);
     }
-
+    
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new ReactorGlassTile();
     }
-
+    
     @RegisterBlock.RenderLayer
     public RenderType renderLayer() {
         return RenderType.getCutout();
     }
-
+    
     @OnlyIn(Dist.CLIENT)
-    public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float getAmbientOcclusionLightValue(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 1.0F;
     }
-
-    public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+    
+    public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
         return true;
     }
 }

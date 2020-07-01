@@ -16,16 +16,17 @@ import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorCoolantPortTil
 import net.roguelogix.biggerreactors.items.tools.Wrench;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort.PortDirection.*;
 
 @RegisterBlock(name = "reactor_coolant_port", tileEntityClass = ReactorCoolantPortTile.class)
-public class ReactorCoolantPort extends ReactorBaseBlock{
+public class ReactorCoolantPort extends ReactorBaseBlock {
     @RegisterBlock.Instance
     public static ReactorCoolantPort INSTANCE;
     
-    public ReactorCoolantPort(){
+    public ReactorCoolantPort() {
         super();
         setDefaultState(getDefaultState().with(PORT_DIRECTION_ENUM_PROPERTY, INLET));
     }
@@ -37,21 +38,22 @@ public class ReactorCoolantPort extends ReactorBaseBlock{
     }
     
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
         builder.add(PORT_DIRECTION_ENUM_PROPERTY);
     }
     
+    @Nonnull
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
-        if(!worldIn.isRemote && handIn == Hand.MAIN_HAND){
-            if(player.getHeldItemMainhand().getItem() == Wrench.INSTANCE){
+    public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult p_225533_6_) {
+        if (!worldIn.isRemote && handIn == Hand.MAIN_HAND) {
+            if (player.getHeldItemMainhand().getItem() == Wrench.INSTANCE) {
                 ReactorAccessPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
                 direction = direction == INLET ? OUTLET : INLET;
                 worldIn.setBlockState(pos, state.with(PORT_DIRECTION_ENUM_PROPERTY, direction));
                 
                 TileEntity te = worldIn.getTileEntity(pos);
-                if(te instanceof ReactorCoolantPortTile){
+                if (te instanceof ReactorCoolantPortTile) {
                     ((ReactorCoolantPortTile) te).setDirection(direction);
                 }
                 

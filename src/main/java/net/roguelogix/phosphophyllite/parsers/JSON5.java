@@ -12,7 +12,7 @@ public class JSON5 {
         iterator.next();
         return parseString(null, Element.Type.Section, iterator);
     }
-
+    
     private Element parseString(String name, Element.Type objectType, Iterator<Character> nextCharacter) {
         ArrayList<Element> subElements = new ArrayList<>();
         char lastChar = 0;

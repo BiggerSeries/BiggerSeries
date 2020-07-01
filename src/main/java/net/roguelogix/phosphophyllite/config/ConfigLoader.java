@@ -6,9 +6,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.roguelogix.biggerreactors.Config;
-import net.roguelogix.phosphophyllite.registry.RegisterBlock;
-import org.reflections.Reflections;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -17,14 +14,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class ConfigLoader {
-
+    
     public static void registerConfig(Class<?> config, ConfigType type, String path) {
         ConfigLoadingInfo loadingInfo = createConfigLoadInfo(config);
         ModConfig.Type configType = null;
-        switch (type){
+        switch (type) {
             case CLIENT:
                 configType = ModConfig.Type.CLIENT;
                 break;
@@ -37,27 +33,28 @@ public class ConfigLoader {
         }
         Path configPath = FMLPaths.CONFIGDIR.get().resolve(path);
         CommentedFileConfig configData = CommentedFileConfig.builder(configPath).sync().autosave().writingMode(WritingMode.REPLACE).build();
-
+        
+        assert loadingInfo != null;
         ModLoadingContext.get().registerConfig(configType, loadingInfo.spec);
-
-
+        
+        
     }
-
+    
     private static class ConfigLoadingInfoBuilder {
         ForgeConfigSpec.Builder specBuilder = new ForgeConfigSpec.Builder();
         final ArrayList<Runnable> valueLoadFuncs = new ArrayList<>();
-
+        
     }
-
+    
     private static class ConfigLoadingInfo {
         ForgeConfigSpec spec;
         final ArrayList<Runnable> valueLoadFuncs = new ArrayList<>();
     }
-
-
+    
+    
     private static void buildConfigLoadInfo(Class<?> configClass, ConfigLoadingInfoBuilder loadingInfo, @Nullable final Object currentObject, ArrayList<Object> previousObjects) throws IllegalAccessException {
         Field[] fields = configClass.getDeclaredFields();
-
+        
         if (previousObjects.contains(currentObject) || (currentObject == null && previousObjects.contains(configClass))) {
             throw new IllegalStateException("Config attempts to use same values twice");
         }
@@ -66,7 +63,7 @@ public class ConfigLoader {
         } else {
             previousObjects.add(currentObject);
         }
-
+        
         for (final Field field : fields) {
             if (!field.isAnnotationPresent(PhosphophylliteConfig.Value.class)) {
                 continue;
@@ -185,30 +182,30 @@ public class ConfigLoader {
             loadingInfo.valueLoadFuncs.add(loader);
         }
     }
-
+    
     private static ConfigLoadingInfo createConfigLoadInfo(Class<?> config) {
         ConfigLoadingInfoBuilder loadingInfo = new ConfigLoadingInfoBuilder();
-
+        
         try {
             buildConfigLoadInfo(config, loadingInfo, null, new ArrayList<>());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return null;
         }
-
+        
         ConfigLoadingInfo loadInfo = new ConfigLoadingInfo();
-
+        
         loadInfo.spec = loadingInfo.specBuilder.build();
         loadInfo.valueLoadFuncs.addAll(loadingInfo.valueLoadFuncs);
-
+        
         return loadInfo;
     }
-
+    
     public static void onLoad(final ModConfig.Loading configEvent) {
-
+    
     }
-
+    
     public static void onReload(final ModConfig.Reloading configEvent) {
     }
-
+    
 }

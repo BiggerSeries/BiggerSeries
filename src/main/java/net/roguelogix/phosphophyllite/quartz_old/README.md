@@ -1,5 +1,5 @@
 # Phosphophyllite Quartz Renderer
-Quartz is a render engine designed to work alongside minecraft's built in engine to help with dynamicly textured blocks
+Quartz is a render engine designed to work alongside minecraft's built in engine to help with dynamically textured blocks
 
 If you are using this engine, it is recommend you *don't* poke around with the OpenGL state at all, 
 depending on what OpenGL capabilities are available, it will switch what its doing

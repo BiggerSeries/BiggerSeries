@@ -9,11 +9,11 @@ import static net.roguelogix.phosphophyllite.util.Util.readResourceLocation;
 import static org.lwjgl.opengl.GL21.*;
 
 public class Program {
-
+    
     private final ResourceLocation location;
-
+    
     private int handle;
-
+    
     public Program(ResourceLocation location) {
         this.location = location;
         handle = load(location);
@@ -21,11 +21,11 @@ public class Program {
             throw new IllegalStateException("Unable to load shader: " + location.toString());
         }
     }
-
+    
     public void bind() {
         glUseProgram(handle);
     }
-
+    
     public Event reload() {
         return secondaryWorkQueue.enqueue(() -> {
             int newHandle = load(location);
@@ -35,26 +35,26 @@ public class Program {
             }
         });
     }
-
+    
     @Override
     protected void finalize() throws Throwable {
         unload(handle);
     }
-
+    
     private static int load(ResourceLocation location) {
         ResourceLocation vertexLocation = new ResourceLocation(location.getNamespace(), location.getPath() + ".vert");
         ResourceLocation fragmentLocation = new ResourceLocation(location.getNamespace(), location.getPath() + ".frag");
-
+        
         String vertexCode = readResourceLocation(vertexLocation);
         String fragmentCode = readResourceLocation(fragmentLocation);
-
+        
         if (vertexCode == null && fragmentCode == null) {
             Phosphophyllite.LOGGER.warn("No code found for shader " + location.toString());
             return 0;
         }
-
+        
         int vertexShader = 0;
-
+        
         if (vertexCode != null) {
             vertexShader = glCreateShader(GL_VERTEX_SHADER);
             glShaderSource(vertexShader, vertexCode);
@@ -66,9 +66,9 @@ public class Program {
                 return 0;
             }
         }
-
+        
         int fragmentShader = 0;
-
+        
         if (fragmentCode != null) {
             fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
             glShaderSource(fragmentShader, fragmentCode);
@@ -81,18 +81,18 @@ public class Program {
                 return 0;
             }
         }
-
+        
         int program = glCreateProgram();
-
+        
         if (vertexCode != null) {
             glAttachShader(program, vertexShader);
         }
         if (fragmentCode != null) {
             glAttachShader(program, fragmentShader);
         }
-
+        
         glLinkProgram(program);
-
+        
         if (glGetProgrami(program, GL_LINK_STATUS) != GL_TRUE) {
             Phosphophyllite.LOGGER.warn("Program link error" + location.toString());
             Phosphophyllite.LOGGER.warn("\n" + glGetProgramInfoLog(program));
@@ -101,7 +101,7 @@ public class Program {
             glDeleteShader(fragmentShader);
             return 0;
         }
-
+        
         if (vertexCode != null) {
             glDetachShader(program, vertexShader);
             glDeleteShader(vertexShader);
@@ -110,14 +110,12 @@ public class Program {
             glDetachShader(program, fragmentShader);
             glDeleteShader(fragmentShader);
         }
-
+        
         return program;
     }
-
+    
     private static void unload(int handle) {
-        secondaryWorkQueue.enqueue(() -> {
-            glDeleteProgram(handle);
-        });
+        secondaryWorkQueue.enqueue(() -> glDeleteProgram(handle));
     }
-
+    
 }

@@ -10,11 +10,11 @@ import javax.annotation.Nullable;
 
 @RegisterBlock(name = "reactor_casing", tileEntityClass = ReactorCasingTile.class)
 public class ReactorCasing extends ReactorBaseBlock {
-
+    
     @RegisterBlock.Instance
     public static ReactorCasing INSTANCE;
-
-    public ReactorCasing(){
+    
+    public ReactorCasing() {
         super();
 
 //        ResourceLocation corner = new ResourceLocation(BiggerReactors.modid, "block/reactor_casing_corner");
@@ -45,13 +45,13 @@ public class ReactorCasing extends ReactorBaseBlock {
 //        frame_zTextureMap.spriteLocation = frame;
 //        model.map.map.put(RectangularMultiblockPositions.FRAME_Z, frame_zTextureMap);
     }
-
+    
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new ReactorCasingTile();
     }
-
+    
     @Override
     public boolean usesBlockState() {
         return false;

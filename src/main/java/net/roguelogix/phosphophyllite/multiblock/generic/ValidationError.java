@@ -3,8 +3,8 @@ package net.roguelogix.phosphophyllite.multiblock.generic;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class ValidationError extends IllegalStateException{
-
+public class ValidationError extends IllegalStateException {
+    
     public ValidationError() {
         super();
     }
@@ -29,7 +29,7 @@ public class ValidationError extends IllegalStateException{
     }
     
     public ITextComponent getTextComponent() {
-        if(cause != null){
+        if (cause != null) {
             return cause;
         }
         return new TranslationTextComponent(getMessage());

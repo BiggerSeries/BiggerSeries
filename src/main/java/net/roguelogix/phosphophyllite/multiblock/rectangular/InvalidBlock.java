@@ -1,7 +1,6 @@
 package net.roguelogix.phosphophyllite.multiblock.rectangular;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import org.joml.Vector3i;

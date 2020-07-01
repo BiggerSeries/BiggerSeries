@@ -28,7 +28,7 @@ public class TextureUnitPack {
     private final ArrayList<Vector2i> offsetsAvailable = new ArrayList<>();
     private final HashMap<Texture, Tuple<Integer, Vector2i>> offsets = new HashMap<>();
     private final int handle;
-
+    
     public TextureUnitPack() {
         switch (OperationMode.mode()) {
             case GL45:
@@ -55,15 +55,13 @@ public class TextureUnitPack {
             }
         }
     }
-
+    
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        secondaryWorkQueue.enqueue(()->{
-            glDeleteTextures(handle);
-        });
+        secondaryWorkQueue.enqueue(() -> glDeleteTextures(handle));
     }
-
+    
     public void bind(int baseTextureUnit) {
         glActiveTexture(GL_TEXTURE0 + baseTextureUnit);
         glBindTexture(GL_TEXTURE_2D, handle);
@@ -72,8 +70,8 @@ public class TextureUnitPack {
             textureUnit.bind(baseTextureUnit + i + 1);
         }
     }
-
-    public void setupUniforms(int baseTextureUnit, int indexUniform, int baseScaleUniform, int baseUnitUniform){
+    
+    public void setupUniforms(int baseTextureUnit, int indexUniform, int baseScaleUniform, int baseUnitUniform) {
         glUniform1i(indexUniform, baseTextureUnit);
         for (int i = 0; i < textureUnits.size(); i++) {
             TextureUnit textureUnit = textureUnits.get(i);
@@ -81,19 +79,19 @@ public class TextureUnitPack {
             glUniform2f(baseScaleUniform + i, textureUnit.xscale(), textureUnit.yscale());
         }
     }
-
+    
     public synchronized void addTextureUnit(TextureUnit textureUnit) {
         textureUnits.add(textureUnit);
     }
-
+    
     public synchronized Vector2ic getTextureIndex(Texture texture) {
         return offsets.get(texture).getB();
     }
-
+    
     public synchronized Vector2f getTextureIndexNormalized(Texture texture, Vector2f vector) {
         return vector.set(offsets.get(texture).getB()).div(size, size);
     }
-
+    
     public synchronized void addTextures(Texture... textures) {
         for (Texture texture : textures) {
             if (this.offsets.containsKey(texture)) {
@@ -109,7 +107,7 @@ public class TextureUnitPack {
             }
         }
     }
-
+    
     public Event reloadAll() {
         Event[] textureUnitReloadEvents = new Event[textureUnits.size()];
         int i = 0;
@@ -119,7 +117,7 @@ public class TextureUnitPack {
         }
         return secondaryWorkQueue.enqueue(this::upload, textureUnitReloadEvents);
     }
-
+    
     public synchronized void upload() {
         textureUnits.forEach(TextureUnit::upload);
         final Vector3f offset = new Vector3f();
@@ -135,7 +133,7 @@ public class TextureUnitPack {
             LOGGER.debug("Texture " + texture.location.toString() + " given index data " + offset.toString() + " for atlas " + textureUnit);
         });
         switch (OperationMode.mode()) {
-
+            
             case GL45:
                 glTextureSubImage2D(handle, 0, 0, 0, size, size, GL_RGBA, GL_FLOAT, buffer);
                 break;

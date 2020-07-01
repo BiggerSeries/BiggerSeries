@@ -24,19 +24,19 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class ForgeEventHandling {
-
+    
     public static void setupEvents() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ForgeEventHandling::onClientSetup);
         MinecraftForge.EVENT_BUS.addListener(ForgeEventHandling::onRenderWorldLastEvent);
         MinecraftForge.EVENT_BUS.addListener(ForgeEventHandling::onChunkLoad);
         MinecraftForge.EVENT_BUS.addListener(ForgeEventHandling::onChunkUnload);
     }
-
+    
     private static Field renderDispatcherField = null;
-    private static ChunkRenderDispatcher renderDispatcher = null;
-
+    private static final ChunkRenderDispatcher renderDispatcher = null;
+    
     private static Queue<Runnable> uploadTasks = null;
-
+    
     public static void onClientSetup(final FMLClientSetupEvent e) {
         Field[] fields = Minecraft.getInstance().worldRenderer.getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -58,9 +58,9 @@ public class ForgeEventHandling {
             }
         });
     }
-
+    
     private static int lastF5Code;
-
+    
     public static void onRenderWorldLastEvent(final RenderWorldLastEvent e) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         try {
@@ -80,13 +80,13 @@ public class ForgeEventHandling {
                     }
                 }
             }
-
+            
         } catch (IllegalAccessException noSuchFieldException) {
             noSuchFieldException.printStackTrace();
         }
-
+        
         uploadTasks.add(Renderer::draw);
-
+        
         // its just for debugging purposes
         long window = Minecraft.getInstance().getMainWindow().getHandle();
         if (glfwGetKey(window, GLFW_KEY_KP_4) == GLFW_PRESS) {
@@ -101,18 +101,18 @@ public class ForgeEventHandling {
             ShaderRegistry.reloadAll();
         }
         lastF5Code = F5Code;
-
+        
         if (glfwGetKey(window, GLFW_KEY_KP_8) == GLFW_PRESS) {
             ChunkRendering.testBlock();
         }
     }
-
+    
     public static void onChunkLoad(ChunkEvent.Load event) {
         IChunk iChunk = event.getChunk();
         IWorld world = iChunk.getWorldForge();
-        if(world != null && world.isRemote()){
+        if (world != null && world.isRemote()) {
             // aight, client shit is safe now
-            if(iChunk instanceof Chunk){
+            if (iChunk instanceof Chunk) {
                 Chunk chunk = (Chunk) iChunk;
                 for (int i = 0; i < chunk.getSections().length; i++) {
                     chunk.getSections()[i] = new QuartzChunkSection(i * 16, chunk.getSections()[i]);
@@ -121,17 +121,17 @@ public class ForgeEventHandling {
             }
         }
     }
-
+    
     public static void onChunkUnload(ChunkEvent.Unload event) {
         IChunk iChunk = event.getChunk();
         IWorld world = iChunk.getWorldForge();
-        if(world != null && world.isRemote()){
+        if (world != null && world.isRemote()) {
             // aight, client shit is safe now
-            if(iChunk instanceof Chunk){
+            if (iChunk instanceof Chunk) {
                 Chunk chunk = (Chunk) iChunk;
                 WorldManager.unloadChunk(chunk);
             }
         }
     }
-
+    
 }
