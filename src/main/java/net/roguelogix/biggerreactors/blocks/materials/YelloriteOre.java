@@ -4,12 +4,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.roguelogix.biggerreactors.Config;
+import net.roguelogix.phosphophyllite.registry.IPhosphophylliteOre;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterOre;
 
 @RegisterBlock(name = "yellorite_ore")
-@RegisterOre(size = Config.YelloriteMaxOrePerCluster, maxLevel = Config.YelloriteOreMaxSpawnY, count = Config.YelloriteOreMaxClustersPerChunk)
-public class YelloriteOre extends Block {
+@RegisterOre
+public class YelloriteOre extends Block implements IPhosphophylliteOre {
     
     public YelloriteOre() {
         super(
@@ -17,5 +18,20 @@ public class YelloriteOre extends Block {
                         .sound(SoundType.STONE)
                         .hardnessAndResistance(1.0F)
         );
+    }
+    
+    @Override
+    public int size() {
+        return Config.YelloriteMaxOrePerCluster;
+    }
+    
+    @Override
+    public int count() {
+        return Config.YelloriteOreMaxClustersPerChunk;
+    }
+    
+    @Override
+    public int maxLevel() {
+        return Config.YelloriteOreMaxSpawnY;
     }
 }

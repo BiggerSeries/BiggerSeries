@@ -56,6 +56,7 @@ public class Registry {
     private static final HashMap<String, HashSet<Block>> blocksRegistered = new HashMap<>();
     private static final HashMap<Class<?>, HashSet<Block>> tileEntityBlocksToRegister = new HashMap<>();
     
+    @SuppressWarnings("unchecked")
     public static synchronized void onModLoad() {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
@@ -473,7 +474,6 @@ public class Registry {
         
         for (Class<?> ore : ores) {
             try {
-                RegisterOre oreAnnotation = ore.getAnnotation(RegisterOre.class);
                 RegisterBlock blockAnnotation = ore.getAnnotation(RegisterBlock.class);
                 
                 Block oreInstance = null;
@@ -484,19 +484,21 @@ public class Registry {
                     }
                 }
                 
+                assert oreInstance instanceof IPhosphophylliteOre;
+                IPhosphophylliteOre oreInfo = (IPhosphophylliteOre) oreInstance;
+                
                 for (Biome biome : ForgeRegistries.BIOMES) {
-                    if (oreAnnotation.spawnBiomes().length > 0) {
-                        if (!Arrays.asList(oreAnnotation.spawnBiomes()).contains(
+                    if (oreInfo.spawnBiomes().length > 0) {
+                        if (!Arrays.asList(oreInfo.spawnBiomes()).contains(
                                 Objects.requireNonNull(biome.getRegistryName()).toString())) {
                             continue;
                         }
                     }
-                    
-                    assert oreInstance != null;
-                    FillerBlockType fillerBlock = oreAnnotation.isNetherOre() ? FillerBlockType.NETHERRACK : FillerBlockType.NATURAL_STONE;
+    
+                    FillerBlockType fillerBlock = oreInfo.isNetherOre() ? FillerBlockType.NETHERRACK : FillerBlockType.NATURAL_STONE;
                     biome.addFeature(Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(
-                            new OreFeatureConfig(fillerBlock, oreInstance.getDefaultState(), oreAnnotation.size()))
-                            .withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(oreAnnotation.count(), oreAnnotation.minLevel(), oreAnnotation.offset(), oreAnnotation.maxLevel()))));
+                            new OreFeatureConfig(fillerBlock, oreInstance.getDefaultState(), oreInfo.size()))
+                            .withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(oreInfo.count(), oreInfo.minLevel(), oreInfo.offset(), oreInfo.maxLevel()))));
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
