@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorBaseTile;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorState;
-import net.roguelogix.biggerreactors.items.tools.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockBlock;
 
 public class ReactorBaseBlock extends RectangularMultiblockBlock {
@@ -40,7 +39,10 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
-        super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
+        ActionResultType superAction = super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
+        if(superAction != ActionResultType.PASS){
+            return superAction;
+        }
         if(handIn != Hand.MAIN_HAND){
             return ActionResultType.PASS;
         }

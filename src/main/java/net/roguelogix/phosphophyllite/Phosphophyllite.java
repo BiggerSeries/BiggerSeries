@@ -8,6 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
+import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +22,7 @@ public class Phosphophyllite {
     public static final Logger LOGGER = LogManager.getLogger("Phosphophyllite/Main");
 
     public Phosphophyllite() {
+        Registry.onModLoad();
         MinecraftForge.EVENT_BUS.register(this);
 //        Quartz.onModLoad();
     }

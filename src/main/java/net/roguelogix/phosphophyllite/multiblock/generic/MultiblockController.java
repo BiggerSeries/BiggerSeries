@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.settings.ScalingSettings;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 
 import java.util.HashSet;
@@ -16,49 +17,49 @@ assembly errors
  */
 
 public class MultiblockController {
-
+    
     protected final World world;
-
+    
     protected final Set<MultiblockTile> blocks = new HashSet<>();
     private boolean checkForDetachments = false;
     private long updateAssemblyAtTick = Long.MAX_VALUE;
     protected final Set<MultiblockController> controllersToMerge = new HashSet<>();
-
+    
     public MultiblockController(World world) {
         this.world = world;
         Phosphophyllite.controllersToTick.add(this);
     }
-
+    
     private int MinX, MinY, MinZ;
     private int MaxX, MaxY, MaxZ;
-
+    
     public int minX() {
         return MinX;
     }
-
+    
     public int minY() {
         return MinY;
     }
-
+    
     public int minZ() {
         return MinZ;
     }
-
+    
     public int maxX() {
         return MaxX;
     }
-
+    
     public int maxY() {
         return MaxY;
     }
-
+    
     public int maxZ() {
         return MaxZ;
     }
-
-
+    
+    
     protected Validator<MultiblockTile> tileAttachValidator;
-
+    
     private void updateMinMaxCoordinates() {
         if (blocks.isEmpty()) {
             return;
@@ -100,7 +101,7 @@ public class MultiblockController {
         MaxY = maxY;
         MaxZ = maxZ;
     }
-
+    
     final void attemptAttach(MultiblockTile toAttach) {
         if (tileAttachValidator != null && !tileAttachValidator.validate(toAttach)) {
             return;
@@ -108,7 +109,7 @@ public class MultiblockController {
         if (toAttach.controller != null && toAttach.controller != this) {
             controllersToMerge.add(toAttach.controller);
         }
-
+        
         // ok, its a valid tile to attach, so ima attach it
         blocks.add(toAttach);
         toAttach.controller = this;
@@ -119,14 +120,14 @@ public class MultiblockController {
         }
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 5;
     }
-
+    
     protected void onPartAdded(MultiblockTile toAttach) {
     }
-
+    
     final void detach(MultiblockTile toDetach) {
         detach(toDetach, false);
     }
-
+    
     final void detach(MultiblockTile toDetach, boolean onChunkUnload) {
         blocks.remove(toDetach);
         onPartRemoved(toDetach);
@@ -136,52 +137,52 @@ public class MultiblockController {
             onPaused();
             updateNBT();
         }
-
+        
         if (blocks.isEmpty()) {
             Phosphophyllite.controllersToTick.remove(this);
         }
-
+        
         checkForDetachments = true;
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 5;
     }
-
+    
     protected void onPartRemoved(MultiblockTile tile) {
     }
-
+    
     protected void onMerge(MultiblockController otherController) {
     }
-
+    
     private Validator<MultiblockController> assemblyValidator = c -> true;
-
+    
     protected void setAssemblyValidator(Validator<MultiblockController> validator) {
         if (validator != null) {
             assemblyValidator = validator;
         }
     }
-
+    
     long lastTick = -1;
-
+    
     public void update() {
         if (lastTick >= Phosphophyllite.tickNumber()) {
             return;
         }
         lastTick = Phosphophyllite.tickNumber();
-
+        
         if (updateAssemblyAtTick < lastTick) {
             updateMinMaxCoordinates();
             updateAssemblyState();
             updateAssemblyAtTick = Long.MAX_VALUE;
         }
-
-        if(blocks.isEmpty()){
+        
+        if (blocks.isEmpty()) {
             // why are we being ticked?
             Phosphophyllite.controllersToTick.remove(this);
             checkForDetachments = false;
         }
-
+        
         if (checkForDetachments) {
             MultiblockTile firstBlock = blocks.iterator().next();
-
+            
             HashSet<MultiblockTile> toSave = new HashSet<>();
             Stack<MultiblockTile> workingStack = new Stack<>();
             toSave.add(firstBlock);
@@ -215,7 +216,7 @@ public class MultiblockController {
                     }
                 }
             }
-
+            
             HashSet<MultiblockTile> toOrphan = new HashSet<>(blocks);
             toOrphan.removeAll(toSave);
             blocks.removeAll(toOrphan);
@@ -245,10 +246,10 @@ public class MultiblockController {
             tick();
         }
     }
-
+    
     public void tick() {
     }
-
+    
     public AssemblyState assemblyState() {
         return state;
     }
@@ -265,14 +266,22 @@ public class MultiblockController {
         DISASSEMBLED,
         PAUSED,
     }
-
+    
     protected AssemblyState state = AssemblyState.DISASSEMBLED;
-
+    
+    protected ValidationError lastValidationError = null;
+    
     private void updateAssemblyState() {
         AssemblyState oldState = state;
         System.out.println("VALIDATING! " + this.hashCode());
         long startTime = System.nanoTime();
-        boolean validated = assemblyValidator.validate(this);
+        boolean validated = false;
+        lastValidationError= null;
+        try {
+            validated = assemblyValidator.validate(this);
+        } catch (ValidationError e) {
+            lastValidationError = e;
+        }
         long endTime = System.nanoTime();
         System.out.println("VALIDATED! " + this.hashCode() + "\t" + validated + "\t" + ((float) (endTime - startTime) / 1_000_000));
         if (validated) {
@@ -293,19 +302,19 @@ public class MultiblockController {
             block.onAssemblyAttempted();
         }
     }
-
+    
     protected void onAssembled() {
     }
-
+    
     protected void onDisassembled() {
     }
-
+    
     protected void onPaused() {
     }
-
+    
     private CompoundNBT storedNBT = null;
     private CompoundNBT multiblockData = null;
-
+    
     private void onBlockWithNBTAttached(CompoundNBT nbt) {
         if (multiblockData == null) {
             readNBT(nbt);
@@ -316,7 +325,7 @@ public class MultiblockController {
             return;
         }
     }
-
+    
     final void readNBT(CompoundNBT nbt) {
         /*
          * to future me, or someone else, i dont judge
@@ -341,14 +350,14 @@ public class MultiblockController {
             }
         }
     }
-
+    
     final CompoundNBT getNBT() {
         if (storedNBT == null) {
             updateNBT();
         }
         return storedNBT.copy();
     }
-
+    
     final void updateNBT() {
         CompoundNBT compound = new CompoundNBT();
         compound.put("userdata", write());
@@ -362,14 +371,14 @@ public class MultiblockController {
         }
         storedNBT = compound;
     }
-
+    
     protected void read(CompoundNBT compound) {
     }
-
+    
     protected CompoundNBT write() {
         return new CompoundNBT();
     }
-
+    
     public String getInfo() {
         return "BlockCount: " + blocks.size() + "\n" +
                 "Min (" + minX() + ", " + minY() + ", " + minZ() + ")\n" +

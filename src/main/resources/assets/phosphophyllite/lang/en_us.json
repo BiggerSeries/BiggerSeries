@@ -1,0 +1,7 @@
+{
+  "invalid_block.frame" : "Invalid block (%s) for frame at %s",
+  "invalid_block.exterior" : "Invalid block (%s) for exterior at %s",
+  "invalid_block.interior" : "Invalid block (%s) for interior at %s",
+  "invalid_block.corner" : "Invalid block (%s) for corner at %s",
+  "invalid_block.generic" : "Invalid block (%s) at %s"
+}

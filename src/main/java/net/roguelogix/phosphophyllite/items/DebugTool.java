@@ -1,7 +1,6 @@
-package net.roguelogix.biggerreactors.items.tools;
+package net.roguelogix.phosphophyllite.items;
 
 import net.minecraft.item.Item;
-import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
 import net.roguelogix.phosphophyllite.registry.RegisterItem;
 
 @RegisterItem(name = "debug_tool")

@@ -14,6 +14,7 @@ import org.joml.Vector3i;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public class Util {
@@ -46,7 +47,7 @@ public class Util {
         return null;
     }
 
-    public static boolean chunkCachedBlockStateIteration(Vector3i start, Vector3i end, World world, BiFunction<BlockState, Vector3i, Boolean> func) {
+    public static void chunkCachedBlockStateIteration(Vector3i start, Vector3i end, World world, BiConsumer<BlockState, Vector3i> func) {
         Vector3i currentPosition = new Vector3i();
         for (int X = start.x; X < ((end.x + 16) & 0xFFFFFFF0); X += 16) {
             for (int Z = start.z; Z < ((end.z + 16) & 0xFFFFFFF0); Z += 16) {
@@ -67,15 +68,12 @@ public class Util {
                         for (int y = sectionMinY; y < sectionMaxY; y++) {
                             for (int z = sectionMinZ; z < sectionMaxZ; z++) {
                                 currentPosition.set(x, y, z);
-                                if (!func.apply(chunkSection.getBlockState(x & 15, y & 15, z & 15), currentPosition)) {
-                                    return false;
-                                }
+                                func.accept(chunkSection.getBlockState(x & 15, y & 15, z & 15), currentPosition);
                             }
                         }
                     }
                 }
             }
         }
-        return true;
     }
 }

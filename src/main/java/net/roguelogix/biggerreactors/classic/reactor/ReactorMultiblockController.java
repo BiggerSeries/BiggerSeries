@@ -36,7 +36,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         frameValidator = block -> {
             return block instanceof ReactorCasing;
         };
-        cornerValidator = frameValidator;
         exteriorValidator = Validator.or(frameValidator, block -> {
             return block instanceof ReactorTerminal ||
                     block instanceof ReactorControlRod ||
@@ -196,7 +195,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             if (state.getBlock() != ReactorFuelRod.INSTANCE) {
                 simulation.setModeratorProperties(pos.x, pos.y, pos.z, ReactorModeratorRegistry.blockModeratorProperties(state.getBlock()));
             }
-            return true;
         });
         for (ReactorControlRodTile controlRod : controlRods) {
             BlockPos rodPos = controlRod.getPos();

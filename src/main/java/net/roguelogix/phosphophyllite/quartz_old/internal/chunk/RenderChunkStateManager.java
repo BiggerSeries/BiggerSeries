@@ -64,7 +64,6 @@ public class RenderChunkStateManager {
             pos.add(1, 1, 1);
             blockPos.setPos(pos.x, pos.y, pos.z);
             lightArray[pos.x][pos.y][pos.z] = WorldRenderer.getPackedLightmapCoords(Minecraft.getInstance().world, blockstate, blockPos);
-            return true;
         });
         Vector3i pos = new Vector3i();
         for (int i = 0; i < 16; i++) {

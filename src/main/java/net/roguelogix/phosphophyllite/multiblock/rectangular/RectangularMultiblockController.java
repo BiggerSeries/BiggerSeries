@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
+import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.util.Util;
 import org.joml.Vector3i;
@@ -15,36 +16,38 @@ import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBO
 Assembly errors
  */
 public class RectangularMultiblockController extends MultiblockController {
-
+    
     public RectangularMultiblockController(World world) {
         super(world);
         setAssemblyValidator(k -> true);
     }
-
+    
     protected boolean strictDimensions = false;
     protected int minLength = -1, minWidth = -1, minHeight = -1;
     protected int maxLength = -1, maxWidth = -1, maxHeight = -1;
-
+    
     protected Validator<Block> cornerValidator = null;
     protected Validator<Block> frameValidator = null;
     protected Validator<Block> exteriorValidator = null;
     protected Validator<Block> interiorValidator = null;
     protected Validator<Block> genericValidator = null;
-
+    
     private static final Validator<MultiblockController> mainValidator = genericController -> {
         if (!(genericController instanceof RectangularMultiblockController)) {
-            return false;
+            // TODO: 6/29/20 invalid controller error
+            // if this *ever* gets hit, normally,
+            throw new ValidationError("TODO: Invalid controller error");
         }
-
+        
         RectangularMultiblockController controller = (RectangularMultiblockController) genericController;
-
+        
         int minX = controller.minX();
         int minY = controller.minY();
         int minZ = controller.minZ();
         int maxX = controller.maxX();
         int maxY = controller.maxY();
         int maxZ = controller.maxZ();
-
+        
         // dimensions are direction agnostic
         BlockPos dimensions = null;
         for (int i = 0; i < (controller.strictDimensions ? 1 : 3); i++) {
@@ -81,11 +84,12 @@ public class RectangularMultiblockController extends MultiblockController {
         }
         // dimension check failed in all orientations
         if (dimensions == null) {
-            return false;
+            // TODO: 6/29/20 dimensions error
+            throw new ValidationError("TODO: dimentions error");
         }
         // or it didnt, at this point i dont know, and you dont either
-
-        return Util.chunkCachedBlockStateIteration(new Vector3i(minX, minY, minZ), new Vector3i(maxX, maxY, maxZ), controller.world, (blockState, pos) -> {
+        
+        Util.chunkCachedBlockStateIteration(new Vector3i(minX, minY, minZ), new Vector3i(maxX, maxY, maxZ), controller.world, (blockState, pos) -> {
             Block block = blockState.getBlock();
             int extremes = 0;
             if (pos.x == minX || pos.x == maxX) {
@@ -102,7 +106,7 @@ public class RectangularMultiblockController extends MultiblockController {
                     if (controller.cornerValidator != null) {
                         // can you be a corner?
                         if (!controller.cornerValidator.validate(block)) {
-                            return false;
+                            throw new InvalidBlock(block, pos, "corner");
                         } else {
                             break;
                         }
@@ -112,7 +116,7 @@ public class RectangularMultiblockController extends MultiblockController {
                     if (controller.frameValidator != null) {
                         // dont care whats on the corners, but we do on the frame as a whole
                         if (!controller.frameValidator.validate(block)) {
-                            return false;
+                            throw new InvalidBlock(block, pos, "frame");
                         } else {
                             break;
                         }
@@ -122,7 +126,7 @@ public class RectangularMultiblockController extends MultiblockController {
                     if (controller.exteriorValidator != null) {
                         // oh, so you dont give a fuck about the frame either, do you even care are the exterior
                         if (!controller.exteriorValidator.validate(block)) {
-                            return false;
+                            throw new InvalidBlock(block, pos, "exterior");
                         } else {
                             break;
                         }
@@ -133,7 +137,7 @@ public class RectangularMultiblockController extends MultiblockController {
                         if (controller.interiorValidator != null) {
                             // oh, so you dont give a fuck about the frame either, do you even care are the exterior
                             if (!controller.interiorValidator.validate(block)) {
-                                return false;
+                                throw new InvalidBlock(block, pos, "interior");
                             } else {
                                 break;
                             }
@@ -142,26 +146,26 @@ public class RectangularMultiblockController extends MultiblockController {
                     if (controller.genericValidator != null) {
                         // oh, so you dont give a fuck about the frame either, do you even care are the exterior
                         if (!controller.genericValidator.validate(block)) {
-                            return false;
+                            throw new InvalidBlock(block, pos, "generic");
                         } else {
                             break;
                         }
                     }
                 }
             }
-            return true;
         });
+        return true;
     };
-
+    
     @Override
     protected final void setAssemblyValidator(Validator<MultiblockController> validator) {
         super.setAssemblyValidator(Validator.and(mainValidator, validator));
     }
-
+    
     private void assembledBlockStates() {
         blocks.forEach(block -> {
             BlockPos pos = block.getPos();
-
+            
             int extremes = 0;
             int frameLoc = 0;
             if (pos.getX() == minX() || pos.getX() == maxX()) {
@@ -212,48 +216,48 @@ public class RectangularMultiblockController extends MultiblockController {
             if (block.doBlockStateUpdate()) {
                 world.setBlockState(pos, block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, position));
             }
-            if(block instanceof RectangularMultiblockTile){
+            if (block instanceof RectangularMultiblockTile) {
                 ((RectangularMultiblockTile) block).position = position;
             }
             world.notifyBlockUpdate(pos, block.getBlockState(), block.getBlockState(), BLOCK_UPDATE + NOTIFY_NEIGHBORS);
             block.markDirty();
         });
     }
-
+    
     private void disassembledBlockStates() {
         blocks.forEach(block -> {
             if (block.doBlockStateUpdate()) {
                 world.setBlockState(block.getPos(), block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
             }
-            if(block instanceof RectangularMultiblockTile){
+            if (block instanceof RectangularMultiblockTile) {
                 ((RectangularMultiblockTile) block).position = RectangularMultiblockPositions.DISASSEMBLED;
             }
             world.notifyBlockUpdate(block.getPos(), block.getBlockState(), block.getBlockState(), BLOCK_UPDATE + NOTIFY_NEIGHBORS);
             block.markDirty();
         });
     }
-
+    
     protected void onAssembly() {
     }
-
+    
     @Override
     protected final void onAssembled() {
         assembledBlockStates();
         onAssembly();
     }
-
+    
     protected void onDisassembly() {
     }
-
+    
     @Override
     protected final void onDisassembled() {
         disassembledBlockStates();
         onDisassembly();
     }
-
+    
     protected void onPause() {
     }
-
+    
     @Override
     protected final void onPaused() {
         onPause();

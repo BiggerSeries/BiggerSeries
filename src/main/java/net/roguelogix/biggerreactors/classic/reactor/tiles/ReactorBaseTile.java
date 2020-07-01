@@ -6,7 +6,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorState;
-import net.roguelogix.biggerreactors.items.tools.DebugTool;
+import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockTile;
 

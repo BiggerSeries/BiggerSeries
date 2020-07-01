@@ -1,12 +1,18 @@
 package net.roguelogix.phosphophyllite.multiblock.generic;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -20,26 +26,26 @@ import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBO
 
 public abstract class MultiblockTile extends TileEntity {
     protected MultiblockController controller;
-
+    
     long lastSavedTick = 0;
-
-    public void attemptAttach(){
+    
+    public void attemptAttach() {
         controller = null;
         attemptAttach = true;
         if (!world.isRemote) {
             Phosphophyllite.tilesToAttach.add(this);
         }
     }
-
+    
     private boolean attemptAttach = true;
     private boolean allowAttach = true;
-
+    
     protected Validator<MultiblockController> attachableControllerValidator = c -> true;
-
+    
     public MultiblockTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
-
+    
     public void attachToNeighbors() {
         assert world != null;
         if (allowAttach && attemptAttach && !world.isRemote) {
@@ -83,18 +89,18 @@ public abstract class MultiblockTile extends TileEntity {
             }
         }
     }
-
+    
     @Override
     public void validate() {
         super.validate();
         attemptAttach();
     }
-
+    
     @Override
     public void onLoad() {
         attemptAttach();
     }
-
+    
     @Override
     public final void remove() {
         if (controller != null) {
@@ -103,7 +109,7 @@ public abstract class MultiblockTile extends TileEntity {
         }
         super.remove();
     }
-
+    
     @Override
     public void onChunkUnloaded() {
         if (controller != null) {
@@ -111,63 +117,63 @@ public abstract class MultiblockTile extends TileEntity {
             allowAttach = false;
         }
     }
-
+    
     public abstract MultiblockController createController();
-
+    
     protected void readNBT(CompoundNBT compound) {
     }
-
+    
     protected CompoundNBT writeNBT() {
         return new CompoundNBT();
     }
-
+    
     CompoundNBT controllerData = null;
-
-//    @Override
+    
+    //    @Override
     public final void read(CompoundNBT compound) {
 //        super.read(compound);
         if (compound.contains("controllerData")) {
             controllerData = compound.getCompound("controllerData");
         }
-        if(compound.contains("bakedmodeldata")){
+        if (compound.contains("bakedmodeldata")) {
             updateBakedModelState(compound.getCompound("bakedmodeldata"));
         }
-        if(compound.contains("userdata")){
+        if (compound.contains("userdata")) {
             readNBT(compound.getCompound("userdata"));
         }
     }
-
+    
     // TODO: 6/25/20 mappings 
     @Override
     public void func_230337_a_(BlockState blockState, CompoundNBT compoundNBT) {
         super.func_230337_a_(blockState, compoundNBT);
         read(compoundNBT);
     }
-
+    
     @Override
     public final CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
-        if(controller != null && controller.blocks.contains(this)) {
+        if (controller != null && controller.blocks.contains(this)) {
             compound.put("controllerData", controller.getNBT());
         }
         compound.put("bakedmodeldata", getBakedModelState());
         compound.put("userdata", writeNBT());
         return compound;
     }
-
-    public CompoundNBT getBakedModelState(){
+    
+    public CompoundNBT getBakedModelState() {
         return new CompoundNBT();
     }
-
-    public void updateBakedModelState(CompoundNBT nbt){
-
+    
+    public void updateBakedModelState(CompoundNBT nbt) {
+    
     }
-
+    
     @Override
     public CompoundNBT getUpdateTag() {
         return write(new CompoundNBT());
     }
-
+    
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
@@ -175,22 +181,22 @@ public abstract class MultiblockTile extends TileEntity {
         nbt.put("bakedmodeldata", getBakedModelState());
         return new SUpdateTileEntityPacket(pos, 1, nbt);
     }
-
+    
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         ModelDataManager.requestModelDataRefresh(this);
         CompoundNBT nbt = pkt.getNbtCompound();
-        if(nbt.contains("bakedmodeldata")){
+        if (nbt.contains("bakedmodeldata")) {
             updateBakedModelState(nbt.getCompound("bakedmodeldata"));
         }
         ModelDataManager.requestModelDataRefresh(this);
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(),BLOCK_UPDATE + NOTIFY_NEIGHBORS);
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), BLOCK_UPDATE + NOTIFY_NEIGHBORS);
     }
-
+    
     public boolean doBlockStateUpdate() {
         return true;
     }
-
+    
     @Nonnull
     @Override
     public IModelData getModelData() {
@@ -198,10 +204,18 @@ public abstract class MultiblockTile extends TileEntity {
         appendModelData(builder);
         return builder.build();
     }
-
-    protected void appendModelData(ModelDataMap.Builder builder){
+    
+    protected void appendModelData(ModelDataMap.Builder builder) {
     }
-
-    protected void onAssemblyAttempted(){
+    
+    protected void onAssemblyAttempted() {
+    }
+    
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (controller != null && controller.lastValidationError != null && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand() == ItemStack.EMPTY) {
+            player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());
+            return ActionResultType.SUCCESS;
+        }
+        return ActionResultType.PASS;
     }
 }
