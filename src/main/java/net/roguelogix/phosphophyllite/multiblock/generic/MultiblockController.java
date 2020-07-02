@@ -378,7 +378,7 @@ public class MultiblockController {
         return new CompoundNBT();
     }
     
-    public String getInfo() {
+    public String getDebugInfo() {
         return "BlockCount: " + blocks.size() + "\n" +
                 "Min (" + minX() + ", " + minY() + ", " + minZ() + ")\n" +
                 "Max (" + maxX() + ", " + maxY() + ", " + maxZ() + ")\n" +

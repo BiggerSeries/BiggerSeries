@@ -2,6 +2,8 @@ package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 @RegisterTileEntity(name = "reactor_terminal")
@@ -14,15 +16,15 @@ public class ReactorTerminalTile extends ReactorBaseTile {
         super(TYPE);
     }
     
+    
     @Override
-    public void onActivated(PlayerEntity player) {
-        if (controller == null) {
-            return;
-        }
+    public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
         if (player.isCrouching()) {
-            reactor().toggleActive();
-        } else {
-            super.onActivated(player);
+            if(controller != null) {
+                reactor().toggleActive();
+            }
+            return ActionResultType.PASS;
         }
+        return super.onBlockActivated(player, handIn);
     }
 }

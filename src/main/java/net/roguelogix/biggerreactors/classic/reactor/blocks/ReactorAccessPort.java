@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorAccessPortTile;
+import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorCoolantPortTile;
 import net.roguelogix.biggerreactors.items.tools.Wrench;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
@@ -62,19 +63,18 @@ public class ReactorAccessPort extends ReactorBaseBlock {
     @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult p_225533_6_) {
-        if (!worldIn.isRemote && handIn == Hand.MAIN_HAND) {
-            if (player.getHeldItemMainhand().getItem() == Wrench.INSTANCE) {
-                PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
+        if (handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem() == Wrench.INSTANCE) {
+            if (!worldIn.isRemote) {
+                ReactorAccessPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
                 direction = direction == INLET ? OUTLET : INLET;
                 worldIn.setBlockState(pos, state.with(PORT_DIRECTION_ENUM_PROPERTY, direction));
-                
+            
                 TileEntity te = worldIn.getTileEntity(pos);
                 if (te instanceof ReactorAccessPortTile) {
                     ((ReactorAccessPortTile) te).setDirection(direction);
                 }
-                
-                return ActionResultType.SUCCESS;
             }
+            return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
     }

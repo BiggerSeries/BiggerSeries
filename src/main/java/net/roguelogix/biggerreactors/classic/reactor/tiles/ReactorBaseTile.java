@@ -35,11 +35,4 @@ public class ReactorBaseTile extends RectangularMultiblockTile {
     public final MultiblockController createController() {
         return new ReactorMultiblockController(world);
     }
-    
-    public void onActivated(PlayerEntity player) {
-        if (controller != null && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
-//            player.sendMessage(new StringTextComponent(world.getBlockState(getPos()).toString()));
-            player.sendMessage(new StringTextComponent(controller.getInfo()));
-        }
-    }
 }

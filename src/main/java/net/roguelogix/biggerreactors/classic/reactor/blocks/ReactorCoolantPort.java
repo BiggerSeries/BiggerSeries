@@ -46,8 +46,8 @@ public class ReactorCoolantPort extends ReactorBaseBlock {
     @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult p_225533_6_) {
-        if (!worldIn.isRemote && handIn == Hand.MAIN_HAND) {
-            if (player.getHeldItemMainhand().getItem() == Wrench.INSTANCE) {
+        if (handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem() == Wrench.INSTANCE) {
+            if (!worldIn.isRemote) {
                 ReactorAccessPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
                 direction = direction == INLET ? OUTLET : INLET;
                 worldIn.setBlockState(pos, state.with(PORT_DIRECTION_ENUM_PROPERTY, direction));
@@ -56,9 +56,8 @@ public class ReactorCoolantPort extends ReactorBaseBlock {
                 if (te instanceof ReactorCoolantPortTile) {
                     ((ReactorCoolantPortTile) te).setDirection(direction);
                 }
-                
-                return ActionResultType.SUCCESS;
             }
+            return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
     }

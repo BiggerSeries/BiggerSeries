@@ -275,8 +275,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    public String getInfo() {
-        return super.getInfo() +
+    public String getDebugInfo() {
+        return super.getDebugInfo() +
                 "State: " + reactorState.toString() + "\n" +
                 "StoredPower: " + storedPower + "\n" +
                 "PowerProduction: " + simulation.getFEProducedLastTick() + "\n" +

@@ -1,6 +1,5 @@
 package net.roguelogix.phosphophyllite.multiblock.generic;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -11,10 +10,12 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
+import net.roguelogix.phosphophyllite.items.DebugTool;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -129,7 +130,7 @@ public abstract class MultiblockTile extends TileEntity {
     
     CompoundNBT controllerData = null;
     
-        @Override
+    @Override
     public final void read(@Nonnull CompoundNBT compound) {
         super.read(compound);
         if (compound.contains("controllerData")) {
@@ -207,10 +208,26 @@ public abstract class MultiblockTile extends TileEntity {
     protected void onAssemblyAttempted() {
     }
     
+    protected String getDebugInfo() {
+        return controller.getDebugInfo();
+    }
+    
     public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
-        if (controller != null && controller.lastValidationError != null && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand() == ItemStack.EMPTY) {
-            player.sendMessage(controller.lastValidationError.getTextComponent());
-            return ActionResultType.SUCCESS;
+        if (handIn == Hand.MAIN_HAND) {
+            if (player.getHeldItemMainhand() == ItemStack.EMPTY) {
+                if (controller != null && controller.lastValidationError != null) {
+                    player.sendMessage(controller.lastValidationError.getTextComponent());
+                }
+                return ActionResultType.SUCCESS;
+                
+            } else if (player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
+                // no its not getting translated, its debug info, *english*
+                if (controller != null) {
+                    player.sendMessage(new StringTextComponent(getDebugInfo()));
+                }
+                return ActionResultType.SUCCESS;
+                
+            }
         }
         return ActionResultType.PASS;
     }

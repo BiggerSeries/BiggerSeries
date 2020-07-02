@@ -39,23 +39,6 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
         return true;
     }
     
-    @Nonnull
-    @Override
-    public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult p_225533_6_) {
-        ActionResultType superAction = super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
-        if (superAction != ActionResultType.PASS) {
-            return superAction;
-        }
-        if (handIn != Hand.MAIN_HAND) {
-            return ActionResultType.PASS;
-        }
-        TileEntity te = worldIn.getTileEntity(pos);
-        if (te instanceof ReactorBaseTile) {
-            ((ReactorBaseTile) te).onActivated(player);
-        }
-        return ActionResultType.PASS;
-    }
-    
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
