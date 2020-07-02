@@ -3,9 +3,10 @@ package net.roguelogix.phosphophyllite.quartz_old.internal;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.Vec3d;
 import net.roguelogix.phosphophyllite.quartz_old.internal.chunk.ChunkRendering;
 import net.roguelogix.phosphophyllite.quartz_old.internal.shaders.ShaderRegistry;
 import net.roguelogix.phosphophyllite.quartz_old.internal.textures.TextureRegistry;
@@ -202,7 +203,7 @@ public class Renderer {
             inverseModelViewProjectionMatrix.set(modelViewProjectionMatrix);
             inverseModelViewProjectionMatrix.invert();
             
-            net.minecraft.util.math.vector.Vector3d vec3d = renderInfo.getProjectedView();
+            Vec3d vec3d = renderInfo.getProjectedView();
             playerPosition.set(vec3d.x, vec3d.y, vec3d.z);
             
             iprofiler.endStartSection("draw");

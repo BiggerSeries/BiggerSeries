@@ -47,15 +47,9 @@ public class ReactorAccessPort extends ReactorBaseBlock {
         
         public static final EnumProperty<PortDirection> PORT_DIRECTION_ENUM_PROPERTY = EnumProperty.create("portdirection", PortDirection.class);
         
-        // TODO: 6/25/20 mappings
-        //    @Override
+        @Override
         public String getName() {
             return toString().toLowerCase();
-        }
-        
-        @Override
-        public String func_176610_l() {
-            return getName();
         }
     }
     

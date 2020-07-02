@@ -33,16 +33,10 @@ public class ReactorPowerTap extends ReactorBaseBlock {
         DISCONNECTED;
         
         public static final EnumProperty<ConnectionState> CONNECTION_STATE_ENUM_PROPERTY = EnumProperty.create("connectionstate", ConnectionState.class);
-        
-        // TODO: 6/25/20 mappings
-        //    @Override
+    
+        @Override
         public String getName() {
             return toString().toLowerCase();
-        }
-        
-        @Override
-        public String func_176610_l() {
-            return getName();
         }
         
     }

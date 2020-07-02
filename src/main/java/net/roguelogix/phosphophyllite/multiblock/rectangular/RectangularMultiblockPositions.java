@@ -19,15 +19,9 @@ public enum RectangularMultiblockPositions implements IStringSerializable {
         this.name = name;
     }
     
-    // TODO: 6/25/20 mappings
-    //    @Override
+    @Override
     public String getName() {
         return toString().toLowerCase();
-    }
-    
-    @Override
-    public String func_176610_l() {
-        return getName();
     }
     
     @Override

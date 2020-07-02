@@ -94,10 +94,8 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     }
     
     @Override
-    // TODO: Fix lost data on reload of world.
-    // Read
-    public void func_230337_a_(@Nonnull BlockState blockState, @Nonnull CompoundNBT compound) {
-        super.func_230337_a_(blockState, compound);
+    public void read(@Nonnull CompoundNBT compound) {
+        super.read(compound);
         machineInventory.deserializeNBT(compound.getCompound("inventory"));
         this.workTime = compound.getInt("workTime");
         this.workTimeTotal = compound.getInt("workTimeTotal");
@@ -106,7 +104,6 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     }
     
     @Override
-    // TODO: Fix lost data on reload of world.
     public final CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
         compound.put("inventory", machineInventory.serializeNBT());

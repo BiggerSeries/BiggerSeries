@@ -15,6 +15,6 @@ public class PhosphophylliteOre extends Block {
     public static PhosphophylliteOre INSTANCE;
     
     public PhosphophylliteOre() {
-        super(Properties.create(Material.ROCK).func_235861_h_().hardnessAndResistance(3.0F, 3.0F));
+        super(Properties.create(Material.ROCK).noDrops().hardnessAndResistance(3.0F, 3.0F));
     }
 }

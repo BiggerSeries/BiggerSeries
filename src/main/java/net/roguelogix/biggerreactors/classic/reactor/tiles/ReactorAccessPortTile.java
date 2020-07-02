@@ -76,7 +76,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (controller != null && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
             player.sendMessage(new StringTextComponent(direction.toString() + "\n" +
                     "In: " + inSlot.toString() + "\n" +
-                    "Out: " + outSlot.toString()), player.getUniqueID());
+                    "Out: " + outSlot.toString()));
         }
     }
     

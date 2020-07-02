@@ -129,9 +129,9 @@ public abstract class MultiblockTile extends TileEntity {
     
     CompoundNBT controllerData = null;
     
-    //    @Override
-    public final void read(CompoundNBT compound) {
-//        super.read(compound);
+        @Override
+    public final void read(@Nonnull CompoundNBT compound) {
+        super.read(compound);
         if (compound.contains("controllerData")) {
             controllerData = compound.getCompound("controllerData");
         }
@@ -143,12 +143,6 @@ public abstract class MultiblockTile extends TileEntity {
         }
     }
     
-    // TODO: 6/25/20 mappings 
-    @Override
-    public void func_230337_a_(@Nonnull BlockState blockState, @Nonnull CompoundNBT compoundNBT) {
-        super.func_230337_a_(blockState, compoundNBT);
-        read(compoundNBT);
-    }
     
     @Override
     public final CompoundNBT write(@Nonnull CompoundNBT compound) {
@@ -215,7 +209,7 @@ public abstract class MultiblockTile extends TileEntity {
     
     public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
         if (controller != null && controller.lastValidationError != null && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand() == ItemStack.EMPTY) {
-            player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());
+            player.sendMessage(controller.lastValidationError.getTextComponent());
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;

@@ -1,7 +1,7 @@
 package net.roguelogix.phosphophyllite.registry;
 
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.state.StateContainer;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
@@ -15,7 +15,7 @@ public class PhosphophylliteFluid extends ForgeFlowingFluid {
     }
     
     @Override
-    protected void fillStateContainer(@Nonnull StateContainer.Builder<Fluid, FluidState> builder) {
+    protected void fillStateContainer(@Nonnull StateContainer.Builder<Fluid, IFluidState> builder) {
         super.fillStateContainer(builder);
         builder.add(LEVEL_1_8);
     }
@@ -24,12 +24,12 @@ public class PhosphophylliteFluid extends ForgeFlowingFluid {
     PhosphophylliteFluid flowingVariant;
     
     @Override
-    public boolean isSource(@Nonnull FluidState state) {
+    public boolean isSource(@Nonnull IFluidState state) {
         return isSource;
     }
     
     @Override
-    public int getLevel(FluidState state) {
+    public int getLevel(IFluidState state) {
         return state.get(LEVEL_1_8);
     }
 }
