@@ -1,14 +1,6 @@
 package net.roguelogix.phosphophyllite.registry;
 
 import com.google.common.collect.ImmutableSet;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.Supplier;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -34,6 +26,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig.FillerBlockType;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -44,12 +37,20 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
-import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBakedModel;
-import org.reflections.Reflections;
+import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class Registry {
     
@@ -61,39 +62,62 @@ public class Registry {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
         String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
-        Reflections ref = new Reflections(callerPackage);
+        
+
+        Set<Class<?>> classes =
+                FMLLoader.getLoadingModList().getModFileById("phosphophyllite").getFile().getScanResult().getClasses().stream().map(classData -> {
+                    try {
+                        Field field = classData.getClass().getDeclaredField("clazz");
+                        field.setAccessible(true);
+                        org.objectweb.asm.Type clazz = (Type) field.get(classData);
+                        String className = clazz.getClassName();
+                        if (className.startsWith(callerPackage)) {
+                            
+                            if (FMLEnvironment.dist != Dist.CLIENT && className.contains("client")) {
+                                return null;
+                            }
+                            return Registry.class.getClassLoader().loadClass(className);
+                        }
+                    } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toSet());
+//        Reflections ref = new Reflections(callerPackage);
         FMLJavaModLoadingContext.get().getModEventBus().addListener((RegistryEvent.Register<?> e) -> {
             switch (e.getName().getPath()) {
                 case "block": {
-                    registerBlocks((RegistryEvent.Register<Block>) e, modNamespace, ref);
+                    registerBlocks((RegistryEvent.Register<Block>) e, modNamespace, classes);
                     break;
                 }
                 case "item": {
-                    registerItems((RegistryEvent.Register<Item>) e, modNamespace, ref);
+                    registerItems((RegistryEvent.Register<Item>) e, modNamespace, classes);
                     break;
                 }
                 case "menu": {
-                    registerContainers((RegistryEvent.Register<ContainerType<?>>) e, modNamespace, ref);
+                    registerContainers((RegistryEvent.Register<ContainerType<?>>) e, modNamespace, classes);
                     break;
                 }
                 case "block_entity_type": {
-                    registerTileEntities((RegistryEvent.Register<TileEntityType<?>>) e, modNamespace, ref);
+                    registerTileEntities((RegistryEvent.Register<TileEntityType<?>>) e, modNamespace, classes);
                     break;
                 }
                 case "fluid": {
-                    registerFluids((RegistryEvent.Register<Fluid>) e, modNamespace, ref);
+                    registerFluids((RegistryEvent.Register<Fluid>) e, modNamespace, classes);
                     break;
                 }
             }
         });
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent e) -> onClientSetup(e, modNamespace, ref));
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((ModelBakeEvent e) -> onModelBake(e, modNamespace, ref));
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((TextureStitchEvent.Pre e) -> onTextureStitch(e, modNamespace, ref));
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLLoadCompleteEvent e) -> onLoadComplete(e, modNamespace, ref));
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent e) -> onClientSetup(e, modNamespace, classes));
+            FMLJavaModLoadingContext.get().getModEventBus().addListener((ModelBakeEvent e) -> onModelBake(e, modNamespace, classes));
+            FMLJavaModLoadingContext.get().getModEventBus().addListener((TextureStitchEvent.Pre e) -> onTextureStitch(e, modNamespace, classes));
+        }
+        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLLoadCompleteEvent e) -> onLoadComplete(e, modNamespace, classes));
     }
     
-    private static synchronized void registerBlocks(final RegistryEvent.Register<Block> blockRegistryEvent, String modNamespace, Reflections ref) {
-        Set<Class<?>> blocks = ref.getTypesAnnotatedWith(RegisterBlock.class);
+    private static synchronized void registerBlocks(final RegistryEvent.Register<Block> blockRegistryEvent, String modNamespace, Set<Class<?>> classes) {
+        Set<Class<?>> blocks = classes.stream().filter(c -> c.isAnnotationPresent(RegisterBlock.class)).collect(Collectors.toSet());
         HashSet<Block> blocksRegistered = Registry.blocksRegistered
                 .computeIfAbsent(modNamespace, k -> new HashSet<>());
         for (Class<?> block : blocks) {
@@ -132,7 +156,7 @@ public class Registry {
             }
         }
         
-        Set<Class<?>> fluids = ref.getTypesAnnotatedWith(RegisterFluid.class);
+        Set<Class<?>> fluids = classes.stream().filter(c -> c.isAnnotationPresent(RegisterFluid.class)).collect(Collectors.toSet());
         for (Class<?> fluid : fluids) {
             RegisterFluid annotation = fluid.getAnnotation(RegisterFluid.class);
             for (Field declaredField : fluid.getDeclaredFields()) {
@@ -156,11 +180,11 @@ public class Registry {
     }
     
     
-    private static synchronized void registerItems(final RegistryEvent.Register<Item> itemRegistryEvent, String modNamespace, Reflections ref) {
-        Set<Class<?>> items = ref.getTypesAnnotatedWith(RegisterItem.class);
+    private static synchronized void registerItems(final RegistryEvent.Register<Item> itemRegistryEvent, String modNamespace, Set<Class<?>> classes) {
+        Set<Class<?>> items = classes.stream().filter(c -> c.isAnnotationPresent(RegisterItem.class)).collect(Collectors.toSet());
         HashSet<Block> blocksRegistered = Registry.blocksRegistered.get(modNamespace);
         
-        Set<Class<?>> modClass = ref.getTypesAnnotatedWith(Mod.class);
+        Set<Class<?>> modClass = classes.stream().filter(c -> c.isAnnotationPresent(Mod.class)).collect(Collectors.toSet());
         
         String groupName = modNamespace;
         if (modClass.size() == 1) {
@@ -171,7 +195,7 @@ public class Registry {
         ItemGroup group;
         {
             Block block;
-            Set<Class<?>> createiveTabBlock = ref.getTypesAnnotatedWith(CreativeTabBlock.class);
+            Set<Class<?>> createiveTabBlock = classes.stream().filter(c -> c.isAnnotationPresent(CreativeTabBlock.class)).collect(Collectors.toSet());
             Iterator<Class<?>> iterator = createiveTabBlock.iterator();
             Block b1 = Blocks.STONE;
             if (iterator.hasNext()) {
@@ -197,7 +221,7 @@ public class Registry {
             };
         }
         
-        Set<Class<?>> fluids = ref.getTypesAnnotatedWith(RegisterFluid.class);
+        Set<Class<?>> fluids = classes.stream().filter(c -> c.isAnnotationPresent(RegisterFluid.class)).collect(Collectors.toSet());
         for (Class<?> fluid : fluids) {
             RegisterFluid annotation = fluid.getAnnotation(RegisterFluid.class);
             if (!annotation.registerBucket()) {
@@ -255,8 +279,8 @@ public class Registry {
         }
     }
     
-    private static synchronized void registerFluids(final RegistryEvent.Register<Fluid> fluidRegistryEvent, String modNamespace, Reflections ref) {
-        Set<Class<?>> fluids = ref.getTypesAnnotatedWith(RegisterFluid.class);
+    private static synchronized void registerFluids(final RegistryEvent.Register<Fluid> fluidRegistryEvent, String modNamespace, Set<Class<?>> classes) {
+        Set<Class<?>> fluids =classes.stream().filter(c -> c.isAnnotationPresent(RegisterFluid.class)).collect(Collectors.toSet());
         for (Class<?> fluid : fluids) {
             RegisterFluid annotation = fluid.getAnnotation(RegisterFluid.class);
             for (Field declaredField : fluid.getDeclaredFields()) {
@@ -307,8 +331,8 @@ public class Registry {
         }
     }
     
-    private static synchronized void registerContainers(RegistryEvent.Register<ContainerType<?>> containerTypeRegistryEvent, String modNamespace, Reflections ref) {
-        Set<Class<?>> containers = ref.getTypesAnnotatedWith(RegisterContainer.class);
+    private static synchronized void registerContainers(RegistryEvent.Register<ContainerType<?>> containerTypeRegistryEvent, String modNamespace, Set<Class<?>> classes) {
+        Set<Class<?>> containers = classes.stream().filter(c -> c.isAnnotationPresent(RegisterContainer.class)).collect(Collectors.toSet());
         
         for (Class<?> container : containers) {
             try {
@@ -338,8 +362,8 @@ public class Registry {
         }
     }
     
-    private static synchronized void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> tileEntityTypeRegistryEvent, String modNamespace, Reflections ref) {
-        Set<Class<?>> tileEntities = ref.getTypesAnnotatedWith(RegisterTileEntity.class);
+    private static synchronized void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> tileEntityTypeRegistryEvent, String modNamespace, Set<Class<?>> classes) {
+        Set<Class<?>> tileEntities = classes.stream().filter(c -> c.isAnnotationPresent(RegisterTileEntity.class)).collect(Collectors.toSet());
         
         for (Class<?> tileEntity : tileEntities) {
             
@@ -381,7 +405,7 @@ public class Registry {
         }
     }
     
-    private static synchronized void onClientSetup(FMLClientSetupEvent clientSetupEvent, String modNamespace, Reflections ref) {
+    private static synchronized void onClientSetup(FMLClientSetupEvent clientSetupEvent, String modNamespace, Set<Class<?>> classes) {
         HashSet<Block> blocksRegistered = Registry.blocksRegistered.get(modNamespace);
         for (Block block : blocksRegistered) {
             if (!block.getDefaultState().isSolid()) {
@@ -408,7 +432,7 @@ public class Registry {
         bakedModelsToRegister.put(block, model);
     }
     
-    private static synchronized void onModelBake(ModelBakeEvent event, String modNamespace, Reflections ref) {
+    private static synchronized void onModelBake(ModelBakeEvent event, String modNamespace, Set<Class<?>> classes) {
         HashSet<Block> blocksRegistered = Registry.blocksRegistered.get(modNamespace);
         if (blocksRegistered == null) {
             return;
@@ -421,7 +445,7 @@ public class Registry {
         }
     }
     
-    private static synchronized void onTextureStitch(TextureStitchEvent.Pre event, String modNamespace, Reflections ref) {
+    private static synchronized void onTextureStitch(TextureStitchEvent.Pre event, String modNamespace, Set<Class<?>> classes) {
         if (!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) {
             return;
         }
@@ -429,42 +453,20 @@ public class Registry {
         if (blocksRegistered == null) {
             return;
         }
-        HashSet<ResourceLocation> sprites = new HashSet<>();
-        for (Block block : blocksRegistered) {
-            IBakedModel model = bakedModelsToRegister.get(block);
-            if (model instanceof MultiblockBakedModel) {
-                Stack<MultiblockBakedModel.TextureMap> mapStack = new Stack<>();
-                mapStack.push(((MultiblockBakedModel) model).map);
-                while (!mapStack.empty()) {
-                    MultiblockBakedModel.TextureMap map = mapStack.pop();
-                    sprites.add(map.spriteLocation);
-                    for (MultiblockBakedModel.TextureMap value : map.map.values()) {
-                        mapStack.push(value);
-                    }
-                }
-            }
-        }
-        for (ResourceLocation sprite : sprites) {
-            event.addSprite(sprite);
-        }
     }
     
     private static void registerConfig() {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
-        Reflections ref = new Reflections(callerPackage);
-        Set<Class<?>> configs = ref.getTypesAnnotatedWith(RegisterConfig.class);
-        for (Class<?> config : configs) {
-//            ConfigLoader.registerConfig(config);
-        }
+
     }
     
-    private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Reflections ref) {
-        Registry.registerWorldGen(modNamespace, ref);
+    private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Set<Class<?>> classes) {
+        Registry.registerWorldGen(modNamespace, classes);
     }
     
-    private static synchronized void registerWorldGen(String modNamespace, Reflections ref) {
-        Set<Class<?>> ores = ref.getTypesAnnotatedWith(RegisterOre.class);
+    private static synchronized void registerWorldGen(String modNamespace, Set<Class<?>> classes) {
+        Set<Class<?>> ores = classes.stream().filter(c -> c.isAnnotationPresent(RegisterOre.class)).collect(Collectors.toSet());
         HashSet<Block> blocksRegistered = Registry.blocksRegistered
                 .computeIfAbsent(modNamespace, k -> new HashSet<>());
         
@@ -506,8 +508,7 @@ public class Registry {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
         String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
-        Reflections ref = new Reflections(callerPackage);
-        Set<Class<?>> configs = ref.getTypesAnnotatedWith(RegisterConfig.class);
+        Set<Class<?>> configs = null;
         for (Class<?> config : configs) {
             for (Method declaredMethod : config.getDeclaredMethods()) {
                 if (declaredMethod.isAnnotationPresent(PhosphophylliteConfig.OnLoad.class)) {

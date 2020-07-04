@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.multiblock.generic;
+package net.roguelogix.phosphophyllite.multiblock.generic.client;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
@@ -30,7 +30,7 @@ public class MultiblockBakedModel implements IDynamicBakedModel {
     
     public TextureMap map = new TextureMap();
     
-    MultiblockBakedModel(ResourceLocation defaultTexture) {
+    public MultiblockBakedModel(ResourceLocation defaultTexture) {
         map.spriteLocation = defaultTexture;
     }
     

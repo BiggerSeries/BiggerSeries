@@ -105,13 +105,10 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.29'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
+    // compile "some.group:artifact:version:classifier"b
     // compile "some.group:artifact:version"
 
     // the runtimeOnly duplicate is for
-
-    shadow "org.reflections:reflections:0.9.11"
-    runtimeOnly "org.reflections:reflections:0.9.11"
 
     shadow group: 'org.joml', name: 'joml', version: '1.9.24'
     runtimeOnly group: 'org.joml', name: 'joml', version: '1.9.24'
@@ -158,7 +155,6 @@ shadowJar {
     classifier '' // Replace the default JAR
 
     relocate "org.joml", "net.roguelogix.phosphophyllite.repack.org.joml"
-    relocate "org.reflections", "net.roguelogix.phosphophyllite.repack.org.reflections"
 
 }
 

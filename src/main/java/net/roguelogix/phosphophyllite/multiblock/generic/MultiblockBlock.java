@@ -10,6 +10,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.roguelogix.phosphophyllite.multiblock.generic.client.MultiblockBakedModel;
 import net.roguelogix.phosphophyllite.registry.Registry;
 
 import javax.annotation.Nonnull;
@@ -21,6 +24,7 @@ public class MultiblockBlock extends Block {
     
     protected MultiblockBakedModel model = null;
     
+    @OnlyIn(Dist.CLIENT)
     public MultiblockBakedModel setupBakedModel(ResourceLocation defaultTexture) {
         model = new MultiblockBakedModel(defaultTexture);
         Registry.registerBakedModel(this, model);

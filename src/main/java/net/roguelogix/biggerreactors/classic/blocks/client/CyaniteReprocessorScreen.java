@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.blocks;
+package net.roguelogix.biggerreactors.classic.blocks.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -10,6 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
+import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorContainer;
 
 import javax.annotation.Nonnull;
 

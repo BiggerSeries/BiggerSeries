@@ -6,7 +6,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorContainer;
-import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorScreen;
+import net.roguelogix.biggerreactors.classic.blocks.client.CyaniteReprocessorScreen;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
