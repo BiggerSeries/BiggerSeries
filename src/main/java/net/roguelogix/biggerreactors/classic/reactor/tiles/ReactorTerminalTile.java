@@ -19,7 +19,7 @@ public class ReactorTerminalTile extends ReactorBaseTile {
     
     @Override
     public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
-        if (player.isCrouching()) {
+        if (player.isCrouching() && handIn == Hand.MAIN_HAND) {
             if(controller != null) {
                 reactor().toggleActive();
             }
