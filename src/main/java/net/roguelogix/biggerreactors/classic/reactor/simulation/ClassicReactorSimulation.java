@@ -113,7 +113,11 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         
         reactorHeatLossCoefficient = 2 * ((x + 2) * (y + 2) + (x + 2) * (z + 2) + (z + 2) * (y + 2)) * Config.Reactor.HeatLossCoefficientMultiplier;
         
-        
+        if (passive) {
+            coolantTank.setPerSideCapacity(0);
+        } else {
+            coolantTank.setPerSideCapacity((((x + 2) * (y + 2) * (z + 2)) - (x * y * z)) * Config.Reactor.CoolantTankAmountPerExternalBlock);
+        }
     }
     
     public void setActive(boolean active) {
