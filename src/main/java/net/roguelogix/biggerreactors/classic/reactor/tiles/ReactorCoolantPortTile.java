@@ -81,8 +81,11 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         if (resource.getFluid() != Fluids.WATER) {
             return 0;
         }
-        assert controller instanceof ReactorMultiblockController;
-        return (int) ((ReactorMultiblockController) controller).addCoolant(resource.getAmount(), action.simulate());
+        if(controller != null) {
+            assert controller instanceof ReactorMultiblockController;
+            return (int) ((ReactorMultiblockController) controller).addCoolant(resource.getAmount(), action.simulate());
+        }
+        return 0;
     }
     
     @Nonnull
