@@ -415,6 +415,10 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         }
     }
     
+    public boolean isPassive() {
+        return passive;
+    }
+    
     private static class ControlRod {
         
         final int x;

@@ -232,7 +232,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     public void tick() {
         
         simulation.tick();
-        if (!Float.isNaN(simulation.FEProducedLastTick)) {
+        if (!Float.isNaN(simulation.FEProducedLastTick) && simulation.isPassive()) {
             storedPower += simulation.FEProducedLastTick;
             if (storedPower > Config.Reactor.PassiveBatterySize) {
                 storedPower = Config.Reactor.PassiveBatterySize;
