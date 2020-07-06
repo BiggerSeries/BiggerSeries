@@ -78,4 +78,12 @@ public class ReactorAccessPort extends ReactorBaseBlock {
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
     }
+    @Override
+    public void neighborChanged(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
+        TileEntity te = worldIn.getTileEntity(pos);
+        if (te instanceof ReactorAccessPortTile) {
+            ((ReactorAccessPortTile) te).neighborChanged();
+        }
+    }
 }

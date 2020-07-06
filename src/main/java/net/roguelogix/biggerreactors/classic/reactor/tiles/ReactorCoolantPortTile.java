@@ -1,6 +1,7 @@
 package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
 import net.minecraft.fluid.Fluids;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -81,7 +82,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         if (resource.getFluid() != Fluids.WATER) {
             return 0;
         }
-        if(controller != null) {
+        if (controller != null) {
             assert controller instanceof ReactorMultiblockController;
             return (int) ((ReactorMultiblockController) controller).addCoolant(resource.getAmount(), action.simulate());
         }
@@ -117,54 +118,53 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     
     
     private boolean connected = false;
-    Direction powerOutputDirection = null;
+    Direction steamOutputDirection = null;
     LazyOptional<IFluidHandler> steamOutput = null;
     FluidTank EMPTY_TANK = new FluidTank(0);
     private ReactorAccessPort.PortDirection direction = INLET;
     
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
-            powerOutputDirection = null;
+            steamOutputDirection = null;
         }
         if (pos.getX() == controller.minX()) {
-            powerOutputDirection = Direction.WEST;
+            steamOutputDirection = Direction.WEST;
             return;
         }
         if (pos.getX() == controller.maxX()) {
-            powerOutputDirection = Direction.EAST;
+            steamOutputDirection = Direction.EAST;
             return;
         }
         if (pos.getY() == controller.minY()) {
-            powerOutputDirection = Direction.DOWN;
+            steamOutputDirection = Direction.DOWN;
             return;
         }
         if (pos.getY() == controller.maxY()) {
-            powerOutputDirection = Direction.UP;
+            steamOutputDirection = Direction.UP;
             return;
         }
         if (pos.getZ() == controller.minZ()) {
-            powerOutputDirection = Direction.NORTH;
+            steamOutputDirection = Direction.NORTH;
             return;
         }
         if (pos.getZ() == controller.maxZ()) {
-            powerOutputDirection = Direction.SOUTH;
+            steamOutputDirection = Direction.SOUTH;
         }
         neighborChanged();
     }
     
     public void neighborChanged() {
-        direction = getBlockState().get(PORT_DIRECTION_ENUM_PROPERTY);
-        if (powerOutputDirection == null) {
+        if (steamOutputDirection == null) {
             connected = false;
             return;
         }
         assert world != null;
-        TileEntity te = world.getTileEntity(pos.offset(powerOutputDirection));
+        TileEntity te = world.getTileEntity(pos.offset(steamOutputDirection));
         if (te == null) {
             connected = false;
             return;
         }
-        steamOutput = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, powerOutputDirection.getOpposite());
+        steamOutput = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, steamOutputDirection.getOpposite());
         connected = false;
         IFluidHandler handler = steamOutput.orElse(EMPTY_TANK);
         for (int i = 0; i < handler.getTanks(); i++) {
@@ -180,4 +180,25 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         this.direction = direction;
         this.markDirty();
     }
+    
+    @Override
+    protected void readNBT(CompoundNBT compound) {
+        if (compound.contains("direction")) {
+            direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
+        }
+    }
+    
+    @Override
+    protected CompoundNBT writeNBT() {
+        CompoundNBT NBT = new CompoundNBT();
+        NBT.putString("direction", String.valueOf(direction));
+        return NBT;
+    }
+    
+    @Override
+    protected void onAssemblyAttempted() {
+        assert world != null;
+        world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
+    }
+    
 }

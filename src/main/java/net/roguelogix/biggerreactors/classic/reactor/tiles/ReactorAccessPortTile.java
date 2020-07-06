@@ -1,11 +1,10 @@
 package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -14,7 +13,7 @@ import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort;
 import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
 import net.roguelogix.biggerreactors.items.ingots.YelloriumIngot;
-import net.roguelogix.phosphophyllite.items.DebugTool;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nonnull;
@@ -164,5 +163,65 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         long ingots = wasteMB / Config.Reactor.FuelMBPerIngot;
         outSlot.setCount((int) (outSlot.getCount() + ingots));
         return (ingots * Config.Reactor.FuelMBPerIngot);
+    }
+    
+    public void pushWaste() {
+        itemOutput.ifPresent(output -> {
+            for (int i = 0; i < output.getSlots(); i++) {
+                if (outSlot.getCount() == 0) {
+                    return;
+                }
+                outSlot = output.insertItem(i, outSlot, false);
+            }
+        });
+    }
+    
+    Direction itemOutputDirection;
+    boolean connected;
+    LazyOptional<IItemHandler> itemOutput = LazyOptional.empty();
+    
+    public void updateOutputDirection() {
+        if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
+            itemOutputDirection = null;
+        }
+        if (pos.getX() == controller.minX()) {
+            itemOutputDirection = Direction.WEST;
+            return;
+        }
+        if (pos.getX() == controller.maxX()) {
+            itemOutputDirection = Direction.EAST;
+            return;
+        }
+        if (pos.getY() == controller.minY()) {
+            itemOutputDirection = Direction.DOWN;
+            return;
+        }
+        if (pos.getY() == controller.maxY()) {
+            itemOutputDirection = Direction.UP;
+            return;
+        }
+        if (pos.getZ() == controller.minZ()) {
+            itemOutputDirection = Direction.NORTH;
+            return;
+        }
+        if (pos.getZ() == controller.maxZ()) {
+            itemOutputDirection = Direction.SOUTH;
+        }
+        neighborChanged();
+    }
+    
+    public void neighborChanged() {
+        if (itemOutputDirection == null) {
+            connected = false;
+            return;
+        }
+        assert world != null;
+        TileEntity te = world.getTileEntity(pos.offset(itemOutputDirection));
+        if (te == null) {
+            connected = false;
+            return;
+        }
+        itemOutput = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, itemOutputDirection.getOpposite());
+        connected = itemOutput.isPresent();
     }
 }
