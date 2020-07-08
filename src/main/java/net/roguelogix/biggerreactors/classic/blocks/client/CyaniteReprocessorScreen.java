@@ -1,6 +1,5 @@
 package net.roguelogix.biggerreactors.classic.blocks.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -24,36 +23,36 @@ public class CyaniteReprocessorScreen extends ContainerScreen<CyaniteReprocessor
         this.xSize = 245;
         this.ySize = 175;
     }
-    
+
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    
+    // 1.16: func_230430_a_
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(); // 1.16: this.func_230446_a_
+        super.render(mouseX, mouseY, partialTicks); // 1.16: super.func_230430_a_
+        this.renderHoveredToolTip(mouseX, mouseY);  // 1.16: this.func_230459_a_
     }
 
-//    @Override
-//    public void func_230430_a_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-//        this.func_230446_a_(matrixStack);
-//        super.func_230430_a_(matrixStack, mouseX, mouseY, partialTicks);
-//        this.func_230459_a_(matrixStack, mouseX, mouseY);
-//    }
-//
-//    @Override
-//    protected void func_230451_b_(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY) {
-//        this.field_230712_o_.func_238422_b_(matrixStack, this.field_230704_d_, (float) this.field_230708_k_, (float) this.field_230709_l_, 4210752);
-//        this.field_230712_o_.func_238422_b_(matrixStack, this.playerInventory.getDisplayName(), (float) 8, (float) (this.ySize - 96 + 2), 4210752);
-//    }
-//
-//    @Override
-//    protected void func_230450_a_(@Nonnull MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-//        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-//
-//        assert this.field_230706_i_ != null;
-//        this.field_230706_i_.getTextureManager().bindTexture(GUI_TEXTURE);
-//
-//        int relativeX = (this.field_230708_k_ - this.xSize) / 2;
-//        int relativeY = (this.field_230709_l_ - this.ySize) / 2;
-//
-//        this.func_238474_b_(matrixStack, relativeX, relativeY, 0, 0, this.xSize, this.ySize);
-//        //func_238463_a_(matrixStack, relativeX, relativeY, 0, 0, this.xSize, this.ySize, GUI_TEXTURE_WIDTH, GUI_TEXTURE_HEIGHT);
-//    }
+    @Override
+    // 1.16: func_230451_b_
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        this.font.drawString(this.title.getFormattedText(), 8.0F, (float) (this.ySize - 168), 4210752);
+          // 1.16: this.field_230712_o_.func_238422_b_
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
+          // 1.16: this.field_230712_o_.func_238422_b_
+    }
+
+    @Override
+    // 1.16: func_230450_a_
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        assert this.minecraft != null;
+        this.minecraft.getTextureManager().bindTexture(GUI_TEXTURE); // 1.16: field_230706_i_
+
+        int relativeX = (this.width - this.xSize) / 2; // 1.16: field_230708_k_
+        int relativeY = (this.height - this.ySize) / 2; // 1.16: field_230709_l_
+
+        this.blit(relativeX, relativeY, 0, 0, this.xSize, this.ySize);
+          // 1.16: func_238474_b_
+    }
 }
