@@ -19,7 +19,7 @@ import java.util.Set;
 
 /* TODO
 
-assembly errors
+handle merges
 
  */
 public class ReactorMultiblockController extends RectangularMultiblockController {
