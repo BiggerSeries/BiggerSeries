@@ -82,6 +82,22 @@ public class Config {
         public static float CoolantBoilingPoint = 100;
         @PhosphophylliteConfig.Value(min = 0)
         public static float CoolantVaporizationEnergy = 4;
+        @PhosphophylliteConfig.Value(min = 0, max = 1)
+        public static float RadIntensityScalingMultiplier = 0.95f;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float RadIntensityScalingRateExponentMultiplier = 1.2f;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static float RadIntensityScalingShiftMultiplier = 1f;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float RadPenaltyShiftMultiplier = 15f;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float RadPenaltyRateMultiplier = 2.5f;
+        @PhosphophylliteConfig.Value(min = 0, max = 1)
+        public static float FuelAbsorptionScalingMultiplier = 0.95f;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static float FuelAbsorptionScalingShiftMultiplier = 1f;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float FuelAbsorptionScalingRateExponentMultiplier = 2.2f;
     }
     
     @PhosphophylliteConfig.Value(min = 5, max = 32)

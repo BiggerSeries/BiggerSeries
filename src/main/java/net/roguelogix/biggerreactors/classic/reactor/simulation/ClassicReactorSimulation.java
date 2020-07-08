@@ -113,7 +113,11 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         
         reactorHeatLossCoefficient = 2 * ((x + 2) * (y + 2) + (x + 2) * (z + 2) + (z + 2) * (y + 2)) * Config.Reactor.HeatLossCoefficientMultiplier;
         
-        
+        if (passive) {
+            coolantTank.setPerSideCapacity(0);
+        } else {
+            coolantTank.setPerSideCapacity((((x + 2) * (y + 2) * (z + 2)) - (x * y * z)) * Config.Reactor.CoolantTankAmountPerExternalBlock);
+        }
     }
     
     public void setActive(boolean active) {
@@ -229,7 +233,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         // Determine radiation amount & intensity, heat amount, determine fuel usage
         
         // Base value for radiation production penalties. 0-1, caps at about 3000C;
-        double radiationPenaltyBase = Math.exp(-15 * Math.exp(-0.0025 * fuelHeat));
+        double radiationPenaltyBase = Math.exp(-Config.Reactor.RadPenaltyShiftMultiplier * Math.exp(-0.001 * Config.Reactor.RadPenaltyRateMultiplier * fuelHeat));
         
         // Raw amount - what's actually in the tanks
         // Effective amount - how
@@ -250,7 +254,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         rawRadIntensity = rawRadIntensity * controlRodModifier;
         
         // Now nerf actual radiation production based on heat.
-        float effectiveRadIntensity = scaledRadIntensity * (1f + (float) (-0.95f * Math.exp(-10f * Math.exp(-0.0012f * fuelHeat))));
+        float effectiveRadIntensity = scaledRadIntensity * (1f + (float) (-Config.Reactor.RadIntensityScalingMultiplier * Math.exp(-10f * Config.Reactor.RadIntensityScalingShiftMultiplier * Math.exp(-0.001f * Config.Reactor.RadIntensityScalingRateExponentMultiplier * fuelHeat))));
         
         // Radiation hardness starts at 20% and asymptotically approaches 100% as heat rises.
         // This will make radiation harder and harder to capture.
@@ -298,7 +302,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
                     // Fuel absorptiveness is determined by control rod + a heat modifier.
                     // Starts at 1 and decays towards 0.05, reaching 0.6 at 1000 and just under 0.2 at 2000. Inflection point at about 500-600.
                     // Harder radiation makes absorption more difficult.
-                    float baseAbsorption = (float) (1.0 - (0.95 * Math.exp(-10 * Math.exp(-0.0022 * fuelHeat)))) * (1f - (hardness / Config.Reactor.FuelHardnessDivisor));
+                    float baseAbsorption = (float) (1.0 - (Config.Reactor.FuelAbsorptionScalingMultiplier * Math.exp(-10 * Config.Reactor.FuelAbsorptionScalingShiftMultiplier * Math.exp(-0.001 * Config.Reactor.FuelAbsorptionScalingRateExponentMultiplier * fuelHeat)))) * (1f - (hardness / Config.Reactor.FuelHardnessDivisor));
                     
                     // Some fuels are better at absorbing radiation than others
                     float scaledAbsorption = Math.min(1f, baseAbsorption * Config.Reactor.FuelAbsorptionCoefficient);
@@ -409,6 +413,10 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         if (nbt.contains("reactorHeat")) {
             reactorHeat = nbt.getFloat("reactorHeat");
         }
+    }
+    
+    public boolean isPassive() {
+        return passive;
     }
     
     private static class ControlRod {

@@ -19,7 +19,7 @@ import java.util.Set;
 
 /* TODO
 
-assembly errors
+handle merges
 
  */
 public class ReactorMultiblockController extends RectangularMultiblockController {
@@ -184,6 +184,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         for (ReactorCoolantPortTile coolantPort : coolantPorts) {
             coolantPort.updateOutputDirection();
         }
+        for (ReactorAccessPortTile accessPort : accessPorts) {
+            accessPort.updateOutputDirection();
+        }
         simulation.resize(maxX() - minX() - 1, maxY() - minY() - 1, maxZ() - minZ() - 1);
         Vector3i start = new Vector3i(minX() + 1, minY() + 1, minZ() + 1);
         Vector3i end = new Vector3i(maxX() - 1, maxY() - 1, maxZ() - 1);
@@ -229,7 +232,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     public void tick() {
         
         simulation.tick();
-        if (!Float.isNaN(simulation.FEProducedLastTick)) {
+        if (!Float.isNaN(simulation.FEProducedLastTick) && simulation.isPassive()) {
             storedPower += simulation.FEProducedLastTick;
             if (storedPower > Config.Reactor.PassiveBatterySize) {
                 storedPower = Config.Reactor.PassiveBatterySize;
@@ -270,7 +273,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         
         // i know this is just a hose out, not sure if it should be changed or not
         for (ReactorCoolantPortTile coolantPort : coolantPorts) {
-            simulation.coolantTank.extractSteam(coolantPort.pushSteam(simulation.coolantTank.extractSteam(Integer.MAX_VALUE, true)), true);
+            simulation.coolantTank.extractSteam(coolantPort.pushSteam(simulation.coolantTank.extractSteam(Integer.MAX_VALUE, true)), false);
+        }
+    
+        for (ReactorAccessPortTile accessPort : accessPorts) {
+            accessPort.pushWaste();
         }
     }
     
