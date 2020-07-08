@@ -2,7 +2,6 @@ package net.roguelogix.biggerreactors.classic.blocks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -12,7 +11,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
@@ -26,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
 @RegisterBlock(name = "cyanite_reprocessor", tileEntityClass = CyaniteReprocessorTile.class)
@@ -81,15 +78,11 @@ public class CyaniteReprocessor extends ContainerBlock {
     
     @Nonnull
     @Override
-    public ActionResultType onBlockActivated(@Nonnull BlockState state, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult trace) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(blockPos);
-            if (tileEntity instanceof CyaniteReprocessorTile) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (CyaniteReprocessorTile) tileEntity, tileEntity.getPos());
-            } else {
-                throw new IllegalStateException("Container not found: cyanite_reprocessor");
-            }
+    public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult trace) {
+        TileEntity tileEntity = world.getTileEntity(blockPos);
+        if(tileEntity instanceof CyaniteReprocessorTile) {
+            return ((CyaniteReprocessorTile) tileEntity).onBlockActivated(blockState, world, blockPos, player, hand, trace);
         }
-        return ActionResultType.SUCCESS;
+        return ActionResultType.FAIL;
     }
 }

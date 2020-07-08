@@ -14,7 +14,7 @@ public class Config {
     public static int YelloriteMaxOrePerCluster = 10;
     @PhosphophylliteConfig.Value(min = 5)
     public static int YelloriteOreMaxSpawnY = 50;
-    
+
     @PhosphophylliteConfig
     public static class Reactor {
         //TODO: remove max, its only there because of the render system
@@ -106,7 +106,22 @@ public class Config {
     public static int TurbineMaxWidth = 32;
     @PhosphophylliteConfig.Value(min = 3, max = 48)
     public static int TurbineMaxHeight = 48;
-    
+
+    @PhosphophylliteConfig.Value(min = 0, comment = "Max energy transfer rate of machines.")
+    public static int MachineEnergyTransferRate = 500;
+
+    @PhosphophylliteConfig.Value(min = 0, comment = "Max energy capacity of machines.")
+    public static int MachineEnergyTankCapacity = 5000;
+    @PhosphophylliteConfig.Value(min = 0, comment = "Max fluid capacity of machines")
+    public static int MachineFluidTankCapacity = 5000;
+
+    @PhosphophylliteConfig.Value(min = 0, comment = "Power usage per tick of work.")
+    public static int CyaniteReprocessorPowerConsumption = 1;
+    @PhosphophylliteConfig.Value(min = 0, comment = "Water usage per tick of work.")
+    public static int CyaniteReprocessorWaterConsumption = 1;
+    @PhosphophylliteConfig.Value(min = 0, comment = "Time (in ticks) it takes to complete a job.")
+    public static int CyaniteReprocessorWorkTime = 200;
+
     @PhosphophylliteConfig
     public static class ReactorModeratorConfigValues {
         @PhosphophylliteConfig.Value

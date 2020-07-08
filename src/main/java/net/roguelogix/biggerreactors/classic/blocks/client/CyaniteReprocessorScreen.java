@@ -10,26 +10,33 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorContainer;
-
-import javax.annotation.Nonnull;
+import net.roguelogix.biggerreactors.client.gui.GuiEnergyTank;
 
 @OnlyIn(Dist.CLIENT)
 public class CyaniteReprocessorScreen extends ContainerScreen<CyaniteReprocessorContainer> implements IHasContainer<CyaniteReprocessorContainer> {
     
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/cyanite_reprocessor.png");
-    
-    public CyaniteReprocessorScreen(CyaniteReprocessorContainer screenContainer, PlayerInventory inventory, ITextComponent title) {
-        super(screenContainer, inventory, title);
-        this.xSize = 245;
+
+    private GuiEnergyTank<CyaniteReprocessorContainer> energyTank;
+
+    public CyaniteReprocessorScreen(CyaniteReprocessorContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, inventory, title);
+        this.xSize = 246;
         this.ySize = 175;
+
+        this.energyTank = new GuiEnergyTank<>(this, 148, 16, true);
     }
 
     @Override
     // 1.16: func_230430_a_
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(); // 1.16: this.func_230446_a_
+        // This really bothers me how the super is sandwiched here but it has to be here so ugh.
         super.render(mouseX, mouseY, partialTicks); // 1.16: super.func_230430_a_
-        this.renderHoveredToolTip(mouseX, mouseY);  // 1.16: this.func_230459_a_
+        this.renderHoveredToolTip(mouseX, mouseY);  // 1.16:// this.func_230459_a_
+
+        if(energyTank == null) return;
+        this.energyTank.drawTooltip(mouseX, mouseY, this.getContainer().getEnergyStored(), this.getContainer().getEnergyCapacity());
     }
 
     @Override
@@ -39,6 +46,8 @@ public class CyaniteReprocessorScreen extends ContainerScreen<CyaniteReprocessor
           // 1.16: this.field_230712_o_.func_238422_b_
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
           // 1.16: this.field_230712_o_.func_238422_b_
+        if(energyTank == null) return;
+        this.energyTank.drawPart(this.getContainer().getEnergyStored(), this.getContainer().getEnergyCapacity());
     }
 
     @Override
