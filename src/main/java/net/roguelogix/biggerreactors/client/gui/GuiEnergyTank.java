@@ -9,7 +9,7 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiEnergyTank<T extends Container> extends GuiPartBase {
+public class GuiEnergyTank<T extends Container> extends GuiPartBase<T> {
 
   private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/energy_tank.png");
   private static final int GUI_SIZE_X = 16;

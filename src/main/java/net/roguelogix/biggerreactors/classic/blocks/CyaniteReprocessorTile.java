@@ -115,35 +115,50 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     return this.energyStorage.getMaxEnergyStored();
   }
 
+  public int getFluidStored() {
+    return this.fluidStorage.getFluidAmount();
+  }
+
+  public int getFluidCapacity() {
+    return this.fluidStorage.getCapacity();
+  }
+
   @Nonnull
-  public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult trace) {
-    if (!world.isRemote) {
-      if (world.getTileEntity(blockPos) == this) {
-        if(player.isCrouching()) {
+  public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world,
+      @Nonnull BlockPos blockPos, @Nonnull PlayerEntity player, @Nonnull Hand hand,
+      @Nonnull BlockRayTraceResult trace) {
+    if (world.getTileEntity(blockPos) == this) {
+
+      if (player.getHeldItem(Hand.MAIN_HAND).getItem() == Items.WATER_BUCKET) {
+        this.fluidStorage.fill(new FluidStack(Fluids.WATER, 1000), FluidAction.EXECUTE);
+        player.setHeldItem(Hand.MAIN_HAND, Items.BUCKET.getDefaultInstance());
+        return ActionResultType.SUCCESS;
+      }
+
+      if (!world.isRemote) {
+        if (player.isCrouching()) {
           // This doesn't work and I have no idea why.
           //if(player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
-            player.sendMessage(new StringTextComponent("Work Time: " + workTime));
-            player.sendMessage(new StringTextComponent("Work Time Total: " + workTimeTotal));
-            player.sendMessage(new StringTextComponent("Energy Stored: " + energyStorage.getEnergyStored() + " RF"));
-            player.sendMessage(new StringTextComponent("Energy Capacity: " + energyStorage.getMaxEnergyStored() + " RF"));
-            player.sendMessage(new StringTextComponent("Fluid Stored: " + fluidStorage.getFluidAmount() + " mB (" + fluidStorage.getFluid().getDisplayName().getFormattedText() + ")"));
-            player.sendMessage(new StringTextComponent("Fluid Capacity: " + fluidStorage.getCapacity() + " mB"));
-            return ActionResultType.SUCCESS;
-          //}
-        } else {
-          if(player.getHeldItem(Hand.MAIN_HAND).getItem() == Items.WATER_BUCKET) {
-            this.fluidStorage.fill(new FluidStack(Fluids.WATER, 1000), FluidAction.EXECUTE);
-            player.setHeldItem(Hand.MAIN_HAND, Items.BUCKET.getDefaultInstance());
-            return ActionResultType.SUCCESS;
-          }
-
-          NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
+          player.sendMessage(new StringTextComponent("Work Time: " + workTime));
+          player.sendMessage(new StringTextComponent("Work Time Total: " + workTimeTotal));
+          player.sendMessage(
+              new StringTextComponent(
+                  "Energy Stored: " + energyStorage.getEnergyStored() + " RF"));
+          player.sendMessage(new StringTextComponent(
+              "Energy Capacity: " + energyStorage.getMaxEnergyStored() + " RF"));
+          player.sendMessage(new StringTextComponent(
+              "Fluid Stored: " + getFluidStored() + " mB (" + fluidStorage.getFluid()
+                  .getDisplayName().getFormattedText().toLowerCase() + ")"));
+          player.sendMessage(
+              new StringTextComponent("Fluid Capacity: " + fluidStorage.getCapacity() + " mB"));
           return ActionResultType.SUCCESS;
+          //}
         }
-
-      } else {
-        throw new IllegalStateException("Container not found: biggerreactors:cyanite_reprocessor");
+        NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
+        return ActionResultType.SUCCESS;
       }
+    } else {
+      throw new IllegalStateException("Container not found: biggerreactors:cyanite_reprocessor");
     }
     return ActionResultType.SUCCESS;
   }
@@ -164,7 +179,6 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     this.fluidStorage = this.fluidStorage.readFromNBT(compound.getCompound("fluidStorage"));
     // NBT method C: items.
     this.itemStorage.deserializeNBT(compound.getCompound("inventory"));
-
     // Other stuff.
     this.workTime = compound.getInt("workTime");
     this.workTimeTotal = compound.getInt("workTimeTotal");
@@ -178,9 +192,8 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     // NBT method A: energy.
     compound.putInt("energyStored", this.energyStorage.getEnergyStored());
     compound.putInt("energyCapacity", this.energyStorage.getMaxEnergyStored());
-    //compound.put("fluids", this.fluidStorage.writeToNBT(compound));
+    // NBT method B: fluid and items.
     compound.put("fluidStorage", fluidStorage.writeToNBT(new CompoundNBT()));
-    // NBT method B: items.
     compound.put("inventory", this.itemStorage.serializeNBT());
 
     // Other stuff.
@@ -193,29 +206,29 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
   @Nonnull
   @Override
   public int[] getSlotsForFace(@Nonnull Direction side) {
-      if (side == SLOT_INPUT_DIRECTION) {
-          return new int[]{SLOT_INPUT};
-      }
-      if (side == SLOT_OUTPUT_DIRECTION) {
-          return new int[]{SLOT_OUTPUT};
-      }
+    if (side == SLOT_INPUT_DIRECTION) {
+      return new int[]{SLOT_INPUT};
+    }
+    if (side == SLOT_OUTPUT_DIRECTION) {
+      return new int[]{SLOT_OUTPUT};
+    }
     return new int[]{};
   }
 
   @Override
   public boolean canInsertItem(int index, @Nonnull ItemStack itemStack,
       @Nullable Direction direction) {
-      if (direction == SLOT_INPUT_DIRECTION && index == SLOT_INPUT) {
-          return this.isItemValidForSlot(index, itemStack);
-      }
+    if (direction == SLOT_INPUT_DIRECTION && index == SLOT_INPUT) {
+      return this.isItemValidForSlot(index, itemStack);
+    }
     return false;
   }
 
   @Override
   public boolean canExtractItem(int index, @Nonnull ItemStack stack, @Nonnull Direction direction) {
-      if (direction == SLOT_INPUT_DIRECTION && index == SLOT_INPUT) {
-          return true;
-      }
+    if (direction == SLOT_INPUT_DIRECTION && index == SLOT_INPUT) {
+      return true;
+    }
     return direction == SLOT_OUTPUT_DIRECTION && index == SLOT_OUTPUT;
   }
 
@@ -287,13 +300,13 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
   @Override
   public boolean isUsableByPlayer(@Nonnull PlayerEntity player) {
     assert this.world != null;
-      if (this.world.getTileEntity(this.pos) != this) {
-          return false;
-      } else {
-          return
-              player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D,
-                  (double) this.pos.getZ() + 0.5D) <= 64.0D;
-      }
+    if (this.world.getTileEntity(this.pos) != this) {
+      return false;
+    } else {
+      return
+          player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D,
+              (double) this.pos.getZ() + 0.5D) <= 64.0D;
+    }
   }
 
   @Override

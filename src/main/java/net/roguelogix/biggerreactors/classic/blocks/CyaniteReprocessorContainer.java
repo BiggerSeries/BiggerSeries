@@ -8,11 +8,8 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
 @RegisterContainer(name = "cyanite_reprocessor")
@@ -42,16 +39,19 @@ public class CyaniteReprocessorContainer extends Container {
   }
 
   public int getEnergyStored() {
-    //return this.tileEntity.getEnergyStored();
-    return this.tileEntity.getCapability(CapabilityEnergy.ENERGY)
-        .map(IEnergyStorage::getEnergyStored).orElse(0);
+    return this.tileEntity.getEnergyStored();
   }
 
   public int getEnergyCapacity() {
-    //return this.tileEntity.getEnergyCapacity();
-    return this.tileEntity.getCapability(CapabilityEnergy.ENERGY)
-        .map(IEnergyStorage::getMaxEnergyStored).orElse(
-            Config.MachineEnergyTankCapacity);
+    return this.tileEntity.getEnergyCapacity();
+  }
+
+  public int getFluidStored() {
+    return this.tileEntity.getFluidStored();
+  }
+
+  public int getFluidCapacity() {
+    return this.tileEntity.getFluidCapacity();
   }
 
   private void populatePlayerInventory() {
