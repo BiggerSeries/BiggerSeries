@@ -1,10 +1,16 @@
 package net.roguelogix.phosphophyllite.multiblock.generic;
 
+import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
+import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
@@ -17,13 +23,7 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
-import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
-
-public abstract class MultiblockTile extends TileEntity {
+public abstract class MultiblockTile extends LockableTileEntity {
     protected MultiblockController controller;
     
     long lastSavedTick = 0;

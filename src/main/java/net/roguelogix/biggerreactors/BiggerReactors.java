@@ -7,6 +7,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorContainer;
 import net.roguelogix.biggerreactors.classic.blocks.client.CyaniteReprocessorScreen;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.client.ReactorScreen;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +36,8 @@ public class BiggerReactors {
         // TODO: 6/28/20 Registry
         ScreenManager.registerFactory(CyaniteReprocessorContainer.INSTANCE,
                 CyaniteReprocessorScreen::new);
+        ScreenManager.registerFactory(ReactorContainer.INSTANCE,
+            ReactorScreen::new);
     }
     
 }
