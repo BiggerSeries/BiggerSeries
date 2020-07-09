@@ -7,7 +7,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
-import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessor;
+import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorTerminalTile;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
@@ -85,6 +85,6 @@ public class ReactorContainer extends Container {
   public boolean canInteractWith(@Nonnull PlayerEntity player) {
     assert tileEntity.getWorld() != null;
     return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()),
-        player, CyaniteReprocessor.INSTANCE);
+        player, ReactorTerminal.INSTANCE);
   }
 }
