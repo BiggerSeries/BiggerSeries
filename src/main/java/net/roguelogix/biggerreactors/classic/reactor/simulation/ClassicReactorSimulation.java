@@ -118,6 +118,8 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         } else {
             coolantTank.setPerSideCapacity((((x + 2) * (y + 2) * (z + 2)) - (x * y * z)) * Config.Reactor.CoolantTankAmountPerExternalBlock);
         }
+        
+        rodToIrradiate = 0;
     }
     
     public void setActive(boolean active) {
