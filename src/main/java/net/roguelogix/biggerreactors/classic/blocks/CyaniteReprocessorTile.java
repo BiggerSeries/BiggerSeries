@@ -161,9 +161,9 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     // NBT method A: energy.
     this.energyStorage.receiveEnergy(compound.getInt("energyStored"), false);
     // NBT method B: fluids.
-    this.fluidStorage = this.fluidStorage.readFromNBT(compound);
+    this.fluidStorage = this.fluidStorage.readFromNBT(compound.getCompound("fluidStorage"));
     // NBT method C: items.
-    this.itemStorage.deserializeNBT(compound);
+    this.itemStorage.deserializeNBT(compound.getCompound("inventory"));
 
     // Other stuff.
     this.workTime = compound.getInt("workTime");
@@ -179,8 +179,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     compound.putInt("energyStored", this.energyStorage.getEnergyStored());
     compound.putInt("energyCapacity", this.energyStorage.getMaxEnergyStored());
     //compound.put("fluids", this.fluidStorage.writeToNBT(compound));
-    compound.putInt("fluidStored", this.fluidStorage.getFluidAmount());
-    compound.putInt("fluidCapacity", this.fluidStorage.getCapacity());
+    compound.put("fluidStorage", fluidStorage.writeToNBT(new CompoundNBT()));
     // NBT method B: items.
     compound.put("inventory", this.itemStorage.serializeNBT());
 
