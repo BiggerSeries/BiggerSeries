@@ -7,6 +7,7 @@ import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
 import net.roguelogix.biggerreactors.classic.reactor.simulation.ClassicReactorSimulation;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
@@ -93,6 +94,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     @Override
     protected void onPartAdded(MultiblockTile tile) {
+        distributeFuel();
         if (tile instanceof ReactorTerminalTile) {
             terminals.add((ReactorTerminalTile) tile);
         }
@@ -115,6 +117,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     @Override
     protected void onPartRemoved(MultiblockTile tile) {
+        distributeFuel();
         if (tile instanceof ReactorTerminalTile) {
             terminals.remove(tile);
         }
@@ -177,6 +180,16 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
+    protected void onMerge(MultiblockController otherController) {
+        setActive(ReactorState.INACTIVE);
+        distributeFuel();
+        assert otherController instanceof ReactorMultiblockController;
+        ((ReactorMultiblockController) otherController).distributeFuel();
+        storedPower = 0;
+        simulation = new ClassicReactorSimulation();
+    }
+    
+    @Override
     protected void onAssembly() {
         for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
@@ -202,6 +215,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         simulation.setPassivelyCooled(coolantPorts.isEmpty());
         simulation.updateInternalValues();
+        collectFuel();
     }
     
     @Override
@@ -216,7 +230,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     
-    private final ClassicReactorSimulation simulation = new ClassicReactorSimulation();
+    private ClassicReactorSimulation simulation = new ClassicReactorSimulation();
     
     private long storedPower = 0;
     
@@ -275,9 +289,39 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         for (ReactorCoolantPortTile coolantPort : coolantPorts) {
             simulation.coolantTank.extractSteam(coolantPort.pushSteam(simulation.coolantTank.extractSteam(Integer.MAX_VALUE, true)), false);
         }
-    
+        
         for (ReactorAccessPortTile accessPort : accessPorts) {
             accessPort.pushWaste();
+        }
+    }
+    
+    private void distributeFuel() {
+        if (simulation.fuelTank.getTotalAmount() > 0 && !fuelRods.isEmpty()) {
+            long fuelToDistribute = simulation.fuelTank.getFuelAmount();
+            long wasteToDistribute = simulation.fuelTank.getWasteAmount();
+            fuelToDistribute /= fuelRods.size();
+            wasteToDistribute /= fuelRods.size();
+            for (ReactorFuelRodTile fuelRod : fuelRods) {
+                fuelRod.fuel += simulation.fuelTank.extractFuel(fuelToDistribute, false);
+                fuelRod.waste += simulation.fuelTank.extractWaste(wasteToDistribute, false);
+            }
+            for (ReactorFuelRodTile fuelRod : fuelRods) {
+                fuelRod.fuel += simulation.fuelTank.extractFuel(Long.MAX_VALUE, false);
+                fuelRod.waste += simulation.fuelTank.extractWaste(Long.MAX_VALUE, false);
+            }
+        }
+    }
+    
+    private void collectFuel() {
+        for (ReactorFuelRodTile fuelRod : fuelRods) {
+            fuelRod.fuel -= simulation.fuelTank.insertFuel(fuelRod.fuel, false);
+            fuelRod.waste -= simulation.fuelTank.insertWaste(fuelRod.waste, false);
+            if (fuelRod.fuel != 0 || fuelRod.waste != 0) {
+                // TODO: 7/9/20 log this shit, shouldn't happen
+                // for now, just void the fuel
+                fuelRod.fuel = 0;
+                fuelRod.waste = 0;
+            }
         }
     }
     

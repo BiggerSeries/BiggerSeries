@@ -117,7 +117,7 @@ public class MultiblockController {
         if (toAttach.controllerData != null) {
             onBlockWithNBTAttached(toAttach.controllerData);
         }
-        updateAssemblyAtTick = Phosphophyllite.tickNumber() + 5;
+        updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
     
     protected void onPartAdded(MultiblockTile toAttach) {
@@ -142,7 +142,7 @@ public class MultiblockController {
         }
         
         checkForDetachments = true;
-        updateAssemblyAtTick = Phosphophyllite.tickNumber() + 5;
+        updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
     
     protected void onPartRemoved(MultiblockTile tile) {

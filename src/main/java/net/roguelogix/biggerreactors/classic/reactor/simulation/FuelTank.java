@@ -56,8 +56,31 @@ public class FuelTank implements INBTSerializable<CompoundNBT> {
         return amount;
     }
     
+    public long insertWaste(long amount, boolean simulated) {
+        if (getTotalAmount() >= capacity) {
+            // if we are overfilled, then we need to *not* insert more
+            return 0;
+        }
+        
+        amount = Math.min(amount, capacity - getTotalAmount());
+        
+        if (!simulated) {
+            waste += amount;
+        }
+        
+        return amount;
+    }
+    
     public long spaceAvailable() {
         return getCapacity() - getTotalAmount();
+    }
+    
+    public long extractFuel(long toExtract, boolean simulated) {
+        toExtract = Math.min(fuel, toExtract);
+        if (!simulated) {
+            fuel -= toExtract;
+        }
+        return toExtract;
     }
     
     public long extractWaste(long toExtract, boolean simulated) {
