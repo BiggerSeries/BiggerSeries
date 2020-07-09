@@ -292,7 +292,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
 
     if (index == 0 && !flag) {
       this.workTime = 0;
-      this.workTimeTotal = Config.CyaniteReprocessorWorkTime;
+      this.workTimeTotal = Config.CyaniteReprocessor.CyaniteReprocessorWorkTime;
       this.markDirty();
     }
   }
