@@ -81,13 +81,15 @@ public class ReactorTerminalTile extends ReactorBaseTile {
             if(controller != null) {
                 reactor().toggleActive();
             }
-            return ActionResultType.PASS;
-        }
-
-        if(!world.isRemote) {
-            NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
             return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(player, handIn);
+    
+        if(handIn == Hand.MAIN_HAND) {
+            if (!world.isRemote) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
+            }
+            return ActionResultType.SUCCESS;
+        }
+        return ActionResultType.PASS;
     }
 }

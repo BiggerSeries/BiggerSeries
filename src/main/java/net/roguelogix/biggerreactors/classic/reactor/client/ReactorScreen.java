@@ -40,7 +40,12 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
   public void render(int mouseX, int mouseY, float partialTicks) {
     this.renderBackground(); // 1.16: this.func_230446_a_
     // This really bothers me how the super is sandwiched here but it has to be here so ugh.
-    super.render(mouseX, mouseY, partialTicks); // 1.16: super.func_230430_a_
+//    super.render(mouseX, mouseY, partialTicks); // 1.16: super.func_230430_a_
+    this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+    RenderSystem.pushMatrix();
+    RenderSystem.translatef(this.guiLeft, this.guiTop, 0);
+    this.drawGuiContainerForegroundLayer(mouseX, mouseY);
+    RenderSystem.popMatrix();
     this.renderHoveredToolTip(mouseX, mouseY);  // 1.16: this.func_230459_a_
 
     this.energyTank.drawTooltip(mouseX, mouseY, this.getContainer().getEnergyStored(), this.getContainer().getEnergyCapacity());
@@ -54,7 +59,7 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
   protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     this.font.drawString(this.title.getFormattedText(), 8.0F, (float) (this.ySize - 168), 4210752);
     // 1.16: this.field_230712_o_.func_238422_b_
-    this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
+//    this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
     // 1.16: this.field_230712_o_.func_238422_b_
 
     this.energyTank.drawPart(this.getContainer().getEnergyStored(), this.getContainer().getEnergyCapacity());
