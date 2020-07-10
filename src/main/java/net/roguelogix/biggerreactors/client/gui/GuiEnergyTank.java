@@ -15,22 +15,18 @@ public class GuiEnergyTank<T extends Container> extends GuiPartBase<T> {
   private static final int GUI_SIZE_X = 16;
   private static final int GUI_SIZE_Y = 64;
 
-  public GuiEnergyTank(ContainerScreen<T> screen, int xPos, int yPos, boolean enableTooltip) {
-    super(screen, xPos, yPos, GUI_TEXTURE, GUI_SIZE_X, GUI_SIZE_Y);
-    this.enableTooltip = enableTooltip;
+  public GuiEnergyTank(ContainerScreen<T> screen, int xPos, int yPos) {
+    super(screen, GUI_TEXTURE, xPos, yPos, GUI_SIZE_X, GUI_SIZE_Y, null);
   }
 
-  public void drawPart(int energyStored, int energyCapacity) {
+  public void drawPart(long energyStored, long energyCapacity) {
     super.drawPart();
-    long energyOffset = -((energyCapacity - energyStored) * ySize / energyCapacity) - 1;
-    this.screen.blit(this.xPos, this.yPos - 1, 16, (int) energyOffset, xSize, ySize);
+    long textureOffset = -((energyCapacity - energyStored) * ySize / energyCapacity) - 1;
+    this.screen.blit(this.xPos, this.yPos - 1, 16, (int) textureOffset, xSize, ySize);
   }
 
-  public void drawTooltip(int mouseX, int mouseY, int energyStored, int energyCapacity) {
-    if(!this.enableTooltip) return;
+  public void drawTooltip(int mouseX, int mouseY, long energyStored, long energyCapacity) {
+    this.tooltipText = String.format("%d/%d RF", energyStored, energyCapacity);
     super.drawTooltip(mouseX, mouseY);
-    if(this.isMouseHovering(mouseX, mouseY)) {
-      this.screen.renderTooltip(String.format("%d/%d RF", energyStored, energyCapacity), mouseX, mouseY);
-    }
   }
 }

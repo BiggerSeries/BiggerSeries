@@ -19,16 +19,16 @@ public class CyaniteReprocessorScreen extends ContainerScreen<CyaniteReprocessor
     
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/cyanite_reprocessor.png");
 
+    private GuiFluidTank<CyaniteReprocessorContainer> waterTank;
     private GuiEnergyTank<CyaniteReprocessorContainer> energyTank;
-    private GuiFluidTank<CyaniteReprocessorContainer> fluidTank;
 
     public CyaniteReprocessorScreen(CyaniteReprocessorContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
         this.xSize = 246;
         this.ySize = 175;
 
-        this.energyTank = new GuiEnergyTank<>(this, 148, 16, true);
-        this.fluidTank = new GuiFluidTank<>(this, 8, 16, Fluids.WATER.getFluid(), true);
+        this.waterTank = new GuiFluidTank<>(this, 8, 16, Fluids.WATER.getFluid());
+        this.energyTank = new GuiEnergyTank<>(this, 148, 16);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class CyaniteReprocessorScreen extends ContainerScreen<CyaniteReprocessor
         super.render(mouseX, mouseY, partialTicks); // 1.16: super.func_230430_a_
         this.renderHoveredToolTip(mouseX, mouseY);  // 1.16: this.func_230459_a_
 
+        this.waterTank.drawTooltip(mouseX, mouseY, this.getContainer().getFluidStored(), this.getContainer(). getFluidCapacity());
         this.energyTank.drawTooltip(mouseX, mouseY, this.getContainer().getEnergyStored(), this.getContainer().getEnergyCapacity());
-        this.fluidTank.drawTooltip(mouseX, mouseY, this.getContainer().getFluidStored(), this.getContainer(). getFluidCapacity());
     }
 
     @Override
@@ -51,8 +51,9 @@ public class CyaniteReprocessorScreen extends ContainerScreen<CyaniteReprocessor
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
           // 1.16: this.field_230712_o_.func_238422_b_
 
+        // Draw machine gauges.
+        this.waterTank.drawPart(this.getContainer().getFluidStored(), this.getContainer().getFluidCapacity());
         this.energyTank.drawPart(this.getContainer().getEnergyStored(), this.getContainer().getEnergyCapacity());
-        this.fluidTank.drawPart(this.getContainer().getFluidStored(), this.getContainer().getFluidCapacity());
     }
 
     @Override

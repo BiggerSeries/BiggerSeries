@@ -18,42 +18,34 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> {
       "textures/screen/parts/fluid_tank.png");
   private static final int GUI_SIZE_X = 18;
   private static final int GUI_SIZE_Y = 64;
-  private Fluid fluidType;
 
-  public GuiFluidTank(ContainerScreen<T> screen, int xPos, int yPos, Fluid fluidType,
-      boolean enableTooltip) {
-    super(screen, xPos, yPos, GUI_TEXTURE, GUI_SIZE_X, GUI_SIZE_Y);
-    this.fluidType = fluidType;
-    this.enableTooltip = enableTooltip;
+  private Fluid fluid;
+
+  public GuiFluidTank(ContainerScreen<T> screen, int xPos, int yPos, Fluid fluid) {
+    super(screen, GUI_TEXTURE, xPos, yPos, GUI_SIZE_X, GUI_SIZE_Y, null);
+
+    this.fluid = fluid;
   }
 
-  public void drawPart(int fluidStored, int fluidCapacity) {
+  public void drawPart(long fluidStored, long fluidCapacity) {
     super.drawPart();
 
     // TODO: Modify to allow usage of any fluid texture. Currently, it's hardcoded for water and steam only.
-
-    long fluidOffset = -((fluidCapacity - fluidStored) * ySize / fluidCapacity) - 1;
-    if(this.fluidType == Fluids.WATER.getFluid()) {
+    long textureOffset = -((fluidCapacity - fluidStored) * ySize / fluidCapacity) - 1;
+    if(this.fluid == Fluids.WATER.getFluid()) {
       // Water
-      this.screen.blit(this.xPos, this.yPos - 1, 36, (int) fluidOffset, xSize, ySize);
+      this.screen.blit(this.xPos, this.yPos - 1, 36, (int) textureOffset, xSize, ySize);
     } else {
       // Steam
-      this.screen.blit(this.xPos, this.yPos - 1, 54, (int) fluidOffset, xSize, ySize);
+      this.screen.blit(this.xPos, this.yPos - 1, 54, (int) textureOffset, xSize, ySize);
     }
 
-    // Draw fill level marks.
     this.screen.blit(this.xPos, this.yPos, 18, 0, xSize, ySize);
   }
 
-  public void drawTooltip(int mouseX, int mouseY, int fluidStored, int fluidCapacity) {
-    if (!this.enableTooltip) {
-      return;
-    }
+  public void drawTooltip(int mouseX, int mouseY, long fluidStored, long fluidCapacity) {
+    this.tooltipText = String.format("%d/%d mB of %s", fluidStored, fluidCapacity,
+        new FluidStack(this.fluid, (int) fluidStored).getDisplayName().getFormattedText().toLowerCase());
     super.drawTooltip(mouseX, mouseY);
-    if (this.isMouseHovering(mouseX, mouseY)) {
-      this.screen.renderTooltip(String.format("%d/%d mB of %s", fluidStored, fluidCapacity,
-          new FluidStack(fluidType, fluidStored).getDisplayName().getFormattedText().toLowerCase()),
-          mouseX, mouseY);
-    }
   }
 }

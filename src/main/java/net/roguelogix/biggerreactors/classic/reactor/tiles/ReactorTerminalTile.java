@@ -13,54 +13,46 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 @RegisterTileEntity(name = "reactor_terminal")
 public class ReactorTerminalTile extends ReactorBaseTile {
-    
+
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-    
+
     public ReactorTerminalTile() {
         super(TYPE);
     }
 
-    // TODO: Connect lines 22-56 to logic.
+    // TODO: Connect this to reactor logic.
+    public ReactorDatapack getReactorData() {
+        ReactorDatapack data = new ReactorDatapack();
+        data.reactorStatus = false;
+        data.reactorType = true;
 
-    public int getEnergyStored() {
-        return 1000;
-    }
+        data.energyStored = 1000;
+        data.energyCapacity = Config.MachineEnergyTankCapacity;
 
-    public int getEnergyCapacity() {
-        return Config.MachineEnergyTankCapacity;
-    }
+        data.caseHeatStored = 1000;
+        data.caseHeatCapacity = 5000;
 
-    public int getCoreHeatStored() {
-        return 1000;
-    }
+        data.coreHeatStored = 1000;
+        data.coreHeatStored = 5000;
 
-    public int getCoreHeatCapacity() {
-        return 5000;
-    }
+        data.fuelHeatStored = 1000;
+        data.fuelHeatCapacity = 5000;
 
-    public int getCaseHeatStored() {
-        return 1000;
-    }
+        data.wasteStored = 500;
+        data.fuelStored = 500;
+        data.fuelCapacity = 5000;
 
-    public int getCaseHeatCapacity() {
-        return 5000;
-    }
+        data.reactorOutputRate = 500;
+        data.fuelUsageRate = 250;
+        data.reactivityRate = 250;
 
-    public int getFuelStored() {
-        return 1000;
-    }
-
-    public int getWasteStored() {
-        return 1000;
-    }
-
-    public int getFuelCapacity() {
-        return 5000;
+        return data;
     }
 
     @Nonnull
@@ -83,7 +75,7 @@ public class ReactorTerminalTile extends ReactorBaseTile {
             }
             return ActionResultType.SUCCESS;
         }
-    
+
         if(handIn == Hand.MAIN_HAND) {
             if (!world.isRemote) {
                 NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
