@@ -12,13 +12,11 @@ import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 public class GuiReactorBar<T extends Container> extends GuiPartBase<T> {
 
   private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/reactor_bars.png");
-  private static final int GUI_SIZE_X = 16;
-  private static final int GUI_SIZE_Y = 64;
 
   private int textureIndex;
 
   public GuiReactorBar(ContainerScreen<T> screen, int xPos, int yPos, int textureIndex) {
-    super(screen, GUI_TEXTURE, xPos, yPos, GUI_SIZE_X, GUI_SIZE_Y, null);
+    super(screen, GUI_TEXTURE, xPos, yPos, 16, 64, null);
 
     this.textureIndex = textureIndex;
   }
@@ -29,8 +27,11 @@ public class GuiReactorBar<T extends Container> extends GuiPartBase<T> {
 
   public void drawPart(long valueStored, long valueCapacity) {
     super.drawPart();
-    long textureOffset = -((valueCapacity - valueStored) * ySize / valueCapacity) - 1;
-    this.screen.blit(this.xPos, this.yPos - 1, (textureIndex * 16), (int) textureOffset, xSize, ySize);
+
+    long textureOffset = valueStored * (this.ySize + 1) / valueCapacity;
+    int relativeY = (int) (this.yPos + this.ySize - textureOffset);
+    int textureY = (int) (this.ySize - textureOffset);
+    this.screen.blit(this.xPos, relativeY, (textureIndex * 16), textureY, this.xSize, (int) (textureOffset));
   }
 
   public void drawTooltip(int mouseX, int mouseY, long valueStored, long valueCapacity) {

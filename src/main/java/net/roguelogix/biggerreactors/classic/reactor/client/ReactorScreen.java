@@ -138,7 +138,7 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     this.fuelSymbol.drawPart();
     //this.fuelTank.drawPart(_, _);
     this.caseHeatSymbol.drawPart();
-    this.caseHeatTank.drawPart(5000, reactorData.caseHeatCapacity);
+    this.caseHeatTank.drawPart(reactorData.caseHeatStored, reactorData.caseHeatCapacity);
     this.fuelHeatSymbol.drawPart();
     this.fuelHeatTank.updateTextureIndex(1);
     this.fuelHeatTank.drawPart(reactorData.fuelHeatStored, reactorData.fuelHeatCapacity);
