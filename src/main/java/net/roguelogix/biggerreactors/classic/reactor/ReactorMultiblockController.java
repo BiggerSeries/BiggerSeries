@@ -27,10 +27,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     public ReactorMultiblockController(World world) {
         super(world);
-        minWidth = minHeight = minLength = 3;
-        maxLength = Config.Reactor.MaxLength;
-        maxWidth = Config.Reactor.MaxWidth;
-        maxHeight = Config.Reactor.MaxHeight;
+        minX = minY = minZ = 3;
+        maxX = Config.Reactor.MaxLength;
+        maxZ = Config.Reactor.MaxWidth;
+        maxY = Config.Reactor.MaxHeight;
         tileAttachValidator = tile -> {
             return tile instanceof ReactorBaseTile;
         };

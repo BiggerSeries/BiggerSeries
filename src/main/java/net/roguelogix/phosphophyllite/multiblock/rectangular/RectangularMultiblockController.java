@@ -22,9 +22,10 @@ public class RectangularMultiblockController extends MultiblockController {
         setAssemblyValidator(k -> true);
     }
     
-    protected boolean strictDimensions = false;
-    protected int minLength = -1, minWidth = -1, minHeight = -1;
-    protected int maxLength = -1, maxWidth = -1, maxHeight = -1;
+    protected boolean orientationAgnostic = true;
+    protected boolean xzAgnostic = true;
+    protected int minX = -1, minY = -1, minZ = -1;
+    protected int maxX = -1, maxY = -1, maxZ = -1;
     
     protected Validator<Block> cornerValidator = null;
     protected Validator<Block> frameValidator = null;
@@ -48,38 +49,50 @@ public class RectangularMultiblockController extends MultiblockController {
         int maxY = controller.maxY();
         int maxZ = controller.maxZ();
         
-        // dimensions are direction agnostic
-        BlockPos dimensions = null;
-        for (int i = 0; i < (controller.strictDimensions ? 1 : 3); i++) {
-            dimensions = new BlockPos(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
-            for (int j = 0; j < i; j++) {
-                dimensions = new BlockPos(dimensions.getY(), dimensions.getZ(), dimensions.getX());
-            }
+        Vector3i[] allowedOrientations = new Vector3i[controller.orientationAgnostic ? 6 : controller.xzAgnostic ? 2 : 1];
+        
+        if (controller.orientationAgnostic) {
+            allowedOrientations[0] = new Vector3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+            allowedOrientations[1] = new Vector3i(maxX - minX + 1, maxZ - minZ + 1, maxY - minY + 1);
+            
+            allowedOrientations[2] = new Vector3i(maxY - minY + 1, maxX - minX + 1, maxZ - minZ + 1);
+            allowedOrientations[3] = new Vector3i(maxY - minY + 1, maxZ - minZ + 1, maxX - minX + 1);
+            
+            allowedOrientations[4] = new Vector3i(maxZ - minZ + 1, maxX - minX + 1, maxY - minY + 1);
+            allowedOrientations[5] = new Vector3i(maxZ - minZ + 1, maxY - minY + 1, maxX - minX + 1);
+        } else if (controller.xzAgnostic) {
+            allowedOrientations[0] = new Vector3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+            allowedOrientations[1] = new Vector3i(maxZ - minZ + 1, maxY - minY + 1, maxX - minX + 1);
+        } else {
+            allowedOrientations[0] = new Vector3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+        }
+        
+        Vector3i dimensions = null;
+        for (Vector3i allowedOrientation : allowedOrientations) {
             // if all are positive, technically zero is valid for them
             // dont know why you would use zero, but that's not my problem
             // i guess to lock out using the machine?
-            if ((controller.minLength | controller.minWidth | controller.minHeight) > 0) {
+            if ((controller.minX | controller.minY | controller.minZ) > 0) {
                 if (
-                        dimensions.getX() < controller.minLength ||
-                                dimensions.getY() < controller.minWidth ||
-                                dimensions.getZ() < controller.minHeight
+                        allowedOrientation.x < controller.minX ||
+                                allowedOrientation.y < controller.minY ||
+                                allowedOrientation.z < controller.minZ
                 ) {
-                    dimensions = null;
                     continue;
                 }
             }
             // you can also just set one of these lower than the above
             // see the below bounds checks
-            if ((controller.maxLength | controller.maxWidth | controller.maxHeight) > 0) {
+            if ((controller.maxX | controller.maxY | controller.maxZ) > 0) {
                 if (
-                        dimensions.getX() > controller.maxLength ||
-                                dimensions.getY() > controller.maxWidth ||
-                                dimensions.getZ() > controller.maxHeight
+                        allowedOrientation.x > controller.maxX ||
+                                allowedOrientation.y > controller.maxY ||
+                                allowedOrientation.z > controller.maxZ
                 ) {
-                    dimensions = null;
                     continue;
                 }
             }
+            dimensions = allowedOrientation;
             break;
         }
         // dimension check failed in all orientations
