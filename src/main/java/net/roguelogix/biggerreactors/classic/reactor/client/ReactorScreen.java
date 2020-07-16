@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -13,6 +14,7 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.biggerreactors.client.gui.GuiEnergyTank;
+import net.roguelogix.biggerreactors.client.gui.GuiFluidTank;
 import net.roguelogix.biggerreactors.client.gui.GuiReactorBar;
 import net.roguelogix.phosphophyllite.gui.GuiPartSymbol;
 
@@ -39,6 +41,10 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
   private GuiEnergyTank<ReactorContainer> energyTank;
 
   // Lower gauges.
+  private GuiPartSymbol<ReactorContainer> waterSymbol;
+  private GuiFluidTank<ReactorContainer> waterTank;
+  private GuiPartSymbol<ReactorContainer> steamSymbol;
+  private GuiFluidTank<ReactorContainer> steamTank;
 
   public ReactorScreen(ReactorContainer container, PlayerInventory inventory, ITextComponent title) {
     super(container, inventory, title);
@@ -46,10 +52,11 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     this.ySize = 186;
 
     // String status symbols.
-    this.coreHeatSymbol = new GuiPartSymbol<>(this, 6, (this.ySize - 170), 0, new TranslationTextComponent("").getFormattedText());
-    this.outputSymbol = new GuiPartSymbol<>(this, 6, (this.ySize - 149), 3, new TranslationTextComponent("").getFormattedText());
-    this.fuelRateSymbol = new GuiPartSymbol<>(this, 6, (this.ySize - 128), 4, new TranslationTextComponent("").getFormattedText());
-    this.reactivitySymbol = new GuiPartSymbol<>(this, 6, (this.ySize - 107), 5, new TranslationTextComponent("").getFormattedText());
+    //this.coreHeatSymbol = new GuiPartSymbol<>(this, 6, (this.ySize - 170), 0, new TranslationTextComponent("").getFormattedText());
+    this.coreHeatSymbol = new GuiPartSymbol<>(this, 6, 16, 0, new TranslationTextComponent("").getFormattedText());
+    this.outputSymbol = new GuiPartSymbol<>(this, 6, 38, 3, new TranslationTextComponent("").getFormattedText());
+    this.fuelRateSymbol = new GuiPartSymbol<>(this, 6, 58, 4, new TranslationTextComponent("").getFormattedText());
+    this.reactivitySymbol = new GuiPartSymbol<>(this, 6, 79, 5, new TranslationTextComponent("").getFormattedText());
 
     // Upper gauges.
     this.fuelSymbol = new GuiPartSymbol<>(this, 88, 5, 6, new TranslationTextComponent("").getFormattedText());
@@ -60,6 +67,13 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     this.fuelHeatTank = new GuiReactorBar<>(this, 132, 22, 2);
     this.energySymbol = new GuiPartSymbol<>(this, 154, 5, 9, new TranslationTextComponent("").getFormattedText());
     this.energyTank = new GuiEnergyTank<>(this, 154, 22);
+
+    // Lower gauges.
+    this.waterSymbol = new GuiPartSymbol<>(this, 132, 96, 1, new TranslationTextComponent("").getFormattedText());
+    this.waterTank = new GuiFluidTank<>(this, 131, 113, Fluids.WATER);
+    this.steamSymbol = new GuiPartSymbol<>(this, 154, 96, 2, new TranslationTextComponent("").getFormattedText());
+    // TODO: Switch this tank to steam, which isn't implemented yet.
+    this.steamTank = new GuiFluidTank<>(this, 153, 113, Fluids.LAVA);
   }
 
   @Override
@@ -93,14 +107,20 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     this.fuelHeatTank.drawTooltip(mouseX, mouseY, reactorData.fuelHeatStored, reactorData.fuelHeatCapacity);
     this.energySymbol.drawTooltip(mouseX, mouseY);
     this.energyTank.drawTooltip(mouseX, mouseY, reactorData.energyStored, reactorData.energyCapacity);
+
+    // Lower gauges.
+    this.waterSymbol.drawTooltip(mouseX, mouseY);
+    this.waterTank.drawTooltip(mouseX, mouseY, reactorData.coolantStored, reactorData.coolantCapacity);
+    this.steamSymbol.drawTooltip(mouseX, mouseY);
+    this.steamTank.drawTooltip(mouseX, mouseY, reactorData.steamStored, reactorData.steamCapacity);
   }
 
-  private void drawCoreHeat(ReactorDatapack reactorData) {
+  private void drawReactorStatus(ReactorDatapack reactorData) {
+    // Draw core heat status.
     this.coreHeatSymbol.drawPart();
     this.font.drawString(String.format("%d C", reactorData.coreHeatStored), 25.0F, (float) (this.ySize - 165), 4210752);
-  }
 
-  private void drawReactorOutput(ReactorDatapack reactorData) {
+    // Draw reactor output status.
     if(reactorData.reactorType) {
       // Active reactor, display as steam.
       this.outputSymbol.updateTextureIndex(2);
@@ -112,19 +132,16 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
       this.outputSymbol.drawPart();
       this.font.drawString(String.format("%d RF/t", reactorData.reactorOutputRate), 25.0F, (float) (this.ySize - 144), 4210752);
     }
-  }
 
-  private void drawFuelRate(ReactorDatapack reactorData) {
+    // Draw fuel rate status.
     this.fuelRateSymbol.drawPart();
     this.font.drawString(String.format("%.1f mB/t", reactorData.fuelUsageRate), 25.0F, (float) (this.ySize - 123), 4210752);
-  }
 
-  private void drawReactivity(ReactorDatapack reactorData) {
+    // Draw reactivity status.
     this.reactivitySymbol.drawPart();
     this.font.drawString(String.format("%.1f%%", reactorData.reactivityRate), 25.0F, (float) (this.ySize - 103), 4210752);
-  }
 
-  private void drawReactorStatus(ReactorDatapack reactorData) {
+    // Draw reactor status.
     if(reactorData.reactorStatus) {
       // Reactor is online.
       this.font.drawString("Status: \u00A72Online", 6.0F, (float) (this.ySize - 84), 4210752);
@@ -135,15 +152,30 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
   }
 
   private void drawReactorGauges(ReactorDatapack reactorData) {
+    // Draw fuel/waste gauge.
     this.fuelSymbol.drawPart();
     //this.fuelTank.drawPart(_, _);
+
+    // Draw case heat gauge.
     this.caseHeatSymbol.drawPart();
-    this.caseHeatTank.drawPart(5000, reactorData.caseHeatCapacity);
+    this.caseHeatTank.drawPart(reactorData.caseHeatStored, reactorData.caseHeatCapacity);
+
+    // Draw fuel heat gauge.
     this.fuelHeatSymbol.drawPart();
     this.fuelHeatTank.updateTextureIndex(1);
     this.fuelHeatTank.drawPart(reactorData.fuelHeatStored, reactorData.fuelHeatCapacity);
+
+    // Draw energy gauge.
     this.energySymbol.drawPart();
     this.energyTank.drawPart(reactorData.energyStored, reactorData.energyCapacity);
+
+    // Draw fluid tanks (if reactor is active type).
+    if(reactorData.reactorType) {
+      this.waterSymbol.drawPart();
+      this.waterTank.drawPart(1000, 5000);
+      this.steamSymbol.drawPart();
+      this.steamTank.drawPart(1000, 5000);
+    }
   }
 
   @Override
@@ -153,10 +185,6 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     // TODO: This label doesn't quite fit on screen correctly, may need to modify texture a little.
     //this.font.drawString(this.title.getFormattedText(), 8.0F, (float) (this.ySize - 168), 4210752);
 
-    this.drawCoreHeat(reactorData);
-    this.drawReactorOutput(reactorData);
-    this.drawFuelRate(reactorData);
-    this.drawReactivity(reactorData);
     this.drawReactorStatus(reactorData);
     this.drawReactorGauges(reactorData);
   }

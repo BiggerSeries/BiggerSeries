@@ -34,6 +34,16 @@ public class ReactorDatapack {
   // Max fuel capacity of reactor.
   public long fuelCapacity;
 
+  // Coolant stored in the reactor (active type).
+  public long coolantStored;
+  // Max coolant capacity of the reactor (active type).
+  public long coolantCapacity;
+
+  // Steam stored in the reactor (active type).
+  public long steamStored;
+  // Max steam capacity of the reactor (active type).
+  public long steamCapacity;
+
   // Output rate of the reactor.
   public long reactorOutputRate;
 

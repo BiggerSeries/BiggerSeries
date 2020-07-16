@@ -16,13 +16,11 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> {
 
   private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid,
       "textures/screen/parts/fluid_tank.png");
-  private static final int GUI_SIZE_X = 18;
-  private static final int GUI_SIZE_Y = 64;
 
   private Fluid fluid;
 
   public GuiFluidTank(ContainerScreen<T> screen, int xPos, int yPos, Fluid fluid) {
-    super(screen, GUI_TEXTURE, xPos, yPos, GUI_SIZE_X, GUI_SIZE_Y, null);
+    super(screen, GUI_TEXTURE, xPos, yPos, 18, 64, null);
 
     this.fluid = fluid;
   }
@@ -31,16 +29,19 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> {
     super.drawPart();
 
     // TODO: Modify to allow usage of any fluid texture. Currently, it's hardcoded for water and steam only.
-    long textureOffset = -((fluidCapacity - fluidStored) * ySize / fluidCapacity) - 1;
+    long textureOffset = fluidStored * (this.ySize + 1) / fluidCapacity;
+    int relativeY = (int) (this.yPos + this.ySize - textureOffset);
+    int textureY = (int) (this.ySize - textureOffset);
+
     if(this.fluid == Fluids.WATER.getFluid()) {
       // Water
-      this.screen.blit(this.xPos, this.yPos - 1, 36, (int) textureOffset, xSize, ySize);
+      this.screen.blit(this.xPos, relativeY, 36, textureY, this.xSize, (int) textureOffset);
     } else {
       // Steam
-      this.screen.blit(this.xPos, this.yPos - 1, 54, (int) textureOffset, xSize, ySize);
+      this.screen.blit(this.xPos, relativeY, 54, textureY, this.xSize, (int) textureOffset);
     }
 
-    this.screen.blit(this.xPos, this.yPos, 18, 0, xSize, ySize);
+    this.screen.blit(this.xPos, this.yPos, 18, 0, this.xSize, this.ySize);
   }
 
   public void drawTooltip(int mouseX, int mouseY, long fluidStored, long fluidCapacity) {
