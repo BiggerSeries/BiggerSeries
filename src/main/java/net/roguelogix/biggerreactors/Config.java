@@ -130,11 +130,18 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0, comment = "Time (in ticks) it takes to complete a job.")
         public static int CyaniteReprocessorWorkTime = 200;
     }
-
+    
     @PhosphophylliteConfig
     public static class ReactorModeratorConfigValues {
+        enum LocationType{
+            REGISTRY,
+            TAG
+        }
+    
         @PhosphophylliteConfig.Value
         public final String location;
+        @PhosphophylliteConfig.Value
+        public final LocationType locationType;
         @PhosphophylliteConfig.Value
         public final float absorption;
         @PhosphophylliteConfig.Value
@@ -144,8 +151,9 @@ public class Config {
         @PhosphophylliteConfig.Value
         public final float conductivity;
         
-        public ReactorModeratorConfigValues(String location, float absorption, float heatEfficiency, float moderation, float conductivity) {
+        public ReactorModeratorConfigValues(String location, LocationType locationType, float absorption, float heatEfficiency, float moderation, float conductivity) {
             this.location = location;
+            this.locationType = locationType;
             this.absorption = absorption;
             this.heatEfficiency = heatEfficiency;
             this.moderation = moderation;
@@ -155,19 +163,19 @@ public class Config {
     
     @PhosphophylliteConfig.Value
     public static ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
-            new ReactorModeratorConfigValues("minecraft:air", 0.1f, 0.25f, 1.1f, 0.05f),
+            new ReactorModeratorConfigValues("minecraft:air",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
             
-            new ReactorModeratorConfigValues("minecraft:iron_block", 0.5f, 0.75f, 1.4f, 0.6f),
-            new ReactorModeratorConfigValues("minecraft:gold_block", 0.52f, 0.8f, 1.45f, 2f),
-            new ReactorModeratorConfigValues("minecraft:diamond_block", 0.55f, 0.85f, 1.5f, 3f),
-            new ReactorModeratorConfigValues("minecraft:emerald_block", 0.55f, 0.85f, 1.5f, 2.5f),
-            new ReactorModeratorConfigValues("minecraft:glass", 0.2f, 0.25f, 1.1f, 0.3f),
-            new ReactorModeratorConfigValues("minecraft:ice", 0.33f, 0.33f, 1.15f, 0.1f),
-            new ReactorModeratorConfigValues("minecraft:snow_block", 0.15f, 0.33f, 1.05f, 0.05f),
+            new ReactorModeratorConfigValues("minecraft:iron_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.5f, 0.75f, 1.4f, 0.6f),
+            new ReactorModeratorConfigValues("minecraft:gold_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.52f, 0.8f, 1.45f, 2f),
+            new ReactorModeratorConfigValues("minecraft:diamond_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 3f),
+            new ReactorModeratorConfigValues("minecraft:emerald_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 2.5f),
+            new ReactorModeratorConfigValues("minecraft:glass",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.2f, 0.25f, 1.1f, 0.3f),
+            new ReactorModeratorConfigValues("minecraft:ice",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.33f, 1.15f, 0.1f),
+            new ReactorModeratorConfigValues("minecraft:snow_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.15f, 0.33f, 1.05f, 0.05f),
             
-            new ReactorModeratorConfigValues("minecraft:water", 0.33f, 0.5f, 1.33f, 0.1f),
+            new ReactorModeratorConfigValues("minecraft:water",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
             
-            new ReactorModeratorConfigValues("biggerreactors:graphite_block", 0.1f, 0.5f, 2f, 2f),
+            new ReactorModeratorConfigValues("biggerreactors:graphite_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.5f, 2f, 2f),
     };
     
     
