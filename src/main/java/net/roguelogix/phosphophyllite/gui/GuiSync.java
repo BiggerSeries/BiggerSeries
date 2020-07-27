@@ -29,10 +29,11 @@ public class GuiSync {
     
     public interface IGUIPacketProvider {
         IGUIPacket getGuiPacket();
-    
-    
+        
+        
         /**
          * DONT OVERRIDE THIS
+         *
          * @param requestName
          * @param requestData
          */
