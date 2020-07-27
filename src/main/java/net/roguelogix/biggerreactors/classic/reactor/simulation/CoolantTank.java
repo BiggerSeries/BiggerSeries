@@ -32,7 +32,7 @@ public class CoolantTank implements INBTSerializable<CompoundNBT> {
         perSideCapacity = Math.min(capacity, Config.Reactor.MaxActiveTankSize);
     }
     
-    public float absorbHeat(float rfTransferred) {
+    public double absorbHeat(double rfTransferred) {
         vaporizedLastTick = 0;
         if (waterAmount <= 0 || rfTransferred <= 0) {
             return rfTransferred;
@@ -50,12 +50,12 @@ public class CoolantTank implements INBTSerializable<CompoundNBT> {
         waterAmount -= amountVaporized;
         steamAmount += amountVaporized;
         
-        float energyUsed = amountVaporized * Config.Reactor.CoolantVaporizationEnergy;
+        double energyUsed = amountVaporized * Config.Reactor.CoolantVaporizationEnergy;
         
         return Math.max(0, rfTransferred - energyUsed);
     }
     
-    public float getCoolantTemperature(float reactorHeat) {
+    public double getCoolantTemperature(double reactorHeat) {
         if (waterAmount <= 0) {
             return reactorHeat;
         }

@@ -43,7 +43,7 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelReactivity = 1.05f;
         @PhosphophylliteConfig.Value(min = 0)
-        public static float FissionEventsPerFuelUnit = 0.01f;
+        public static double FissionEventsPerFuelUnit = 0.01f;
         @PhosphophylliteConfig.Value(min = 0)
         public static float FEPerRadiationUnit = 10f;
         @PhosphophylliteConfig.Value(min = 0)
@@ -57,7 +57,7 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 1)
         public static float FuelModerationFactor = 1.5f;
         @PhosphophylliteConfig.Value(min = 0)
-        public static float FEPerCentigradePerUnitVolume = 10.0f;
+        public static double FEPerCentigradePerUnitVolume = 10.0f;
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelToCasingTransferCoefficientMultiplier = 1.0f;
         @PhosphophylliteConfig.Value(min = 0)

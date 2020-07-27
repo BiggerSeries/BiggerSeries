@@ -9,10 +9,10 @@ public class FuelTank implements INBTSerializable<CompoundNBT> {
     private long fuel = 0;
     private long waste = 0;
     
-    private float partialUsed = 0;
+    private double partialUsed = 0;
     
-    void burn(float amount) {
-        if (Float.isInfinite(amount) || Float.isNaN(amount)) {
+    void burn(double amount) {
+        if (Double.isInfinite(amount) || Double.isNaN(amount)) {
             return;
         }
         
@@ -109,7 +109,7 @@ public class FuelTank implements INBTSerializable<CompoundNBT> {
         nbt.putLong("capacity", capacity);
         nbt.putLong("fuel", fuel);
         nbt.putLong("waste", waste);
-        nbt.putFloat("partialUsed", partialUsed);
+        nbt.putDouble("partialUsed", partialUsed);
         return nbt;
     }
     
@@ -125,7 +125,7 @@ public class FuelTank implements INBTSerializable<CompoundNBT> {
             waste = nbt.getLong("waste");
         }
         if (nbt.contains("partialUsed")) {
-            partialUsed = nbt.getFloat("partialUsed");
+            partialUsed = nbt.getDouble("partialUsed");
         }
     }
 }
