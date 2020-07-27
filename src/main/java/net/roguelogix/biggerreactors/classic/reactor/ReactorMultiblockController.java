@@ -325,6 +325,39 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
     }
     
+    public void updateDataPacket(ReactorDatapack data) {
+        data.reactorStatus = reactorState == ReactorState.ACTIVE;
+        data.reactorType = !simulation.isPassive();
+        
+        data.energyStored = storedPower;
+        data.energyCapacity = Config.Reactor.PassiveBatterySize;
+        
+        data.caseHeatStored = simulation.getReactorHeat();
+        data.fuelHeatStored = simulation.getFuelHeat();
+        
+        data.wasteStored = simulation.fuelTank.getWasteAmount();
+        data.reactantStored = simulation.fuelTank.getTotalAmount();
+        data.fuelCapacity = simulation.fuelTank.getCapacity();
+        
+        data.coolantCapacity = simulation.coolantTank.getPerSideCapacity();
+        data.coolantStored = simulation.coolantTank.getWaterAmount();
+        data.steamStored = simulation.coolantTank.getSteamAmount();
+        
+        data.reactorOutputRate = simulation.getFEProducedLastTick();
+        data.fuelUsageRate = simulation.getFuelConsumedLastTick();
+        data.reactivityRate = simulation.getFertility();
+    }
+    
+    public void runRequest(String requestName, Object requestData) {
+        //noinspection SwitchStatementWithTooFewBranches
+        switch (requestName) {
+            case "setActive": {
+                Boolean newState = (Boolean) requestData;
+                setActive(newState ? ReactorState.ACTIVE : ReactorState.INACTIVE);
+            }
+        }
+    }
+    
     @Override
     public String getDebugInfo() {
         return super.getDebugInfo() +

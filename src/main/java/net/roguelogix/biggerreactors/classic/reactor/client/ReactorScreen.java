@@ -11,12 +11,15 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
+import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.biggerreactors.client.gui.GuiEnergyTank;
 import net.roguelogix.biggerreactors.client.gui.GuiFluidTank;
 import net.roguelogix.biggerreactors.client.gui.GuiReactorBar;
+import net.roguelogix.biggerreactors.fluids.IrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.GuiPartSymbol;
+import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
 public class ReactorScreen extends ContainerScreen<ReactorContainer> implements IHasContainer<ReactorContainer> {
@@ -73,7 +76,7 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     this.waterTank = new GuiFluidTank<>(this, 131, 113, Fluids.WATER);
     this.steamSymbol = new GuiPartSymbol<>(this, 154, 96, 2, new TranslationTextComponent("").getFormattedText());
     // TODO: Switch this tank to steam, which isn't implemented yet.
-    this.steamTank = new GuiFluidTank<>(this, 153, 113, Fluids.LAVA);
+    this.steamTank = new GuiFluidTank<>(this, 153, 113, IrradiatedSteam.INSTANCE);
   }
 
   @Override
@@ -102,9 +105,9 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     this.fuelSymbol.drawTooltip(mouseX, mouseY);
     //this.fuelTank.drawTooltip(mouseX, mouseY, _, _);
     this.caseHeatSymbol.drawTooltip(mouseX, mouseY);
-    this.caseHeatTank.drawTooltip(mouseX, mouseY, reactorData.caseHeatStored, reactorData.caseHeatCapacity);
+    this.caseHeatTank.drawTooltip(mouseX, mouseY, (long) reactorData.caseHeatStored, Config.Reactor.GUI.HeatDisplayMax);
     this.fuelHeatSymbol.drawTooltip(mouseX, mouseY);
-    this.fuelHeatTank.drawTooltip(mouseX, mouseY, reactorData.fuelHeatStored, reactorData.fuelHeatCapacity);
+    this.fuelHeatTank.drawTooltip(mouseX, mouseY, (long) reactorData.fuelHeatStored, Config.Reactor.GUI.HeatDisplayMax);
     this.energySymbol.drawTooltip(mouseX, mouseY);
     this.energyTank.drawTooltip(mouseX, mouseY, reactorData.energyStored, reactorData.energyCapacity);
 
@@ -112,34 +115,34 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     this.waterSymbol.drawTooltip(mouseX, mouseY);
     this.waterTank.drawTooltip(mouseX, mouseY, reactorData.coolantStored, reactorData.coolantCapacity);
     this.steamSymbol.drawTooltip(mouseX, mouseY);
-    this.steamTank.drawTooltip(mouseX, mouseY, reactorData.steamStored, reactorData.steamCapacity);
+    this.steamTank.drawTooltip(mouseX, mouseY, reactorData.steamStored, reactorData.coolantCapacity);
   }
 
   private void drawReactorStatus(ReactorDatapack reactorData) {
     // Draw core heat status.
     this.coreHeatSymbol.drawPart();
-    this.font.drawString(String.format("%d C", reactorData.coreHeatStored), 25.0F, (float) (this.ySize - 165), 4210752);
+    this.font.drawString(String.format("%.0f C", reactorData.fuelHeatStored), 25.0F, (float) (this.ySize - 165), 4210752);
 
     // Draw reactor output status.
     if(reactorData.reactorType) {
       // Active reactor, display as steam.
       this.outputSymbol.updateTextureIndex(2);
       this.outputSymbol.drawPart();
-      this.font.drawString(String.format("%d mB/t", reactorData.reactorOutputRate), 25.0F, (float) (this.ySize - 144), 4210752);
+      this.font.drawString(String.format("%.2f mB/t", reactorData.reactorOutputRate), 25.0F, (float) (this.ySize - 144), 4210752);
     } else {
       // Passive reactor, display as energy.
       this.outputSymbol.updateTextureIndex(3);
       this.outputSymbol.drawPart();
-      this.font.drawString(String.format("%d RF/t", reactorData.reactorOutputRate), 25.0F, (float) (this.ySize - 144), 4210752);
+      this.font.drawString(String.format("%.2f RF/t", reactorData.reactorOutputRate), 25.0F, (float) (this.ySize - 144), 4210752);
     }
 
     // Draw fuel rate status.
     this.fuelRateSymbol.drawPart();
-    this.font.drawString(String.format("%.1f mB/t", reactorData.fuelUsageRate), 25.0F, (float) (this.ySize - 123), 4210752);
+    this.font.drawString(String.format("%.3f mB/t", reactorData.fuelUsageRate), 25.0F, (float) (this.ySize - 123), 4210752);
 
     // Draw reactivity status.
     this.reactivitySymbol.drawPart();
-    this.font.drawString(String.format("%.1f%%", reactorData.reactivityRate), 25.0F, (float) (this.ySize - 103), 4210752);
+    this.font.drawString(String.format("%.1f%%", reactorData.reactivityRate * 100), 25.0F, (float) (this.ySize - 103), 4210752);
 
     // Draw reactor status.
     if(reactorData.reactorStatus) {
@@ -158,12 +161,12 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
 
     // Draw case heat gauge.
     this.caseHeatSymbol.drawPart();
-    this.caseHeatTank.drawPart(reactorData.caseHeatStored, reactorData.caseHeatCapacity);
+    this.caseHeatTank.drawPart((long) reactorData.caseHeatStored, Config.Reactor.GUI.HeatDisplayMax);
 
     // Draw fuel heat gauge.
     this.fuelHeatSymbol.drawPart();
-    this.fuelHeatTank.updateTextureIndex(1);
-    this.fuelHeatTank.drawPart(reactorData.fuelHeatStored, reactorData.fuelHeatCapacity);
+//    this.fuelHeatTank.updateTextureIndex(1);
+    this.fuelHeatTank.drawPart((long) reactorData.fuelHeatStored, Config.Reactor.GUI.HeatDisplayMax);
 
     // Draw energy gauge.
     this.energySymbol.drawPart();
@@ -172,9 +175,9 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     // Draw fluid tanks (if reactor is active type).
     if(reactorData.reactorType) {
       this.waterSymbol.drawPart();
-      this.waterTank.drawPart(1000, 5000);
+      this.waterTank.drawPart(reactorData.coolantStored, reactorData.coolantCapacity);
       this.steamSymbol.drawPart();
-      this.steamTank.drawPart(1000, 5000);
+      this.steamTank.drawPart(reactorData.steamStored, reactorData.coolantCapacity);
     }
   }
 

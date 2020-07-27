@@ -24,58 +24,7 @@ public class ReactorBaseTile extends RectangularMultiblockTile {
     public ReactorBaseTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
-
-    @Override
-    protected ITextComponent getDefaultName() {
-        return null;
-    }
-
-    @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        return null;
-    }
-
-
-    @Override
-    public int getSizeInventory() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return null;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        return null;
-    }
-
-    @Override
-    public ItemStack removeStackFromSlot(int index) {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-
-    }
-
-    @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        return false;
-    }
-
-    @Override
-    public void clear() {
-
-    }
-
+    
     ReactorState reactorState = INACTIVE;
 
     @Override
@@ -87,5 +36,11 @@ public class ReactorBaseTile extends RectangularMultiblockTile {
     @Override
     public final MultiblockController createController() {
         return new ReactorMultiblockController(world);
+    }
+    
+    public void runRequest(String requestName, Object requestData) {
+        if(this.controller != null){
+            reactor().runRequest(requestName, requestData);
+        }
     }
 }

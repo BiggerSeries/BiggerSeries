@@ -27,6 +27,10 @@ public class GuiReactorBar<T extends Container> extends GuiPartBase<T> {
 
   public void drawPart(long valueStored, long valueCapacity) {
     super.drawPart();
+    
+    if(valueCapacity == 0){
+      valueCapacity = 1;
+    }
 
     long textureOffset = valueStored * (this.ySize + 1) / valueCapacity;
     int relativeY = (int) (this.yPos + this.ySize - textureOffset);

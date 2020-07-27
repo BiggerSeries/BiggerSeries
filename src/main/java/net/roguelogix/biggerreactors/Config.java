@@ -98,13 +98,19 @@ public class Config {
         public static float FuelAbsorptionScalingShiftMultiplier = 1f;
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelAbsorptionScalingRateExponentMultiplier = 2.2f;
+        
+        @PhosphophylliteConfig
+        public static class GUI{
+            @PhosphophylliteConfig.Value
+            public static long HeatDisplayMax = 2000;
+        }
     }
     
     @PhosphophylliteConfig.Value(min = 5, max = 32)
     public static int TurbineMaxLength = 32;
     @PhosphophylliteConfig.Value(min = 5, max = 32)
     public static int TurbineMaxWidth = 32;
-    @PhosphophylliteConfig.Value(min = 3, max = 48)
+    @PhosphophylliteConfig.Value(min = 4, max = 48)
     public static int TurbineMaxHeight = 48;
 
     @PhosphophylliteConfig.Value(min = 1, comment = "Max energy transfer rate of machines.")

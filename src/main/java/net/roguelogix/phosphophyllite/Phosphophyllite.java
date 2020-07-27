@@ -1,11 +1,17 @@
 package net.roguelogix.phosphophyllite;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.registry.Registry;
@@ -24,6 +30,7 @@ public class Phosphophyllite {
     public Phosphophyllite() {
         Registry.onModLoad();
         MinecraftForge.EVENT_BUS.register(this);
+        GuiSync.onModLoad();
 //        Quartz.onModLoad();
     }
     
@@ -78,6 +85,26 @@ public class Phosphophyllite {
             if (toAttach != null) {
                 toAttach.attachToNeighbors();
             }
+        }
+    }
+    
+    @SubscribeEvent
+    public void onContainerOpen(PlayerContainerEvent.Open e) {
+        System.out.println(e.getPlayer());
+    }
+    
+    @SubscribeEvent
+    public void onContainerClose(PlayerContainerEvent.Close e) {
+        System.out.println(e.getPlayer());
+    }
+    
+    @SubscribeEvent
+    public void GuiOpenEvent(GuiOpenEvent e) {
+        Screen gui = e.getGui();
+        if(gui != null){
+            System.out.println(gui.getClass().getSimpleName());
+        }else{
+            System.out.println("null gui");
         }
     }
 }

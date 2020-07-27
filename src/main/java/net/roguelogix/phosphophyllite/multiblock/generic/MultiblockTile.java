@@ -23,7 +23,7 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 
-public abstract class MultiblockTile extends LockableTileEntity {
+public abstract class MultiblockTile extends TileEntity {
     protected MultiblockController controller;
     
     long lastSavedTick = 0;

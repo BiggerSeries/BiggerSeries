@@ -20,6 +20,10 @@ public class GuiEnergyTank<T extends Container> extends GuiPartBase<T> {
   public void drawPart(long energyStored, long energyCapacity) {
     super.drawPart();
 
+    if(energyCapacity == 0){
+      energyCapacity = 1;
+    }
+    
     long textureOffset = energyStored * (this.ySize + 1) / energyCapacity;
     int relativeY = (int) (this.yPos + this.ySize - textureOffset);
     int textureY = (int) (this.ySize - textureOffset);
