@@ -20,10 +20,8 @@ public class GuiReactorToggleActiveButton<T extends Container> extends GuiReacto
         // TODO: update variable names in ReactorDatapack, as they don't match the request keys
         if (data.reactorStatus) {
             ((ReactorContainer) this.screen.getContainer()).executeRequest("setActive", false);
-            this.updateTextureIndex(0);
         } else {
             ((ReactorContainer) this.screen.getContainer()).executeRequest("setActive", true);
-            this.updateTextureIndex(1);
         }
     }
 }

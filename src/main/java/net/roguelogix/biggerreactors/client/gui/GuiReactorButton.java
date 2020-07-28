@@ -6,6 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.phosphophyllite.gui.GuiPartButton;
 
 import javax.annotation.Nullable;
@@ -30,6 +32,8 @@ public class GuiReactorButton<T extends Container> extends GuiPartButton<T> {
     
     @Override
     public void drawPart() {
+        ReactorDatapack data = ((ReactorContainer) this.screen.getContainer()).getReactorData();
+        this.updateTextureIndex(data.reactorStatus ? 1 : 0);
         this.screen.getMinecraft().getTextureManager().bindTexture(guiTexture);
         this.screen.blit(this.xPos, this.yPos, (textureIndex * 16), 0, xSize, ySize);
     }
