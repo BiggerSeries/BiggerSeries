@@ -41,11 +41,6 @@ public class ReactorModeratorRegistry {
         return blocks.get(block);
     }
     
-    // TODO: 6/22/20 FLUID
-    public static ModeratorProperties fluidModeratorProperties(Fluid fluid) {
-        return null;
-    }
-    
     public static void registerBlock(String location) {
         registerBlock(new ResourceLocation(location));
     }
@@ -71,9 +66,5 @@ public class ReactorModeratorRegistry {
     
     public static void registerBlock(Block block, ModeratorProperties properties) {
         blocks.put(block, properties);
-    }
-    
-    static {
-        registerBlock(Blocks.AIR, 0.1f, 0.25f, 1.1f, 0.05f);
     }
 }

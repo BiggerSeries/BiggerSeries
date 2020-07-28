@@ -1,5 +1,6 @@
 package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -53,11 +54,11 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (compound.contains("direction")) {
             direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
         }
-        if (compound.contains("inSlot")) {
-            inSlot.deserializeNBT(compound.getCompound("inSlot"));
+        if (compound.contains("fuel")) {
+            fuel = compound.getInt("fuel");
         }
-        if (compound.contains("outSlot")) {
-            outSlot.deserializeNBT(compound.getCompound("outSlot"));
+        if (compound.contains("waste")) {
+            waste = compound.getInt("waste");
         }
     }
     
@@ -65,16 +66,16 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     protected CompoundNBT writeNBT() {
         CompoundNBT NBT = new CompoundNBT();
         NBT.putString("direction", String.valueOf(direction));
-        NBT.put("inSlot", inSlot.serializeNBT());
-        NBT.put("outSlot", outSlot.serializeNBT());
+        NBT.putInt("fuel", fuel);
+        NBT.putInt("waste", waste);
         return NBT;
     }
     
     @Override
     protected String getDebugInfo() {
         return direction.toString() + "\n" +
-                "In: " + inSlot.toString() + "\n" +
-                "Out: " + outSlot.toString();
+                "Fuel: " + fuel + "\n" +
+                "Waste: " + waste;
     }
     
     @Override
@@ -94,8 +95,8 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         return super.getCapability(cap, side);
     }
     
-    ItemStack inSlot = new ItemStack(() -> YelloriumIngot.INSTANCE, 0);
-    ItemStack outSlot = new ItemStack(() -> CyaniteIngot.INSTANCE, 0);
+    int fuel = 0;
+    int waste = 0;
     
     @Override
     public int getSlots() {
@@ -116,11 +117,11 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         stack = stack.copy();
         if (stack.getItem() == YelloriumIngot.INSTANCE) {
-            int canAccept = inSlot.getMaxStackSize() - inSlot.getCount();
+            int canAccept = 64 - fuel;
             if (canAccept > 0) {
                 ItemStack accepted = stack.split(canAccept);
                 if (!simulate) {
-                    inSlot.setCount(inSlot.getCount() + accepted.getCount());
+                    fuel += accepted.getCount();
                 }
             }
         }
@@ -133,16 +134,16 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (isInlet()) {
             return ItemStack.EMPTY;
         }
-        ItemStack stack = outSlot;
-        if (simulate) {
-            stack = stack.copy();
+        ItemStack stack = new ItemStack(CyaniteIngot.INSTANCE, Math.min(amount, waste));
+        if (!simulate) {
+            waste -= stack.getCount();
         }
-        return stack.split(amount);
+        return stack;
     }
     
     @Override
     public int getSlotLimit(int slot) {
-        return inSlot.getMaxStackSize();
+        return 64;
     }
     
     @Override
@@ -152,26 +153,28 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     public long refuel(long maxAmount) {
         long ingots = maxAmount / Config.Reactor.FuelMBPerIngot;
-        return inSlot.split((int) ingots).getCount() * Config.Reactor.FuelMBPerIngot;
+        ingots = Math.min(ingots, fuel);
+        fuel -= ingots;
+        return ingots * Config.Reactor.FuelMBPerIngot;
     }
     
     public long wasteSpaceAvailable() {
-        return (outSlot.getMaxStackSize() - outSlot.getCount()) * Config.Reactor.FuelMBPerIngot;
+        return (64 - waste) * Config.Reactor.FuelMBPerIngot;
     }
     
     public long dumpWaste(long wasteMB) {
         long ingots = wasteMB / Config.Reactor.FuelMBPerIngot;
-        outSlot.setCount((int) (outSlot.getCount() + ingots));
+        waste += ingots;
         return (ingots * Config.Reactor.FuelMBPerIngot);
     }
     
     public void pushWaste() {
         itemOutput.ifPresent(output -> {
             for (int i = 0; i < output.getSlots(); i++) {
-                if (outSlot.getCount() == 0) {
+                if (waste == 0) {
                     return;
                 }
-                outSlot = output.insertItem(i, outSlot, false);
+                waste = output.insertItem(i, new ItemStack(CyaniteIngot.INSTANCE, waste), false).getCount();
             }
         });
     }
@@ -211,6 +214,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     }
     
     public void neighborChanged() {
+        itemOutput = LazyOptional.empty();
         if (itemOutputDirection == null) {
             connected = false;
             return;

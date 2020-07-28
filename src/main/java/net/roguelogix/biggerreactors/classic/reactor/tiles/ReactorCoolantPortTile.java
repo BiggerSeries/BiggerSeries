@@ -154,6 +154,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     }
     
     public void neighborChanged() {
+        steamOutput = LazyOptional.empty();
         if (steamOutputDirection == null) {
             connected = false;
             return;
