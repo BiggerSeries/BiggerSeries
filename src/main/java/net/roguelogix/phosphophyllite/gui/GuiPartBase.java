@@ -1,10 +1,10 @@
 package net.roguelogix.phosphophyllite.gui;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nullable;
 
 public class GuiPartBase<T extends Container> {
     
@@ -40,7 +40,7 @@ public class GuiPartBase<T extends Container> {
         }
     }
     
-    private boolean isMouseHovering(int mouseX, int mouseY) {
+    protected boolean isMouseHovering(int mouseX, int mouseY) {
         if (mouseX > (this.screen.getGuiLeft() + this.xPos) && mouseX < (this.screen.getGuiLeft() + this.xPos + xSize)) {
             if (mouseY > (this.screen.getGuiTop() + this.yPos) && mouseY < (this.screen.getGuiTop() + this.yPos + ySize)) {
                 return true;

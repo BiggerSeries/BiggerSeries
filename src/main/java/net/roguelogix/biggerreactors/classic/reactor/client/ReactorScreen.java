@@ -17,8 +17,9 @@ import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.biggerreactors.client.gui.GuiEnergyTank;
 import net.roguelogix.biggerreactors.client.gui.GuiFluidTank;
 import net.roguelogix.biggerreactors.client.gui.GuiReactorBar;
+import net.roguelogix.biggerreactors.client.gui.GuiReactorSymbol;
+import net.roguelogix.biggerreactors.client.gui.buttons.GuiReactorToggleActiveButton;
 import net.roguelogix.biggerreactors.fluids.IrradiatedSteam;
-import net.roguelogix.phosphophyllite.gui.GuiPartSymbol;
 
 @OnlyIn(Dist.CLIENT)
 public class ReactorScreen extends ContainerScreen<ReactorContainer> implements IHasContainer<ReactorContainer> {
@@ -26,27 +27,29 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/reactor_terminal.png");
     
     // String status symbols.
-    private GuiPartSymbol<ReactorContainer> coreHeatSymbol;
-    private GuiPartSymbol<ReactorContainer> outputSymbol;
-    private GuiPartSymbol<ReactorContainer> fuelRateSymbol;
-    private GuiPartSymbol<ReactorContainer> reactivitySymbol;
+    private GuiReactorSymbol<ReactorContainer> coreHeatSymbol;
+    private GuiReactorSymbol<ReactorContainer> outputSymbol;
+    private GuiReactorSymbol<ReactorContainer> fuelRateSymbol;
+    private GuiReactorSymbol<ReactorContainer> reactivitySymbol;
     
     // Upper gauges.
-    // Needs modification/generalization to work with fuel tank, will do later.
-    private GuiPartSymbol<ReactorContainer> fuelSymbol;
+    private GuiReactorSymbol<ReactorContainer> fuelSymbol;
     private GuiReactorBar<ReactorContainer> fuelTank;
-    private GuiPartSymbol<ReactorContainer> caseHeatSymbol;
+    private GuiReactorSymbol<ReactorContainer> caseHeatSymbol;
     private GuiReactorBar<ReactorContainer> caseHeatTank;
-    private GuiPartSymbol<ReactorContainer> fuelHeatSymbol;
+    private GuiReactorSymbol<ReactorContainer> fuelHeatSymbol;
     private GuiReactorBar<ReactorContainer> fuelHeatTank;
-    private GuiPartSymbol<ReactorContainer> energySymbol;
+    private GuiReactorSymbol<ReactorContainer> energySymbol;
     private GuiEnergyTank<ReactorContainer> energyTank;
     
     // Lower gauges.
-    private GuiPartSymbol<ReactorContainer> waterSymbol;
+    private GuiReactorSymbol<ReactorContainer> waterSymbol;
     private GuiFluidTank<ReactorContainer> waterTank;
-    private GuiPartSymbol<ReactorContainer> steamSymbol;
+    private GuiReactorSymbol<ReactorContainer> steamSymbol;
     private GuiFluidTank<ReactorContainer> steamTank;
+    
+    // Buttons.
+    private GuiReactorToggleActiveButton<ReactorContainer> reactorStatusButton;
     
     public ReactorScreen(ReactorContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
@@ -54,27 +57,30 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
         this.ySize = 186;
         
         // String status symbols.
-        this.coreHeatSymbol = new GuiPartSymbol<>(this, 6, (this.ySize - 170), 0, new TranslationTextComponent("").getFormattedText());
-        this.coreHeatSymbol = new GuiPartSymbol<>(this, 6, 16, 0, new TranslationTextComponent("").getFormattedText());
-        this.outputSymbol = new GuiPartSymbol<>(this, 6, 38, 3, new TranslationTextComponent("").getFormattedText());
-        this.fuelRateSymbol = new GuiPartSymbol<>(this, 6, 58, 4, new TranslationTextComponent("").getFormattedText());
-        this.reactivitySymbol = new GuiPartSymbol<>(this, 6, 79, 5, new TranslationTextComponent("").getFormattedText());
+        this.coreHeatSymbol = new GuiReactorSymbol<>(this, 6, (this.ySize - 170), 0, new TranslationTextComponent("").getFormattedText());
+        this.coreHeatSymbol = new GuiReactorSymbol<>(this, 6, 16, 0, new TranslationTextComponent("").getFormattedText());
+        this.outputSymbol = new GuiReactorSymbol<>(this, 6, 38, 3, new TranslationTextComponent("").getFormattedText());
+        this.fuelRateSymbol = new GuiReactorSymbol<>(this, 6, 58, 4, new TranslationTextComponent("").getFormattedText());
+        this.reactivitySymbol = new GuiReactorSymbol<>(this, 6, 79, 5, new TranslationTextComponent("").getFormattedText());
         
         // Upper gauges.
-        this.fuelSymbol = new GuiPartSymbol<>(this, 88, 5, 6, new TranslationTextComponent("").getFormattedText());
+        this.fuelSymbol = new GuiReactorSymbol<>(this, 88, 5, 6, new TranslationTextComponent("").getFormattedText());
         this.fuelTank = new GuiReactorBar<>(this, 88, 22, 3);
-        this.caseHeatSymbol = new GuiPartSymbol<>(this, 110, 5, 7, new TranslationTextComponent("").getFormattedText());
+        this.caseHeatSymbol = new GuiReactorSymbol<>(this, 110, 5, 7, new TranslationTextComponent("").getFormattedText());
         this.caseHeatTank = new GuiReactorBar<>(this, 110, 22, 2);
-        this.fuelHeatSymbol = new GuiPartSymbol<>(this, 132, 5, 8, new TranslationTextComponent("").getFormattedText());
+        this.fuelHeatSymbol = new GuiReactorSymbol<>(this, 132, 5, 8, new TranslationTextComponent("").getFormattedText());
         this.fuelHeatTank = new GuiReactorBar<>(this, 132, 22, 2);
-        this.energySymbol = new GuiPartSymbol<>(this, 154, 5, 9, new TranslationTextComponent("").getFormattedText());
+        this.energySymbol = new GuiReactorSymbol<>(this, 154, 5, 9, new TranslationTextComponent("").getFormattedText());
         this.energyTank = new GuiEnergyTank<>(this, 154, 22);
         
         // Lower gauges.
-        this.waterSymbol = new GuiPartSymbol<>(this, 132, 96, 1, new TranslationTextComponent("").getFormattedText());
+        this.waterSymbol = new GuiReactorSymbol<>(this, 132, 96, 1, new TranslationTextComponent("").getFormattedText());
         this.waterTank = new GuiFluidTank<>(this, 131, 113, Fluids.WATER);
-        this.steamSymbol = new GuiPartSymbol<>(this, 154, 96, 2, new TranslationTextComponent("").getFormattedText());
+        this.steamSymbol = new GuiReactorSymbol<>(this, 154, 96, 2, new TranslationTextComponent("").getFormattedText());
         this.steamTank = new GuiFluidTank<>(this, 153, 113, IrradiatedSteam.INSTANCE);
+        
+        // Buttons
+        this.reactorStatusButton = new GuiReactorToggleActiveButton<>(this, 5, 165, 0, new TranslationTextComponent("").getFormattedText());
     }
     
     @Override
@@ -114,6 +120,9 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
         this.waterTank.drawTooltip(mouseX, mouseY, reactorData.coolantStored, reactorData.coolantCapacity);
         this.steamSymbol.drawTooltip(mouseX, mouseY);
         this.steamTank.drawTooltip(mouseX, mouseY, reactorData.steamStored, reactorData.coolantCapacity);
+        
+        // Buttons.
+        this.reactorStatusButton.drawTooltip(mouseX, mouseY);
     }
     
     private void drawReactorStatus(ReactorDatapack reactorData) {
@@ -178,6 +187,10 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
         }
     }
     
+    private void drawReactorControls(ReactorDatapack reactorData) {
+        this.reactorStatusButton.drawPart();
+    }
+    
     @Override
     // 1.16: func_230451_b_
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
@@ -187,6 +200,7 @@ public class ReactorScreen extends ContainerScreen<ReactorContainer> implements 
         
         this.drawReactorStatus(reactorData);
         this.drawReactorGauges(reactorData);
+        this.drawReactorControls(reactorData);
     }
     
     @Override
