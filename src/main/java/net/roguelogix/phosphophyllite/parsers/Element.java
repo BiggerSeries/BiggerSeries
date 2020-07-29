@@ -9,33 +9,38 @@ public class Element {
         this.value = value;
     }
     
-    enum Type {
+    public enum Type {
+        String,
         Value,
         Array,
         Section
     }
     
-    final Type type;
+    public final Type type;
     
-    final String comment;
+    public final String comment;
     
-    final String name;
+    public final String name;
     
-    final Object value;
+    public final Object value;
     
-    Element[] asArray() {
-        return (Element[]) value;
+    public Element[] asArray() {
+        Element[] newArray = new Element[((Object[]) value).length];
+        for (int i = 0; i < newArray.length; i++) {
+            newArray[i] = (Element) ((Object[]) value)[i];
+        }
+        return newArray;
     }
     
-    String asString() {
+    public String asString() {
         return (String) value;
     }
     
-    long asLong() {
+    public long asLong() {
         return Long.parseLong(asString());
     }
     
-    double asDouble() {
+    public double asDouble() {
         return Double.parseDouble(asString());
     }
 }

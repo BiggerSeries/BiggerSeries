@@ -28,7 +28,7 @@ public class BiggerReactors {
     }
     
     public void onCommonSetup(final FMLCommonSetupEvent e) {
-        Config.onLoad();
+        Config.postLoad();
     }
     
     

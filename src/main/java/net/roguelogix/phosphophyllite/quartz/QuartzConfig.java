@@ -10,6 +10,7 @@ import static net.roguelogix.phosphophyllite.Phosphophyllite.modid;
 @RegisterConfig
 @PhosphophylliteConfig(
         folder = modid,
+        name = "quartz",
         comment = "Config for the Quartz render system"
 )
 public class QuartzConfig {

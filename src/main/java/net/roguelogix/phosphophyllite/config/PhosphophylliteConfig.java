@@ -3,7 +3,7 @@ package net.roguelogix.phosphophyllite.config;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import static net.roguelogix.phosphophyllite.config.ConfigFormat.ROTN;
+import static net.roguelogix.phosphophyllite.config.ConfigFormat.JSON5;
 import static net.roguelogix.phosphophyllite.config.ConfigType.COMMON;
 
 
@@ -16,7 +16,7 @@ public @interface PhosphophylliteConfig {
     
     String comment() default "";
     
-    ConfigFormat format() default ROTN;
+    ConfigFormat format() default JSON5;
     
     ConfigType type() default COMMON;
     
@@ -26,6 +26,8 @@ public @interface PhosphophylliteConfig {
     @interface Value {
         
         String comment() default "";
+        
+        boolean commentDefaultValue() default true;
         
         // only used for numbers
         long max() default Long.MAX_VALUE;
@@ -37,7 +39,11 @@ public @interface PhosphophylliteConfig {
     }
     
     @Retention(RetentionPolicy.RUNTIME)
-    @interface OnLoad {
+    @interface PreLoad {
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface PostLoad {
     }
 }
 

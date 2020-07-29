@@ -40,6 +40,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.roguelogix.phosphophyllite.config.ConfigManager;
 import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
 import org.objectweb.asm.Type;
 
@@ -114,6 +115,8 @@ public class Registry {
             FMLJavaModLoadingContext.get().getModEventBus().addListener((TextureStitchEvent.Pre e) -> onTextureStitch(e, modNamespace, classes));
         }
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLLoadCompleteEvent e) -> onLoadComplete(e, modNamespace, classes));
+        // oh yea, *right now*
+        registerConfigs(modNamespace, classes);
     }
     
     private static synchronized void registerBlocks(final RegistryEvent.Register<Block> blockRegistryEvent, String modNamespace, Set<Class<?>> classes) {
@@ -504,21 +507,11 @@ public class Registry {
         }
     }
     
-    private static void loadConfig() {
-        String callerClass = new Exception().getStackTrace()[1].getClassName();
-        String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
-        String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
-        Set<Class<?>> configs = null;
+    public static synchronized void registerConfigs(String modNamespace, Set<Class<?>> classes){
+        Set<Class<?>> configs = classes.stream().filter(c -> c.isAnnotationPresent(RegisterConfig.class)).collect(Collectors.toSet());
+    
         for (Class<?> config : configs) {
-            for (Method declaredMethod : config.getDeclaredMethods()) {
-                if (declaredMethod.isAnnotationPresent(PhosphophylliteConfig.OnLoad.class)) {
-                    try {
-                        declaredMethod.invoke(null);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            ConfigManager.registerConfig(config, modNamespace);
         }
     }
 }

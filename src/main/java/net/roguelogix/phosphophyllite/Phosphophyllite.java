@@ -1,13 +1,10 @@
 package net.roguelogix.phosphophyllite;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -86,16 +83,6 @@ public class Phosphophyllite {
                 toAttach.attachToNeighbors();
             }
         }
-    }
-    
-    @SubscribeEvent
-    public void onContainerOpen(PlayerContainerEvent.Open e) {
-        System.out.println(e.getPlayer());
-    }
-    
-    @SubscribeEvent
-    public void onContainerClose(PlayerContainerEvent.Close e) {
-        System.out.println(e.getPlayer());
     }
     
     @SubscribeEvent

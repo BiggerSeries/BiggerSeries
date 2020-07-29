@@ -1,6 +1,9 @@
 package net.roguelogix.phosphophyllite;
 
+import net.roguelogix.phosphophyllite.registry.RegisterConfig;
+
 // ironic
+@RegisterConfig
 @net.roguelogix.phosphophyllite.config.PhosphophylliteConfig
 public class PhosphophylliteConfig {
     @net.roguelogix.phosphophyllite.config.PhosphophylliteConfig

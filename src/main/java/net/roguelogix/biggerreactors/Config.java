@@ -151,6 +151,15 @@ public class Config {
         @PhosphophylliteConfig.Value
         public final float conductivity;
         
+        ReactorModeratorConfigValues(){
+            location = null;
+            locationType = null;
+            absorption = 0;
+            heatEfficiency = 0;
+            moderation = 0;
+            conductivity = 0;
+        }
+        
         public ReactorModeratorConfigValues(String location, LocationType locationType, float absorption, float heatEfficiency, float moderation, float conductivity) {
             this.location = location;
             this.locationType = locationType;
@@ -179,8 +188,15 @@ public class Config {
     };
     
     
-    @PhosphophylliteConfig.OnLoad
-    public static void onLoad() {
+    @PhosphophylliteConfig.PreLoad
+    public static void preLoad(){
+        for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
+            ReactorModeratorRegistry.registerBlock(reactorModerator.location);
+        }
+    }
+    
+    @PhosphophylliteConfig.PostLoad
+    public static void postLoad() {
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
             ReactorModeratorRegistry.registerBlock(reactorModerator.location, reactorModerator.absorption, reactorModerator.heatEfficiency, reactorModerator.moderation, reactorModerator.conductivity);
         }
