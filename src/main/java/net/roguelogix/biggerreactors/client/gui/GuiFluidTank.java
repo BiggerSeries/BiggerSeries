@@ -7,7 +7,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidStack;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 
@@ -27,6 +26,10 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> {
     
     public void drawPart(long fluidStored, long fluidCapacity) {
         super.drawPart();
+        
+        if (fluidCapacity == 0) {
+            fluidCapacity = 1;
+        }
         
         // TODO: Modify to allow usage of any fluid texture. Currently, it's hardcoded for water and steam only.
         long textureOffset = fluidStored * (this.ySize + 1) / fluidCapacity;

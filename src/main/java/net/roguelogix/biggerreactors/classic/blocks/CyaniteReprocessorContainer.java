@@ -1,6 +1,5 @@
 package net.roguelogix.biggerreactors.classic.blocks;
 
-import javax.annotation.Nonnull;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -11,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
+
+import javax.annotation.Nonnull;
 
 @RegisterContainer(name = "cyanite_reprocessor")
 public class CyaniteReprocessorContainer extends Container {
@@ -53,6 +54,9 @@ public class CyaniteReprocessorContainer extends Container {
   public int getFluidCapacity() {
     return this.tileEntity.getFluidCapacity();
   }
+  
+  public int getWorkTime() { return this.tileEntity.getWorkTime(); }
+  public int getWorkTimeTotal() { return this.tileEntity.getWorkTimeTotal(); }
 
   private void populatePlayerInventory() {
     int guiOffset = 93;

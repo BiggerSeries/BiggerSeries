@@ -1,13 +1,6 @@
 package net.roguelogix.biggerreactors.classic.blocks;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +17,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @RegisterBlock(name = "cyanite_reprocessor", tileEntityClass = CyaniteReprocessorTile.class)
 public class CyaniteReprocessor extends ContainerBlock {
@@ -40,6 +37,7 @@ public class CyaniteReprocessor extends ContainerBlock {
                 Properties.create(Material.IRON)
                         .sound(SoundType.STONE)
                         .hardnessAndResistance(1.0F)
+                        .harvestTool(ToolType.PICKAXE)
         );
         this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(ENABLED,
                 Boolean.FALSE));
