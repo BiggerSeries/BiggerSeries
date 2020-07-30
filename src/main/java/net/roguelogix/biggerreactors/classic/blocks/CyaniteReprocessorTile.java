@@ -65,12 +65,12 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     private final LazyOptional<EnergyStorage> energyStorageCapability = LazyOptional
             .of(() -> this.energyStorage);
     
-    private EnergyStorage energyStorage = new EnergyStorage(Config.MachineEnergyTankCapacity);
+    private EnergyStorage energyStorage = new EnergyStorage(Config.CyaniteReprocessor.EnergyTankCapacity);
     
     private final LazyOptional<FluidTank> fluidStorageCapability = LazyOptional
             .of(() -> this.fluidStorage);
     
-    private FluidTank fluidStorage = new FluidTank(Config.MachineFluidTankCapacity,
+    private FluidTank fluidStorage = new FluidTank(Config.CyaniteReprocessor.WaterTankCapacity,
             x -> x.getFluid() == Fluids.WATER);
     
     private final LazyOptional<ItemStackHandler> itemStorageCapability = LazyOptional
@@ -107,7 +107,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
     public CyaniteReprocessorTile() {
         super(INSTANCE);
         this.workTime = 0;
-        this.workTimeTotal = 200;
+        this.workTimeTotal = Config.CyaniteReprocessor.TotalWorkTime;
     }
     
     public int getEnergyStored() {
@@ -301,7 +301,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
         
         if (index == 0 && !flag) {
             this.workTime = 0;
-            this.workTimeTotal = Config.CyaniteReprocessor.CyaniteReprocessorWorkTime;
+            this.workTimeTotal = Config.CyaniteReprocessor.TotalWorkTime;
             this.markDirty();
         }
     }

@@ -22,16 +22,16 @@ public class YelloriteOre extends Block implements IPhosphophylliteOre {
     
     @Override
     public int size() {
-        return Config.YelloriteMaxOrePerCluster;
+        return Config.WorldGen.YelloriteMaxOrePerCluster;
     }
     
     @Override
     public int count() {
-        return Config.YelloriteOreMaxClustersPerChunk;
+        return Config.WorldGen.YelloriteOreMaxClustersPerChunk;
     }
     
     @Override
     public int maxLevel() {
-        return Config.YelloriteOreMaxSpawnY;
+        return Config.WorldGen.YelloriteOreMaxSpawnY;
     }
 }

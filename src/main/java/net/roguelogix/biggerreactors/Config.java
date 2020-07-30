@@ -8,13 +8,16 @@ import net.roguelogix.phosphophyllite.registry.RegisterConfig;
 @PhosphophylliteConfig
 public class Config {
     
-    @PhosphophylliteConfig.Value(min = 1)
-    public static int YelloriteOreMaxClustersPerChunk = 5;
-    @PhosphophylliteConfig.Value(min = 1)
-    public static int YelloriteMaxOrePerCluster = 10;
-    @PhosphophylliteConfig.Value(min = 5)
-    public static int YelloriteOreMaxSpawnY = 50;
-
+    @PhosphophylliteConfig
+    public static class WorldGen {
+        @PhosphophylliteConfig.Value(min = 1)
+        public static int YelloriteOreMaxClustersPerChunk = 5;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static int YelloriteMaxOrePerCluster = 10;
+        @PhosphophylliteConfig.Value(min = 5)
+        public static int YelloriteOreMaxSpawnY = 50;
+    }
+    
     @PhosphophylliteConfig
     public static class Reactor {
         //TODO: remove max, its only there because of the render system
@@ -113,22 +116,20 @@ public class Config {
     @PhosphophylliteConfig.Value(min = 4, max = 48)
     public static int TurbineMaxHeight = 48;
 
-    @PhosphophylliteConfig.Value(min = 1, comment = "Max energy transfer rate of machines.")
-    public static int MachineEnergyTransferRate = 500;
-
-    @PhosphophylliteConfig.Value(min = 1, comment = "Max energy capacity of machines.")
-    public static int MachineEnergyTankCapacity = 5000;
-    @PhosphophylliteConfig.Value(min = 1, comment = "Max fluid capacity of machines")
-    public static int MachineFluidTankCapacity = 5000;
-
     @PhosphophylliteConfig
     public static class CyaniteReprocessor {
+        @PhosphophylliteConfig.Value(min = 1, comment = "Max transfer rate of fluids and energy.")
+        public static int TransferRate = 500;
+        @PhosphophylliteConfig.Value(min = 1, comment = "Max energy capacity.")
+        public static int EnergyTankCapacity = 5000;
+        @PhosphophylliteConfig.Value(min = 1, comment = "Max water capacity")
+        public static int WaterTankCapacity = 5000;
         @PhosphophylliteConfig.Value(min = 0, comment = "Power usage per tick of work.")
-        public static int CyaniteReprocessorPowerConsumption = 1;
+        public static int EnergyConsumptionPerTick = 1;
         @PhosphophylliteConfig.Value(min = 0, comment = "Water usage per tick of work.")
-        public static int CyaniteReprocessorWaterConsumption = 1;
+        public static int WaterConsumptionPerTick = 1;
         @PhosphophylliteConfig.Value(min = 0, comment = "Time (in ticks) it takes to complete a job.")
-        public static int CyaniteReprocessorWorkTime = 200;
+        public static int TotalWorkTime = 200;
     }
     
     @PhosphophylliteConfig
