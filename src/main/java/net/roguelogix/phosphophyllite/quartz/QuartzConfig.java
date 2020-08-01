@@ -15,5 +15,5 @@ import static net.roguelogix.phosphophyllite.Phosphophyllite.modid;
 )
 public class QuartzConfig {
     @PhosphophylliteConfig.Value
-    OperationMode MaxOpMode = OperationMode.GL45;
+    public static OperationMode MaxOpMode = OperationMode.GL45;
 }
