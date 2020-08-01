@@ -34,8 +34,8 @@ public class JSON5 {
     
     public static String parseElement(Element element) {
         StringBuilder builder = new StringBuilder();
-        parseElement(element, 0, builder, false);
-        return builder.substring(builder.indexOf(":") + 2, builder.length() - 2);
+        parseElement(new Element(element.type, element.comment, null, element.value), 0, builder, false);
+        return builder.substring(1, builder.length() - 2);
     }
     
     private static void newLine(int indentLevel, StringBuilder builder) {
