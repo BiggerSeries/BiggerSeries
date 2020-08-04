@@ -27,8 +27,6 @@ public class Phosphophyllite {
     public Phosphophyllite() {
         Registry.onModLoad();
         MinecraftForge.EVENT_BUS.register(this);
-        GuiSync.onModLoad();
-//        Quartz.onModLoad();
     }
     
     @SubscribeEvent

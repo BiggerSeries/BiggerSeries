@@ -41,14 +41,10 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.roguelogix.phosphophyllite.config.ConfigManager;
-import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -63,7 +59,7 @@ public class Registry {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
         String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
-        
+
 
         Set<Class<?>> classes =
                 FMLLoader.getLoadingModList().getModFileById("phosphophyllite").getFile().getScanResult().getClasses().stream().map(classData -> {
@@ -84,7 +80,24 @@ public class Registry {
                     }
                     return null;
                 }).filter(Objects::nonNull).collect(Collectors.toSet());
-//        Reflections ref = new Reflections(callerPackage);
+
+        classes.forEach(clazz -> {
+            for (Method declaredMethod : clazz.getDeclaredMethods()) {
+                if(Modifier.isStatic(declaredMethod.getModifiers())){
+                    if(declaredMethod.isAnnotationPresent(OnModLoad.class)){
+                        if(declaredMethod.getTypeParameters().length == 0){
+                            declaredMethod.setAccessible(true);
+                            try {
+                                declaredMethod.invoke(null);
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener((RegistryEvent.Register<?> e) -> {
             switch (e.getName().getPath()) {
                 case "block": {

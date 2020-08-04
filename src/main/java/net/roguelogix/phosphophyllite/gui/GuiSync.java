@@ -16,6 +16,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.roguelogix.phosphophyllite.PhosphophylliteConfig;
+import net.roguelogix.phosphophyllite.registry.OnModLoad;
 import net.roguelogix.phosphophyllite.robn.ROBN;
 
 import java.util.ArrayList;
@@ -111,7 +112,8 @@ public class GuiSync {
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
     );
-    
+
+    @OnModLoad
     public static void onModLoad() {
         INSTANCE.registerMessage(1, GUIPacketMessage.class, GuiSync::encodePacket, GuiSync::decodePacket, GuiSync::handler);
         MinecraftForge.EVENT_BUS.addListener(GuiSync::onContainerClose);
