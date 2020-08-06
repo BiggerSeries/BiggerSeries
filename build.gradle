@@ -31,10 +31,10 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20200701-1.15.1'
+    mappings channel: 'snapshot', version: '20200804-1.15.1'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -102,7 +102,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.29'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.36'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"b
@@ -124,7 +124,7 @@ dependencies {
     // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
 //    runtime ""
-//    runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')
+    runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -136,11 +136,11 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "BiggerReactors",
+                "Specification-Title"   : "BiggerReactors",
 //                "Specification-Vendor"    : "examplemodsareus",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${version}",
+                "Specification-Version" : "1", // We are version 1 of ourselves
+                "Implementation-Title"  : project.name,
+                "Implementation-Version": "${version}",
 //                "Implementation-Vendor"   : "examplemodsareus",
 //                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
@@ -181,12 +181,12 @@ publishing {
     }
 }
 
-configurations{
+configurations {
     compile.extendsFrom shaders
 }
 
-task shaders{
-    exec{
+task shaders {
+    exec {
         workingDir './src/main/resources/assets/phosphophyllite/shaders/'
         commandLine "python3", "process_shaders.py"
     }

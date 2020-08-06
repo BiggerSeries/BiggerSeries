@@ -1,7 +1,7 @@
 {
-  "invalid_block.frame" : "Invalid block (%s) for frame at %s",
-  "invalid_block.exterior" : "Invalid block (%s) for exterior at %s",
-  "invalid_block.interior" : "Invalid block (%s) for interior at %s",
-  "invalid_block.corner" : "Invalid block (%s) for corner at %s",
-  "invalid_block.generic" : "Invalid block (%s) at %s"
+  "multiblock.error.phosphophyllite.invalid_block.frame" : "Invalid block (%s) for frame at %s",
+  "multiblock.error.phosphophyllite.invalid_block.exterior" : "Invalid block (%s) for exterior at %s",
+  "multiblock.error.phosphophyllite.invalid_block.interior" : "Invalid block (%s) for interior at %s",
+  "multiblock.error.phosphophyllite.invalid_block.corner" : "Invalid block (%s) for corner at %s",
+  "multiblock.error.phosphophyllite.invalid_block.generic" : "Invalid block (%s) at %s"
 }

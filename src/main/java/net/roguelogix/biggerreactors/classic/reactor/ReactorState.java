@@ -9,7 +9,6 @@ public enum ReactorState implements IStringSerializable {
     INACTIVE;
     
     public static final EnumProperty<ReactorState> REACTOR_STATE_ENUM_PROPERTY = EnumProperty.create("reactorstate", ReactorState.class);
-    public static final ModelProperty<ReactorState> REACTOR_STATE_MODEL_PROPERTY = new ModelProperty<>();
     
     @Override
     public String getName() {

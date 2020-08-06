@@ -103,7 +103,7 @@ public class Config {
         public static float FuelAbsorptionScalingRateExponentMultiplier = 2.2f;
         
         @PhosphophylliteConfig
-        public static class GUI{
+        public static class GUI {
             @PhosphophylliteConfig.Value
             public static long HeatDisplayMax = 2000;
         }
@@ -136,11 +136,11 @@ public class Config {
     
     @PhosphophylliteConfig
     public static class ReactorModeratorConfigValues {
-        enum LocationType{
+        enum LocationType {
             REGISTRY,
             TAG
         }
-    
+        
         @PhosphophylliteConfig.Value
         public final String location;
         @PhosphophylliteConfig.Value
@@ -154,7 +154,7 @@ public class Config {
         @PhosphophylliteConfig.Value
         public final float conductivity;
         
-        ReactorModeratorConfigValues(){
+        ReactorModeratorConfigValues() {
             location = null;
             locationType = null;
             absorption = 0;
@@ -175,24 +175,24 @@ public class Config {
     
     @PhosphophylliteConfig.Value
     public static ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
-            new ReactorModeratorConfigValues("minecraft:air",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
+            new ReactorModeratorConfigValues("minecraft:air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
             
-            new ReactorModeratorConfigValues("minecraft:iron_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.5f, 0.75f, 1.4f, 0.6f),
-            new ReactorModeratorConfigValues("minecraft:gold_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.52f, 0.8f, 1.45f, 2f),
-            new ReactorModeratorConfigValues("minecraft:diamond_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 3f),
-            new ReactorModeratorConfigValues("minecraft:emerald_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 2.5f),
-            new ReactorModeratorConfigValues("minecraft:glass",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.2f, 0.25f, 1.1f, 0.3f),
-            new ReactorModeratorConfigValues("minecraft:ice",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.33f, 1.15f, 0.1f),
-            new ReactorModeratorConfigValues("minecraft:snow_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.15f, 0.33f, 1.05f, 0.05f),
+            new ReactorModeratorConfigValues("minecraft:iron_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.5f, 0.75f, 1.4f, 0.6f),
+            new ReactorModeratorConfigValues("minecraft:gold_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.52f, 0.8f, 1.45f, 2f),
+            new ReactorModeratorConfigValues("minecraft:diamond_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 3f),
+            new ReactorModeratorConfigValues("minecraft:emerald_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 2.5f),
+            new ReactorModeratorConfigValues("minecraft:glass", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.2f, 0.25f, 1.1f, 0.3f),
+            new ReactorModeratorConfigValues("minecraft:ice", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.33f, 1.15f, 0.1f),
+            new ReactorModeratorConfigValues("minecraft:snow_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.15f, 0.33f, 1.05f, 0.05f),
             
-            new ReactorModeratorConfigValues("minecraft:water",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
+            new ReactorModeratorConfigValues("minecraft:water", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
             
-            new ReactorModeratorConfigValues("biggerreactors:graphite_block",  ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.5f, 2f, 2f),
+            new ReactorModeratorConfigValues("biggerreactors:graphite_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.5f, 2f, 2f),
     };
     
     
     @PhosphophylliteConfig.PreLoad
-    public static void preLoad(){
+    public static void preLoad() {
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
             ReactorModeratorRegistry.registerBlock(reactorModerator.location);
         }

@@ -18,11 +18,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-/* TODO
-
-handle merges
-
- */
 public class ReactorMultiblockController extends RectangularMultiblockController {
     
     public ReactorMultiblockController(World world) {
@@ -55,7 +50,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             return !exteriorValidator.validate(block);
         };
         setAssemblyValidator(genericController -> {
-            ReactorMultiblockController reactorController = (ReactorMultiblockController) genericController;
             if (terminals.isEmpty()) {
                 return false;
             }

@@ -25,7 +25,7 @@ public class InvalidBlock extends ValidationError {
     
     public InvalidBlock(Block block, Vector3i worldPosition, String multiblockPosition) {
         super(new TranslationTextComponent(
-                "invalid_block." + multiblockPosition,
+                "multiblock.error.phosphophyllite.invalid_block." + multiblockPosition,
                 new TranslationTextComponent(block.getTranslationKey()),
                 "(x: " + worldPosition.x + "; y: " + worldPosition.y + "; z: " + worldPosition.z + ")")
         );
