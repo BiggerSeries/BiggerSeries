@@ -1,14 +1,18 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
 import net.roguelogix.biggerreactors.classic.reactor.simulation.ClassicReactorSimulation;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
+import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineBaseBlock;
+import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineBaseTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
+import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
 import net.roguelogix.phosphophyllite.util.Util;
@@ -72,6 +76,17 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                     return false;
                 }
             }
+            
+            Util.chunkCachedBlockStateIteration(new Vector3i(minX(), minY(), minZ()), new Vector3i(maxX(), maxY(), maxZ()), world, (block, pos) -> {
+                if (block.getBlock() instanceof ReactorBaseBlock) {
+                    TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
+                    if (te instanceof ReactorBaseTile) {
+                        if (!((ReactorBaseTile) te).isCurrentController(this)) {
+                            throw new ValidationError("multiblock.error.biggerreactors.dangling_internal_part");
+                        }
+                    }
+                }
+            });
             
             return true;
         });

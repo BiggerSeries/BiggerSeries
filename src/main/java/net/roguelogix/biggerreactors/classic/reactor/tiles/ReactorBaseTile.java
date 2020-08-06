@@ -25,4 +25,8 @@ public class ReactorBaseTile extends RectangularMultiblockTile {
             reactor().runRequest(requestName, requestData);
         }
     }
+    
+    public boolean isCurrentController(ReactorMultiblockController reactorMultiblockController) {
+        return reactor() == reactorMultiblockController;
+    }
 }
