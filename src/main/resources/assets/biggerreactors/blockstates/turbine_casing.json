@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "direction=disassembled": {
+      "model": "biggerreactors:block/turbine_casing_disassembled"
+    },
+    "direction=corner": {
+      "model": "biggerreactors:block/turbine_casing_corner"
+    },
+    "direction=frame_x": {
+      "model": "biggerreactors:block/turbine_casing_frame",
+      "x": 90,
+      "y": 90
+    },
+    "direction=frame_y": {
+      "model": "biggerreactors:block/turbine_casing_frame"
+    },
+    "direction=frame_z": {
+      "model": "biggerreactors:block/turbine_casing_frame",
+      "x": 90
+    },
+    "direction=face": {
+      "model": "biggerreactors:block/turbine_casing_face"
+    },
+    "direction=interior": {
+      "model": "biggerreactors:block/turbine_casing_disassembled"
+    }
+  }
+}

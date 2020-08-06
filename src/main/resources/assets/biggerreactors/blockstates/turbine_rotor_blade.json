@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "biggerreactors:block/turbine_rotor_blade"
+    }
+  }
+}

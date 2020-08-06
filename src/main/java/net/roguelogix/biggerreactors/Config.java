@@ -109,13 +109,15 @@ public class Config {
         }
     }
     
-    @PhosphophylliteConfig.Value(min = 5, max = 32)
-    public static int TurbineMaxLength = 32;
-    @PhosphophylliteConfig.Value(min = 5, max = 32)
-    public static int TurbineMaxWidth = 32;
-    @PhosphophylliteConfig.Value(min = 4, max = 48)
-    public static int TurbineMaxHeight = 48;
-
+    @PhosphophylliteConfig
+    public static class Turbine {
+        @PhosphophylliteConfig.Value(min = 5, max = 32)
+        public static int MaxLength = 32;
+        @PhosphophylliteConfig.Value(min = 5, max = 32)
+        public static int MaxWidth = 32;
+        @PhosphophylliteConfig.Value(min = 4, max = 48)
+        public static int MaxHeight = 48;
+    }
     @PhosphophylliteConfig
     public static class CyaniteReprocessor {
         @PhosphophylliteConfig.Value(min = 1, comment = "Max transfer rate of fluids and energy.")
