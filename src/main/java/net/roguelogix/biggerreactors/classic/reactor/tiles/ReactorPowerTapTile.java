@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorPowerTap.ConnectionState.*;
 
 
-@RegisterTileEntity(name = "reactor_power_port")
+@RegisterTileEntity(name = "reactor_power_tap")
 public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStorage {
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
