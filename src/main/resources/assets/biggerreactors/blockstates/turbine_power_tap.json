@@ -1,0 +1,27 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "biggerreactors:block/turbine_power_tap_disassembled"
+      }
+    },
+    {
+      "when": {
+        "direction": "face",
+        "connectionstate": "disconnected"
+      },
+      "apply": {
+        "model": "biggerreactors:block/turbine_power_tap_disconnected"
+      }
+    },
+    {
+      "when": {
+        "direction": "face",
+        "connectionstate": "connected"
+      },
+      "apply": {
+        "model": "biggerreactors:block/turbine_power_tap_connected"
+      }
+    }
+  ]
+}

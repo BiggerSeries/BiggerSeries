@@ -205,6 +205,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     private final Set<TurbineRotorBearingTile> rotorBearings = new HashSet<>();
     private final Set<TurbineRotorShaftTile> rotorShafts = new HashSet<>();
     private final Set<TurbineRotorBladeTile> rotorBlades = new HashSet<>();
+    private final Set<TurbinePowerTapTile> powerTaps = new HashSet<>();
     
     @Override
     protected void onPartAdded(MultiblockTile tile) {
@@ -222,6 +223,9 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof TurbineRotorBladeTile) {
             rotorBlades.add((TurbineRotorBladeTile) tile);
+        }
+        if (tile instanceof TurbinePowerTapTile) {
+            powerTaps.add((TurbinePowerTapTile) tile);
         }
     }
     
@@ -241,6 +245,9 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof TurbineRotorBladeTile) {
             rotorBlades.remove(tile);
+        }
+        if (tile instanceof TurbinePowerTapTile) {
+            powerTaps.remove(tile);
         }
     }
     
