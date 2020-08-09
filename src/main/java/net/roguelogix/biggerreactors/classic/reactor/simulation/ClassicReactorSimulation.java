@@ -129,6 +129,8 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     public void tick() {
         if (active) {
             radiate();
+        }else{
+            fuelConsumedLastTick = 0;
         }
         
         FEProducedLastTick = 0;

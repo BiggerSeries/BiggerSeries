@@ -302,6 +302,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         for (ReactorAccessPortTile accessPort : accessPorts) {
             accessPort.pushWaste();
         }
+        
+        markDirty();
     }
     
     private void distributeFuel() {

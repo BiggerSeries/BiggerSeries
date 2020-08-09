@@ -68,10 +68,10 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     
     @Override
     public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-        if (tank == 0 && stack.getFluid() == Fluids.WATER) {
+        if (tank == 0 && stack.getRawFluid() == Fluids.WATER) {
             return true;
         }
-        return tank == 1 && stack.getFluid() == IrradiatedSteam.INSTANCE;
+        return tank == 1 && stack.getRawFluid() == IrradiatedSteam.INSTANCE;
     }
     
     @Override
@@ -129,23 +129,18 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         if (pos.getX() == controller.minX()) {
             steamOutputDirection = Direction.WEST;
-            return;
         }
         if (pos.getX() == controller.maxX()) {
             steamOutputDirection = Direction.EAST;
-            return;
         }
         if (pos.getY() == controller.minY()) {
             steamOutputDirection = Direction.DOWN;
-            return;
         }
         if (pos.getY() == controller.maxY()) {
             steamOutputDirection = Direction.UP;
-            return;
         }
         if (pos.getZ() == controller.minZ()) {
             steamOutputDirection = Direction.NORTH;
-            return;
         }
         if (pos.getZ() == controller.maxZ()) {
             steamOutputDirection = Direction.SOUTH;

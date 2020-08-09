@@ -2,6 +2,7 @@ package net.roguelogix.phosphophyllite.multiblock.generic;
 
 import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
 import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
+import static net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions.DISASSEMBLED;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,11 +18,13 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.items.DebugTool;
+import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 
 public abstract class MultiblockTile extends TileEntity {
     protected MultiblockController controller;
@@ -214,9 +217,15 @@ public abstract class MultiblockTile extends TileEntity {
     
     public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
         if (handIn == Hand.MAIN_HAND) {
-            if (player.getHeldItemMainhand() == ItemStack.EMPTY) {
-                if (controller != null && controller.lastValidationError != null) {
-                    player.sendMessage(controller.lastValidationError.getTextComponent());
+            // TODO: 8/8/20 add a generic layer for this to check against
+            //              currently not a problem as a only use rectangular multiblocks
+            if (player.getHeldItemMainhand() == ItemStack.EMPTY && getBlockState().get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) == DISASSEMBLED) {
+                if (controller != null) {
+                    if (controller.lastValidationError != null) {
+                        player.sendMessage(controller.lastValidationError.getTextComponent());
+                    }else{
+                        player.sendMessage(new TranslationTextComponent("multiblock.error.phosphophyllite.unknown"));
+                    }
                 }
                 return ActionResultType.SUCCESS;
                 
