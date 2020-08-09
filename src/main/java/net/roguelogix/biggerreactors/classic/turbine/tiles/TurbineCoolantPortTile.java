@@ -52,10 +52,10 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     @Override
     public FluidStack getFluidInTank(int tank) {
         if (tank == 0) {
-            return water;
+            return steam;
         }
         if (tank == 1) {
-            return steam;
+            return water;
         }
         return FluidStack.EMPTY;
     }
@@ -67,10 +67,10 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     
     @Override
     public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-        if (tank == 1 && stack.getFluid() == Fluids.WATER) {
+        if (tank == 1 && stack.getRawFluid() == Fluids.WATER) {
             return true;
         }
-        return tank == 0 && stack.getFluid() == Fluids.WATER;
+        return tank == 0 && stack.getRawFluid() == IrradiatedSteam.INSTANCE;
     }
     
     @Override
@@ -106,73 +106,68 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         return water.copy();
     }
     
-    public long pushSteam(long amount) {
+    public long pushWater(long amount) {
         if (!connected || direction == INLET) {
             return 0;
         }
-        steam.setAmount((int) amount);
-        return steamOutput.orElse(EMPTY_TANK).fill(steam, IFluidHandler.FluidAction.EXECUTE);
+        water.setAmount((int) amount);
+        return waterOutput.orElse(EMPTY_TANK).fill(water, IFluidHandler.FluidAction.EXECUTE);
     }
     
     
     private boolean connected = false;
-    Direction steamOutputDirection = null;
-    LazyOptional<IFluidHandler> steamOutput = null;
+    Direction waterOutputDirection = null;
+    LazyOptional<IFluidHandler> waterOutput = null;
     FluidTank EMPTY_TANK = new FluidTank(0);
     private TurbineCoolantPort.PortDirection direction = INLET;
     
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
-            steamOutputDirection = null;
+            waterOutputDirection = null;
         }
         if (pos.getX() == controller.minX()) {
-            steamOutputDirection = Direction.WEST;
-            return;
+            waterOutputDirection = Direction.WEST;
         }
         if (pos.getX() == controller.maxX()) {
-            steamOutputDirection = Direction.EAST;
-            return;
+            waterOutputDirection = Direction.EAST;
         }
         if (pos.getY() == controller.minY()) {
-            steamOutputDirection = Direction.DOWN;
-            return;
+            waterOutputDirection = Direction.DOWN;
         }
         if (pos.getY() == controller.maxY()) {
-            steamOutputDirection = Direction.UP;
-            return;
+            waterOutputDirection = Direction.UP;
         }
         if (pos.getZ() == controller.minZ()) {
-            steamOutputDirection = Direction.NORTH;
-            return;
+            waterOutputDirection = Direction.NORTH;
         }
         if (pos.getZ() == controller.maxZ()) {
-            steamOutputDirection = Direction.SOUTH;
+            waterOutputDirection = Direction.SOUTH;
         }
         neighborChanged();
     }
     
     public void neighborChanged() {
-        steamOutput = LazyOptional.empty();
-        if (steamOutputDirection == null) {
+        waterOutput = LazyOptional.empty();
+        if (waterOutputDirection == null) {
             connected = false;
             return;
         }
         assert world != null;
-        TileEntity te = world.getTileEntity(pos.offset(steamOutputDirection));
+        TileEntity te = world.getTileEntity(pos.offset(waterOutputDirection));
         if (te == null) {
             connected = false;
             return;
         }
-        steamOutput = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, steamOutputDirection.getOpposite());
+        waterOutput = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, waterOutputDirection.getOpposite());
         connected = false;
-        IFluidHandler handler = steamOutput.orElse(EMPTY_TANK);
+        IFluidHandler handler = waterOutput.orElse(EMPTY_TANK);
         for (int i = 0; i < handler.getTanks(); i++) {
-            if (handler.isFluidValid(i, steam)) {
+            if (handler.isFluidValid(i, water)) {
                 connected = true;
                 break;
             }
         }
-        connected = connected && steamOutput.isPresent();
+        connected = connected && waterOutput.isPresent();
     }
     
     public void setDirection(TurbineCoolantPort.PortDirection direction) {

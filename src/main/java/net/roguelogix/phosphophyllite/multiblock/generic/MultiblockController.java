@@ -5,6 +5,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
+import net.roguelogix.phosphophyllite.util.Util;
+import org.joml.Vector2i;
+import org.joml.Vector3i;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -241,8 +244,8 @@ public class MultiblockController {
         }
         controllersToMerge.clear();
         if (state == AssemblyState.ASSEMBLED) {
-            updateNBT();
             tick();
+            updateNBT();
         }
     }
     
@@ -288,6 +291,7 @@ public class MultiblockController {
             if (storedNBT != null) {
                 read(storedNBT.getCompound("userdata"));
             }
+            blocks.forEach(block -> world.notifyNeighbors(block.getPos(), block.getBlockState().getBlock()));
             onAssembled();
             updateNBT();
         } else {
@@ -369,6 +373,10 @@ public class MultiblockController {
             multiblockData.putString("assemblyState", state.toString());
         }
         storedNBT = compound;
+    }
+    
+    protected void markDirty(){
+        Util.markRangeDirty(world, new Vector2i(minX(), minZ()), new Vector2i(maxX(), maxZ()));
     }
     
     protected void read(CompoundNBT compound) {

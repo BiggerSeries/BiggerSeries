@@ -1,6 +1,7 @@
 package net.roguelogix.biggerreactors;
 
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
+import net.roguelogix.biggerreactors.classic.turbine.TurbineCoilRegistry;
 import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.registry.RegisterConfig;
 
@@ -117,6 +118,25 @@ public class Config {
         public static int MaxWidth = 32;
         @PhosphophylliteConfig.Value(min = 4, max = 48)
         public static int MaxHeight = 48;
+        
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long TankSize = 4000;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long MaxFlow = 2000;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long FluidPerBlade = 25;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long SteamCondensationEnergy = 10;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long RotorMassPerPart = 10;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static double MassDragMultiplier = 0.01;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static double BladeDragMultiplier = 0.000025;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static double CoilDragMultiplier = 1;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static long BatterySize = 1_000_000;
     }
     @PhosphophylliteConfig
     public static class CyaniteReprocessor {
@@ -136,7 +156,7 @@ public class Config {
     
     @PhosphophylliteConfig
     public static class ReactorModeratorConfigValues {
-        enum LocationType {
+        public enum LocationType {
             REGISTRY,
             TAG
         }
@@ -191,17 +211,63 @@ public class Config {
     };
     
     
+    public static class TurbineCoilConfigValues {
+        
+        public enum LocationType {
+            REGISTRY,
+            TAG
+        }
+    
+        @PhosphophylliteConfig.Value
+        public final String location;
+        @PhosphophylliteConfig.Value
+        public final LocationType locationType;
+        @PhosphophylliteConfig.Value
+        public final double efficiency;
+        @PhosphophylliteConfig.Value
+        public final double extractionRate;
+        @PhosphophylliteConfig.Value
+        public final double bonus;
+    
+        TurbineCoilConfigValues() {
+            location = null;
+            locationType = null;
+            efficiency = 0;
+            bonus = 0;
+            extractionRate = 0;
+        }
+        
+        public TurbineCoilConfigValues(String location, LocationType locationType, double efficiency, double extractionRate, double bonus) {
+            this.location = location;
+            this.locationType = locationType;
+            this.efficiency = efficiency;
+            this.extractionRate = extractionRate;
+            this.bonus = bonus;
+        }
+    }
+    
+    @PhosphophylliteConfig.Value
+    public static TurbineCoilConfigValues[] turbineCoils = new TurbineCoilConfigValues[]{
+            new TurbineCoilConfigValues("minecraft:iron_block", TurbineCoilConfigValues.LocationType.REGISTRY, 0.33, 0.1, 1),
+            new TurbineCoilConfigValues("minecraft:gold_block", TurbineCoilConfigValues.LocationType.REGISTRY, 0.66, 0.175, 1),
+            new TurbineCoilConfigValues("biggerreactors:ludicrite_block", TurbineCoilConfigValues.LocationType.REGISTRY, 1.155, 0.35, 1.02),
+    };
+    
     @PhosphophylliteConfig.PreLoad
     public static void preLoad() {
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
             ReactorModeratorRegistry.registerBlock(reactorModerator.location);
         }
+        TurbineCoilRegistry.clearRegistry();
     }
     
     @PhosphophylliteConfig.PostLoad
     public static void postLoad() {
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
             ReactorModeratorRegistry.registerBlock(reactorModerator.location, reactorModerator.absorption, reactorModerator.heatEfficiency, reactorModerator.moderation, reactorModerator.conductivity);
+        }
+        for (TurbineCoilConfigValues turbineCoil : turbineCoils) {
+            TurbineCoilRegistry.registerConfigValues(turbineCoil);
         }
     }
 }

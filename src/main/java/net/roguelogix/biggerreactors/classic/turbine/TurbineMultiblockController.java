@@ -40,6 +40,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             return block instanceof TurbineTerminal
                     || block instanceof TurbineCoolantPort
                     || block instanceof TurbineRotorBearing
+                    || block instanceof TurbinePowerTap
                     || block instanceof TurbineGlass;
         });
         interiorValidator = block -> {
@@ -175,22 +176,22 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             int[] totalCoilBlocks = new int[]{0};
             
             Util.chunkCachedBlockStateIteration(new Vector3i(minX(), minY(), minZ()), new Vector3i(maxX(), maxY(), maxZ()), world, (block, pos) -> {
-                if(block.getBlock() instanceof TurbineBaseBlock){
+                if (block.getBlock() instanceof TurbineBaseBlock) {
                     TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
-                    if(te instanceof TurbineBaseTile){
-                        if(!((TurbineBaseTile) te).isCurrentController(this)){
+                    if (te instanceof TurbineBaseTile) {
+                        if (!((TurbineBaseTile) te).isCurrentController(this)) {
                             throw new ValidationError("multiblock.error.biggerreactors.dangling_internal_part");
                         }
                     }
                     return;
                 }
-                if(block.getBlock() instanceof AirBlock){
+                if (block.getBlock() instanceof AirBlock) {
                     return;
                 }
                 totalCoilBlocks[0]++;
             });
             
-            if(totalCoilBlocks[0] != validCoilBlocks){
+            if (totalCoilBlocks[0] != validCoilBlocks) {
                 throw new ValidationError("multiblock.error.biggerreactors.turbine.dangling_coil");
             }
             
@@ -258,6 +259,302 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         });
     }
     
+    private long steam;
+    private long water;
+    
+    public long extractWater(long maxDrain, boolean simulate) {
+        long toExtract = Math.min(maxDrain, water);
+        if (toExtract < 0) {
+            toExtract = 0;
+        }
+        if (!simulate) {
+            water -= toExtract;
+        }
+        return toExtract;
+    }
+    
+    public long addSteam(long amount, boolean simulate) {
+        long toAdd = Math.min(amount, Config.Turbine.TankSize - steam);
+        if (toAdd < 0) {
+            toAdd = 0;
+        }
+        if (!simulate) {
+            steam += toAdd;
+        }
+        return toAdd;
+    }
+    
+    private long rotorMass;
+    private long bladeSurfaceArea;
+    private long coilSize;
+    private double inductionEfficiency;
+    private double inductorDragCoefficient;
+    private double inductionEnergyExponentBonus;
+    private double frictionDrag;
+    private double bladeDrag;
+    
+    @Override
+    protected void onAssembly() {
+        
+        for (TurbinePowerTapTile powerPort : powerTaps) {
+            powerPort.updateOutputDirection();
+        }
+        for (TurbineCoolantPortTile coolantPort : coolantPorts) {
+            coolantPort.updateOutputDirection();
+        }
+        
+        rotorMass = 0;
+        bladeSurfaceArea = 0;
+        coilSize = 0;
+        inductionEfficiency = 0;
+        inductorDragCoefficient = 0;
+        inductionEnergyExponentBonus = 0;
+        
+        Util.chunkCachedBlockStateIteration(new Vector3i(minX() + 1, minY() + 1, minZ() + 1), new Vector3i(maxX() - 1, maxY() - 1, maxZ() - 1), world, (blockState, pos) -> {
+            Block block = blockState.getBlock();
+            if (block instanceof AirBlock) {
+                return;
+            }
+            if (block instanceof TurbineRotorBlade) {
+                bladeSurfaceArea++;
+            }
+            if (block instanceof TurbineRotorBlade || block instanceof TurbineRotorShaft) {
+                rotorMass += Config.Turbine.RotorMassPerPart;
+            }
+            TurbineCoilRegistry.TurbineCoilData coilData = TurbineCoilRegistry.getCoilData(block);
+            if (coilData != null) {
+                inductionEfficiency += coilData.efficiency;
+                inductorDragCoefficient += coilData.extractionRate;
+                inductionEnergyExponentBonus += coilData.bonus;
+                coilSize++;
+            }
+        });
+        
+        frictionDrag = rotorMass * Config.Turbine.MassDragMultiplier;
+        bladeDrag = Config.Turbine.BladeDragMultiplier * bladeSurfaceArea;
+        
+        if (coilSize <= 0) {
+            inductionEfficiency = 0;
+            inductorDragCoefficient = 0;
+            inductionEnergyExponentBonus = 0;
+        } else {
+            // TODO: 8/8/20 config that 1b
+            inductionEfficiency = (inductionEfficiency * 1d) / coilSize;
+            inductionEnergyExponentBonus = Math.max(1f, (inductionEnergyExponentBonus / coilSize));
+            inductorDragCoefficient = (inductorDragCoefficient / coilSize);
+        }
+    }
+    
+    @Override
+    protected void onDisassembly() {
+        rotorMass = 0;
+        bladeSurfaceArea = 0;
+        coilSize = 0;
+        rotorEnergy = 0;
+    }
+    
+    long storedPower = 0;
+    
+    private double energyGeneratedLastTick;
+    private long fluidConsumedLastTick;
+    private double rotorEfficiencyLastTick;
+    
+    private double rotorEnergy = 0;
+    
+    @Override
+    public void tick() {
+        
+        energyGeneratedLastTick = 0;
+        fluidConsumedLastTick = 0;
+        rotorEfficiencyLastTick = 0;
+        
+        long steamIn = 0;
+        
+        if (turbineState == TurbineState.ACTIVE) {
+            steamIn = Math.min(maxFloatRate, steam);
+            
+            if (ventState == VentState.CLOSED) {
+                long availableSpace = Config.Turbine.TankSize - water;
+                steamIn = Math.min(steamIn, availableSpace);
+            }
+        }
+        
+        if (steamIn > 0 || rotorEnergy > 0) {
+            
+            double rotorSpeed = 0;
+            if (rotorBlades.size() > 0 && rotorMass > 0) {
+                rotorSpeed = rotorEnergy / (double) (rotorBlades.size() * rotorMass);
+            }
+            
+            double aeroDragTorque = rotorSpeed * bladeDrag;
+            
+            double liftTorque = 0;
+            if (steamIn > 0) {
+                long steamToProcess = bladeSurfaceArea * Config.Turbine.FluidPerBlade;
+                steamToProcess = Math.min(steamToProcess, steamIn);
+                liftTorque = steamToProcess * Config.Turbine.SteamCondensationEnergy;
+                
+                if (steamToProcess < steamIn) {
+                    steamToProcess = steamIn - steamToProcess;
+                    double neededBlades = steamIn / (double) Config.Turbine.FluidPerBlade;
+                    double missingBlades = neededBlades - bladeSurfaceArea;
+                    double bladeEfficiency = 1.0 - missingBlades / neededBlades;
+                    liftTorque += steamToProcess * bladeEfficiency;
+                    
+                }
+                rotorEfficiencyLastTick = liftTorque / (steamIn * Config.Turbine.SteamCondensationEnergy);
+            }
+            
+            double inductionTorque = coilEngaged ? rotorSpeed * inductorDragCoefficient * coilSize : 0f;
+            double energyToGenerate = Math.pow(inductionTorque, inductionEnergyExponentBonus) * inductionEfficiency;
+            if (energyToGenerate > 0) {
+                // TODO: 8/7/20 this works at multiples of 900 over 1800 RPM, it probably shouldn't
+                // TODO: 8/7/20 make RPM range configurable, its not exactly the easiest thing to do
+                double efficiency = 0.25 * Math.cos(rotorSpeed / (45.5 * Math.PI)) + 0.75;
+                // yes this is slightly different, this matches what the equation actually looks like better
+                // go on, graph it
+                if (rotorSpeed < 450) {
+                    efficiency = Math.min(0.5, efficiency);
+                }
+                
+                // oh noes, there is a cap now, *no overspeeding your fucking turbines*
+                if (rotorSpeed > 2245) {
+                    efficiency = rotorSpeed / 4490;
+                    efficiency += 1;
+                }
+                if (efficiency < 0) {
+                    efficiency = 0;
+                }
+                
+                energyToGenerate *= efficiency;
+                
+                energyGeneratedLastTick = energyToGenerate;
+                
+                energyToGenerate = Math.min(energyToGenerate, Config.Turbine.BatterySize - storedPower);
+                
+                if (energyToGenerate > 0) {
+                    storedPower += energyToGenerate;
+                }
+            }
+            
+            rotorEnergy += liftTorque;
+            rotorEnergy -= inductionTorque;
+            rotorEnergy -= aeroDragTorque;
+            rotorEnergy -= frictionDrag;
+            if (rotorEnergy < 0) {
+                rotorEnergy = 0;
+            }
+            
+            if (steamIn > 0) {
+                fluidConsumedLastTick = steamIn;
+                steam -= steamIn;
+                
+                if (ventState != VentState.All) {
+                    water += steamIn;
+                }
+            }
+            if (water > Config.Turbine.TankSize) {
+                water = Config.Turbine.TankSize;
+            }
+        }
+        
+        long totalPowerRequested = 0;
+        for (TurbinePowerTapTile powerPort : powerTaps) {
+            totalPowerRequested += powerPort.distributePower(storedPower, true);
+        }
+        long startingPower = storedPower;
+        
+        double distributionMultiplier = Math.min(1f, (double) storedPower / (double) totalPowerRequested);
+        for (TurbinePowerTapTile powerPort : powerTaps) {
+            long powerRequested = powerPort.distributePower(startingPower, true);
+            powerRequested *= distributionMultiplier;
+            powerRequested = Math.min(storedPower, powerRequested); // just in case
+            storedPower -= powerPort.distributePower(powerRequested, false);
+        }
+        
+        for (TurbineCoolantPortTile coolantPort : coolantPorts) {
+            if (water < 0) {
+                break;
+            }
+            water -= coolantPort.pushWater(water);
+        }
+        
+        markDirty();
+    }
+    
+    public void runRequest(String requestName, Object requestData) {
+    
+    }
+    
+    VentState ventState = VentState.CLOSED;
+    
+    private void setVentState(VentState newVentState) {
+        ventState = newVentState;
+    }
+    
+    long maxFloatRate = Config.Turbine.MaxFlow;
+    
+    private void setMaxFlowRate(long flowRate) {
+        if (flowRate > 0 && flowRate < Config.Turbine.MaxFlow) {
+            maxFloatRate = flowRate;
+        }
+    }
+    
+    private boolean coilEngaged = true;
+    
+    private void setCoilEngaged(boolean engaged) {
+        coilEngaged = engaged;
+    }
+    
+    
+    protected CompoundNBT write() {
+        CompoundNBT compound = new CompoundNBT();
+        {
+            compound.putLong("steam", steam);
+            compound.putLong("water", water);
+            compound.putString("turbineState", turbineState.toString());
+            compound.putDouble("storedPower", storedPower);
+            compound.putString("ventState", ventState.toString());
+            compound.putDouble("rotorEnergy", rotorEnergy);
+            compound.putLong("maxFloatRate", maxFloatRate);
+            compound.putBoolean("coilEngaged", coilEngaged);
+        }
+        return compound;
+    }
+    
+    protected void read(CompoundNBT compound) {
+        if (compound.contains("steam")) {
+            steam = compound.getLong("steam");
+        }
+        if (compound.contains("water")) {
+            water = compound.getLong("water");
+        }
+        if (compound.contains("turbineState")) {
+            turbineState = TurbineState.valueOf(compound.getString("turbineState").toUpperCase());
+        }
+        if (compound.contains("storedPower")) {
+            storedPower = compound.getLong("storedPower");
+        }
+        if (compound.contains("ventState")) {
+            ventState = VentState.valueOf(compound.getString("ventState").toUpperCase());
+        }
+        if (compound.contains("rotorEnergy")) {
+            rotorEnergy = compound.getDouble("rotorEnergy");
+        }
+        if (compound.contains("maxFloatRate")) {
+            maxFloatRate = compound.getLong("maxFloatRate");
+        }
+        if (compound.contains("coilEngaged")) {
+            coilEngaged = compound.getBoolean("coilEngaged");
+        }
+        
+        updateBlockStates();
+    }
+    
+    public void toggleActive() {
+        setActive(turbineState == TurbineState.ACTIVE ? TurbineState.INACTIVE : TurbineState.ACTIVE);
+    }
+    
     public void setActive(TurbineState newState) {
         if (turbineState != newState) {
             turbineState = newState;
@@ -265,41 +562,29 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         }
     }
     
-    protected void read(CompoundNBT compound) {
-        if (compound.contains("turbineState")) {
-            turbineState = TurbineState.valueOf(compound.getString("turbineState").toUpperCase());
-        }
-        
-        updateBlockStates();
-    }
-    
-    protected CompoundNBT write() {
-        CompoundNBT compound = new CompoundNBT();
-        {
-            compound.putString("turbineState", turbineState.toString());
-        }
-        return compound;
-    }
-    
     @Override
-    protected void onAssembly() {
-    
-    }
-    
-    @Override
-    protected void onDisassembly() {
-    
-    }
-    
-    public long extractWater(long maxDrain, boolean simulate) {
-        return 0;
-    }
-    
-    public long addSteam(long amount, boolean simulate) {
-        return 0;
-    }
-    
-    public void runRequest(String requestName, Object requestData) {
-    
+    public String getDebugInfo() {
+        return super.getDebugInfo() + "\n" +
+                "rotorMass: " + rotorMass + "\n" +
+                "bladeSurfaceArea: " + bladeSurfaceArea + "\n" +
+                "coilSize: " + coilSize + "\n" +
+                "inductionEfficiency: " + inductionEfficiency + "\n" +
+                "inductorDragCoefficient: " + inductorDragCoefficient + "\n" +
+                "inductionEnergyExponentBonus: " + inductionEnergyExponentBonus + "\n" +
+                "frictionDrag: " + frictionDrag + "\n" +
+                "bladeDrag: " + bladeDrag + "\n" +
+                "CoilEngaged:" + coilEngaged + " \n" +
+                "VentState:" + ventState + " \n" +
+                "State:" + turbineState.toString() + " \n" +
+                "StoredPower: " + storedPower + "\n" +
+                "CoilEngaged: " + coilEngaged + " \n" +
+                "PowerProduction: " + energyGeneratedLastTick + "\n" +
+                "CoilEfficiency: " + rotorEfficiencyLastTick + "\n" +
+                "Steam: " + steam + "\n" +
+                "Water: " + water + "\n" +
+                "Flow: " + fluidConsumedLastTick + "\n" +
+                "MaxFlow: " + maxFloatRate + "\n" +
+                "RotorRPM: " + (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0) + "\n" +
+                "";
     }
 }

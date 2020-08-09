@@ -111,23 +111,18 @@ public class TurbinePowerTapTile extends TurbineBaseTile implements IEnergyStora
         }
         if (pos.getX() == controller.minX()) {
             powerOutputDirection = Direction.WEST;
-            return;
         }
         if (pos.getX() == controller.maxX()) {
             powerOutputDirection = Direction.EAST;
-            return;
         }
         if (pos.getY() == controller.minY()) {
             powerOutputDirection = Direction.DOWN;
-            return;
         }
         if (pos.getY() == controller.maxY()) {
             powerOutputDirection = Direction.UP;
-            return;
         }
         if (pos.getZ() == controller.minZ()) {
             powerOutputDirection = Direction.NORTH;
-            return;
         }
         if (pos.getZ() == controller.maxZ()) {
             powerOutputDirection = Direction.SOUTH;

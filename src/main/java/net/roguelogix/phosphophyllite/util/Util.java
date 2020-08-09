@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
+import org.joml.Vector2i;
 import org.joml.Vector3i;
 
 import java.io.BufferedReader;
@@ -72,6 +73,17 @@ public class Util {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    public static void markRangeDirty(World world, Vector2i start, Vector2i end) {
+        for (int X = start.x; X < ((end.x + 16) & 0xFFFFFFF0); X += 16) {
+            for (int Z = start.y; Z < ((end.y + 16) & 0xFFFFFFF0); Z += 16) {
+                int chunkX = X >> 4;
+                int chunkZ = Z >> 4;
+                Chunk chunk = world.getChunk(chunkX, chunkZ);
+                chunk.markDirty();
             }
         }
     }
