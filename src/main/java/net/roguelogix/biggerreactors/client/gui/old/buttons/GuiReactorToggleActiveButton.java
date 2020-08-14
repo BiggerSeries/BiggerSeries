@@ -1,10 +1,10 @@
-package net.roguelogix.biggerreactors.client.gui.buttons;
+package net.roguelogix.biggerreactors.client.gui.old.buttons;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
-import net.roguelogix.biggerreactors.client.gui.GuiReactorButton;
+import net.roguelogix.biggerreactors.client.gui.old.GuiReactorButton;
 
 import javax.annotation.Nullable;
 

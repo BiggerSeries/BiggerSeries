@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui;
+package net.roguelogix.phosphophyllite.gui.old;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
+@Deprecated
 public class GuiPartSymbol<T extends Container> extends GuiPartBase<T> {
     
     private int textureIndex;

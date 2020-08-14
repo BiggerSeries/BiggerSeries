@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.gui;
+package net.roguelogix.biggerreactors.client.gui.old;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
@@ -8,7 +8,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
-import net.roguelogix.phosphophyllite.gui.GuiPartButton;
+import net.roguelogix.phosphophyllite.gui.old.GuiPartButton;
 
 import javax.annotation.Nullable;
 

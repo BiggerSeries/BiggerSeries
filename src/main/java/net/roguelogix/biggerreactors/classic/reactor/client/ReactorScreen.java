@@ -14,11 +14,11 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
-import net.roguelogix.biggerreactors.client.gui.GuiEnergyTank;
-import net.roguelogix.biggerreactors.client.gui.GuiFluidTank;
-import net.roguelogix.biggerreactors.client.gui.GuiReactorBar;
-import net.roguelogix.biggerreactors.client.gui.GuiReactorSymbol;
-import net.roguelogix.biggerreactors.client.gui.buttons.GuiReactorToggleActiveButton;
+import net.roguelogix.biggerreactors.client.gui.old.GuiEnergyTank;
+import net.roguelogix.biggerreactors.client.gui.old.GuiFluidTank;
+import net.roguelogix.biggerreactors.client.gui.old.GuiReactorBar;
+import net.roguelogix.biggerreactors.client.gui.old.GuiReactorSymbol;
+import net.roguelogix.biggerreactors.client.gui.old.buttons.GuiReactorToggleActiveButton;
 import net.roguelogix.biggerreactors.fluids.IrradiatedSteam;
 
 @OnlyIn(Dist.CLIENT)

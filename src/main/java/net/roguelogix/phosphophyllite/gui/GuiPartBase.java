@@ -2,47 +2,49 @@ package net.roguelogix.phosphophyllite.gui;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-
+@OnlyIn(Dist.CLIENT)
 public class GuiPartBase<T extends Container> {
     
     protected ContainerScreen<T> screen;
-    protected ResourceLocation guiTexture;
-    protected int xPos;
-    protected int yPos;
-    protected int xSize;
-    protected int ySize;
-    protected String tooltipText;
+    protected int xPos, yPos;
+    protected int xSize, ySize;
     
-    public GuiPartBase(ContainerScreen<T> screen, ResourceLocation guiTexture, int xPos, int yPos, int xSize, int ySize, @Nullable String tooltipText) {
+    /**
+     * @param screen The screen this instance belongs to.
+     * @param xPos   The X position of the part.
+     * @param yPos   The Y position of the part.
+     * @param xSize  The width of the part.
+     * @param ySize  The height of the part.
+     */
+    protected GuiPartBase(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize) {
         this.screen = screen;
-        this.guiTexture = guiTexture;
         this.xPos = xPos;
         this.yPos = yPos;
         this.xSize = xSize;
         this.ySize = ySize;
-        this.tooltipText = tooltipText;
     }
     
+    /**
+     * Render this element.
+     */
     protected void drawPart() {
-        this.screen.getMinecraft().getTextureManager().bindTexture(guiTexture);
-        this.screen.blit(this.xPos, this.yPos, 0, 0, xSize, ySize);
     }
     
-    protected void drawTooltip(int mouseX, int mouseY) {
-        if (tooltipText == null) {
-            return;
-        }
-        if (this.isMouseHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(tooltipText, mouseX, mouseY);
-        }
-    }
-    
-    protected boolean isMouseHovering(int mouseX, int mouseY) {
-        if (mouseX > (this.screen.getGuiLeft() + this.xPos) && mouseX < (this.screen.getGuiLeft() + this.xPos + xSize)) {
-            if (mouseY > (this.screen.getGuiTop() + this.yPos) && mouseY < (this.screen.getGuiTop() + this.yPos + ySize)) {
+    /**
+     * Check if the cursor is hovering over this element.
+     *
+     * @param mouseX The cursor's X position.
+     * @param mouseY The cursor's Y position.
+     * @return True if the cursor is hovering, false otherwise.
+     */
+    protected boolean isHovering(int mouseX, int mouseY) {
+        int relativeX = this.screen.getGuiLeft() + this.xPos;
+        int relativeY = this.screen.getGuiTop() + this.yPos;
+        if ((mouseX > relativeX) && (mouseX < relativeX + this.xSize)) {
+            if ((mouseY > relativeY) && (mouseY < relativeY + this.ySize)) {
                 return true;
             }
         }

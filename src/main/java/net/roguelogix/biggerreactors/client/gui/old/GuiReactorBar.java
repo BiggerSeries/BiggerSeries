@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.gui;
+package net.roguelogix.biggerreactors.client.gui.old;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.gui.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.old.GuiPartBase;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiReactorBar<T extends Container> extends GuiPartBase<T> {

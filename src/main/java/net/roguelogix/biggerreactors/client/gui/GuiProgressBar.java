@@ -3,30 +3,55 @@ package net.roguelogix.biggerreactors.client.gui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.gui.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.GuiPartTextured;
 
-@OnlyIn(Dist.CLIENT)
-public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
+public class GuiProgressBar<T extends Container> extends GuiPartTextured<T> {
     
-    private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid,
-            "textures/screen/parts/progress_bar.png");
+    private int workTime;
+    private int workTimeTotal;
     
+    /**
+     * @param screen The screen this instance belongs to.
+     * @param xPos   The X position of the part.
+     * @param yPos   The Y position of the part.
+     */
     public GuiProgressBar(ContainerScreen<T> screen, int xPos, int yPos) {
-        super(screen, GUI_TEXTURE, xPos, yPos, 25, 16, null);
+        super(screen, xPos, yPos, 25, 16,
+                new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/progress_bar.png"),
+                0, 0);
     }
     
-    public void drawPart(long workTime, long workTimeTotal) {
+    /**
+     * Update the energy values this part uses.
+     *
+     * @param workTime      The amount of energy currently stored.
+     * @param workTimeTotal The max capacity of energy storable.
+     */
+    public void updateWorkTime(int workTime, int workTimeTotal) {
+        this.workTime = workTime;
+        this.workTimeTotal = workTimeTotal;
+    }
+    
+    /**
+     * Render this element.
+     */
+    @Override
+    public void drawPart() {
+        // Bind texture.
+        this.screen.getMinecraft().getTextureManager().bindTexture(this.texture);
+        // Draw background.
+        this.updateTexture(this.texture, 0, 0);
         super.drawPart();
-        
-        if(workTimeTotal == 0){
-            workTimeTotal = 1;
+        // Draw foreground.
+        this.updateTexture(this.texture, 25, 0);
+        if (this.workTime != 0) {
+            int renderSize = this.xSize * this.workTime / this.workTimeTotal;
+            int renderPos = this.xPos + (this.xSize - (renderSize));
+            if (this.workTime != this.workTimeTotal) {
+                --renderPos;
+            }
+            this.screen.blit(renderPos, this.yPos, this.offsetX, this.offsetY, renderPos, this.ySize);
         }
-        
-        // May of figured out a better way to render bars and the such, this is currently buggy though.
-        long textureOffset = 25 * workTime / workTimeTotal;
-        this.screen.blit(this.xPos, this.yPos, 25, 0, this.xSize - (int) textureOffset, this.ySize);
     }
 }

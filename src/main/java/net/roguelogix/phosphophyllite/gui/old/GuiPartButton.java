@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui;
+package net.roguelogix.phosphophyllite.gui.old;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -9,9 +9,12 @@ import javax.annotation.Nullable;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+@Deprecated
 public class GuiPartButton<T extends Container> extends GuiPartBase<T> {
     
     private int textureIndex;
+    // Needed to ensure single click per click, rather than one per frame.
+    private boolean pressState = false;
     
     public GuiPartButton(ContainerScreen<T> screen, ResourceLocation guiTexture, int xPos, int yPos, int xSize, int ySize, int textureIndex, @Nullable String tooltipText) {
         super(screen, guiTexture, xPos, yPos, xSize, ySize, tooltipText);
@@ -28,9 +31,6 @@ public class GuiPartButton<T extends Container> extends GuiPartBase<T> {
         this.screen.getMinecraft().getTextureManager().bindTexture(guiTexture);
         this.screen.blit(this.xPos, this.yPos, (textureIndex * 16), 0, xSize, ySize);
     }
-    
-    // Needed to ensure single click per click, rather than one per frame.
-    private boolean pressState = false;
     
     @Override
     // Hijacked tooltip function for button press logic... yup, nothing sketchy here.

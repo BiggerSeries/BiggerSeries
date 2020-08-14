@@ -1,10 +1,10 @@
-package net.roguelogix.biggerreactors.client.gui;
+package net.roguelogix.biggerreactors.client.gui.old;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.gui.GuiPartSymbol;
+import net.roguelogix.phosphophyllite.gui.old.GuiPartSymbol;
 
 import javax.annotation.Nullable;
 
