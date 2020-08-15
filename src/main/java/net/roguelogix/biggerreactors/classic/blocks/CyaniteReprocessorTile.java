@@ -36,6 +36,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.roguelogix.biggerreactors.Config;
+import net.roguelogix.biggerreactors.classic.machine.blocks.CyaniteReprocessor;
 import net.roguelogix.biggerreactors.items.ingots.BlutoniumIngot;
 import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -44,7 +45,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-@RegisterTileEntity(name = "cyanite_reprocessor")
+@Deprecated
+@RegisterTileEntity(name = "cyanite_reprocessor_old")
 public class CyaniteReprocessorTile extends LockableTileEntity implements ISidedInventory,
         ITickableTileEntity, INamedContainerProvider, INameable {
     
@@ -126,9 +128,13 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements ISided
         return this.fluidStorage.getCapacity();
     }
     
-    public int getWorkTime() { return this.workTime; }
+    public int getWorkTime() {
+        return this.workTime;
+    }
     
-    public int getWorkTimeTotal() { return this.workTimeTotal; }
+    public int getWorkTimeTotal() {
+        return this.workTimeTotal;
+    }
     
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world,

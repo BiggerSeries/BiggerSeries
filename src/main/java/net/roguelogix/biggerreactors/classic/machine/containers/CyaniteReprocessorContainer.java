@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.blocks;
+package net.roguelogix.biggerreactors.classic.machine.containers;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
@@ -7,15 +7,19 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.roguelogix.biggerreactors.classic.machine.blocks.CyaniteReprocessor;
+import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorState;
+import net.roguelogix.biggerreactors.classic.machine.tiles.CyaniteReprocessorTile;
+import net.roguelogix.biggerreactors.classic.machine.tiles.impl.CyaniteReprocessorItemHandler;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
 import javax.annotation.Nonnull;
 
-@Deprecated
-@RegisterContainer(name = "cyanite_reprocessor_old")
+@RegisterContainer(name = "cyanite_reprocessor")
 public class CyaniteReprocessorContainer extends Container {
     
     @RegisterContainer.Instance
@@ -23,66 +27,46 @@ public class CyaniteReprocessorContainer extends Container {
     
     private PlayerEntity player;
     private CyaniteReprocessorTile tileEntity;
+    private CyaniteReprocessorState machineState;
     
     public CyaniteReprocessorContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
-        super(INSTANCE, windowId);
+        this(windowId, blockPos, player, new CyaniteReprocessorState());
+    }
+    
+    public CyaniteReprocessorContainer(int windowId, BlockPos blockPos, PlayerEntity player, CyaniteReprocessorState machineState) {
+        super(CyaniteReprocessorContainer.INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (CyaniteReprocessorTile) player.world.getTileEntity(blockPos);
         
+        this.machineState = machineState;
+        assertIntArraySize(this.machineState, 6);
+        this.trackIntArray(this.machineState);
+        
+        // Populate machine slots.
         if (this.tileEntity != null) {
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
                 // Add input slot.
-                this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorTile.SLOT_INPUT, 44, 41));
+                this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorItemHandler.INPUT_SLOT_INDEX, 44, 41));
                 // Add output slot.
-                this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorTile.SLOT_OUTPUT, 116, 41));
+                this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorItemHandler.OUTPUT_SLOT_INDEX, 116, 41));
             });
         }
         
+        // Populate player inventory.
         this.populatePlayerInventory();
     }
     
-    public int getEnergyStored() {
-        return this.tileEntity.getEnergyStored();
-    }
-    
-    public int getEnergyCapacity() {
-        return this.tileEntity.getEnergyCapacity();
-    }
-    
-    public int getFluidStored() {
-        return this.tileEntity.getFluidStored();
-    }
-    
-    public int getFluidCapacity() {
-        return this.tileEntity.getFluidCapacity();
-    }
-    
-    public int getWorkTime() { return this.tileEntity.getWorkTime(); }
-    
-    public int getWorkTimeTotal() {
-        return this.tileEntity.getWorkTimeTotal();
-    }
-    
-    private void populatePlayerInventory() {
-        int guiOffset = 93;
-        
-        // Add player inventory;
-        for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
-            for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
-                this.addSlot(new Slot(player.inventory, (columnIndex + rowIndex * 9 + 9),
-                        (8 + columnIndex * 18), (guiOffset + rowIndex * 18)));
-            }
-        }
-        // Add player hotbar.
-        for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
-            this.addSlot(
-                    new Slot(player.inventory, columnIndex, (8 + columnIndex * 18), (guiOffset + 58)));
-        }
+    /**
+     * @return The (mostly) current state of the machine.
+     */
+    @OnlyIn(Dist.CLIENT)
+    public CyaniteReprocessorState getMachineState() {
+        return this.machineState;
     }
     
     @Override
     public boolean canInteractWith(@Nonnull PlayerEntity player) {
-        assert tileEntity.getWorld() != null;
+        assert this.tileEntity.getWorld() != null;
         return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()),
                 player, CyaniteReprocessor.INSTANCE);
     }
@@ -114,5 +98,25 @@ public class CyaniteReprocessorContainer extends Container {
         }
         
         return itemStackA;
+    }
+    
+    /**
+     * Draw and initialize the player's inventory.
+     */
+    private void populatePlayerInventory() {
+        int guiOffset = 93;
+        
+        // Add player inventory;
+        for (int rowIndex = 0; rowIndex < 3; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
+                this.addSlot(new Slot(player.inventory, (columnIndex + rowIndex * 9 + 9),
+                        (8 + columnIndex * 18), (guiOffset + rowIndex * 18)));
+            }
+        }
+        // Add player hotbar.
+        for (int columnIndex = 0; columnIndex < 9; columnIndex++) {
+            this.addSlot(
+                    new Slot(player.inventory, columnIndex, (8 + columnIndex * 18), (guiOffset + 58)));
+        }
     }
 }

@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.blocks.client;
+package net.roguelogix.biggerreactors.classic.machine.client;
 
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.entity.player.PlayerInventory;
@@ -8,7 +8,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.blocks.CyaniteReprocessorContainer;
+import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
+import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorState;
 import net.roguelogix.biggerreactors.client.gui.GuiEnergyTank;
 import net.roguelogix.biggerreactors.client.gui.GuiFluidTank;
 import net.roguelogix.biggerreactors.client.gui.GuiProgressBar;
@@ -34,9 +35,10 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
     
     @Override
     public void tick() {
-        this.progressBar.updateWorkTime(this.getContainer().getWorkTime(), this.getContainer().getWorkTimeTotal());
-        this.energyTank.updateEnergy(this.getContainer().getEnergyStored(), this.getContainer().getEnergyCapacity());
-        this.waterTank.updateFluid(Fluids.WATER.getFluid(), this.getContainer().getFluidStored(), this.getContainer().getFluidCapacity());
+        CyaniteReprocessorState machineState = this.getContainer().getMachineState();
+        this.progressBar.updateWorkTime(machineState.workTime, machineState.workTimeTotal);
+        this.energyTank.updateEnergy(machineState.energy, machineState.energyCapacity);
+        this.waterTank.updateFluid(Fluids.WATER.getFluid(), machineState.water, machineState.waterCapacity);
     }
     
     @Override

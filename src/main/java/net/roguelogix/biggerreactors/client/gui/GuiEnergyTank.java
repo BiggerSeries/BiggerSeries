@@ -4,11 +4,13 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.gui.GuiPartTextured;
+import net.roguelogix.phosphophyllite.gui.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
-public class GuiEnergyTank<T extends Container> extends GuiPartTextured<T> implements IHasTooltip {
+public class GuiEnergyTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_parts.png");
     private int energyStored;
     private int energyCapacity;
     
@@ -18,9 +20,7 @@ public class GuiEnergyTank<T extends Container> extends GuiPartTextured<T> imple
      * @param yPos   The Y position of the part.
      */
     public GuiEnergyTank(ContainerScreen<T> screen, int xPos, int yPos) {
-        super(screen, xPos, yPos, 16, 64,
-                new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/energy_tank.png"),
-                0, 0);
+        super(screen, xPos, yPos, 18, 64);
     }
     
     /**
@@ -39,21 +39,30 @@ public class GuiEnergyTank<T extends Container> extends GuiPartTextured<T> imple
      */
     @Override
     public void drawPart() {
-        // Bind texture.
-        this.screen.getMinecraft().getTextureManager().bindTexture(this.texture);
-        // Draw background.
-        this.updateTexture(this.texture, 0, 0);
+        // Reset and bind texture.
         super.drawPart();
+        GuiRenderHelper.setTexture(this.texture);
+        
+        // Draw background.
+        GuiRenderHelper.setTextureOffset(54, 0);
+        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        
         // Draw foreground.
-        this.updateTexture(this.texture, 16, 0);
         if (this.energyStored != 0) {
+            // Determine amount to draw.
             int renderSize = this.ySize * this.energyStored / this.energyCapacity;
-            int renderPos = this.yPos + (this.ySize - (renderSize));
-            if (this.energyStored != this.energyCapacity) {
-                --renderPos;
-            }
-            this.screen.blit(this.xPos, renderPos, this.offsetX, this.offsetY, this.xSize, renderSize);
+            
+            // Draw energy.
+            GuiRenderHelper.setTextureOffset(72, 0);
+            GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+            
+            // Mask away used energy.
+            GuiRenderHelper.setTextureOffset(54, 0);
+            GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);
         }
+        // Draw frame.
+        GuiRenderHelper.setTextureOffset(18, 0);
+        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
     
     /**

@@ -35,7 +35,7 @@
   "block.biggerreactors.reactor_access_port": "Reactor Access Port",
   "block.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
 
-  "screen.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
+  "container.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
   "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor"
 
 }
