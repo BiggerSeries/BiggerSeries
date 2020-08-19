@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.state.StateContainer;
-import net.roguelogix.biggerreactors.classic.turbine.TurbineState;
+import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockBlock;
 
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ public class TurbineBaseBlock extends RectangularMultiblockBlock {
     public TurbineBaseBlock(boolean solid) {
         super(solid ? PROPERTIES_SOLID : PROPERTIES_GLASS);
         if (usesBlockState()) {
-            setDefaultState(getDefaultState().with(TurbineState.TURBINE_STATE_ENUM_PROPERTY, TurbineState.INACTIVE));
+            setDefaultState(getDefaultState().with(TurbineActivity.TURBINE_STATE_ENUM_PROPERTY, TurbineActivity.INACTIVE));
         }
     }
     
@@ -34,6 +34,6 @@ public class TurbineBaseBlock extends RectangularMultiblockBlock {
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(TurbineState.TURBINE_STATE_ENUM_PROPERTY);
+        builder.add(TurbineActivity.TURBINE_STATE_ENUM_PROPERTY);
     }
 }

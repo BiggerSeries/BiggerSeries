@@ -6,6 +6,8 @@ import net.roguelogix.phosphophyllite.gui.GuiSync;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: This will be replaced by ReactorState in due time.
+@Deprecated
 public class ReactorDatapack implements GuiSync.IGUIPacket {
     
     // True if online, false if offline.
@@ -73,7 +75,7 @@ public class ReactorDatapack implements GuiSync.IGUIPacket {
     
     @Override
     public Map<?, ?> write() {
-        reactorTerminalTile.updateData();
+        reactorTerminalTile.updateState();
         HashMap<String, Object> data = new HashMap<>();
         data.put("reactorStatus", reactorStatus);
         data.put("reactorType", reactorType);

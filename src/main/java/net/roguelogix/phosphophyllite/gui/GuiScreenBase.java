@@ -13,8 +13,17 @@ import net.roguelogix.phosphophyllite.gui.api.IHasGuiTexture;
 @OnlyIn(Dist.CLIENT)
 public class GuiScreenBase<T extends Container> extends ContainerScreen<T> implements IHasGuiTexture {
     
+    /**
+     * The texture to draw with.
+     */
     protected ResourceLocation texture;
+    /**
+     * X offset to fetch a sub-texture from.
+     */
     protected int offsetX;
+    /**
+     * Y offset to fetch a sub-texture from.
+     */
     protected int offsetY;
     
     public GuiScreenBase(T container, PlayerInventory playerInventory, ITextComponent title) {
@@ -35,6 +44,12 @@ public class GuiScreenBase<T extends Container> extends ContainerScreen<T> imple
         this.offsetY = offsetY;
     }
     
+    /**
+     * Draw foreground elements.
+     *
+     * @param mouseX X position of the mouse.
+     * @param mouseY Y position of the mouse.
+     */
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

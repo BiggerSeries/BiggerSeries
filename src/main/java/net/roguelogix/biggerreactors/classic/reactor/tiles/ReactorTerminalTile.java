@@ -14,13 +14,15 @@ import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
+import net.roguelogix.phosphophyllite.gui.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_terminal")
-public class ReactorTerminalTile extends ReactorBaseTile implements INamedContainerProvider {
+public class ReactorTerminalTile extends ReactorBaseTile implements INamedContainerProvider, IHasUpdatableState<ReactorState> {
     
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
@@ -31,7 +33,15 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     
     public final ReactorDatapack data = new ReactorDatapack(this);
     
-    public void updateData() {
+    @Override
+    public ReactorState getState() {
+        // TODO: Finish.
+        return new ReactorState();
+        //return this.data;
+    }
+    
+    @Override
+    public void updateState() {
         if (controller != null && controller instanceof ReactorMultiblockController) {
             ((ReactorMultiblockController) controller).updateDataPacket(data);
         }

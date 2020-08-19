@@ -46,6 +46,7 @@ import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocess
 import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorState;
 import net.roguelogix.biggerreactors.classic.machine.tiles.impl.CyaniteReprocessorItemHandler;
 import net.roguelogix.biggerreactors.items.ingots.BlutoniumIngot;
+import net.roguelogix.phosphophyllite.gui.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
@@ -54,56 +55,57 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 
 @RegisterTileEntity(name = "cyanite_reprocessor")
-public class CyaniteReprocessorTile extends LockableTileEntity implements INamedContainerProvider, ITickableTileEntity {
+public class CyaniteReprocessorTile extends LockableTileEntity implements INamedContainerProvider, ITickableTileEntity, IHasUpdatableState<CyaniteReprocessorState> {
     
     @RegisterTileEntity.Type
     public static TileEntityType<CyaniteReprocessorTile> INSTANCE;
-    
+    /**
+     * The (mostly) current state of the machine.
+     */
+    public final CyaniteReprocessorState cyaniteReprocessorState = new CyaniteReprocessorState(this);
+    /**
+     * The work handler.
+     */
+    private WorkHandler workHandler;
     /**
      * Capability access to the work handler.
      */
     private final LazyOptional<IWorkHandler> WORK_HANDLER_CAPABILITY = LazyOptional.of(() -> this.workHandler);
     /**
-     * The work handler.
+     * The item handler.
      */
-    private WorkHandler workHandler;
-    
+    private CyaniteReprocessorItemHandler itemHandler;
     /**
      * Capability access to the item handler.
      */
     private final LazyOptional<IItemHandler> ITEM_HANDLER_CAPABILITY = LazyOptional.of(() -> this.itemHandler);
     /**
-     * The item handler.
+     * The energy storage.
      */
-    private CyaniteReprocessorItemHandler itemHandler;
-    
+    private EnergyStorage energyStorage;
     /**
      * Capability access to the energy storage.
      */
     private final LazyOptional<IEnergyStorage> ENERGY_STORAGE_CAPABILITY = LazyOptional.of(() -> this.energyStorage);
     /**
-     * The energy storage.
+     * The fluid tank.
      */
-    private EnergyStorage energyStorage;
-    
+    private FluidTank fluidTank;
     /**
      * Capability access to the fluid tank.
      */
     private final LazyOptional<IFluidTank> FLUID_TANK_CAPABILITY = LazyOptional.of(() -> this.fluidTank);
     /**
-     * The fluid tank.
+     * "Anti-cheat" item stack, to ensure players don't swap items mid-process.
+     *
+     * @see CyaniteReprocessorTile#tick()
      */
-    private FluidTank fluidTank;
-    
-    /**
-     * The (mostly) current state of the machine.
-     */
-    private CyaniteReprocessorState machineState = new CyaniteReprocessorState();
+    private ItemStack itemPresentLastTick = ItemStack.EMPTY;
     
     public CyaniteReprocessorTile() {
         super(CyaniteReprocessorTile.INSTANCE);
         this.clear();
-        this.updateMachineState();
+        this.updateState();
     }
     
     /**
@@ -118,21 +120,22 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         
         // Print tile data.
         if (ItemStack.areItemsEqual(player.getHeldItemMainhand(), new ItemStack(DebugTool.INSTANCE))) {
-            player.sendMessage(new StringTextComponent(String.format("[%s] Progress: %s/%s", BiggerReactors.modid, this.machineState.workTime, this.machineState.workTimeTotal)));
-            player.sendMessage(new StringTextComponent(String.format("[%s] Energy: %s/%s RF", BiggerReactors.modid, this.machineState.energy, this.machineState.energyCapacity)));
-            player.sendMessage(new StringTextComponent(String.format("[%s] Fluid Tank: %s/%s mB", BiggerReactors.modid, this.machineState.water, this.machineState.waterCapacity)));
+            player.sendMessage(new StringTextComponent(String.format("[%s] Progress: %s/%s", BiggerReactors.modid, this.cyaniteReprocessorState.workTime, this.cyaniteReprocessorState.workTimeTotal)));
+            player.sendMessage(new StringTextComponent(String.format("[%s] Energy: %s/%s RF", BiggerReactors.modid, this.cyaniteReprocessorState.energyStored, this.cyaniteReprocessorState.energyCapacity)));
+            player.sendMessage(new StringTextComponent(String.format("[%s] Fluid Tank: %s/%s mB", BiggerReactors.modid, this.cyaniteReprocessorState.waterStored, this.cyaniteReprocessorState.waterCapacity)));
             return ActionResultType.SUCCESS;
         }
         
         // Do water bucket check.
         if (ItemStack.areItemsEqual(player.getHeldItemMainhand(), new ItemStack(Items.WATER_BUCKET))) {
-            this.fluidTank.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-            player.setHeldItem(Hand.MAIN_HAND, Items.BUCKET.getDefaultInstance());
+            if (this.fluidTank.getFluidAmount() <= (Config.CyaniteReprocessor.WaterTankCapacity - 1000)) {
+                this.fluidTank.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+                player.setHeldItem(Hand.MAIN_HAND, Items.BUCKET.getDefaultInstance());
+            }
             return ActionResultType.SUCCESS;
         }
         
         // Get container and open GUI.
-        INamedContainerProvider container = blockState.getContainer(world, blockPos);
         NetworkHooks.openGui((ServerPlayerEntity) player, this, blockPos);
         return ActionResultType.SUCCESS;
     }
@@ -152,26 +155,67 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         }
     }
     
+    /**
+     * @see CyaniteReprocessorTile#getDefaultName()
+     */
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("container.biggerreactors.cyanite_reprocessor");
+        return this.getDefaultName();
     }
     
+    /**
+     * @return The localized default name for the tile.
+     */
     @Override
     protected ITextComponent getDefaultName() {
         return new TranslationTextComponent("block.biggerreactors.cyanite_reprocessor");
     }
     
+    /**
+     * Create a GUI container for the tile.
+     *
+     * @param windowId        The window ID to use.
+     * @param playerInventory The player's inventory.
+     * @return A GUI container to render.
+     */
     @Override
     protected Container createMenu(int windowId, PlayerInventory playerInventory) {
-        return new CyaniteReprocessorContainer(windowId, this.getPos(), playerInventory.player, this.machineState);
+        return new CyaniteReprocessorContainer(windowId, this.getPos(), playerInventory.player);
     }
     
+    /**
+     * @return The current state of the tile.
+     */
+    @Override
+    public CyaniteReprocessorState getState() {
+        this.updateState();
+        return this.cyaniteReprocessorState;
+    }
+    
+    /**
+     * Call for an update to the current state information.
+     */
+    @Override
+    public void updateState() {
+        this.cyaniteReprocessorState.workTime = this.workHandler.getProgress();
+        this.cyaniteReprocessorState.workTimeTotal = this.workHandler.getGoal();
+        this.cyaniteReprocessorState.energyStored = this.energyStorage.getEnergyStored();
+        this.cyaniteReprocessorState.energyCapacity = this.energyStorage.getMaxEnergyStored();
+        this.cyaniteReprocessorState.waterStored = this.fluidTank.getFluidAmount();
+        this.cyaniteReprocessorState.waterCapacity = this.fluidTank.getCapacity();
+    }
+    
+    /**
+     * @return How large this tile's inventory is.
+     */
     @Override
     public int getSizeInventory() {
         return this.itemHandler.getSlots();
     }
     
+    /**
+     * @return Whether or not the inventory is empty.
+     */
     @Override
     public boolean isEmpty() {
         for (int index = 0; index < this.itemHandler.getSlots(); ++index) {
@@ -182,16 +226,35 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         return true;
     }
     
+    /**
+     * Gets the item held in the specified slot.
+     *
+     * @param index The slot index to fetch from.
+     * @return Any items held in that slot.
+     */
     @Override
     public ItemStack getStackInSlot(int index) {
         return this.itemHandler.getStackInSlot(index);
     }
     
+    /**
+     * Removes the specified number of items from the specified slot.
+     *
+     * @param index The slot index to remove from.
+     * @param count The number of items to remove.
+     * @return The items that were removed.
+     */
     @Override
     public ItemStack decrStackSize(int index, int count) {
         return this.itemHandler.getStackInSlot(index).split(count);
     }
     
+    /**
+     * Removes an entire stack fromm the specified slot.
+     *
+     * @param index The slot index to remove from.
+     * @return The items that were removed.
+     */
     @Override
     public ItemStack removeStackFromSlot(int index) {
         ItemStack itemStack = this.itemHandler.getStackInSlot(index).copy();
@@ -199,6 +262,12 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         return itemStack;
     }
     
+    /**
+     * Updates the stored items in the specified slot.
+     *
+     * @param index The slot index to update.
+     * @param stack The items to update with.
+     */
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         ItemStack oldStack = this.itemHandler.getStackInSlot(index);
@@ -215,19 +284,9 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         }
     }
     
-    @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
-        assert this.world != null;
-        if (this.world.getTileEntity(this.getPos()) != this) {
-            return false;
-        } else {
-            return player.getDistanceSq(
-                    (double) this.getPos().getX() + 0.5D,
-                    (double) this.getPos().getY() + 0.5D,
-                    (double) this.getPos().getZ() + 0.5D) <= 64.0D;
-        }
-    }
-    
+    /**
+     * Clears all data and inventory for this tile.
+     */
     @Override
     public void clear() {
         // Reset work.
@@ -244,28 +303,30 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         this.fluidTank = new FluidTank(Config.CyaniteReprocessor.WaterTankCapacity, fluid -> fluid.getFluid() == Fluids.WATER);
     }
     
-    private ItemStack itemPresentLastTick = ItemStack.EMPTY;
-    
     /**
-     * @return Whether or not the machine can perform work.
+     * Checks if the player can currently use this tile.
+     *
+     * @param player The player to check.
+     * @return True if usable, false otherwise.
      */
-    private boolean canWork() {
-        return (this.energyStorage.getEnergyStored() >= Config.CyaniteReprocessor.EnergyConsumptionPerTick
-                && this.fluidTank.getFluidAmount() >= Config.CyaniteReprocessor.WaterConsumptionPerTick);
+    @Override
+    public boolean isUsableByPlayer(PlayerEntity player) {
+        assert this.world != null;
+        if (this.world.getTileEntity(this.getPos()) != this) {
+            return false;
+        } else {
+            return player.getDistanceSq(
+                    (double) this.getPos().getX() + 0.5D,
+                    (double) this.getPos().getY() + 0.5D,
+                    (double) this.getPos().getZ() + 0.5D) <= 64.0D;
+        }
     }
     
     /**
-     * Updates the machine state data to match actual data.
+     * Read NBT data from the world.
+     *
+     * @param parentCompound The parent compound to read from.
      */
-    private void updateMachineState() {
-        this.machineState.workTime = this.workHandler.getProgress();
-        this.machineState.workTimeTotal = this.workHandler.getGoal();
-        this.machineState.energy = this.energyStorage.getEnergyStored();
-        this.machineState.energyCapacity = this.energyStorage.getMaxEnergyStored();
-        this.machineState.water = this.fluidTank.getFluidAmount();
-        this.machineState.waterCapacity = this.fluidTank.getCapacity();
-    }
-    
     @Override
     public void read(@Nonnull CompoundNBT parentCompound) {
         super.read(parentCompound);
@@ -276,15 +337,20 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         // Read items.
         this.itemHandler.deserializeNBT(childCompound.getCompound("inventory"));
         // Read energy.
-        //this.energyStorage.receiveEnergy(compound.getInt("energyStored"), false);
         this.energyStorage = new EnergyStorage(childCompound.getInt("energyCapacity"),
                 Config.CyaniteReprocessor.TransferRate,
                 Config.CyaniteReprocessor.TransferRate,
-                childCompound.getInt("energy"));
+                childCompound.getInt("energyStored"));
         // Read fluids.
         this.fluidTank = this.fluidTank.readFromNBT(childCompound.getCompound("fluidStorage"));
     }
     
+    /**
+     * Save NBT data to the world.
+     *
+     * @param parentCompound The parent compound to append onto.
+     * @return The updated compound.
+     */
     @Override
     public final CompoundNBT write(@Nonnull CompoundNBT parentCompound) {
         super.write(parentCompound);
@@ -296,16 +362,28 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         // Write items.
         childCompound.put("inventory", this.itemHandler.serializeNBT());
         // Write energy.
-        childCompound.putInt("energy", this.energyStorage.getEnergyStored());
+        childCompound.putInt("energyStored", this.energyStorage.getEnergyStored());
         childCompound.putInt("energyCapacity", this.energyStorage.getMaxEnergyStored());
         // Write fluids.
-        childCompound.put("fluidStorage", fluidTank.writeToNBT(new CompoundNBT()));
+        childCompound.put("fluidTank", fluidTank.writeToNBT(new CompoundNBT()));
         
         parentCompound.put("cyaniteReprocessorState", childCompound);
         
         return parentCompound;
     }
     
+    /**
+     * @return Whether or not the machine can perform work.
+     * @see CyaniteReprocessorTile#tick()
+     */
+    private boolean canWork() {
+        return (this.energyStorage.getEnergyStored() >= Config.CyaniteReprocessor.EnergyConsumptionPerTick
+                && this.fluidTank.getFluidAmount() >= Config.CyaniteReprocessor.WaterConsumptionPerTick);
+    }
+    
+    /**
+     * Do work (if possible).
+     */
     @Override
     public void tick() {
         // Check for client-side.
@@ -356,10 +434,18 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
             markDirty();
         }
         
-        // Update machine state.
-        this.updateMachineState();
+        // Update the current machine state.
+        this.updateState();
     }
     
+    /**
+     * Check if the tile holds a certain capability.
+     *
+     * @param capability The capability to check for.
+     * @param side       Which side this capability should belong to.
+     * @param <T>        The type class of the capability.
+     * @return The handler for the capability, if present.
+     */
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability,

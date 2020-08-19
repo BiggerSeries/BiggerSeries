@@ -7,40 +7,30 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.roguelogix.biggerreactors.classic.machine.blocks.CyaniteReprocessor;
-import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorState;
 import net.roguelogix.biggerreactors.classic.machine.tiles.CyaniteReprocessorTile;
 import net.roguelogix.biggerreactors.classic.machine.tiles.impl.CyaniteReprocessorItemHandler;
+import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
 import javax.annotation.Nonnull;
 
 @RegisterContainer(name = "cyanite_reprocessor")
-public class CyaniteReprocessorContainer extends Container {
+public class CyaniteReprocessorContainer extends Container implements GuiSync.IGUIPacketProvider {
     
     @RegisterContainer.Instance
     public static ContainerType<CyaniteReprocessorContainer> INSTANCE;
     
     private PlayerEntity player;
     private CyaniteReprocessorTile tileEntity;
-    private CyaniteReprocessorState machineState;
     
     public CyaniteReprocessorContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
-        this(windowId, blockPos, player, new CyaniteReprocessorState());
-    }
-    
-    public CyaniteReprocessorContainer(int windowId, BlockPos blockPos, PlayerEntity player, CyaniteReprocessorState machineState) {
         super(CyaniteReprocessorContainer.INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (CyaniteReprocessorTile) player.world.getTileEntity(blockPos);
-        
-        this.machineState = machineState;
-        assertIntArraySize(this.machineState, 6);
-        this.trackIntArray(this.machineState);
+        this.getGuiPacket();
         
         // Populate machine slots.
         if (this.tileEntity != null) {
@@ -57,11 +47,11 @@ public class CyaniteReprocessorContainer extends Container {
     }
     
     /**
-     * @return The (mostly) current state of the machine.
+     * @return The current state of the machine.
      */
-    @OnlyIn(Dist.CLIENT)
-    public CyaniteReprocessorState getMachineState() {
-        return this.machineState;
+    @Override
+    public GuiSync.IGUIPacket getGuiPacket() {
+        return this.tileEntity.cyaniteReprocessorState;
     }
     
     @Override

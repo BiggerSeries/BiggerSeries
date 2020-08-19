@@ -10,6 +10,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.*;
+import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.*;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
@@ -199,7 +200,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         });
     }
     
-    private TurbineState turbineState = TurbineState.INACTIVE;
+    private TurbineActivity turbineActivity = TurbineActivity.INACTIVE;
     
     private final Set<TurbineTerminalTile> terminals = new HashSet<>();
     private final Set<TurbineCoolantPortTile> coolantPorts = new HashSet<>();
@@ -254,7 +255,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     
     public void updateBlockStates() {
         terminals.forEach(terminal -> {
-            world.setBlockState(terminal.getPos(), terminal.getBlockState().with(TurbineState.TURBINE_STATE_ENUM_PROPERTY, turbineState));
+            world.setBlockState(terminal.getPos(), terminal.getBlockState().with(TurbineActivity.TURBINE_STATE_ENUM_PROPERTY, turbineActivity));
             terminal.markDirty();
         });
     }
@@ -370,7 +371,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         
         long steamIn = 0;
         
-        if (turbineState == TurbineState.ACTIVE) {
+        if (turbineActivity == TurbineActivity.ACTIVE) {
             steamIn = Math.min(maxFloatRate, steam);
             
             if (ventState == VentState.CLOSED) {
@@ -512,7 +513,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         {
             compound.putLong("steam", steam);
             compound.putLong("water", water);
-            compound.putString("turbineState", turbineState.toString());
+            compound.putString("turbineState", turbineActivity.toString());
             compound.putDouble("storedPower", storedPower);
             compound.putString("ventState", ventState.toString());
             compound.putDouble("rotorEnergy", rotorEnergy);
@@ -530,7 +531,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             water = compound.getLong("water");
         }
         if (compound.contains("turbineState")) {
-            turbineState = TurbineState.valueOf(compound.getString("turbineState").toUpperCase());
+            turbineActivity = TurbineActivity.valueOf(compound.getString("turbineState").toUpperCase());
         }
         if (compound.contains("storedPower")) {
             storedPower = compound.getLong("storedPower");
@@ -552,12 +553,12 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     public void toggleActive() {
-        setActive(turbineState == TurbineState.ACTIVE ? TurbineState.INACTIVE : TurbineState.ACTIVE);
+        setActive(turbineActivity == TurbineActivity.ACTIVE ? TurbineActivity.INACTIVE : TurbineActivity.ACTIVE);
     }
     
-    public void setActive(TurbineState newState) {
-        if (turbineState != newState) {
-            turbineState = newState;
+    public void setActive(TurbineActivity newState) {
+        if (turbineActivity != newState) {
+            turbineActivity = newState;
             updateBlockStates();
         }
     }
@@ -575,7 +576,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 "bladeDrag: " + bladeDrag + "\n" +
                 "CoilEngaged:" + coilEngaged + " \n" +
                 "VentState:" + ventState + " \n" +
-                "State:" + turbineState.toString() + " \n" +
+                "State:" + turbineActivity.toString() + " \n" +
                 "StoredPower: " + storedPower + "\n" +
                 "CoilEngaged: " + coilEngaged + " \n" +
                 "PowerProduction: " + energyGeneratedLastTick + "\n" +

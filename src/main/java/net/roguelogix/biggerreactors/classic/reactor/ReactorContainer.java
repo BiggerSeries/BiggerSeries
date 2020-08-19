@@ -1,7 +1,5 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -11,6 +9,8 @@ import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorTerminalTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
+
+import javax.annotation.Nonnull;
 
 @RegisterContainer(name = "reactor_terminal")
 public class ReactorContainer extends Container implements GuiSync.IGUIPacketProvider {
@@ -25,6 +25,7 @@ public class ReactorContainer extends Container implements GuiSync.IGUIPacketPro
         super(INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (ReactorTerminalTile) player.world.getTileEntity(blockPos);
+        this.getGuiPacket();
     }
     
     public ReactorDatapack getReactorData() {

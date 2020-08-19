@@ -1,118 +1,66 @@
 package net.roguelogix.biggerreactors.classic.machine.state;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.IIntArray;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.roguelogix.biggerreactors.classic.machine.tiles.CyaniteReprocessorTile;
+import net.roguelogix.phosphophyllite.gui.GuiSync;
 
-public class CyaniteReprocessorState implements IIntArray, INBTSerializable {
+import java.util.HashMap;
+import java.util.Map;
+
+public class CyaniteReprocessorState implements GuiSync.IGUIPacket {
     
     /**
      * The number of ticks the current item has processed for.
      */
     public int workTime;
-    private final int WORK_TIME_INDEX = 0;
     /**
      * The total amount of time required to process the item.
      */
     public int workTimeTotal;
-    private final int WORK_TIME_TOTAL_INDEX = 1;
-    
     /**
      * The amount of energy stored in the machine.
      */
-    public int energy;
-    private final int ENERGY_INDEX = 2;
+    public int energyStored;
     /**
      * The max energy capacity of the machine.
      */
     public int energyCapacity;
-    private final int ENERGY_CAPACITY_INDEX = 3;
-    
     /**
      * The amount of water stored in the machine.
      */
-    public int water;
-    private final int WATER_INDEX = 4;
+    public int waterStored;
     /**
      * The max water capacity of the machine.
      */
     public int waterCapacity;
-    private final int WATER_CAPACITY_INDEX = 5;
+    /**
+     * The tile whose information this belongs to.
+     */
+    CyaniteReprocessorTile cyaniteReprocessorTile;
     
-    private final int STATE_SIZE_INDEX = 6;
+    public CyaniteReprocessorState(CyaniteReprocessorTile cyaniteReprocessorTile) {
+        this.cyaniteReprocessorTile = cyaniteReprocessorTile;
+    }
     
     @Override
-    public INBT serializeNBT() {
-        CompoundNBT data = new CompoundNBT();
-        data.putInt("workTime", workTime);
-        data.putInt("workTimeTotal", workTimeTotal);
-        data.putInt("energy", energy);
-        data.putInt("energyCapacity", energyCapacity);
-        data.putInt("water", water);
-        data.putInt("waterCapacity", water);
+    public void read(Map<?, ?> data) {
+        this.workTime = (Integer) data.get("workTime");
+        this.workTimeTotal = (Integer) data.get("workTimeTotal");
+        this.energyStored = (Integer) data.get("energyStored");
+        this.energyCapacity = (Integer) data.get("energyCapacity");
+        this.waterStored = (Integer) data.get("waterStored");
+        this.waterCapacity = (Integer) data.get("waterCapacity");
+    }
+    
+    @Override
+    public Map<?, ?> write() {
+        this.cyaniteReprocessorTile.updateState();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("workTime", this.workTime);
+        data.put("workTimeTotal", this.workTimeTotal);
+        data.put("energyStored", this.energyStored);
+        data.put("energyCapacity", this.energyCapacity);
+        data.put("waterStored", this.waterStored);
+        data.put("waterCapacity", this.waterCapacity);
         return data;
-    }
-    
-    @Override
-    public void deserializeNBT(INBT nbt) {
-        CompoundNBT data = (CompoundNBT) nbt;
-        workTime = data.getInt("workTime");
-        workTimeTotal = data.getInt("workTimeTotal");
-        energy = data.getInt("energy");
-        energyCapacity = data.getInt("energyCapacity");
-        water = data.getInt("water");
-        waterCapacity = data.getInt("waterCapacity");
-    }
-    
-    @Override
-    public int get(int index) {
-        switch (index) {
-            case WORK_TIME_INDEX:
-                return workTime;
-            case WORK_TIME_TOTAL_INDEX:
-                return workTimeTotal;
-            case ENERGY_INDEX:
-                return energy;
-            case ENERGY_CAPACITY_INDEX:
-                return energyCapacity;
-            case WATER_INDEX:
-                return water;
-            case WATER_CAPACITY_INDEX:
-                return waterCapacity;
-            default:
-                throw new IndexOutOfBoundsException(String.format("unexpected value %s", index));
-        }
-    }
-    
-    @Override
-    public void set(int index, int value) {
-        switch (index) {
-            case WORK_TIME_INDEX:
-                workTime = value;
-                return;
-            case WORK_TIME_TOTAL_INDEX:
-                workTimeTotal = value;
-                return;
-            case ENERGY_INDEX:
-                energy = value;
-                return;
-            case ENERGY_CAPACITY_INDEX:
-                energyCapacity = value;
-                return;
-            case WATER_INDEX:
-                water = value;
-                return;
-            case WATER_CAPACITY_INDEX:
-                waterCapacity = value;
-                return;
-            default:
-                throw new IndexOutOfBoundsException(String.format("unexpected value %s", index));
-        }
-    }
-    
-    @Override
-    public int size() {
-        return STATE_SIZE_INDEX;
     }
 }
