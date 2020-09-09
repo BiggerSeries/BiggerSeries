@@ -15,7 +15,7 @@ import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
 public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_parts.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_tanks.png");
     private Fluid fluidType;
     private int fluidStored;
     private int fluidCapacity;
@@ -56,7 +56,7 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
         GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
-        if (this.fluidStored != 0) {
+        if (this.fluidCapacity != 0) {
             // Determine amount to draw.
             int renderSize = this.ySize * this.fluidStored / this.fluidCapacity;
             
@@ -71,7 +71,7 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
             GuiRenderHelper.drawSpriteGrid(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, 16, fluidSprite, 1, 4);
             GuiRenderHelper.clearRenderColor();
             
-            // Mask away used fluid.
+            // Mask away empty bit.
             GuiRenderHelper.setTexture(this.texture);
             GuiRenderHelper.setTextureOffset(0, 0);
             GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);

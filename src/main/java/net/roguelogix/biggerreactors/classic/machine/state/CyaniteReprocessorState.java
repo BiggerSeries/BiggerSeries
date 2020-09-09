@@ -16,6 +16,7 @@ public class CyaniteReprocessorState implements GuiSync.IGUIPacket {
      * The total amount of time required to process the item.
      */
     public int workTimeTotal;
+    
     /**
      * The amount of energy stored in the machine.
      */
@@ -24,6 +25,7 @@ public class CyaniteReprocessorState implements GuiSync.IGUIPacket {
      * The max energy capacity of the machine.
      */
     public int energyCapacity;
+    
     /**
      * The amount of water stored in the machine.
      */
@@ -32,6 +34,7 @@ public class CyaniteReprocessorState implements GuiSync.IGUIPacket {
      * The max water capacity of the machine.
      */
     public int waterCapacity;
+    
     /**
      * The tile whose information this belongs to.
      */

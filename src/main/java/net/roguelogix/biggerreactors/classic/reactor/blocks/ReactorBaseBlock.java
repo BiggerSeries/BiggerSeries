@@ -22,7 +22,7 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
     public ReactorBaseBlock(boolean solid) {
         super(solid ? PROPERTIES_SOLID : PROPERTIES_GLASS);
         if (usesBlockState()) {
-            setDefaultState(getDefaultState().with(ReactorActivity.REACTOR_STATE_ENUM_PROPERTY, ReactorActivity.INACTIVE));
+            setDefaultState(getDefaultState().with(ReactorActivity.REACTOR_ACTIVITY_ENUM_PROPERTY, ReactorActivity.INACTIVE));
         }
     }
     
@@ -34,6 +34,6 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(ReactorActivity.REACTOR_STATE_ENUM_PROPERTY);
+        builder.add(ReactorActivity.REACTOR_ACTIVITY_ENUM_PROPERTY);
     }
 }

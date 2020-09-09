@@ -3,11 +3,11 @@ package net.roguelogix.biggerreactors.classic.reactor.state;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.util.IStringSerializable;
 
-public enum ReactorActivity implements IStringSerializable {
+public enum ReactorType implements IStringSerializable {
     ACTIVE,
-    INACTIVE;
+    PASSIVE;
     
-    public static final EnumProperty<ReactorActivity> REACTOR_ACTIVITY_ENUM_PROPERTY = EnumProperty.create("reactoractivity", ReactorActivity.class);
+    public static final EnumProperty<ReactorType> REACTOR_TYPE_ENUM_PROPERTY = EnumProperty.create("reactortype", ReactorType.class);
     
     @Override
     public String getName() {

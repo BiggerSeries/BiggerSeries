@@ -3,7 +3,7 @@
 
   "item.biggerreactors.debug_tool": "Debeefer",
   "item.biggerreactors.wrench": "Reactor Wrench",
-  
+
   "block.biggerreactors.yellorite_ore": "Yellorite Ore",
   "block.biggerreactors.yellorium_block": "Yellorium Block",
   "item.biggerreactors.yellorium_dust": "Yellorium Dust",
@@ -25,7 +25,9 @@
   "item.biggerreactors.ludicrite_dust": "Ludicrite Dust",
   "item.biggerreactors.ludicrite_ingot": "Ludicrite Ingot",
 
-  "screen.biggerreactors.reactor_terminal": "Reactor Terminal",
+  "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
+
+  "screen.biggerreactors.reactor_terminal": "Reactor Info",
   "block.biggerreactors.reactor_terminal": "Reactor Terminal",
   "block.biggerreactors.reactor_casing": "Reactor Casing",
   "block.biggerreactors.reactor_glass": "Reactor Glass",
@@ -35,6 +37,20 @@
   "block.biggerreactors.reactor_access_port": "Reactor Access Port",
   "block.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
 
-  "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor"
+  "tooltip.biggerreactors.buttons.activate_reactor.main": "\u00A7bActivate Reactor",
+  "tooltip.biggerreactors.buttons.deactivate_reactor.main": "\u00A7bDeactivate Reactor",
+  "tooltip.biggerreactors.buttons.deactivate_reactor.sub": "Residual heat will still generate power/consume coolant until the reactor cools.",
+  "tooltip.biggerreactors.buttons.waste_eject_auto_enabled.main": "\u00A7bAuto-Eject Waste",
+  "tooltip.biggerreactors.buttons.waste_eject_auto_enabled.sub": "Waste in the core will be ejected as soon as possible.",
+  "tooltip.biggerreactors.buttons.waste_eject_auto_disabled.main": "\u00A7bDon't Auto-Eject Waste",
+  "tooltip.biggerreactors.buttons.waste_eject_auto_disabled.sub": "Waste must be manually ejected.",
+  "tooltip.biggerreactors.buttons.waste_eject_manual.main": "\u00A7bEject Waste Now",
+  "tooltip.biggerreactors.buttons.waste_eject_manual.sub": "Ejects waste from the core into access ports (1000 mB = 1 ingot).",
 
+  "tooltip.biggerreactors.symbols.fuel_mix.main": "\u00A7bFuel Mix",
+  "tooltip.biggerreactors.symbols.case_heat.main": "\u00A7bCase Heat",
+  "tooltip.biggerreactors.symbols.case_heat.sub": "High heat uses more coolant.",
+  "tooltip.biggerreactors.symbols.fuel_heat.main": "\u00A7bFuel Heat",
+  "tooltip.biggerreactors.symbols.fuel_heat.sub": "High heat raises fuel usage.",
+  "tooltip.biggerreactors.symbols.energy_tank.main": "\u00A7bEnergy Buffer"
 }

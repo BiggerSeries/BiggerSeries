@@ -8,6 +8,8 @@ import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
 import net.roguelogix.biggerreactors.classic.reactor.simulation.ClassicReactorSimulation;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
@@ -19,6 +21,8 @@ import org.joml.Vector3i;
 
 import java.util.HashSet;
 import java.util.Set;
+
+//import net.roguelogix.biggerreactors.classic.reactor.old.ReactorDatapack;
 
 
 public class ReactorMultiblockController extends RectangularMultiblockController {
@@ -148,7 +152,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     public void updateBlockStates() {
         terminals.forEach(terminal -> {
-            world.setBlockState(terminal.getPos(), terminal.getBlockState().with(ReactorActivity.REACTOR_STATE_ENUM_PROPERTY, reactorActivity));
+            world.setBlockState(terminal.getPos(), terminal.getBlockState().with(ReactorActivity.REACTOR_ACTIVITY_ENUM_PROPERTY, reactorActivity));
             terminal.markDirty();
         });
     }
@@ -335,27 +339,30 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
     }
     
-    public void updateDataPacket(ReactorDatapack data) {
-        data.reactorStatus = reactorActivity == ReactorActivity.ACTIVE;
-        data.reactorType = !simulation.isPassive();
+    public void updateDataPacket(ReactorState reactorState) {
+        // TODO: These are mixed between the new enums and old booleans. Migrate them fully to enums.
+        reactorState.reactorActivity = reactorActivity;
+        reactorState.reactorType = simulation.isPassive() ? ReactorType.PASSIVE : ReactorType.ACTIVE;
         
-        data.energyStored = storedPower;
-        data.energyCapacity = Config.Reactor.PassiveBatterySize;
+        reactorState.energyStored = storedPower;
+        reactorState.energyCapacity = Config.Reactor.PassiveBatterySize;
         
-        data.caseHeatStored = simulation.getReactorHeat();
-        data.fuelHeatStored = simulation.getFuelHeat();
+        reactorState.wasteStored = simulation.fuelTank.getWasteAmount();
+        reactorState.reactantStored = simulation.fuelTank.getTotalAmount();
+        reactorState.fuelCapacity = simulation.fuelTank.getCapacity();
         
-        data.wasteStored = simulation.fuelTank.getWasteAmount();
-        data.reactantStored = simulation.fuelTank.getTotalAmount();
-        data.fuelCapacity = simulation.fuelTank.getCapacity();
+        reactorState.coolantStored = simulation.coolantTank.getWaterAmount();
+        reactorState.coolantCapacity = simulation.coolantTank.getPerSideCapacity();
         
-        data.coolantCapacity = simulation.coolantTank.getPerSideCapacity();
-        data.coolantStored = simulation.coolantTank.getWaterAmount();
-        data.steamStored = simulation.coolantTank.getSteamAmount();
+        reactorState.steamStored = simulation.coolantTank.getSteamAmount();
+        reactorState.steamCapacity = simulation.coolantTank.getPerSideCapacity();
         
-        data.reactorOutputRate = simulation.getFEProducedLastTick();
-        data.fuelUsageRate = simulation.getFuelConsumedLastTick();
-        data.reactivityRate = simulation.getFertility();
+        reactorState.caseHeatStored = simulation.getReactorHeat();
+        reactorState.fuelHeatStored = simulation.getFuelHeat();
+        
+        reactorState.reactivityRate = simulation.getFertility();
+        reactorState.fuelUsageRate = simulation.getFuelConsumedLastTick();
+        reactorState.reactorOutputRate = simulation.getFEProducedLastTick();
     }
     
     public void runRequest(String requestName, Object requestData) {

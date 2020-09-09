@@ -28,7 +28,7 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
         this.xSize = 246;
         this.ySize = 175;
         this.updateTexture(new ResourceLocation(BiggerReactors.modid, "textures/screen/cyanite_reprocessor.png"), 0, 0);
-        // Initialize GUI parts.
+        // Initialize machine bars.
         this.progressBar = new GuiProgressBar<>(this, 75, 41);
         this.energyTank = new GuiEnergyTank<>(this, 148, 16);
         this.waterTank = new GuiFluidTank<>(this, 8, 16);
@@ -73,7 +73,6 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
         this.font.drawString(this.title.getFormattedText(), 8.0F, (float) (this.ySize - 168), 4210752);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
         
-        // Draw machine gauges.
         this.progressBar.drawPart();
         this.energyTank.drawPart();
         this.waterTank.drawPart();

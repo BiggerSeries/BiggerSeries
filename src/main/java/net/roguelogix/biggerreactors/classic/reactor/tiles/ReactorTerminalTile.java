@@ -10,10 +10,9 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
-import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.phosphophyllite.gui.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
@@ -31,19 +30,18 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
         super(TYPE);
     }
     
-    public final ReactorDatapack data = new ReactorDatapack(this);
+    public final ReactorState reactorState = new ReactorState(this);
     
     @Override
     public ReactorState getState() {
-        // TODO: Finish.
-        return new ReactorState();
-        //return this.data;
+        this.updateState();
+        return new ReactorState(this);
     }
     
     @Override
     public void updateState() {
         if (controller != null && controller instanceof ReactorMultiblockController) {
-            ((ReactorMultiblockController) controller).updateDataPacket(data);
+            ((ReactorMultiblockController) controller).updateDataPacket(reactorState);
         }
     }
     

@@ -9,7 +9,7 @@ import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 
 public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_parts.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_tanks.png");
     private int workTime;
     private int workTimeTotal;
     
@@ -47,13 +47,13 @@ public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
         GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
-        if (this.workTime != 0) {
+        if (this.workTimeTotal != 0) {
             // Determine amount to draw.
-            int renderSize = this.ySize * this.workTime / this.workTimeTotal;
+            int renderSize = this.xSize * this.workTime / this.workTimeTotal;
             
             // Draw work.
             GuiRenderHelper.setTextureOffset(25, 65);
-            GuiRenderHelper.draw(this.xPos + 1, this.yPos, this.screen.getBlitOffset(), this.xSize - renderSize, this.ySize);
+            GuiRenderHelper.draw(this.xPos + 1, this.yPos, this.screen.getBlitOffset(), renderSize, this.ySize);
         }
     }
 }
