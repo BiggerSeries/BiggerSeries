@@ -264,15 +264,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 storedPower = Config.Reactor.PassiveBatterySize;
             }
         }
-        
-        for (ReactorAccessPortTile accessPort : accessPorts) {
-            // todo, output to inputs if there aren't any outputs left
-            if (accessPort.isInlet()) {
-                continue;
-            }
-            long wasteSpaceAvailable = accessPort.wasteSpaceAvailable();
-            simulation.fuelTank.extractWaste(accessPort.dumpWaste(simulation.fuelTank.extractWaste(wasteSpaceAvailable, true)), false);
-            
+        if(autoEjectWaste) {
+            ejectWaste();
         }
         
         if (simulation.fuelTank.spaceAvailable() > 0) {
@@ -339,6 +332,18 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
     }
     
+    private void ejectWaste(){
+        for (ReactorAccessPortTile accessPort : accessPorts) {
+            // todo, output to inputs if there aren't any outputs left
+            if (accessPort.isInlet()) {
+                continue;
+            }
+            long wasteSpaceAvailable = accessPort.wasteSpaceAvailable();
+            simulation.fuelTank.extractWaste(accessPort.dumpWaste(simulation.fuelTank.extractWaste(wasteSpaceAvailable, true)), false);
+        
+        }
+    }
+    
     public void updateDataPacket(ReactorState reactorState) {
         // TODO: These are mixed between the new enums and old booleans. Migrate them fully to enums.
         reactorState.reactorActivity = reactorActivity;
@@ -365,12 +370,19 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         reactorState.reactorOutputRate = simulation.getFEProducedLastTick();
     }
     
+    private boolean autoEjectWaste = true;
+    
     public void runRequest(String requestName, Object requestData) {
-        //noinspection SwitchStatementWithTooFewBranches
         switch (requestName) {
             case "setActive": {
                 Boolean newState = (Boolean) requestData;
                 setActive(newState ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
+            }
+            case "setAutoEject": {
+                autoEjectWaste = (Boolean) requestData;
+            }
+            case "ejectWaste":{
+                ejectWaste();
             }
         }
     }
