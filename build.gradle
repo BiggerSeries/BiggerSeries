@@ -96,6 +96,9 @@ repositories {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
     }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
@@ -125,6 +128,9 @@ dependencies {
 
 //    runtime ""
     runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')
+    runtime fg.deobf('curse.maven:thermalexpansion:3053266')
+    runtime fg.deobf('curse.maven:thermalfoundation:3053264')
+    runtime fg.deobf('curse.maven:cofhcore:3053263')
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
