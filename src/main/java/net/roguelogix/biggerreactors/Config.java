@@ -193,6 +193,15 @@ public class Config {
         }
     }
     
+    // todo: blocks to add
+    //      osmium (mek exists for 1.15/1.16)
+    //      brass?
+    //      zinc?
+    //      aluminum (does mek have this?)
+    //      steel (mek, again)
+    //      fluxed electrum (lemming may port RA, unsure)
+    //      platinum (cant find tag in thermal)
+    //      thermal fluids (again, cant find)
     @PhosphophylliteConfig.Value
     public static ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
             new ReactorModeratorConfigValues("minecraft:air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
@@ -205,12 +214,20 @@ public class Config {
             new ReactorModeratorConfigValues("minecraft:ice", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.33f, 1.15f, 0.1f),
             new ReactorModeratorConfigValues("minecraft:snow_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.15f, 0.33f, 1.05f, 0.05f),
             
+            new ReactorModeratorConfigValues("forge:storage_blocks/copper", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.75f, 1.4f, 1f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/bronze", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/invar", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.79f, 1.43f, 0.6f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/silver", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.79f, 1.43f, 1.5f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/lead", ReactorModeratorConfigValues.LocationType.TAG, 0.75f, 0.75f, 1.75f, 1.5f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/electrum", ReactorModeratorConfigValues.LocationType.TAG, 0.75f, 0.75f, 1.75f, 1.5f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/enderium", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.88f, 1.6f, 3f),
+            
             new ReactorModeratorConfigValues("minecraft:water", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
             
             new ReactorModeratorConfigValues("biggerreactors:graphite_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.5f, 2f, 2f),
     };
     
-    
+    @PhosphophylliteConfig
     public static class TurbineCoilConfigValues {
         
         public enum LocationType {
@@ -246,26 +263,35 @@ public class Config {
         }
     }
     
+    
+    // todo: blocks to add
+    //      osmium (mek exists for 1.15/1.16)
+    //      brass?
+    //      aluminum (does mek have this?)
+    //      steel (mek, again)
+    //      fluxed electrum (lemming may port RA, unsure)
+    //      platinum (cant find tag in thermal)
     @PhosphophylliteConfig.Value
     public static TurbineCoilConfigValues[] turbineCoils = new TurbineCoilConfigValues[]{
             new TurbineCoilConfigValues("minecraft:iron_block", TurbineCoilConfigValues.LocationType.REGISTRY, 0.33, 0.1, 1),
             new TurbineCoilConfigValues("minecraft:gold_block", TurbineCoilConfigValues.LocationType.REGISTRY, 0.66, 0.175, 1),
+            
             new TurbineCoilConfigValues("biggerreactors:ludicrite_block", TurbineCoilConfigValues.LocationType.REGISTRY, 1.155, 0.35, 1.02),
+            
+            new TurbineCoilConfigValues("forge:storage_blocks/copper", TurbineCoilConfigValues.LocationType.TAG, 0.396, 0.12, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/invar", TurbineCoilConfigValues.LocationType.TAG, 0.495, 0.14, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/silver", TurbineCoilConfigValues.LocationType.TAG, 0.561, 0.15, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/electrum", TurbineCoilConfigValues.LocationType.TAG, 0.825, 0.2, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/enderium", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.3, 1.02),
     };
     
-    @PhosphophylliteConfig.PreLoad
-    public static void preLoad() {
+    public static void loadRegistries() {
+        ReactorModeratorRegistry.clearRegistry();
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
-            ReactorModeratorRegistry.registerBlock(reactorModerator.location);
+            ReactorModeratorRegistry.registerConfigValues(reactorModerator);
         }
+        
         TurbineCoilRegistry.clearRegistry();
-    }
-    
-    @PhosphophylliteConfig.PostLoad
-    public static void postLoad() {
-        for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
-            ReactorModeratorRegistry.registerBlock(reactorModerator.location, reactorModerator.absorption, reactorModerator.heatEfficiency, reactorModerator.moderation, reactorModerator.conductivity);
-        }
         for (TurbineCoilConfigValues turbineCoil : turbineCoils) {
             TurbineCoilRegistry.registerConfigValues(turbineCoil);
         }

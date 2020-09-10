@@ -8,10 +8,13 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorAccessPortTile;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorCoolantPortTile;
 import net.roguelogix.biggerreactors.items.tools.Wrench;
 import net.roguelogix.phosphophyllite.registry.RegisterBlock;
@@ -43,23 +46,18 @@ public class ReactorCoolantPort extends ReactorBaseBlock {
         builder.add(PORT_DIRECTION_ENUM_PROPERTY);
     }
     
-    @Nonnull
     @Override
-    public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult p_225533_6_) {
-        if (handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem() == Wrench.INSTANCE) {
-            if (!worldIn.isRemote) {
-                ReactorAccessPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
-                direction = direction == INLET ? OUTLET : INLET;
-                worldIn.setBlockState(pos, state.with(PORT_DIRECTION_ENUM_PROPERTY, direction));
-                
-                TileEntity te = worldIn.getTileEntity(pos);
-                if (te instanceof ReactorCoolantPortTile) {
-                    ((ReactorCoolantPortTile) te).setDirection(direction);
-                }
+    public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation rotationDirection) {
+        ReactorAccessPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
+        direction = direction == INLET ? OUTLET : INLET;
+        state = state.with(PORT_DIRECTION_ENUM_PROPERTY, direction);
+        if (!world.isRemote()) {
+            TileEntity te = world.getTileEntity(pos);
+            if (te instanceof ReactorCoolantPortTile) {
+                ((ReactorCoolantPortTile) te).setDirection(direction);
             }
-            return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, p_225533_6_);
+        return state;
     }
     
     @Override

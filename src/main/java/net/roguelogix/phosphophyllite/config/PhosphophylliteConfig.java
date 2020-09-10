@@ -43,6 +43,10 @@ public @interface PhosphophylliteConfig {
     }
     
     @Retention(RetentionPolicy.RUNTIME)
+    @interface Load {
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
     @interface PostLoad {
     }
 }

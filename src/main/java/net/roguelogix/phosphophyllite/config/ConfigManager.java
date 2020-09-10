@@ -3,14 +3,19 @@ package net.roguelogix.phosphophyllite.config;
 import net.roguelogix.phosphophyllite.parsers.Element;
 import net.roguelogix.phosphophyllite.parsers.JSON5;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class ConfigManager {
     
+    private static final HashMap<Class<?>, String> reloadableConfigClasses = new HashMap<>();
     private static final HashMap<Class<?>, String> configClasses = new HashMap<>();
     
     public static synchronized void registerConfig(Class<?> clazz, String modName) {
@@ -20,15 +25,18 @@ public class ConfigManager {
                 modName = annotation.name();
             }
             loadConfig(clazz, modName);
+            configClasses.put(clazz, modName);
             if (annotation.reloadable()) {
-                configClasses.put(clazz, modName);
+                reloadableConfigClasses.put(clazz, modName);
             }
         }
     }
     
     public static synchronized void reloadConfigs() {
-        configClasses.forEach(ConfigManager::loadConfig);
+        reloadableConfigClasses.forEach(ConfigManager::loadConfig);
     }
+    
+    public static boolean modLoadingFinished = false;
     
     private static synchronized void loadConfig(Class<?> clazz, String name) {
         PhosphophylliteConfig annotation = clazz.getAnnotation(PhosphophylliteConfig.class);
@@ -90,7 +98,60 @@ public class ConfigManager {
             case TOML:
                 throw new RuntimeException("TOML not supported");
         }
-        
+        for (Method declaredMethod : clazz.getDeclaredMethods()) {
+            if (declaredMethod.isAnnotationPresent(PhosphophylliteConfig.PreLoad.class)) {
+                if (Modifier.isStatic(declaredMethod.getModifiers())) {
+                    if (declaredMethod.getParameters().length == 0) {
+                        declaredMethod.setAccessible(true);
+                        try {
+                            declaredMethod.invoke(null);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
         ConfigLoader.writeElementTree(elementTree, clazz);
+        for (Method declaredMethod : clazz.getDeclaredMethods()) {
+            if (declaredMethod.isAnnotationPresent(PhosphophylliteConfig.Load.class)) {
+                if (Modifier.isStatic(declaredMethod.getModifiers())) {
+                    if (declaredMethod.getParameters().length == 0) {
+                        declaredMethod.setAccessible(true);
+                        try {
+                            declaredMethod.invoke(null);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        if (modLoadingFinished) {
+            runPostLoad(clazz);
+        }
+    }
+    
+    public static void runPostLoads() {
+        for (Class<?> aClass : configClasses.keySet()) {
+            runPostLoad(aClass);
+        }
+    }
+    
+    private static void runPostLoad(@Nonnull Class<?> clazz) {
+        for (Method declaredMethod : clazz.getDeclaredMethods()) {
+            if (declaredMethod.isAnnotationPresent(PhosphophylliteConfig.PostLoad.class)) {
+                if (Modifier.isStatic(declaredMethod.getModifiers())) {
+                    if (declaredMethod.getParameters().length == 0) {
+                        declaredMethod.setAccessible(true);
+                        try {
+                            declaredMethod.invoke(null);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

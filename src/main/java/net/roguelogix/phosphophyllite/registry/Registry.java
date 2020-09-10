@@ -479,6 +479,8 @@ public class Registry {
     
     private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Set<Class<?>> classes) {
         Registry.registerWorldGen(modNamespace, classes);
+        ConfigManager.modLoadingFinished = true;
+        ConfigManager.runPostLoads();
     }
     
     private static synchronized void registerWorldGen(String modNamespace, Set<Class<?>> classes) {
