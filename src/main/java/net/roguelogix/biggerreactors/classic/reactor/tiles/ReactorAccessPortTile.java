@@ -12,6 +12,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort;
+import net.roguelogix.biggerreactors.items.ingots.BlutoniumIngot;
 import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
 import net.roguelogix.biggerreactors.items.ingots.YelloriumIngot;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
@@ -116,7 +117,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             return stack;
         }
         stack = stack.copy();
-        if (stack.getItem() == YelloriumIngot.INSTANCE) {
+        if (stack.getItem() == YelloriumIngot.INSTANCE || stack.getItem() == BlutoniumIngot.INSTANCE) {
             int canAccept = 64 - fuel;
             if (canAccept > 0) {
                 ItemStack accepted = stack.split(canAccept);
