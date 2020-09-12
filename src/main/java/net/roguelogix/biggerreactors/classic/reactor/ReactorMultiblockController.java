@@ -399,6 +399,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 "PercentFull: " + (float) simulation.fuelTank.getTotalAmount() * 100 / simulation.fuelTank.getCapacity() + "\n" +
                 "Fuel: " + simulation.fuelTank.getFuelAmount() + "\n" +
                 "Waste: " + simulation.fuelTank.getWasteAmount() + "\n" +
+                "AutoEjectWaste: " + autoEjectWaste + "\n" +
                 "Fertility: " + simulation.getFertility() + "\n" +
                 "FuelHeat: " + simulation.getFuelHeat() + "\n" +
                 "ReactorHeat: " + simulation.getReactorHeat() + "\n" +
