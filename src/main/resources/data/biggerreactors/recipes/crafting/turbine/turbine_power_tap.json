@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CRC",
+    "R R",
+    "CRC"
+  ],
+  "key": {
+    "C" : {
+      "item": "biggerreactors:turbine_casing"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:turbine_power_tap"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CSC",
+    "DDD",
+    "CSC"
+  ],
+  "key": {
+    "C" : {
+      "item": "biggerreactors:turbine_casing"
+    },
+    "S": {
+      "item": "biggerreactors:turbine_rotor_shaft"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:turbine_rotor_bearing"
+  }
+}

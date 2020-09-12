@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "BPB",
+        "ENE",
+        "BPB"
+    ],
+    "key": {
+        "B": {
+            "item": "biggerreactors:blutonium_ingot"
+        },
+        "P": {
+            "item": "minecraft:ender_pearl"
+        },
+        "E": {
+            "item": "minecraft:emerald_block"
+        },
+        "N": {
+            "item": "minecraft:nether_star"
+        }
+    },
+    "result": {
+        "item": "biggerreactors:ludicrite_block"
+    }
+}

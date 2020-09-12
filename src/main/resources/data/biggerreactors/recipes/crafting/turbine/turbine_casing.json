@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "IGI",
-    "GYG",
+    "QCQ",
     "IGI"
   ],
   "key": {
@@ -12,12 +12,15 @@
     "G": {
       "item": "biggerreactors:graphite_ingot"
     },
-    "Y": {
-      "item": "biggerreactors:yellorium_ingot"
+    "Q": {
+      "item": "minecraft:quartz"
+    },
+    "C": {
+      "item": "biggerreactors:cyanite_ingot"
     }
   },
   "result": {
-    "item": "biggerreactors:reactor_casing",
+    "item": "biggerreactors:turbine_casing",
     "count": 4
   }
 }

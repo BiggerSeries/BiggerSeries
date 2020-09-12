@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "biggerreactors:yellorium_dust"
+    },
+    {
+      "item": "minecraft:sand"
+    }
+  ],
+  "result": {
+    "item": "biggerreactors:cyanite_dust"
+  }
+}

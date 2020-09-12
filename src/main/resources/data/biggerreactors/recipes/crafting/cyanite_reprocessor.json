@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "CIC",
+        "PFP",
+        "CRC"
+    ],
+    "key": {
+        "C": {
+            "item": "biggerreactors:reactor_casing"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "F": {
+            "item": "biggerreactors:reactor_fuel_rod"
+        },
+        "P": {
+            "item": "minecraft:piston"
+        },
+        "R": {
+            "item": "minecraft:redstone"
+        }
+    },
+    "result": {
+        "item": "biggerreactors:cyanite_reprocessor"
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+      "GCG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "C": {
+      "item": "biggerreactors:turbine_casing"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:turbine_glass"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C C",
+    " V ",
+    "CPC"
+  ],
+  "key": {
+    "C": {
+      "item": "biggerreactors:reactor_casing"
+    },
+    "V": {
+      "item": "minecraft:chest"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:reactor_access_port"
+  }
+}

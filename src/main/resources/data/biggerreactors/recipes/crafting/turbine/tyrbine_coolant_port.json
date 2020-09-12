@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C C",
+    "IVI",
+    "CPC"
+  ],
+  "key": {
+    "C" : {
+      "item": "biggerreactors:turbine_casing"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "V": {
+      "item": "minecraft:bucket"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:turbine_coolant_port"
+  }
+}

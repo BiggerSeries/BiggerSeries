@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "BRB",
+        "E E",
+        "BRB"
+    ],
+    "key": {
+        "B": {
+            "item": "biggerreactors:blutonium_ingot"
+        },
+        "R": {
+            "item": "minecraft:blaze_rod"
+        },
+        "E": {
+            "item": "thermal:enderium_block"
+        }
+    },
+    "result": {
+        "item": "biggerreactors:ludicrite_block"
+    }
+}
