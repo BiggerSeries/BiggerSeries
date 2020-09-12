@@ -1,0 +1,12 @@
+{
+    "type": "thermal:pulverizer",
+    "ingredient": {
+        "item": "biggerreactors:cyanite_ingot"
+    },
+    "result": [
+        {
+            "item": "biggerreactors:cyanite_dust",
+            "chance": 1.0
+        }
+    ]
+}

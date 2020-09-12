@@ -1,0 +1,12 @@
+{
+    "type": "thermal:pulverizer",
+    "ingredient": {
+        "item": "biggerreactors:ludicrite_ingot"
+    },
+    "result": [
+        {
+            "item": "biggerreactors:ludicrite_dust",
+            "chance": 1.0
+        }
+    ]
+}

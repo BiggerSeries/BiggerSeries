@@ -1,0 +1,12 @@
+{
+    "type": "thermal:pulverizer",
+    "ingredient": {
+        "item": "biggerreactors:blutonium_ingot"
+    },
+    "result": [
+        {
+            "item": "biggerreactors:blutonium_dust",
+            "chance": 1.0
+        }
+    ]
+}

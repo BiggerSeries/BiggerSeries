@@ -1,0 +1,17 @@
+{
+    "type": "thermal:pulverizer",
+    "ingredient": {
+        "item": "biggerreactors:yellorite_ore"
+    },
+    "result": [
+        {
+            "item": "biggerreactors:yellorium_dust",
+            "chance": 2.0
+        },
+        {
+            "item": "minecraft:gravel",
+            "chance": 0.2
+        }
+    ],
+    "experience": 0.35
+}
