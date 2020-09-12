@@ -36,9 +36,9 @@ public class ReactorState implements GuiSync.IGUIPacket {
      */
     public long wasteStored;
     /**
-     * The amount of reactant stored in the reactor.
+     * The amount of fuel stored in the reactor.
      */
-    public long reactantStored;
+    public long fuelStored;
     /**
      * The max fuel capacity of the reactor.
      */
@@ -105,7 +105,7 @@ public class ReactorState implements GuiSync.IGUIPacket {
         energyCapacity = (Long) data.get("energyCapacity");
         
         wasteStored = (Long) data.get("wasteStored");
-        reactantStored = (Long) data.get("reactantStored");
+        fuelStored = (Long) data.get("fuelStored");
         fuelCapacity = (Long) data.get("fuelCapacity");
         
         coolantStored = (Long) data.get("coolantStored");
@@ -136,7 +136,7 @@ public class ReactorState implements GuiSync.IGUIPacket {
         data.put("energyCapacity", energyCapacity);
         
         data.put("wasteStored", wasteStored);
-        data.put("reactantStored", reactantStored);
+        data.put("fuelStored", fuelStored);
         data.put("fuelCapacity", fuelCapacity);
         
         data.put("coolantStored", coolantStored);

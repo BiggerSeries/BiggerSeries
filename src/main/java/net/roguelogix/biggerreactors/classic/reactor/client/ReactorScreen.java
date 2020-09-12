@@ -90,7 +90,7 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
         this.reactorAutoEjectToggle.updateState(reactorState.doAutoEject);
         
         // Update reactor bars.
-        this.barFuelMix.updateFuelWaste(reactorState.wasteStored, reactorState.reactantStored, reactorState.fuelCapacity);
+        this.barFuelMix.updateFuelWaste(reactorState.wasteStored, reactorState.fuelStored, reactorState.fuelCapacity);
         this.barCaseHeat.updateCaseHeat(reactorState.caseHeatStored, Config.Reactor.GUI.HeatDisplayMax);
         this.barFuelHeat.updateCaseHeat(reactorState.fuelHeatStored, Config.Reactor.GUI.HeatDisplayMax);
         this.energyTank.updateEnergy(reactorState.energyStored, reactorState.energyCapacity);

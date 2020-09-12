@@ -355,7 +355,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         reactorState.energyCapacity = Config.Reactor.PassiveBatterySize;
         
         reactorState.wasteStored = simulation.fuelTank.getWasteAmount();
-        reactorState.reactantStored = simulation.fuelTank.getTotalAmount();
+        reactorState.fuelStored = simulation.fuelTank.getFuelAmount();
         reactorState.fuelCapacity = simulation.fuelTank.getCapacity();
         
         reactorState.coolantStored = simulation.coolantTank.getWaterAmount();
