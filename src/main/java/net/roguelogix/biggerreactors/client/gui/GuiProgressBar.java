@@ -3,30 +3,57 @@ package net.roguelogix.biggerreactors.client.gui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.gui.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 
-@OnlyIn(Dist.CLIENT)
 public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
     
-    private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid,
-            "textures/screen/parts/progress_bar.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_tanks.png");
+    private int workTime;
+    private int workTimeTotal;
     
+    /**
+     * @param screen The screen this instance belongs to.
+     * @param xPos   The X position of the part.
+     * @param yPos   The Y position of the part.
+     */
     public GuiProgressBar(ContainerScreen<T> screen, int xPos, int yPos) {
-        super(screen, GUI_TEXTURE, xPos, yPos, 25, 16, null);
+        super(screen, xPos, yPos, 24, 18);
     }
     
-    public void drawPart(long workTime, long workTimeTotal) {
+    /**
+     * Update the energy values this part uses.
+     *
+     * @param workTime      The amount of energy currently stored.
+     * @param workTimeTotal The max capacity of energy storable.
+     */
+    public void updateWorkTime(int workTime, int workTimeTotal) {
+        this.workTime = workTime;
+        this.workTimeTotal = workTimeTotal;
+    }
+    
+    /**
+     * Render this element.
+     */
+    @Override
+    public void drawPart() {
+        // Reset and bind texture.
         super.drawPart();
+        GuiRenderHelper.setTexture(this.texture);
         
-        if(workTimeTotal == 0){
-            workTimeTotal = 1;
+        // Draw background.
+        GuiRenderHelper.setTextureOffset(0, 65);
+        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        
+        // Draw foreground.
+        if (this.workTimeTotal != 0) {
+            // Determine amount to draw.
+            int renderSize = this.xSize * this.workTime / this.workTimeTotal;
+            
+            // Draw work.
+            GuiRenderHelper.setTextureOffset(25, 65);
+            GuiRenderHelper.draw(this.xPos + 1, this.yPos, this.screen.getBlitOffset(), renderSize, this.ySize);
         }
-        
-        // May of figured out a better way to render bars and the such, this is currently buggy though.
-        long textureOffset = 25 * workTime / workTimeTotal;
-        this.screen.blit(this.xPos, this.yPos, 25, 0, this.xSize - (int) textureOffset, this.ySize);
     }
 }

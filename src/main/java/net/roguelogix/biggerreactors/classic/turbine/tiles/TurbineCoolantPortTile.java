@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineCoolantPort;
-import net.roguelogix.biggerreactors.fluids.IrradiatedSteam;
+import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
@@ -41,7 +41,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     }
     
     private final FluidStack water = new FluidStack(Fluids.WATER, 0);
-    private final FluidStack steam = new FluidStack(IrradiatedSteam.INSTANCE, 0);
+    private final FluidStack steam = new FluidStack(FluidIrradiatedSteam.INSTANCE, 0);
     
     @Override
     public int getTanks() {
@@ -70,7 +70,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         if (tank == 1 && stack.getRawFluid() == Fluids.WATER) {
             return true;
         }
-        return tank == 0 && stack.getRawFluid() == IrradiatedSteam.INSTANCE;
+        return tank == 0 && stack.getRawFluid() == FluidIrradiatedSteam.INSTANCE;
     }
     
     @Override
@@ -78,7 +78,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         if (direction == OUTLET) {
             return 0;
         }
-        if (resource.getFluid() != IrradiatedSteam.INSTANCE) {
+        if (resource.getFluid() != FluidIrradiatedSteam.INSTANCE) {
             return 0;
         }
         if (controller != null) {
@@ -90,7 +90,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action) {
-        if (resource.getFluid() == IrradiatedSteam.INSTANCE) {
+        if (resource.getFluid() == FluidIrradiatedSteam.INSTANCE) {
             return drain(resource.getAmount(), action);
         }
         return FluidStack.EMPTY;

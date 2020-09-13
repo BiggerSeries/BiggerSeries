@@ -1,6 +1,4 @@
-package net.roguelogix.biggerreactors.classic.reactor;
-
-import javax.annotation.Nonnull;
+package net.roguelogix.biggerreactors.classic.reactor.containers;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
@@ -11,6 +9,8 @@ import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorTerminalTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
+
+import javax.annotation.Nonnull;
 
 @RegisterContainer(name = "reactor_terminal")
 public class ReactorContainer extends Container implements GuiSync.IGUIPacketProvider {
@@ -25,10 +25,15 @@ public class ReactorContainer extends Container implements GuiSync.IGUIPacketPro
         super(INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (ReactorTerminalTile) player.world.getTileEntity(blockPos);
+        this.getGuiPacket();
     }
     
-    public ReactorDatapack getReactorData() {
-        return this.tileEntity.data;
+    /**
+     * @return The current state of the machine.
+     */
+    @Override
+    public GuiSync.IGUIPacket getGuiPacket() {
+        return this.tileEntity.reactorState;
     }
     
     @Override
@@ -40,15 +45,11 @@ public class ReactorContainer extends Container implements GuiSync.IGUIPacketPro
     
     @Override
     public void executeRequest(String requestName, Object requestData) {
-        if (this.tileEntity.getWorld().isRemote) {
+        assert tileEntity.getWorld() != null;
+        if (tileEntity.getWorld().isRemote) {
             runRequest(requestName, requestData);
         }
         
-        this.tileEntity.runRequest(requestName, requestData);
-    }
-    
-    @Override
-    public GuiSync.IGUIPacket getGuiPacket() {
-        return getReactorData();
+        tileEntity.runRequest(requestName, requestData);
     }
 }

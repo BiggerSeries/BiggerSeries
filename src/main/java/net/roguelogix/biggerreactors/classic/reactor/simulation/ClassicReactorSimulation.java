@@ -129,7 +129,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     public void tick() {
         if (active) {
             radiate();
-        }else{
+        } else {
             fuelConsumedLastTick = 0;
         }
         
@@ -320,7 +320,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
                     double fertilityAbsorbed = (scaledAbsorption - controlRodPenalty) * intensity;
                     
                     double fuelModerationFactor = Config.Reactor.FuelModerationFactor;
-                    fuelModerationFactor += fuelModerationFactor * controlRodInsertion + controlRodInsertion; // Full insertion doubles the moderation factor of the fuel as well as adding its own level
+                    fuelModerationFactor += fuelModerationFactor * controlRodInsertion + controlRodInsertion; // Full insertion doubles the moderaetion factor of the fuel as well as adding its own level
                     
                     intensity = Math.max(0f, intensity - radiationAbsorbed);
                     hardness /= fuelModerationFactor;

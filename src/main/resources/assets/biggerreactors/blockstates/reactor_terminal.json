@@ -8,7 +8,7 @@
     {
       "when": {
         "direction": "face",
-        "reactorstate": "active"
+        "reactoractivity": "active"
       },
       "apply": {
         "model": "biggerreactors:block/reactor_terminal_active"
@@ -17,7 +17,7 @@
     {
       "when": {
         "direction": "face",
-        "reactorstate": "inactive"
+        "reactoractivity": "inactive"
       },
       "apply": {
         "model": "biggerreactors:block/reactor_terminal_idle"

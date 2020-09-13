@@ -4,16 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
-import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorBaseTile;
-import net.roguelogix.biggerreactors.classic.reactor.ReactorState;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockBlock;
 
 import javax.annotation.Nonnull;
@@ -30,7 +22,7 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
     public ReactorBaseBlock(boolean solid) {
         super(solid ? PROPERTIES_SOLID : PROPERTIES_GLASS);
         if (usesBlockState()) {
-            setDefaultState(getDefaultState().with(ReactorState.REACTOR_STATE_ENUM_PROPERTY, ReactorState.INACTIVE));
+            setDefaultState(getDefaultState().with(ReactorActivity.REACTOR_ACTIVITY_ENUM_PROPERTY, ReactorActivity.INACTIVE));
         }
     }
     
@@ -42,6 +34,6 @@ public class ReactorBaseBlock extends RectangularMultiblockBlock {
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(ReactorState.REACTOR_STATE_ENUM_PROPERTY);
+        builder.add(ReactorActivity.REACTOR_ACTIVITY_ENUM_PROPERTY);
     }
 }

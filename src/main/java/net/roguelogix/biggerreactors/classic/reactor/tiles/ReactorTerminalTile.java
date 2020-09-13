@@ -10,17 +10,18 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.roguelogix.biggerreactors.classic.reactor.ReactorContainer;
-import net.roguelogix.biggerreactors.classic.reactor.ReactorDatapack;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
+import net.roguelogix.phosphophyllite.gui.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_terminal")
-public class ReactorTerminalTile extends ReactorBaseTile implements INamedContainerProvider {
+public class ReactorTerminalTile extends ReactorBaseTile implements INamedContainerProvider, IHasUpdatableState<ReactorState> {
     
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
@@ -29,11 +30,18 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
         super(TYPE);
     }
     
-    public final ReactorDatapack data = new ReactorDatapack(this);
+    public final ReactorState reactorState = new ReactorState(this);
     
-    public void updateData() {
+    @Override
+    public ReactorState getState() {
+        this.updateState();
+        return new ReactorState(this);
+    }
+    
+    @Override
+    public void updateState() {
         if (controller != null && controller instanceof ReactorMultiblockController) {
-            ((ReactorMultiblockController) controller).updateDataPacket(data);
+            ((ReactorMultiblockController) controller).updateDataPacket(reactorState);
         }
     }
     

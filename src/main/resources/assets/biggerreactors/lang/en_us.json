@@ -3,7 +3,7 @@
 
   "item.biggerreactors.debug_tool": "Debeefer",
   "item.biggerreactors.wrench": "Reactor Wrench",
-  
+
   "block.biggerreactors.yellorite_ore": "Yellorite Ore",
   "block.biggerreactors.yellorium_block": "Yellorium Block",
   "item.biggerreactors.yellorium_dust": "Yellorium Dust",
@@ -25,7 +25,9 @@
   "item.biggerreactors.ludicrite_dust": "Ludicrite Dust",
   "item.biggerreactors.ludicrite_ingot": "Ludicrite Ingot",
 
-  "screen.biggerreactors.reactor_terminal": "Reactor Terminal",
+  "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
+
+  "screen.biggerreactors.reactor_terminal": "Reactor Info",
   "block.biggerreactors.reactor_terminal": "Reactor Terminal",
   "block.biggerreactors.reactor_casing": "Reactor Casing",
   "block.biggerreactors.reactor_glass": "Reactor Glass",
@@ -35,7 +37,21 @@
   "block.biggerreactors.reactor_access_port": "Reactor Access Port",
   "block.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
 
-  "screen.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
-  "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor"
+  "tooltip.biggerreactors.buttons.reactor_activity.activate": "\u00A7bActivate Reactor",
+  "tooltip.biggerreactors.buttons.reactor_activity.deactivate": "\u00A7bDeactivate Reactor\nResidual heat will still generate\npower/consume coolant.",
+  "tooltip.biggerreactors.buttons.waste_eject_auto.enabled": "\u00A7bAuto-Eject Waste\nWaste in the core will be ejected as soon as possible.",
+  "tooltip.biggerreactors.buttons.waste_eject_auto.disabled": "\u00A7bDon't Auto-Eject Waste\n\u00A7dWaste must be manually ejected!",
+  "tooltip.biggerreactors.buttons.waste_eject_manual": "\u00A7bEject Waste Now\nEjects waste from the core.\n1000 mB of waste equals 1 ingot.\n\u00A78Shift to dump any excess waste.",
 
+  "tooltip.biggerreactors.symbols.fuel_mix": "\u00A7bFuel Mix",
+  "tooltip.biggerreactors.symbols.case_heat": "\u00A7bCase Heat\nHeat of the reactor's fuel.\nHigh heat raises fuel usage.\nCore heat is transferred to the casing.\nTransfer rate is based on the design\nof the reactor's interior.",
+  "tooltip.biggerreactors.symbols.fuel_heat": "\u00A7bFuel Heat\nHeat of the reactor's casing.\nHigh heat raises energy output\nand coolant conversion.",
+  "tooltip.biggerreactors.symbols.energy_tank": "\u00A7bEnergy Buffer",
+  "tooltip.biggerreactors.symbols.coolant_tank": "\u00A7bCoolant Fluid Tank\nCasing heat will superheat\ncoolant in this tank.",
+  "tooltip.biggerreactors.symbols.hot_tank": "\u00A7bHot Fluid Tank\nSuperheated coolant will\npump into this tank, and\nmust be piped out via\ncoolant ports.",
+
+  "tooltip.biggerreactors.symbols.reactor_temperature": "\u00A7bCore Temperature\nTemperature inside the reactor core.\nHigher temperatures increase fuel\nburn-up.",
+  "tooltip.biggerreactors.symbols.reactor_output": "\u00A7bReactor Output",
+  "tooltip.biggerreactors.symbols.fuel_consumption": "\u00A7bFuel Burn-up Rate\nThe rate at which fuel is fissioned\ninto waste in the core.",
+  "tooltip.biggerreactors.symbols.fuel_reactivity": "\u00A7bFuel Reactivity\nHow heavily irradiated the core is.\nHigher levels of radiation reduce\nfuel burn-up."
 }

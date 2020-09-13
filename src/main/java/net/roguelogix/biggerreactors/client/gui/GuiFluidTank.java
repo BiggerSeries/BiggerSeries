@@ -1,55 +1,100 @@
 package net.roguelogix.biggerreactors.client.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.gui.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
+import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
-@OnlyIn(Dist.CLIENT)
-public class GuiFluidTank<T extends Container> extends GuiPartBase<T> {
+public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
-    private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(BiggerReactors.modid,
-            "textures/screen/parts/fluid_tank.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_tanks.png");
+    private Fluid fluidType;
+    private long fluidStored;
+    private long fluidCapacity;
     
-    private Fluid fluid;
-    
-    public GuiFluidTank(ContainerScreen<T> screen, int xPos, int yPos, Fluid fluid) {
-        super(screen, GUI_TEXTURE, xPos, yPos, 18, 64, null);
-        
-        this.fluid = fluid;
+    /**
+     * @param screen The screen this instance belongs to.
+     * @param xPos   The X position of the part.
+     * @param yPos   The Y position of the part.
+     */
+    public GuiFluidTank(ContainerScreen<T> screen, int xPos, int yPos) {
+        super(screen, xPos, yPos, 18, 64);
     }
     
-    public void drawPart(long fluidStored, long fluidCapacity) {
+    /**
+     * Update the fluid values this part uses.
+     *
+     * @param fluidType     The type of fluid stored.
+     * @param fluidStored   The amount of fluids currently stored.
+     * @param fluidCapacity The max capacity of fluids storable.
+     */
+    public void updateFluid(Fluid fluidType, long fluidStored, long fluidCapacity) {
+        this.fluidType = fluidType;
+        this.fluidStored = fluidStored;
+        this.fluidCapacity = fluidCapacity;
+    }
+    
+    /**
+     * Render this element.
+     */
+    @Override
+    public void drawPart() {
+        // Reset and bind texture.
         super.drawPart();
+        GuiRenderHelper.setTexture(this.texture);
+        GuiRenderHelper.setTextureOffset(0, 0);
         
-        if (fluidCapacity == 0) {
-            fluidCapacity = 1;
+        // Draw background.
+        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        
+        // Draw foreground.
+        if (this.fluidCapacity != 0) {
+            // Determine amount to draw.
+            int renderSize = (int) (this.ySize * this.fluidStored / this.fluidCapacity);
+            
+            // Gather fluid texture.
+            FluidAttributes fluidAttributes = this.fluidType.getAttributes();
+            TextureAtlasSprite fluidSprite = Minecraft.getInstance()
+                    .getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidAttributes.getStillTexture());
+            
+            // Draw fluid.
+            GuiRenderHelper.setTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+            GuiRenderHelper.setRenderColor(fluidAttributes.getColor());
+            GuiRenderHelper.drawSpriteGrid(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, 16, fluidSprite, 1, 4);
+            GuiRenderHelper.clearRenderColor();
+            
+            // Mask away empty bit.
+            GuiRenderHelper.setTexture(this.texture);
+            GuiRenderHelper.setTextureOffset(0, 0);
+            GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);
         }
+        // Draw frame.
+        GuiRenderHelper.setTextureOffset(18, 0);
+        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
-        // TODO: Modify to allow usage of any fluid texture. Currently, it's hardcoded for water and steam only.
-        long textureOffset = fluidStored * (this.ySize + 1) / fluidCapacity;
-        int relativeY = (int) (this.yPos + this.ySize - textureOffset);
-        int textureY = (int) (this.ySize - textureOffset);
-        
-        if (this.fluid == Fluids.WATER.getFluid()) {
-            // Water
-            this.screen.blit(this.xPos, relativeY, 36, textureY, this.xSize, (int) textureOffset);
-        } else {
-            // Steam
-            this.screen.blit(this.xPos, relativeY, 54, textureY, this.xSize, (int) textureOffset);
-        }
-        
-        this.screen.blit(this.xPos, this.yPos, 18, 0, this.xSize, this.ySize);
+        // Draw level gauge.
+        GuiRenderHelper.setTextureOffset(36, 0);
+        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
     
-    public void drawTooltip(int mouseX, int mouseY, long fluidStored, long fluidCapacity) {
-        this.tooltipText = String.format("%d/%d mB of %s", fluidStored, fluidCapacity,
-                this.fluid.getAttributes().getDisplayName(null).getFormattedText().toLowerCase());
-        super.drawTooltip(mouseX, mouseY);
+    /**
+     * Perform an action on click.
+     *
+     * @param mouseX The cursor's X position.
+     * @param mouseY The cursor's Y position.
+     */
+    @Override
+    public void drawTooltip(int mouseX, int mouseY) {
+        if (this.isHovering(mouseX, mouseY)) {
+            this.screen.renderTooltip(String.format("%d/%d mB", this.fluidStored, this.fluidCapacity), mouseX, mouseY);
+        }
     }
 }
