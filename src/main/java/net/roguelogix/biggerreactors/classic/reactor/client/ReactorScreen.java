@@ -114,14 +114,12 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
         this.reactorAutoEjectToggle.updateState(reactorState.doAutoEject);
         
         // Update reactor bars.
-        this.barFuelMix.updateFuelMix(reactorState.wasteStored, reactorState.reactantStored, reactorState.fuelCapacity);
+        this.barFuelMix.updateFuelMix(reactorState.wasteStored, reactorState.fuelStored, reactorState.fuelCapacity);
         this.barCaseHeat.updateCaseHeat(reactorState.caseHeatStored, Config.Reactor.GUI.HeatDisplayMax);
         this.barFuelHeat.updateCaseHeat(reactorState.fuelHeatStored, Config.Reactor.GUI.HeatDisplayMax);
         this.energyTank.updateEnergy(reactorState.energyStored, reactorState.energyCapacity);
-        //this.coolantTank.updateFluid(Fluids.WATER.getFluid(), reactorState.coolantStored, reactorState.coolantCapacity);
-        this.coolantTank.updateFluid(Fluids.WATER.getFluid(), 4000, reactorState.coolantCapacity);
-        //this.hotTank.updateFluid(IrradiatedSteam.INSTANCE.getFluid(), reactorState.steamStored, reactorState.steamCapacity);
-        this.hotTank.updateFluid(FluidIrradiatedSteam.INSTANCE.getFluid(), 4000, reactorState.steamCapacity);
+        this.coolantTank.updateFluid(Fluids.WATER.getFluid(), reactorState.coolantStored, reactorState.coolantCapacity);
+        this.hotTank.updateFluid(FluidIrradiatedSteam.INSTANCE.getFluid(), reactorState.steamStored, reactorState.steamCapacity);
         
         // Update reactor symbols.
         if (reactorState.reactorType == ReactorType.ACTIVE) {

@@ -264,7 +264,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 storedPower = Config.Reactor.PassiveBatterySize;
             }
         }
-        if(autoEjectWaste) {
+        if (autoEjectWaste) {
             ejectWaste();
         }
         
@@ -332,7 +332,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
     }
     
-    private void ejectWaste(){
+    private void ejectWaste() {
         for (ReactorAccessPortTile accessPort : accessPorts) {
             // todo, output to inputs if there aren't any outputs left
             if (accessPort.isInlet()) {
@@ -340,7 +340,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             }
             long wasteSpaceAvailable = accessPort.wasteSpaceAvailable();
             simulation.fuelTank.extractWaste(accessPort.dumpWaste(simulation.fuelTank.extractWaste(wasteSpaceAvailable, true)), false);
-        
+            
         }
     }
     
@@ -349,11 +349,13 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         reactorState.reactorActivity = reactorActivity;
         reactorState.reactorType = simulation.isPassive() ? ReactorType.PASSIVE : ReactorType.ACTIVE;
         
+        reactorState.doAutoEject = autoEjectWaste;
+        
         reactorState.energyStored = storedPower;
         reactorState.energyCapacity = Config.Reactor.PassiveBatterySize;
         
         reactorState.wasteStored = simulation.fuelTank.getWasteAmount();
-        reactorState.reactantStored = simulation.fuelTank.getTotalAmount();
+        reactorState.fuelStored = simulation.fuelTank.getFuelAmount();
         reactorState.fuelCapacity = simulation.fuelTank.getCapacity();
         
         reactorState.coolantStored = simulation.coolantTank.getWaterAmount();
@@ -381,7 +383,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             case "setAutoEject": {
                 autoEjectWaste = (Boolean) requestData;
             }
-            case "ejectWaste":{
+            case "ejectWaste": {
                 ejectWaste();
             }
         }
