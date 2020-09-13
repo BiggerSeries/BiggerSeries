@@ -1,13 +1,15 @@
-package net.roguelogix.biggerreactors.client.gui.buttons;
+package net.roguelogix.biggerreactors.client.turbine;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
-import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
+import net.roguelogix.biggerreactors.classic.turbine.VentState;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasButton;
@@ -17,11 +19,11 @@ import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
+public class GuiTurbineVentStateToggle<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
     private boolean debounce = false;
-    private boolean doAutoEject;
+    private VentState ventState;
     
     /**
      * @param screen The screen this instance belongs to.
@@ -30,12 +32,12 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
      * @param xSize  The width of the part.
      * @param ySize  The height of the part.
      */
-    public GuiReactorAutoEjectToggle(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize) {
+    public GuiTurbineVentStateToggle(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize) {
         super(screen, xPos, yPos, xSize, ySize);
     }
     
-    public void updateState(boolean doAutoEject) {
-        this.doAutoEject = doAutoEject;
+    public void updateState(VentState ventState) {
+        this.ventState = ventState;
     }
     
     /**
@@ -48,10 +50,12 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw button.
-        if (this.doAutoEject) {
-            GuiRenderHelper.setTextureOffset(48, 16);
+        if (this.ventState == VentState.OVERFLOW) {
+            GuiRenderHelper.setTextureOffset(32, 48);
+        } else if (this.ventState == VentState.ALL) {
+            GuiRenderHelper.setTextureOffset(16, 48);
         } else {
-            GuiRenderHelper.setTextureOffset(32, 16);
+            GuiRenderHelper.setTextureOffset(0, 48);
         }
         GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
@@ -59,10 +63,12 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
     @Override
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            if (this.doAutoEject) {
-                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_auto.enabled").getFormattedText().split("\\n")), mouseX, mouseY);
+            if (this.ventState == VentState.OVERFLOW) {
+                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.vent_state.overflow").getFormattedText().split("\\n")), mouseX, mouseY);
+            } else if (this.ventState == VentState.ALL) {
+                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.vent_state.all").getFormattedText().split("\\n")), mouseX, mouseY);
             } else {
-                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_auto.disabled").getFormattedText().split("\\n")), mouseX, mouseY);
+                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.vent_state.closed").getFormattedText().split("\\n")), mouseX, mouseY);
             }
         }
     }
@@ -78,12 +84,15 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
                 && !debounce) {
             
             // Do click logic.
-            ReactorState reactorState = (ReactorState) ((ReactorContainer) this.screen.getContainer()).getGuiPacket();
-            if (reactorState.doAutoEject) {
-                ((ReactorContainer) this.screen.getContainer()).executeRequest("setAutoEject", false);
+            if (ventState == VentState.OVERFLOW) {
+                ((TurbineContainer) this.screen.getContainer()).runRequest("setVentState", VentState.valueOf(VentState.ALL));
+            } else if (ventState == VentState.ALL) {
+                ((TurbineContainer) this.screen.getContainer()).runRequest("setVentState", VentState.valueOf(VentState.CLOSED));
             } else {
-                ((ReactorContainer) this.screen.getContainer()).executeRequest("setAutoEject", true);
+                ((TurbineContainer) this.screen.getContainer()).runRequest("setVentState", VentState.valueOf(VentState.OVERFLOW));
             }
+            assert this.screen.getMinecraft().player != null;
+            this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;
         }
         

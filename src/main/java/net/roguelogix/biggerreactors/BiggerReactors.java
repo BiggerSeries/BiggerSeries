@@ -3,7 +3,6 @@ package net.roguelogix.biggerreactors;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -12,6 +11,8 @@ import net.roguelogix.biggerreactors.classic.machine.client.CyaniteReprocessorSc
 import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.client.ReactorScreen;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.turbine.client.TurbineScreen;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +37,7 @@ public class BiggerReactors {
     }
     
     public void onWorldLoad(final WorldEvent.Load worldLoadEvent) {
-        if(worldLoadEvent.getWorld().isRemote()){
+        if (worldLoadEvent.getWorld().isRemote()) {
             return;
         }
         Config.loadRegistries();
@@ -49,6 +50,8 @@ public class BiggerReactors {
                 CyaniteReprocessorScreen::new);
         ScreenManager.registerFactory(ReactorContainer.INSTANCE,
                 ReactorScreen::new);
+        ScreenManager.registerFactory(TurbineContainer.INSTANCE,
+                TurbineScreen::new);
     }
     
 }

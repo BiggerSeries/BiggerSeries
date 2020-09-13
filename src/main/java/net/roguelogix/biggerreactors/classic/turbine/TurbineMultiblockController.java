@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.*;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
+import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.*;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
@@ -450,7 +451,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 fluidConsumedLastTick = steamIn;
                 steam -= steamIn;
                 
-                if (ventState != VentState.All) {
+                if (ventState != VentState.ALL) {
                     water += steamIn;
                 }
             }
@@ -483,8 +484,51 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         markDirty();
     }
     
-    public void runRequest(String requestName, Object requestData) {
+    public void updateDataPacket(TurbineState turbineState) {
+        turbineState.turbineActivity = turbineActivity;
+        turbineState.ventState = ventState;
+        turbineState.coilStatus = coilEngaged;
+        
+        turbineState.flowRate = maxFloatRate;
+        turbineState.efficiencyRate = rotorEfficiencyLastTick;
+        turbineState.turbineOutputRate = energyGeneratedLastTick;
+        
+        turbineState.currentRPM = (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0);
+        turbineState.maxRPM = 2000.0;
+        
+        turbineState.intakeStored = water;
+        turbineState.intakeCapacity = Config.Turbine.TankSize;
+        
+        turbineState.exhaustStored = steam;
+        turbineState.exhaustCapacity = Config.Turbine.TankSize;
+        
+        turbineState.energyStored = storedPower;
+        turbineState.energyCapacity = Config.Turbine.BatterySize;
+    }
     
+    public void runRequest(String requestName, Object requestData) {
+        switch (requestName) {
+            case "setActive": {
+                boolean newState = (boolean) requestData;
+                setActive(newState ? TurbineActivity.ACTIVE : TurbineActivity.INACTIVE);
+                return;
+            }
+            case "setMaxFlowRate": {
+                long newRate = (long) requestData;
+                setMaxFlowRate(newRate);
+                return;
+            }
+            case "setCoilEngaged": {
+                boolean newState = (boolean) requestData;
+                setCoilEngaged(newState);
+                return;
+            }
+            case "setVentState": {
+                VentState newState = VentState.valueOf((int) requestData);
+                setVentState(newState);
+                return;
+            }
+        }
     }
     
     VentState ventState = VentState.CLOSED;
@@ -496,9 +540,13 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     long maxFloatRate = Config.Turbine.MaxFlow;
     
     private void setMaxFlowRate(long flowRate) {
-        if (flowRate > 0 && flowRate < Config.Turbine.MaxFlow) {
-            maxFloatRate = flowRate;
+        if (flowRate < 0) {
+            flowRate = 0;
         }
+        if (flowRate > Config.Turbine.MaxFlow) {
+            flowRate = Config.Turbine.MaxFlow;
+        }
+        maxFloatRate = flowRate;
     }
     
     private boolean coilEngaged = true;

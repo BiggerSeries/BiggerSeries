@@ -14,10 +14,10 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
-import net.roguelogix.biggerreactors.client.gui.*;
-import net.roguelogix.biggerreactors.client.gui.buttons.GuiReactorActivityToggle;
-import net.roguelogix.biggerreactors.client.gui.buttons.GuiReactorAutoEjectToggle;
-import net.roguelogix.biggerreactors.client.gui.buttons.GuiReactorManualEject;
+import net.roguelogix.biggerreactors.client.GuiEnergyTank;
+import net.roguelogix.biggerreactors.client.GuiFluidTank;
+import net.roguelogix.biggerreactors.client.GuiSymbol;
+import net.roguelogix.biggerreactors.client.reactor.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.GuiScreenBase;
 
@@ -31,12 +31,12 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
     // Buttons.
     private GuiReactorActivityToggle<ReactorContainer> reactorActivityToggle;
     private GuiReactorAutoEjectToggle<ReactorContainer> reactorAutoEjectToggle;
-    private GuiReactorManualEject<ReactorContainer> reactorManualEject;
+    private GuiReactorManualEjectButton<ReactorContainer> reactorManualEject;
     
     // Reactor bars.
-    private GuiFuelMixBar<ReactorContainer> barFuelMix;
-    private GuiHeatBar<ReactorContainer> barCaseHeat;
-    private GuiHeatBar<ReactorContainer> barFuelHeat;
+    private GuiReactorFuelMixBar<ReactorContainer> barFuelMix;
+    private GuiReactorHeatBar<ReactorContainer> barCaseHeat;
+    private GuiReactorHeatBar<ReactorContainer> barFuelHeat;
     private GuiEnergyTank<ReactorContainer> energyTank;
     private GuiFluidTank<ReactorContainer> coolantTank;
     private GuiFluidTank<ReactorContainer> hotTank;
@@ -62,44 +62,44 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
         // Set textures.
         this.xSize = 176;
         this.ySize = 186;
-        this.updateTexture(new ResourceLocation(BiggerReactors.modid, "textures/screen/reactor_terminal.png"), 0, 0);
+        this.updateTexture(new ResourceLocation(BiggerReactors.modid, "textures/screen/terminal.png"), 0, 0);
         
         // Initialize buttons.
         this.reactorActivityToggle = new GuiReactorActivityToggle<>(this, 5, 147, 16, 16);
         this.reactorAutoEjectToggle = new GuiReactorAutoEjectToggle<>(this, 5, 165, 16, 16);
-        this.reactorManualEject = new GuiReactorManualEject<>(this, 23, 165, 16, 16);
+        this.reactorManualEject = new GuiReactorManualEjectButton<>(this, 23, 165, 16, 16);
         
         // Initialize reactor bars.
-        this.barFuelMix = new GuiFuelMixBar<>(this, 88, 22);
-        this.barCaseHeat = new GuiHeatBar<>(this, 110, 22);
-        this.barFuelHeat = new GuiHeatBar<>(this, 132, 22);
+        this.barFuelMix = new GuiReactorFuelMixBar<>(this, 88, 22);
+        this.barCaseHeat = new GuiReactorHeatBar<>(this, 110, 22);
+        this.barFuelHeat = new GuiReactorHeatBar<>(this, 132, 22);
         this.energyTank = new GuiEnergyTank<>(this, 154, 22);
         this.coolantTank = new GuiFluidTank<>(this, 132, 117);
         this.hotTank = new GuiFluidTank<>(this, 154, 117);
         
         // Initialize reactor bar symbols.
-        this.symbolFuelMix = new GuiSymbol<>(this, 88, 5, 96, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.fuel_mix").getFormattedText());
-        this.symbolCaseHeat = new GuiSymbol<>(this, 110, 5, 112, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.case_heat").getFormattedText());
-        this.symbolFuelHeat = new GuiSymbol<>(this, 132, 5, 128, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.fuel_heat").getFormattedText());
-        this.symbolEnergyTank = new GuiSymbol<>(this, 154, 5, 144, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.energy_tank").getFormattedText());
+        this.symbolFuelMix = new GuiSymbol<>(this, 89, 5, 96, 0,
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.fuel_mix").getFormattedText());
+        this.symbolCaseHeat = new GuiSymbol<>(this, 111, 5, 112, 0,
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.case_heat").getFormattedText());
+        this.symbolFuelHeat = new GuiSymbol<>(this, 133, 5, 128, 0,
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.fuel_heat").getFormattedText());
+        this.symbolEnergyTank = new GuiSymbol<>(this, 155, 5, 144, 0,
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.energy_tank").getFormattedText());
         this.symbolCoolantTank = new GuiSymbol<>(this, 133, 100, 16, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.coolant_tank").getFormattedText());
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.coolant_tank").getFormattedText());
         this.symbolHotTank = new GuiSymbol<>(this, 155, 100, 32, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.hot_tank").getFormattedText());
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.hot_tank").getFormattedText());
         
-        // Initialize reactor bar symbols.
+        // Initialize reactor information symbols.
         this.symbolReactorTemperature = new GuiSymbol<>(this, 7, 18, 0, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor_temperature").getFormattedText());
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.temperature").getFormattedText());
         this.symbolReactorOutput = new GuiSymbol<>(this, 7, 39, 48, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor_output").getFormattedText());
-        this.symbolFuelConsumption = new GuiSymbol<>(this, 7, 57, 64, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.fuel_consumption").getFormattedText());
-        this.symbolFuelReactivity = new GuiSymbol<>(this, 7, 76, 80, 0,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.fuel_reactivity").getFormattedText());
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.output").getFormattedText());
+        this.symbolFuelConsumption = new GuiSymbol<>(this, 7, 59, 64, 0,
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.fuel_consumption").getFormattedText());
+        this.symbolFuelReactivity = new GuiSymbol<>(this, 7, 80, 80, 0,
+                new TranslationTextComponent("tooltip.biggerreactors.symbols.reactor.fuel_reactivity").getFormattedText());
     }
     
     /**
@@ -115,8 +115,8 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
         
         // Update reactor bars.
         this.barFuelMix.updateFuelMix(reactorState.wasteStored, reactorState.fuelStored, reactorState.fuelCapacity);
-        this.barCaseHeat.updateCaseHeat(reactorState.caseHeatStored, Config.Reactor.GUI.HeatDisplayMax);
-        this.barFuelHeat.updateCaseHeat(reactorState.fuelHeatStored, Config.Reactor.GUI.HeatDisplayMax);
+        this.barCaseHeat.updateHeat(reactorState.caseHeatStored, Config.Reactor.GUI.HeatDisplayMax);
+        this.barFuelHeat.updateHeat(reactorState.fuelHeatStored, Config.Reactor.GUI.HeatDisplayMax);
         this.energyTank.updateEnergy(reactorState.energyStored, reactorState.energyCapacity);
         this.coolantTank.updateFluid(Fluids.WATER.getFluid(), reactorState.coolantStored, reactorState.coolantCapacity);
         this.hotTank.updateFluid(FluidIrradiatedSteam.INSTANCE.getFluid(), reactorState.steamStored, reactorState.steamCapacity);
@@ -146,7 +146,7 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
         this.reactorAutoEjectToggle.drawTooltip(mouseX, mouseY);
         this.reactorManualEject.drawTooltip(mouseX, mouseY);
         
-        // Draw bars.
+        // Draw reactor bars.
         this.barFuelMix.drawTooltip(mouseX, mouseY);
         this.barCaseHeat.drawTooltip(mouseX, mouseY);
         this.barFuelHeat.drawTooltip(mouseX, mouseY);
@@ -185,15 +185,15 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
      * @param mouseY Y position of the mouse.
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(new TranslationTextComponent("screen.biggerreactors.reactor_terminal").getFormattedText(), 8.0F, (float) (this.ySize - 178), 4210752);
+    public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        this.font.drawString(new TranslationTextComponent("screen.biggerreactors.reactor_terminal").getFormattedText(), 8, 6, 4210752);
         
         // Draw buttons.
         this.reactorActivityToggle.drawPart();
         this.reactorAutoEjectToggle.drawPart();
         this.reactorManualEject.drawPart();
         
-        // Draw bars.
+        // Draw reactor bars.
         this.barFuelMix.drawPart();
         this.barCaseHeat.drawPart();
         this.barFuelHeat.drawPart();
@@ -222,16 +222,16 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
         // Update (and draw) reactor information text.
         this.font.drawString(String.format("%.0f \u00B0C", reactorState.fuelHeatStored), 26, 23, 4210752);
         if (reactorState.reactorType == ReactorType.ACTIVE) {
-            this.font.drawString(String.format("%.2f mB/t", reactorState.reactorOutputRate), 26, 43, 4210752);
+            this.font.drawString(String.format("%.1f mB/t", reactorState.reactorOutputRate), 26, 43, 4210752);
         } else {
-            this.font.drawString(String.format("%.2f RF/t", reactorState.reactorOutputRate), 26, 43, 4210752);
+            this.font.drawString(String.format("%.1f RF/t", reactorState.reactorOutputRate), 26, 43, 4210752);
         }
-        this.font.drawString(String.format("%.3f mB/t", reactorState.fuelUsageRate), 26, 62, 4210752);
-        this.font.drawString(String.format("%.1f%%", reactorState.reactivityRate * 100), 26, 80, 4210752);
+        this.font.drawString(String.format("%.3f mB/t", reactorState.fuelUsageRate), 26, 63, 4210752);
+        this.font.drawString(String.format("%.1f%%", reactorState.reactivityRate * 100), 26, 84, 4210752);
         if (reactorState.reactorActivity == ReactorActivity.ACTIVE) {
-            this.font.drawString("Status: \u00A72Online", 8, 98, 4210752);
+            this.font.drawString(new TranslationTextComponent("tooltip.biggerreactors.status.reactor.activity.online").getFormattedText(), 8, 103, 4210752);
         } else {
-            this.font.drawString("Status: \u00A74Offline", 8, 98, 4210752);
+            this.font.drawString(new TranslationTextComponent("tooltip.biggerreactors.status.reactor.activity.offline").getFormattedText(), 8, 103, 4210752);
         }
     }
 }

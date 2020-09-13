@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.gui;
+package net.roguelogix.biggerreactors.client.reactor;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
@@ -8,30 +8,30 @@ import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
-public class GuiEnergyTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
+public class GuiReactorHeatBar<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_tanks.png");
-    private long energyStored;
-    private long energyCapacity;
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_bars.png");
+    private double heatStored;
+    private double heatCapacity;
     
     /**
      * @param screen The screen this instance belongs to.
      * @param xPos   The X position of the part.
      * @param yPos   The Y position of the part.
      */
-    public GuiEnergyTank(ContainerScreen<T> screen, int xPos, int yPos) {
+    public GuiReactorHeatBar(ContainerScreen<T> screen, int xPos, int yPos) {
         super(screen, xPos, yPos, 18, 64);
     }
     
     /**
-     * Update the energy values this part uses.
+     * Update the case heat values this part uses.
      *
-     * @param energyStored   The amount of energy currently stored.
-     * @param energyCapacity The max capacity of energy storable.
+     * @param heatStored   The amount of heat currently stored.
+     * @param heatCapacity The amount of heat currently stored.
      */
-    public void updateEnergy(long energyStored, long energyCapacity) {
-        this.energyStored = energyStored;
-        this.energyCapacity = energyCapacity;
+    public void updateHeat(double heatStored, double heatCapacity) {
+        this.heatStored = heatStored;
+        this.heatCapacity = heatCapacity;
     }
     
     /**
@@ -48,12 +48,12 @@ public class GuiEnergyTank<T extends Container> extends GuiPartBase<T> implement
         GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
-        if (this.energyCapacity != 0) {
+        if (this.heatCapacity != 0) {
             // Determine amount to draw.
-            int renderSize = (int) (this.ySize * this.energyStored / this.energyCapacity);
+            int renderSize = (int) (this.ySize * this.heatStored / this.heatCapacity);
             
-            // Draw energy.
-            GuiRenderHelper.setTextureOffset(72, 0);
+            // Draw case heat.
+            GuiRenderHelper.setTextureOffset(126, 0);
             GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
             
             // Mask away empty bit.
@@ -74,7 +74,7 @@ public class GuiEnergyTank<T extends Container> extends GuiPartBase<T> implement
     @Override
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(String.format("%d/%d RF", this.energyStored, this.energyCapacity), mouseX, mouseY);
+            this.screen.renderTooltip(String.format("%.1f/%.1f \u00B0C", this.heatStored, this.heatCapacity), mouseX, mouseY);
         }
     }
 }

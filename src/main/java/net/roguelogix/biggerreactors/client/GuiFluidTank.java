@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.gui;
+package net.roguelogix.biggerreactors.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -15,7 +15,7 @@ import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
 public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_tanks.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_bars.png");
     private Fluid fluidType;
     private long fluidStored;
     private long fluidCapacity;

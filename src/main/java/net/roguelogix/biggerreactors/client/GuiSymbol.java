@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.gui;
+package net.roguelogix.biggerreactors.client;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;

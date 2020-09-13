@@ -5,14 +5,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
 import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorState;
-import net.roguelogix.biggerreactors.client.gui.GuiEnergyTank;
-import net.roguelogix.biggerreactors.client.gui.GuiFluidTank;
-import net.roguelogix.biggerreactors.client.gui.GuiProgressBar;
+import net.roguelogix.biggerreactors.client.GuiEnergyTank;
+import net.roguelogix.biggerreactors.client.GuiFluidTank;
+import net.roguelogix.biggerreactors.client.GuiProgressBar;
 import net.roguelogix.phosphophyllite.gui.GuiScreenBase;
 
 @OnlyIn(Dist.CLIENT)
@@ -72,8 +73,8 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
      */
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.font.drawString(this.title.getFormattedText(), 8.0F, (float) (this.ySize - 168), 4210752);
-        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 94), 4210752);
+        this.font.drawString(new TranslationTextComponent("screen.biggerreactors.cyanite_reprocessor").getFormattedText(), 8, (this.ySize - 168), 4210752);
+        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8, (this.ySize - 94), 4210752);
         
         this.progressBar.drawPart();
         this.energyTank.drawPart();

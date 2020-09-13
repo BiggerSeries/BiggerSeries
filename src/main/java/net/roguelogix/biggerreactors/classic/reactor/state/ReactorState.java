@@ -150,6 +150,7 @@ public class ReactorState implements GuiSync.IGUIPacket {
         data.put("reactivityRate", reactivityRate);
         data.put("fuelUsageRate", fuelUsageRate);
         data.put("reactorOutputRate", reactorOutputRate);
+        
         return data;
     }
 }

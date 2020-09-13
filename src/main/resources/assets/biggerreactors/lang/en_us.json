@@ -25,6 +25,7 @@
   "item.biggerreactors.ludicrite_dust": "Ludicrite Dust",
   "item.biggerreactors.ludicrite_ingot": "Ludicrite Ingot",
 
+  "screen.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
   "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
 
   "screen.biggerreactors.reactor_terminal": "Reactor Info",
@@ -37,21 +38,59 @@
   "block.biggerreactors.reactor_access_port": "Reactor Access Port",
   "block.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
 
-  "tooltip.biggerreactors.buttons.reactor_activity.activate": "\u00A7bActivate Reactor",
-  "tooltip.biggerreactors.buttons.reactor_activity.deactivate": "\u00A7bDeactivate Reactor\nResidual heat will still generate\npower/consume coolant.",
-  "tooltip.biggerreactors.buttons.waste_eject_auto.enabled": "\u00A7bAuto-Eject Waste\nWaste in the core will be ejected as soon as possible.",
-  "tooltip.biggerreactors.buttons.waste_eject_auto.disabled": "\u00A7bDon't Auto-Eject Waste\n\u00A7dWaste must be manually ejected!",
-  "tooltip.biggerreactors.buttons.waste_eject_manual": "\u00A7bEject Waste Now\nEjects waste from the core.\n1000 mB of waste equals 1 ingot.\n\u00A78Shift to dump any excess waste.",
+  "tooltip.biggerreactors.status.reactor.activity.online": "Status: §2Online",
+  "tooltip.biggerreactors.status.reactor.activity.offline": "Status: §4Offline",
 
-  "tooltip.biggerreactors.symbols.fuel_mix": "\u00A7bFuel Mix",
-  "tooltip.biggerreactors.symbols.case_heat": "\u00A7bCase Heat\nHeat of the reactor's fuel.\nHigh heat raises fuel usage.\nCore heat is transferred to the casing.\nTransfer rate is based on the design\nof the reactor's interior.",
-  "tooltip.biggerreactors.symbols.fuel_heat": "\u00A7bFuel Heat\nHeat of the reactor's casing.\nHigh heat raises energy output\nand coolant conversion.",
-  "tooltip.biggerreactors.symbols.energy_tank": "\u00A7bEnergy Buffer",
-  "tooltip.biggerreactors.symbols.coolant_tank": "\u00A7bCoolant Fluid Tank\nCasing heat will superheat\ncoolant in this tank.",
-  "tooltip.biggerreactors.symbols.hot_tank": "\u00A7bHot Fluid Tank\nSuperheated coolant will\npump into this tank, and\nmust be piped out via\ncoolant ports.",
+  "tooltip.biggerreactors.buttons.reactor.activity.activate": "§bActivate Reactor",
+  "tooltip.biggerreactors.buttons.reactor.activity.deactivate": "§bDeactivate Reactor\nResidual heat will still generate\npower/consume coolant.",
+  "tooltip.biggerreactors.buttons.reactor.waste_eject_auto.enabled": "§bAuto-Eject Waste\nWaste in the core will be ejected as soon as possible.",
+  "tooltip.biggerreactors.buttons.reactor.waste_eject_auto.disabled": "§bDon't Auto-Eject Waste\n§dWaste must be manually ejected!",
+  "tooltip.biggerreactors.buttons.reactor.waste_eject_manual": "§bEject Waste Now\nEjects waste from the core.\n1000 mB of waste equals 1 ingot.\n§8[Shift]: Dump any/all excess waste.",
 
-  "tooltip.biggerreactors.symbols.reactor_temperature": "\u00A7bCore Temperature\nTemperature inside the reactor core.\nHigher temperatures increase fuel\nburn-up.",
-  "tooltip.biggerreactors.symbols.reactor_output": "\u00A7bReactor Output",
-  "tooltip.biggerreactors.symbols.fuel_consumption": "\u00A7bFuel Burn-up Rate\nThe rate at which fuel is fissioned\ninto waste in the core.",
-  "tooltip.biggerreactors.symbols.fuel_reactivity": "\u00A7bFuel Reactivity\nHow heavily irradiated the core is.\nHigher levels of radiation reduce\nfuel burn-up."
+  "tooltip.biggerreactors.symbols.reactor.fuel_mix": "§bFuel Mix",
+  "tooltip.biggerreactors.symbols.reactor.case_heat": "§bCase Heat\nHeat of the reactor's fuel.\nHigh heat raises fuel usage.\nCore heat is transferred to the casing.\nTransfer rate is based on the design\nof the reactor's interior.",
+  "tooltip.biggerreactors.symbols.reactor.fuel_heat": "§bFuel Heat\nHeat of the reactor's casing.\nHigh heat raises energy output\nand coolant conversion.",
+  "tooltip.biggerreactors.symbols.reactor.energy_tank": "§bEnergy Buffer",
+  "tooltip.biggerreactors.symbols.reactor.coolant_tank": "§bCoolant Fluid Tank\nCase heat will superheat\ncoolant in this tank.",
+  "tooltip.biggerreactors.symbols.reactor.hot_tank": "§bHot Fluid Tank\nSuperheated coolant will\npump into this tank, and\nmust be piped out via\ncoolant ports.",
+
+  "tooltip.biggerreactors.symbols.reactor.temperature": "§bCore Temperature\nTemperature inside the reactor core.\nHigher temperatures increase fuel\nburn-up.",
+  "tooltip.biggerreactors.symbols.reactor.output": "§bReactor Output",
+  "tooltip.biggerreactors.symbols.reactor.fuel_consumption": "§bFuel Burn-up Rate\nThe rate at which fuel is fissioned\ninto waste in the core.",
+  "tooltip.biggerreactors.symbols.reactor.fuel_reactivity": "§bFuel Reactivity\nHow heavily irradiated the core is.\nHigher levels of radiation reduce\nfuel burn-up.",
+
+  "screen.biggerreactors.turbine_terminal": "Turbine Info",
+  "block.biggerreactors.turbine_terminal": "Turbine Terminal",
+  "block.biggerreactors.turbine_casing": "Turbine Casing",
+  "block.biggerreactors.turbine_glass": "Turbine Glass",
+  "block.biggerreactors.turbine_rotor_shaft": "Turbine Rotor Shaft",
+  "block.biggerreactors.turbine_rotor_blade": "Turbine Rotor Blade",
+  "block.biggerreactors.turbine_rotor_bearing": "Turbine Rotor Bearing",
+  "block.biggerreactors.turbine_coolant_port": "Turbine Coolant Port",
+  "block.biggerreactors.turbine_power_tap": "Turbine Coolant Port",
+
+  "tooltip.biggerreactors.status.turbine.activity.online": "Status: §2Online",
+  "tooltip.biggerreactors.status.turbine.activity.offline": "Status: §4Offline",
+
+  "tooltip.biggerreactors.buttons.turbine.activity.activate": "§bActivate Turbine\nEnables flow of intake fluid to rotor.\nFluid flow will spin up the rotor.",
+  "tooltip.biggerreactors.buttons.turbine.activity.deactivate": "§bDeactivate Turbine\nDisables flow of intake fluid to rotor.\nThe rotor will spin down.",
+
+  "tooltip.biggerreactors.buttons.turbine.coils.activate": "§bEngage Coils\nEngages the induction coils.\nEnergy will be extracted from\nthe rotor and converted to RF.\nEnergy extraction exerts\ndrag on the rotor, slowing\nit down.",
+  "tooltip.biggerreactors.buttons.turbine.coils.deactivate": "§bDisengage Coils\nDisengages the induction coils.\nEnergy will not be extracted\nfrom the rotor, allowing it\nto spin faster.",
+
+  "tooltip.biggerreactors.buttons.turbine.vent_state.overflow": "§bVent Overflow Only\nDump excess exhaust fluids.\nExcess fluids will be lost if\nexhaust fluid tank is full.",
+  "tooltip.biggerreactors.buttons.turbine.vent_state.all": "§bVent All Exhaust\nDump all exhaust fluids.\nThe exhaust fluid tank\nwill not fill.",
+  "tooltip.biggerreactors.buttons.turbine.vent_state.closed": "§bVent Nothing\nPreserve all exhaust fluids.\nTurbine will slow or halt fluid\nintake if exhaust tank is full.",
+
+  "tooltip.biggerreactors.buttons.turbine.flow.increase": "§bIncrease Max Flow Rate\nHigher flow rates will increase rotor speed.\n§8[Shift]: Increase by 10 mB/t.\n§8[Ctrl]: Increase by 100 mB/t.\n§8[Ctrl + Shift]: Increase by 1000 mB/t.",
+  "tooltip.biggerreactors.buttons.turbine.flow.decrease": "§bDecrease Max Flow Rate\nLower flow rates will decrease rotor speed.\n§8[Shift]: Decrease by 10 mB/t.\n§8[Ctrl]: Decrease by 100 mB/t.\n§8[Ctrl + Shift]: Decrease by 1000 mB/t.",
+
+  "tooltip.biggerreactors.symbols.turbine.tachometer": "§bTachometer\nRotors perform best at\naround 900 or 1800 RPM.\nRotors kept overspeed for\ntoo long may fail.",
+  "tooltip.biggerreactors.symbols.turbine.intake_tank": "§bIntake Fluid Tank",
+  "tooltip.biggerreactors.symbols.turbine.exhaust_tank": "§bExhaust Fluid Tank",
+  "tooltip.biggerreactors.symbols.turbine.energy_tank": "§bEnergy Buffer",
+
+  "tooltip.biggerreactors.symbols.turbine.governor": "§bFlow Rate Governor\nControls the maximum rate\nat which the turbine will\nprocess fluids.",
+  "tooltip.biggerreactors.symbols.turbine.output": "§bTurbine Output\nTurbines generate energy\nvia metal induction coils placed\naround a spinning rotor.\nMore (or higher quality) coils\ngenerate energy faster.",
+  "tooltip.biggerreactors.symbols.turbine.rotor_efficiency": "§bRotor Efficiency\nRotor blades can only capture\nso much fluid per blade.\nEfficiency drops if the flow\nof input raises past capacity."
 }

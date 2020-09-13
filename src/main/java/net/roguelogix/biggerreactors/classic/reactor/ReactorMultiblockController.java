@@ -22,9 +22,6 @@ import org.joml.Vector3i;
 import java.util.HashSet;
 import java.util.Set;
 
-//import net.roguelogix.biggerreactors.classic.reactor.old.ReactorDatapack;
-
-
 public class ReactorMultiblockController extends RectangularMultiblockController {
     
     public ReactorMultiblockController(World world) {
@@ -332,6 +329,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
     }
     
+    private boolean autoEjectWaste = true;
+    
     private void ejectWaste() {
         for (ReactorAccessPortTile accessPort : accessPorts) {
             // todo, output to inputs if there aren't any outputs left
@@ -372,19 +371,20 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         reactorState.reactorOutputRate = simulation.getFEProducedLastTick();
     }
     
-    private boolean autoEjectWaste = true;
-    
     public void runRequest(String requestName, Object requestData) {
         switch (requestName) {
             case "setActive": {
-                Boolean newState = (Boolean) requestData;
+                boolean newState = (boolean) requestData;
                 setActive(newState ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
+                return;
             }
             case "setAutoEject": {
-                autoEjectWaste = (Boolean) requestData;
+                autoEjectWaste = (boolean) requestData;
+                return;
             }
             case "ejectWaste": {
                 ejectWaste();
+                return;
             }
         }
     }

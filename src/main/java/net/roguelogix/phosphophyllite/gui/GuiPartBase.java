@@ -33,8 +33,7 @@ public class GuiPartBase<T extends Container> {
      */
     protected void drawPart() {
         // Default method resets variables for next usage.
-        // TODO: This causes an error to print on first open. Probably a wrong default texture location or something.
-        GuiRenderHelper.setTexture(new ResourceLocation("minecraft", "textures/block/dirt"));
+        GuiRenderHelper.setTexture(new ResourceLocation("minecraft", "textures/block/dirt.png"));
         GuiRenderHelper.setTextureOffset(0, 0);
         GuiRenderHelper.clearRenderColor();
     }

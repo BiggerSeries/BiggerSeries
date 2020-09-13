@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.gui;
+package net.roguelogix.biggerreactors.client.reactor;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
@@ -10,9 +10,9 @@ import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
 import java.util.Arrays;
 
-public class GuiFuelMixBar<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
+public class GuiReactorFuelMixBar<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_tanks.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_bars.png");
     private long wasteStored;
     private long fuelStored;
     private long fuelCapacity;
@@ -22,7 +22,7 @@ public class GuiFuelMixBar<T extends Container> extends GuiPartBase<T> implement
      * @param xPos   The X position of the part.
      * @param yPos   The Y position of the part.
      */
-    public GuiFuelMixBar(ContainerScreen<T> screen, int xPos, int yPos) {
+    public GuiReactorFuelMixBar(ContainerScreen<T> screen, int xPos, int yPos) {
         super(screen, xPos, yPos, 18, 64);
     }
     

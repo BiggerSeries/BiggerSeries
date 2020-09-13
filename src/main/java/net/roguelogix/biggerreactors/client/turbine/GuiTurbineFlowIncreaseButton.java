@@ -1,14 +1,14 @@
-package net.roguelogix.biggerreactors.client.gui.buttons;
+package net.roguelogix.biggerreactors.client.turbine;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
-import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
-import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasButton;
@@ -18,11 +18,11 @@ import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
+public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
     private boolean debounce = false;
-    private ReactorActivity reactorActivity;
+    private long flowRate;
     
     /**
      * @param screen The screen this instance belongs to.
@@ -31,12 +31,12 @@ public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T
      * @param xSize  The width of the part.
      * @param ySize  The height of the part.
      */
-    public GuiReactorActivityToggle(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize) {
+    public GuiTurbineFlowIncreaseButton(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize) {
         super(screen, xPos, yPos, xSize, ySize);
     }
     
-    public void updateState(ReactorActivity reactorActivity) {
-        this.reactorActivity = reactorActivity;
+    public void updateState(long flowRate) {
+        this.flowRate = flowRate;
     }
     
     /**
@@ -49,10 +49,10 @@ public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw button.
-        if (this.reactorActivity == ReactorActivity.ACTIVE) {
-            GuiRenderHelper.setTextureOffset(16, 16);
+        if (this.debounce) {
+            GuiRenderHelper.setTextureOffset(64, 48);
         } else {
-            GuiRenderHelper.setTextureOffset(0, 16);
+            GuiRenderHelper.setTextureOffset(48, 48);
         }
         GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
@@ -60,11 +60,7 @@ public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T
     @Override
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            if (this.reactorActivity == ReactorActivity.ACTIVE) {
-                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor_activity.deactivate").getFormattedText().split("\\n")), mouseX, mouseY);
-            } else {
-                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor_activity.activate").getFormattedText().split("\\n")), mouseX, mouseY);
-            }
+            this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.flow.increase").getFormattedText().split("\\n")), mouseX, mouseY);
         }
     }
     
@@ -77,14 +73,26 @@ public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T
         // Check for a click (and enable debounce).
         if (glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS
                 && !debounce) {
+            long newFlowRate = flowRate;
+            boolean shiftPressed = (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+                    || (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
+            boolean ctrlPressed = glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS
+                    || (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
             
             // Do click logic.
-            ReactorState reactorState = (ReactorState) ((ReactorContainer) this.screen.getContainer()).getGuiPacket();
-            if (reactorState.reactorActivity == ReactorActivity.ACTIVE) {
-                ((ReactorContainer) this.screen.getContainer()).executeRequest("setActive", false);
+            if (shiftPressed && ctrlPressed) {
+                newFlowRate += 1000;
+            } else if (ctrlPressed) {
+                newFlowRate += 100;
+            } else if (shiftPressed) {
+                newFlowRate += 10;
             } else {
-                ((ReactorContainer) this.screen.getContainer()).executeRequest("setActive", true);
+                newFlowRate += 1;
             }
+            ((TurbineContainer) this.screen.getContainer()).runRequest("setMaxFlowRate", newFlowRate);
+            
+            assert this.screen.getMinecraft().player != null;
+            this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;
         }
         
