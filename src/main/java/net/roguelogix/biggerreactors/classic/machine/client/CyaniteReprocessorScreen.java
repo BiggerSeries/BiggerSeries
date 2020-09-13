@@ -18,6 +18,8 @@ import net.roguelogix.phosphophyllite.gui.GuiScreenBase;
 @OnlyIn(Dist.CLIENT)
 public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorContainer> implements IHasContainer<CyaniteReprocessorContainer> {
     
+    private CyaniteReprocessorState cyaniteReprocessorState;
+    
     private GuiProgressBar<CyaniteReprocessorContainer> progressBar;
     private GuiEnergyTank<CyaniteReprocessorContainer> energyTank;
     private GuiFluidTank<CyaniteReprocessorContainer> waterTank;
@@ -39,7 +41,7 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
      */
     @Override
     public void tick() {
-        CyaniteReprocessorState cyaniteReprocessorState = (CyaniteReprocessorState) this.getContainer().getGuiPacket();
+        this.cyaniteReprocessorState = (CyaniteReprocessorState) this.getContainer().getGuiPacket();
         this.progressBar.updateWorkTime(cyaniteReprocessorState.workTime, cyaniteReprocessorState.workTimeTotal);
         this.energyTank.updateEnergy(cyaniteReprocessorState.energyStored, cyaniteReprocessorState.energyCapacity);
         this.waterTank.updateFluid(Fluids.WATER.getFluid(), cyaniteReprocessorState.waterStored, cyaniteReprocessorState.waterCapacity);

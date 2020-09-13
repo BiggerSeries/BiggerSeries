@@ -13,6 +13,8 @@ import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasButton;
 import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
+import java.util.Arrays;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
@@ -58,10 +60,9 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
             if (this.doAutoEject) {
-                this.screen.renderTooltip(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_auto_enabled.main").getFormattedText(), mouseX, mouseY);
+                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_auto.enabled").getFormattedText().split("\\n")), mouseX, mouseY);
             } else {
-                this.screen.renderTooltip(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_auto_disabled.main").getFormattedText(), mouseX, mouseY - 14);
-                this.screen.renderTooltip(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_auto_disabled.sub").getFormattedText(), mouseX, mouseY);
+                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_auto.disabled").getFormattedText().split("\\n")), mouseX, mouseY);
             }
         }
     }
@@ -78,7 +79,6 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
             
             // Do click logic.
             ReactorState reactorState = (ReactorState) ((ReactorContainer) this.screen.getContainer()).getGuiPacket();
-            // TODO: I don't think this handler has been implemented yet.
             if (reactorState.doAutoEject) {
                 ((ReactorContainer) this.screen.getContainer()).executeRequest("setAutoEject", false);
             } else {

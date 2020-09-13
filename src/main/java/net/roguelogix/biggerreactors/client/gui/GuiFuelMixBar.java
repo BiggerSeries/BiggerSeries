@@ -8,6 +8,8 @@ import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
+import java.util.Arrays;
+
 public class GuiFuelMixBar<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_tanks.png");
@@ -31,7 +33,7 @@ public class GuiFuelMixBar<T extends Container> extends GuiPartBase<T> implement
      * @param fuelStored   The amount of fuel currently stored.
      * @param fuelCapacity The max capacity of fuel/waste storable.
      */
-    public void updateFuelWaste(long wasteStored, long fuelStored, long fuelCapacity) {
+    public void updateFuelMix(long wasteStored, long fuelStored, long fuelCapacity) {
         this.wasteStored = wasteStored;
         this.fuelStored = fuelStored;
         this.fuelCapacity = fuelCapacity;
@@ -82,8 +84,13 @@ public class GuiFuelMixBar<T extends Container> extends GuiPartBase<T> implement
     @Override
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(String.format("%d/%d mB", (this.wasteStored + this.fuelStored), this.fuelCapacity), mouseX, mouseY - 14);
-            this.screen.renderTooltip(String.format("%.1f%% Fuel, %.1f%% Waste", ((float) this.wasteStored / this.fuelCapacity * 100.0), ((float) this.fuelStored / this.fuelCapacity) * 100.0), mouseX, mouseY);
+            this.screen.renderTooltip(Arrays.asList(
+                    String.format("%d/%d mB\n%.1f%% Fuel, %.1f%% Waste",
+                            (this.wasteStored + this.fuelStored),
+                            this.fuelCapacity,
+                            ((float) this.fuelStored / this.fuelCapacity * 100.0),
+                            ((float) this.wasteStored / this.fuelCapacity) * 100.0)
+                            .split("\\n")), mouseX, mouseY);
         }
     }
 }

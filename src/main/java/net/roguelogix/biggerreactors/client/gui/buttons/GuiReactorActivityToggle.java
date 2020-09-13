@@ -14,6 +14,8 @@ import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasButton;
 import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
+import java.util.Arrays;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
@@ -59,9 +61,9 @@ public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
             if (this.reactorActivity == ReactorActivity.ACTIVE) {
-                this.screen.renderTooltip(new TranslationTextComponent("tooltip.biggerreactors.buttons.deactivate_reactor.main").getFormattedText(), mouseX, mouseY);
+                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor_activity.deactivate").getFormattedText().split("\\n")), mouseX, mouseY);
             } else {
-                this.screen.renderTooltip(new TranslationTextComponent("tooltip.biggerreactors.buttons.activate_reactor.main").getFormattedText(), mouseX, mouseY);
+                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor_activity.activate").getFormattedText().split("\\n")), mouseX, mouseY);
             }
         }
     }

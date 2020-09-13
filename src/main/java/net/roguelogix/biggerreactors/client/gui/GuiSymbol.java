@@ -8,23 +8,39 @@ import net.roguelogix.phosphophyllite.gui.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
+import java.util.Arrays;
+
 public class GuiSymbol<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
-    private String[] tooltips;
+    private String tooltip;
     private int xOffset;
     private int yOffset;
     
     /**
-     * @param screen The screen this instance belongs to.
-     * @param xPos   The X position of the part.
-     * @param yPos   The Y position of the part.
+     * @param screen  The screen this instance belongs to.
+     * @param xPos    The X position of the part.
+     * @param yPos    The Y position of the part.
+     * @param xOffset The X offset of the texture.
+     * @param yOffset The Y offset of the texture.
+     * @param tooltip The tooltip to apply to this symbol.
      */
-    public GuiSymbol(ContainerScreen<T> screen, int xPos, int yPos, int xOffset, int yOffset, String[] tooltips) {
+    public GuiSymbol(ContainerScreen<T> screen, int xPos, int yPos, int xOffset, int yOffset, String tooltip) {
         super(screen, xPos, yPos, 16, 16);
         this.xOffset = xOffset;
         this.yOffset = yOffset;
-        this.tooltips = tooltips;
+        this.tooltip = tooltip;
+    }
+    
+    /**
+     * Update the energy values this part uses.
+     *
+     * @param xOffset The X offset of the texture.
+     * @param yOffset The Y offset of the texture.
+     */
+    public void updateTextureOffset(int xOffset, int yOffset) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
     }
     
     /**
@@ -49,13 +65,8 @@ public class GuiSymbol<T extends Container> extends GuiPartBase<T> implements IH
      */
     @Override
     public void drawTooltip(int mouseX, int mouseY) {
-        int i = tooltips.length;
         if (this.isHovering(mouseX, mouseY)) {
-            for (String tooltip : tooltips) {
-                this.screen.renderTooltip(tooltip, mouseX, mouseY - (i * 14));
-                --i;
-                ;
-            }
+            this.screen.renderTooltip(Arrays.asList(tooltip.split("\\n")), mouseX, mouseY);
         }
     }
 }

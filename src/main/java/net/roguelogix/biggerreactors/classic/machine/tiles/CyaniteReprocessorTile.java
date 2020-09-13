@@ -452,8 +452,9 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
                                              @Nullable Direction side) {
         // Check for work.
         // TODO: While this capability is exclusive to the Reprocessor for now, it may not always be.
-        //  The capability isn't technically implemented, no registration is done.
+        //  The capability is technically implemented, but no registration is done.
         //  That oughta be fixed, so it can be checked for here.
+        //  But I'm lazy, so I'll do that some other time.
         //if (capability.equals(CapabilityWorkHandler.WORK_HANDLER_CAPABILITY)) {
         //    return this.WORK_HANDLER_CAPABILITY.cast();
         //}

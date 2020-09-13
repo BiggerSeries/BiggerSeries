@@ -95,7 +95,6 @@ public class ReactorState implements GuiSync.IGUIPacket {
     
     @Override
     public void read(Map<?, ?> data) {
-        // TODO: These are mixed between the new enums and old booleans. Migrate them fully to enums.
         reactorActivity = ((Boolean) data.get("reactorActivity")) ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE;
         reactorType = ((Boolean) data.get("reactorType")) ? ReactorType.ACTIVE : ReactorType.PASSIVE;
         

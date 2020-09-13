@@ -4,12 +4,12 @@ import net.roguelogix.phosphophyllite.registry.PhosphophylliteFluid;
 import net.roguelogix.phosphophyllite.registry.RegisterFluid;
 
 @RegisterFluid(name = "fluid_irradiated_steam")
-public class IrradiatedSteam extends PhosphophylliteFluid {
+public class FluidIrradiatedSteam extends PhosphophylliteFluid {
     
     @RegisterFluid.Instance
-    public static IrradiatedSteam INSTANCE;
+    public static FluidIrradiatedSteam INSTANCE;
     
-    public IrradiatedSteam(Properties properties) {
+    public FluidIrradiatedSteam(Properties properties) {
         super(properties);
     }
 }

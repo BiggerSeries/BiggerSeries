@@ -15,10 +15,10 @@ import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
 public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_tanks.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_tanks.png");
     private Fluid fluidType;
-    private int fluidStored;
-    private int fluidCapacity;
+    private long fluidStored;
+    private long fluidCapacity;
     
     /**
      * @param screen The screen this instance belongs to.
@@ -36,7 +36,7 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
      * @param fluidStored   The amount of fluids currently stored.
      * @param fluidCapacity The max capacity of fluids storable.
      */
-    public void updateFluid(Fluid fluidType, int fluidStored, int fluidCapacity) {
+    public void updateFluid(Fluid fluidType, long fluidStored, long fluidCapacity) {
         this.fluidType = fluidType;
         this.fluidStored = fluidStored;
         this.fluidCapacity = fluidCapacity;
@@ -58,7 +58,7 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
         // Draw foreground.
         if (this.fluidCapacity != 0) {
             // Determine amount to draw.
-            int renderSize = this.ySize * this.fluidStored / this.fluidCapacity;
+            int renderSize = (int) (this.ySize * this.fluidStored / this.fluidCapacity);
             
             // Gather fluid texture.
             FluidAttributes fluidAttributes = this.fluidType.getAttributes();

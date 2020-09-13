@@ -12,6 +12,8 @@ import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.api.IHasButton;
 import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
 
+import java.util.Arrays;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class GuiReactorManualEject<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
@@ -59,7 +61,6 @@ public class GuiReactorManualEject<T extends Container> extends GuiPartBase<T> i
                 && !debounce) {
             
             // Do click logic.
-            // TODO: I don't think this handler has been implemented yet.
             ((ReactorContainer) this.screen.getContainer()).executeRequest("ejectWaste", true);
             debounce = true;
         }
@@ -74,8 +75,7 @@ public class GuiReactorManualEject<T extends Container> extends GuiPartBase<T> i
     @Override
     public void drawTooltip(int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_manual.main").getFormattedText(), mouseX, mouseY - 14);
-            this.screen.renderTooltip(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_manual.sub").getFormattedText(), mouseX, mouseY);
+            this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.waste_eject_manual").getFormattedText().split("\\n")), mouseX, mouseY);
         }
     }
 }

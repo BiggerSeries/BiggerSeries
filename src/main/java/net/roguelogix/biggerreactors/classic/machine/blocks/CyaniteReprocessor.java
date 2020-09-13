@@ -90,7 +90,6 @@ public class CyaniteReprocessor extends ContainerBlock {
         if (entity != null) {
             world.setBlockState(blockPos, blockState
                     .with(FACING, getFacingFromEntity(blockPos, entity))
-                    // TODO: add enable/lit logic
                     .with(ENABLED, false), 2);
         }
     }
