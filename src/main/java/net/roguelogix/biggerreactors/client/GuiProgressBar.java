@@ -9,7 +9,7 @@ import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
 
 public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/gui_bars.png");
+    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_bars.png");
     private int workTime;
     private int workTimeTotal;
     
