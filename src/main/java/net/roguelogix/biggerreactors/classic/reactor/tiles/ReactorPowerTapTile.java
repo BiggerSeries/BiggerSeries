@@ -64,7 +64,7 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
             return;
         }
         energyOutput = te.getCapability(CapabilityEnergy.ENERGY, powerOutputDirection.getOpposite());
-        setConnected(energyOutput.orElse(ENERGY_ZERO).canReceive());
+        setConnected(energyOutput.isPresent());
     }
     
     public long distributePower(long toDistribute, boolean simulate) {
