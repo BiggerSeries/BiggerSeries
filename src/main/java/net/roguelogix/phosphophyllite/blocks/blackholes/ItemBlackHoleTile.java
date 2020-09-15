@@ -60,7 +60,7 @@ public class ItemBlackHoleTile extends TileEntity implements IItemHandler {
     
     @Override
     public int getSlotLimit(int slot) {
-        return 0;
+        return 64;
     }
     
     @Override

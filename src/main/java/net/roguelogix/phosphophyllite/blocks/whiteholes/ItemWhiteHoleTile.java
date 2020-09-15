@@ -79,7 +79,7 @@ public class ItemWhiteHoleTile extends TileEntity implements IItemHandler, ITick
     
     @Override
     public int getSlots() {
-        return 0;
+        return 128;
     }
     
     @Nonnull
@@ -102,7 +102,7 @@ public class ItemWhiteHoleTile extends TileEntity implements IItemHandler, ITick
     
     @Override
     public int getSlotLimit(int slot) {
-        return 1;
+        return 64;
     }
     
     @Override
