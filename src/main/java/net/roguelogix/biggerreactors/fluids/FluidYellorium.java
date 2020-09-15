@@ -11,7 +11,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterFluid;
 public class FluidYellorium extends PhosphophylliteFluid {
     
     @RegisterFluid.Instance
-    public static FluidYellorium INSTANCE_STILL;
+    public static FluidYellorium INSTANCE;
     
     private final ResourceLocation TEXTURE_STILL = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_still");
     private final ResourceLocation TEXTURE_FLOWING = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_flowing");
