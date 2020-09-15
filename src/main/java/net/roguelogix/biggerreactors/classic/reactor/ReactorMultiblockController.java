@@ -3,6 +3,7 @@ package net.roguelogix.biggerreactors.classic.reactor;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
@@ -55,25 +56,25 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         };
         setAssemblyValidator(genericController -> {
             if (terminals.isEmpty()) {
-                return false;
+                throw new ValidationError("multiblock.error.biggerreactors.no_terminal");
             }
             if (controlRods.isEmpty()) {
-                return false;
+                throw new ValidationError("multiblock.error.biggerreactors.no_rods");
             }
             for (ReactorControlRodTile controlRod : controlRods) {
                 if (controlRod.getPos().getY() != maxY()) {
-                    return false;
+                    throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.control_rod_not_on_top", controlRod.getPos().getX(), controlRod.getPos().getY(), controlRod.getPos().getZ()));
                 }
                 for (int i = 0; i < maxY() - minY() - 1; i++) {
                     if (!(world.getBlockState(controlRod.getPos().add(0, -1 - i, 0)).getBlock() instanceof ReactorFuelRod)) {
-                        return false;
+                        throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.fuel_rod_gap", controlRod.getPos().getX(), -1 - i, controlRod.getPos().getZ()));
                     }
                 }
             }
             
             for (ReactorFuelRodTile fuelRod : fuelRods) {
                 if (!(world.getBlockState(new BlockPos(fuelRod.getPos().getX(), maxY(), fuelRod.getPos().getZ())).getBlock() instanceof ReactorControlRod)) {
-                    return false;
+                    throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.no_control_rod_for_fuel_rod", fuelRod.getPos().getX(), fuelRod.getPos().getZ()));
                 }
             }
             
@@ -82,7 +83,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                     TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
                     if (te instanceof ReactorBaseTile) {
                         if (!((ReactorBaseTile) te).isCurrentController(this)) {
-                            throw new ValidationError("multiblock.error.biggerreactors.dangling_internal_part");
+                            throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.dangling_internal_part", te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
                         }
                     }
                 }

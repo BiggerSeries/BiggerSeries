@@ -2,6 +2,7 @@ package net.roguelogix.phosphophyllite.multiblock.rectangular;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
@@ -98,9 +99,12 @@ public class RectangularMultiblockController extends MultiblockController {
         // dimension check failed in all orientations
         if (dimensions == null) {
             // TODO: 6/29/20 dimensions error
-            throw new ValidationError("TODO: dimensions error");
+            throw new ValidationError(new TranslationTextComponent("multiblock.error.phosphophyllite.dimensions",
+                    allowedOrientations[0].x, allowedOrientations[0].y, allowedOrientations[0].z,
+                    controller.minX, controller.minY, controller.minZ,
+                    controller.maxX, controller.maxY, controller.maxZ));
         }
-        // or it didnt, at this point i dont know, and you dont either
+        // or it didnt, at this point i dont really know, and you dont either, works(tm)
         
         Util.chunkCachedBlockStateIteration(new Vector3i(minX, minY, minZ), new Vector3i(maxX, maxY, maxZ), controller.world, (blockState, pos) -> {
             Block block = blockState.getBlock();
@@ -148,7 +152,7 @@ public class RectangularMultiblockController extends MultiblockController {
                 default: {
                     if (extremes == 0) {
                         if (controller.interiorValidator != null) {
-                            // oh, so you dont give a fuck about the frame either, do you even care are the exterior
+                            // you must care about the inside, right?
                             if (!controller.interiorValidator.validate(block)) {
                                 throw new InvalidBlock(block, pos, "interior");
                             } else {
@@ -157,7 +161,7 @@ public class RectangularMultiblockController extends MultiblockController {
                         }
                     }
                     if (controller.genericValidator != null) {
-                        // oh, so you dont give a fuck about the frame either, do you even care are the exterior
+                        // anything at all?
                         if (!controller.genericValidator.validate(block)) {
                             throw new InvalidBlock(block, pos, "generic");
                         } else {
