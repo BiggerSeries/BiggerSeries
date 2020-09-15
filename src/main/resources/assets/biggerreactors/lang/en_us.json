@@ -1,8 +1,10 @@
 {
   "itemGroup.net.roguelogix.biggerreactors.BiggerReactors": "Bigger Reactors",
 
-  "item.biggerreactors.debug_tool": "Debeefer",
   "item.biggerreactors.wrench": "Reactor Wrench",
+
+  "item.biggerreactors.fluid_yellorium_bucket": "Fluid Yellorium",
+  "fluid.biggerreactors.fluid_irradiated_steam": "Irradiated Steam",
 
   "block.biggerreactors.yellorite_ore": "Yellorite Ore",
   "block.biggerreactors.yellorium_block": "Yellorium Block",
@@ -38,6 +40,13 @@
   "block.biggerreactors.reactor_access_port": "Reactor Access Port",
   "block.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
 
+  "multiblock.error.biggerreactors.no_terminal": "Reactors require at least one terminal",
+  "multiblock.error.biggerreactors.no_rods": "Reactors must have at least one fuel element",
+  "multiblock.error.biggerreactors.control_rod_not_on_top": "Control rods can only be placed on the top of the reactor (%d, %d, %d)",
+  "multiblock.error.biggerreactors.fuel_rod_gap": "All fuel elements must extend from top of the reactor to the bottom (%d, %d, %d)",
+  "multiblock.error.biggerreactors.no_control_rod_for_fuel_rod": "All fuel elements must be topped with a control rod (%d, %d)",
+  "multiblock.error.biggerreactors.dangling_internal_part": "There appears to be another reactor inside this one, is something wrong? (%d, %d, %d)",
+
   "tooltip.biggerreactors.status.reactor.activity.online": "Status: §2Online",
   "tooltip.biggerreactors.status.reactor.activity.offline": "Status: §4Offline",
 
@@ -67,7 +76,7 @@
   "block.biggerreactors.turbine_rotor_blade": "Turbine Rotor Blade",
   "block.biggerreactors.turbine_rotor_bearing": "Turbine Rotor Bearing",
   "block.biggerreactors.turbine_coolant_port": "Turbine Coolant Port",
-  "block.biggerreactors.turbine_power_tap": "Turbine Coolant Port",
+  "block.biggerreactors.turbine_power_tap": "Turbine Power Tap",
 
   "tooltip.biggerreactors.status.turbine.activity.online": "Status: §2Online",
   "tooltip.biggerreactors.status.turbine.activity.offline": "Status: §4Offline",
