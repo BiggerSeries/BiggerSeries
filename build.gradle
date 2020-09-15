@@ -132,6 +132,8 @@ dependencies {
     runtime fg.deobf('curse.maven:thermalcore:3053264')
     runtime fg.deobf('curse.maven:cofhcore:3053263')
     runtime fg.deobf('curse.maven:jei:3039710')
+    runtime fg.deobf('curse.maven:mekanism:2996531')
+    runtime fg.deobf('curse.maven:mekanismGens:2996533')
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
