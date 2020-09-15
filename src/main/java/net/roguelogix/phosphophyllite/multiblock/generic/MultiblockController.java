@@ -275,8 +275,8 @@ public class MultiblockController {
     
     private void updateAssemblyState() {
         AssemblyState oldState = state;
-        System.out.println("VALIDATING! " + this.hashCode());
-        long startTime = System.nanoTime();
+//        System.out.println("VALIDATING! " + this.hashCode());
+//        long startTime = System.nanoTime();
         boolean validated = false;
         lastValidationError = null;
         try {
@@ -284,8 +284,8 @@ public class MultiblockController {
         } catch (ValidationError e) {
             lastValidationError = e;
         }
-        long endTime = System.nanoTime();
-        System.out.println("VALIDATED! " + this.hashCode() + "\t" + validated + "\t" + ((float) (endTime - startTime) / 1_000_000));
+//        long endTime = System.nanoTime();
+//        System.out.println("VALIDATED! " + this.hashCode() + "\t" + validated + "\t" + ((float) (endTime - startTime) / 1_000_000));
         if (validated) {
             state = AssemblyState.ASSEMBLED;
             if (storedNBT != null) {

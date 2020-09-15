@@ -78,14 +78,4 @@ public class Phosphophyllite {
             }
         }
     }
-    
-    @SubscribeEvent
-    public void GuiOpenEvent(GuiOpenEvent e) {
-        Screen gui = e.getGui();
-        if (gui != null) {
-            System.out.println(gui.getClass().getSimpleName());
-        } else {
-            System.out.println("null gui");
-        }
-    }
 }
