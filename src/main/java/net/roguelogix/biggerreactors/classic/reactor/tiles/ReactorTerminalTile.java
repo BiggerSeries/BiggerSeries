@@ -15,6 +15,7 @@ import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.phosphophyllite.gui.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
@@ -47,7 +48,7 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     
     @Override
     public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
-        if (player.isCrouching() && handIn == Hand.MAIN_HAND) {
+        if (player.isCrouching() && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
             if (controller != null) {
                 reactor().toggleActive();
             }
