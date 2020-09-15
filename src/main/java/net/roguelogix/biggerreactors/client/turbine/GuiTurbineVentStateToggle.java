@@ -10,10 +10,10 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.VentState;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
-import net.roguelogix.phosphophyllite.gui.GuiPartBase;
-import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
-import net.roguelogix.phosphophyllite.gui.api.IHasButton;
-import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
+import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasButton;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
 
 import java.util.Arrays;
 

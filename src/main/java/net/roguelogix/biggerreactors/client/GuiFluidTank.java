@@ -9,9 +9,9 @@ import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.gui.GuiPartBase;
-import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
-import net.roguelogix.phosphophyllite.gui.api.IHasTooltip;
+import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
 
 public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     

@@ -4,8 +4,8 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.gui.GuiPartBase;
-import net.roguelogix.phosphophyllite.gui.GuiRenderHelper;
+import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
 
 public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
     

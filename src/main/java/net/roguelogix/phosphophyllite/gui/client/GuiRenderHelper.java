@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui;
+package net.roguelogix.phosphophyllite.gui.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;

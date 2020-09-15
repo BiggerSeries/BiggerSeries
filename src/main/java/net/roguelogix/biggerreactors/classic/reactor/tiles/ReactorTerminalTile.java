@@ -9,12 +9,13 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
-import net.roguelogix.phosphophyllite.gui.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -69,7 +70,7 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     
     @Override
     public ITextComponent getDisplayName() {
-        return ReactorTerminal.INSTANCE.getNameTextComponent();
+        return new TranslationTextComponent(ReactorTerminal.INSTANCE.getTranslationKey());
     }
     
     @Nullable

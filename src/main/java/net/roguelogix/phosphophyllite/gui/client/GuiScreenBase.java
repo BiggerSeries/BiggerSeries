@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui;
+package net.roguelogix.phosphophyllite.gui.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.roguelogix.phosphophyllite.gui.api.IHasGuiTexture;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasGuiTexture;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiScreenBase<T extends Container> extends ContainerScreen<T> implements IHasGuiTexture {

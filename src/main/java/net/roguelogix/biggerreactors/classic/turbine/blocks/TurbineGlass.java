@@ -29,6 +29,7 @@ public class TurbineGlass extends TurbineBaseBlock {
         return new TurbineGlassTile();
     }
     
+    @OnlyIn(Dist.CLIENT)
     @RegisterBlock.RenderLayer
     public RenderType renderLayer() {
         return RenderType.getCutout();

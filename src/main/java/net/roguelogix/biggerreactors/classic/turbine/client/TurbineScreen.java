@@ -15,7 +15,7 @@ import net.roguelogix.biggerreactors.client.GuiFluidTank;
 import net.roguelogix.biggerreactors.client.GuiSymbol;
 import net.roguelogix.biggerreactors.client.turbine.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
-import net.roguelogix.phosphophyllite.gui.GuiScreenBase;
+import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 

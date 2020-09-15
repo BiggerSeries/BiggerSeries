@@ -27,6 +27,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig.FillerBlockType;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -66,7 +67,7 @@ public class Registry {
                     try {
                         Field field = classData.getClass().getDeclaredField("clazz");
                         field.setAccessible(true);
-                        org.objectweb.asm.Type clazz = (Type) field.get(classData);
+                        Type clazz = (Type) field.get(classData);
                         String className = clazz.getClassName();
                         if (className.startsWith(callerPackage)) {
                             
@@ -442,12 +443,21 @@ public class Registry {
         }
     }
     
-    private static final HashMap<Block, IBakedModel> bakedModelsToRegister = new HashMap<>();
+    private static final HashMap<Block, IBakedModel> bakedModelsToRegister;
+    static {
+        if(FMLEnvironment.dist == Dist.CLIENT){
+            bakedModelsToRegister = new HashMap<>();
+        } else {
+            bakedModelsToRegister = null;
+        }
+    }
     
+    @OnlyIn(Dist.CLIENT)
     public static synchronized void registerBakedModel(Block block, IBakedModel model) {
         bakedModelsToRegister.put(block, model);
     }
     
+    @OnlyIn(Dist.CLIENT)
     private static synchronized void onModelBake(ModelBakeEvent event, String modNamespace, Set<Class<?>> classes) {
         HashSet<Block> blocksRegistered = Registry.blocksRegistered.get(modNamespace);
         if (blocksRegistered == null) {

@@ -334,10 +334,16 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     public long extractWaste(long mb, boolean simulated) {
+        if(assemblyState() != AssemblyState.ASSEMBLED){
+            return 0;
+        }
         return simulation.fuelTank.extractWaste(mb, simulated);
     }
     
     public long refuel(long mb, boolean simulated) {
+        if(assemblyState() != AssemblyState.ASSEMBLED){
+            return 0;
+        }
         return simulation.fuelTank.insertFuel(mb, simulated);
     }
     

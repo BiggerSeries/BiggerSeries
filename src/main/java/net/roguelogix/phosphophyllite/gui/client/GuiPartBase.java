@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui;
+package net.roguelogix.phosphophyllite.gui.client;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;

@@ -29,6 +29,7 @@ public class ReactorFuelRod extends ReactorBaseBlock {
         return new ReactorFuelRodTile();
     }
     
+    @OnlyIn(Dist.CLIENT)
     @RegisterBlock.RenderLayer
     RenderType renderLayer() {
         return RenderType.getCutout();

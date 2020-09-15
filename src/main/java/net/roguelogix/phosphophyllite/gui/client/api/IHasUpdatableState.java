@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui.api;
+package net.roguelogix.phosphophyllite.gui.client.api;
 
 public interface IHasUpdatableState<T> {
     /**

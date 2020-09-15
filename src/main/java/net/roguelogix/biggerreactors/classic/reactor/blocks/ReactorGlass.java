@@ -29,6 +29,7 @@ public class ReactorGlass extends ReactorBaseBlock {
         return new ReactorGlassTile();
     }
     
+    @OnlyIn(Dist.CLIENT)
     @RegisterBlock.RenderLayer
     public RenderType renderLayer() {
         return RenderType.getCutout();

@@ -30,11 +30,6 @@ public class TurbineRotorShaft extends TurbineBaseBlock {
         return new TurbineRotorShaftTile();
     }
     
-    @RegisterBlock.RenderLayer
-    public RenderType renderLayer() {
-        return RenderType.getCutout();
-    }
-    
     @OnlyIn(Dist.CLIENT)
     public float getAmbientOcclusionLightValue(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 1.0F;
