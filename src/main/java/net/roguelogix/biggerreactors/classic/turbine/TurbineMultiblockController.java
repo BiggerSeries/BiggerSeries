@@ -531,7 +531,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         }
     }
     
-    VentState ventState = VentState.CLOSED;
+    VentState ventState = VentState.OVERFLOW;
     
     private void setVentState(VentState newVentState) {
         ventState = newVentState;
