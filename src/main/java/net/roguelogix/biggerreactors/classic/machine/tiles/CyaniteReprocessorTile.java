@@ -130,7 +130,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         if (ItemStack.areItemsEqual(player.getHeldItemMainhand(), new ItemStack(Items.WATER_BUCKET))) {
             if (this.fluidTank.getFluidAmount() <= (Config.CyaniteReprocessor.WaterTankCapacity - 1000)) {
                 this.fluidTank.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-                player.setHeldItem(Hand.MAIN_HAND, Items.BUCKET.getDefaultInstance());
+                player.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.BUCKET));
             }
             return ActionResultType.SUCCESS;
         }
@@ -402,7 +402,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         }
         this.itemPresentLastTick = inputStack.copy();
         
-        if (!inputStack.isEmpty()) {
+        if (inputStack.getCount() >= 2) {
             // Can we continue?
             if (canWork()) {
                 isActive = true;
@@ -417,7 +417,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
             
             // Item is done.
             if (this.workHandler.isFinished()) {
-                this.itemHandler.extractItem(CyaniteReprocessorItemHandler.INPUT_SLOT_INDEX, 1, false);
+                this.itemHandler.extractItem(CyaniteReprocessorItemHandler.INPUT_SLOT_INDEX, 2, false);
                 this.itemHandler.insertItem(CyaniteReprocessorItemHandler.OUTPUT_SLOT_INDEX, new ItemStack(BlutoniumIngot.INSTANCE, 1), false);
                 this.workHandler.clear();
             }
