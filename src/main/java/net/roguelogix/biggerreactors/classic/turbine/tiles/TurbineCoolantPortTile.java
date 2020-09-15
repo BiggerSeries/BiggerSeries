@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -40,6 +41,8 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         return super.getCapability(cap, side);
     }
     
+    private static final ResourceLocation steamTagLocation = new ResourceLocation("forge:steam");
+    
     private final FluidStack water = new FluidStack(Fluids.WATER, 0);
     private final FluidStack steam = new FluidStack(FluidIrradiatedSteam.INSTANCE, 0);
     
@@ -70,7 +73,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         if (tank == 1 && stack.getRawFluid() == Fluids.WATER) {
             return true;
         }
-        return tank == 0 && stack.getRawFluid() == FluidIrradiatedSteam.INSTANCE;
+        return tank == 0 && stack.getRawFluid().getTags().contains(steamTagLocation);
     }
     
     @Override
@@ -78,7 +81,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         if (direction == OUTLET) {
             return 0;
         }
-        if (resource.getFluid() != FluidIrradiatedSteam.INSTANCE) {
+        if (!resource.getFluid().getTags().contains(steamTagLocation)) {
             return 0;
         }
         if (controller != null) {
