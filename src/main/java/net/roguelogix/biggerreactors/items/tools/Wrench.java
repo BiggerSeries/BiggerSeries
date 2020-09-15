@@ -3,7 +3,7 @@ package net.roguelogix.biggerreactors.items.tools;
 import net.minecraft.item.Item;
 import net.roguelogix.phosphophyllite.registry.RegisterItem;
 
-@RegisterItem(name = "wrench")
+//@RegisterItem(name = "wrench")
 public class Wrench extends Item {
     
     @RegisterItem.Instance
