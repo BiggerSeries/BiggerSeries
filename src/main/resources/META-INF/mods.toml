@@ -26,7 +26,7 @@ logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
 credits="ErogeneousBeef for the origional Big Reactors mod, that this is spirtually (and semi-literally) derived from" #optional
 # A text field displayed in the mod UI
-authors="RogueLogix" #optional
+authors="RogueLogix, Gizmocodes" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Big Reactors, but even bigger
@@ -55,7 +55,7 @@ Library for the Bigger mods
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
+[[dependencies.phosphophyllite]] #optional
     # the modid of the dependency
     modId="forge" #mandatory
     # Does this dependency have to exist - if not, ordering below must be specified
@@ -67,10 +67,31 @@ Library for the Bigger mods
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 # Here's another dependency
-[[dependencies.examplemod]]
+[[dependencies.phosphophyllite]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"
+
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.biggerreactors]] #optional
+# the modid of the dependency
+modId="forge" #mandatory
+# Does this dependency have to exist - if not, ordering below must be specified
+mandatory=true #mandatory
+# The version range of the dependency
+versionRange="[31,)" #mandatory
+# An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+ordering="NONE"
+# Side this dependency is applied on - BOTH, CLIENT or SERVER
+side="BOTH"
+# Here's another dependency
+[[dependencies.biggerreactors]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.15.2]"
+ordering="NONE"
+side="BOTH"
+
 
