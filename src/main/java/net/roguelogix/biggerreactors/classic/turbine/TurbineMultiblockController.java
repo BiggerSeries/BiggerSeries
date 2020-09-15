@@ -632,6 +632,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 "Steam: " + steam + "\n" +
                 "Water: " + water + "\n" +
                 "Flow: " + fluidConsumedLastTick + "\n" +
+                "RotorEfficiency: " + rotorEfficiencyLastTick + "\n" +
                 "MaxFlow: " + maxFloatRate + "\n" +
                 "RotorRPM: " + (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0) + "\n" +
                 "";
