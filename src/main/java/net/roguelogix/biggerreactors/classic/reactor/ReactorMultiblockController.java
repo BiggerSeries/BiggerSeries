@@ -265,13 +265,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             ejectWaste();
         }
         
-        if (simulation.fuelTank.spaceAvailable() > 0) {
-            for (ReactorAccessPortTile accessPort : accessPorts) {
-                long ingots = accessPort.refuel(simulation.fuelTank.spaceAvailable());
-                simulation.fuelTank.insertFuel(ingots, false);
-            }
-        }
-        
         
         long totalPowerRequested = 0;
         for (ReactorPowerTapTile powerPort : powerPorts) {
@@ -290,10 +283,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         // i know this is just a hose out, not sure if it should be changed or not
         for (ReactorCoolantPortTile coolantPort : coolantPorts) {
             simulation.coolantTank.extractSteam(coolantPort.pushSteam(simulation.coolantTank.extractSteam(Integer.MAX_VALUE, true)), false);
-        }
-        
-        for (ReactorAccessPortTile accessPort : accessPorts) {
-            accessPort.pushWaste();
         }
         
         markDirty();
@@ -337,10 +326,18 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             if (accessPort.isInlet()) {
                 continue;
             }
-            long wasteSpaceAvailable = accessPort.wasteSpaceAvailable();
-            simulation.fuelTank.extractWaste(accessPort.dumpWaste(simulation.fuelTank.extractWaste(wasteSpaceAvailable, true)), false);
+            long wastePushed = accessPort.pushWaste((int) simulation.fuelTank.getWasteAmount(), false);
+            simulation.fuelTank.extractWaste(wastePushed, false);
             
         }
+    }
+    
+    public long extractWaste(long mb, boolean simulated) {
+        return simulation.fuelTank.extractWaste(mb, simulated);
+    }
+    
+    public long refuel(long mb, boolean simulated) {
+        return simulation.fuelTank.insertFuel(mb, simulated);
     }
     
     public void updateDataPacket(ReactorState reactorState) {
