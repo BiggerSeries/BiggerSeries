@@ -421,7 +421,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 
                 // oh noes, there is a cap now, *no overspeeding your fucking turbines*
                 if (rotorSpeed > 2245) {
-                    efficiency = rotorSpeed / 4490;
+                    efficiency = -rotorSpeed / 4490;
                     efficiency += 1;
                 }
                 if (efficiency < 0) {
