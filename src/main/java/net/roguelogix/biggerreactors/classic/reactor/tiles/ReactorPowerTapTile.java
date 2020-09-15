@@ -108,23 +108,17 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             powerOutputDirection = null;
-        }
-        if (pos.getX() == controller.minX()) {
+        } else if (pos.getX() == controller.minX()) {
             powerOutputDirection = Direction.WEST;
-        }
-        if (pos.getX() == controller.maxX()) {
+        } else if (pos.getX() == controller.maxX()) {
             powerOutputDirection = Direction.EAST;
-        }
-        if (pos.getY() == controller.minY()) {
+        } else if (pos.getY() == controller.minY()) {
             powerOutputDirection = Direction.DOWN;
-        }
-        if (pos.getY() == controller.maxY()) {
+        } else if (pos.getY() == controller.maxY()) {
             powerOutputDirection = Direction.UP;
-        }
-        if (pos.getZ() == controller.minZ()) {
+        } else if (pos.getZ() == controller.minZ()) {
             powerOutputDirection = Direction.NORTH;
-        }
-        if (pos.getZ() == controller.maxZ()) {
+        } else if (pos.getZ() == controller.maxZ()) {
             powerOutputDirection = Direction.SOUTH;
         }
         neighborChanged();

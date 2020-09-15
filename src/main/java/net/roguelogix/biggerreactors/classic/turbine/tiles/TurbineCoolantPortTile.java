@@ -124,23 +124,17 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             waterOutputDirection = null;
-        }
-        if (pos.getX() == controller.minX()) {
+        } else if (pos.getX() == controller.minX()) {
             waterOutputDirection = Direction.WEST;
-        }
-        if (pos.getX() == controller.maxX()) {
+        } else if (pos.getX() == controller.maxX()) {
             waterOutputDirection = Direction.EAST;
-        }
-        if (pos.getY() == controller.minY()) {
+        } else if (pos.getY() == controller.minY()) {
             waterOutputDirection = Direction.DOWN;
-        }
-        if (pos.getY() == controller.maxY()) {
+        } else if (pos.getY() == controller.maxY()) {
             waterOutputDirection = Direction.UP;
-        }
-        if (pos.getZ() == controller.minZ()) {
+        } else if (pos.getZ() == controller.minZ()) {
             waterOutputDirection = Direction.NORTH;
-        }
-        if (pos.getZ() == controller.maxZ()) {
+        } else if (pos.getZ() == controller.maxZ()) {
             waterOutputDirection = Direction.SOUTH;
         }
         neighborChanged();
