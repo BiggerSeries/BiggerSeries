@@ -494,7 +494,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         turbineState.turbineOutputRate = energyGeneratedLastTick;
         
         turbineState.currentRPM = (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0);
-        turbineState.maxRPM = 2000.0;
+        turbineState.maxRPM = 2200.0;
         
         turbineState.intakeStored = steam;
         turbineState.intakeCapacity = Config.Turbine.TankSize;
