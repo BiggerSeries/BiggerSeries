@@ -32,6 +32,8 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.EventBus;
+import net.minecraftforge.eventbus.api.*;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
@@ -41,12 +43,14 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.roguelogix.phosphophyllite.config.ConfigManager;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -54,6 +58,12 @@ public class Registry {
     
     private static final HashMap<String, HashSet<Block>> blocksRegistered = new HashMap<>();
     private static final HashMap<Class<?>, HashSet<Block>> tileEntityBlocksToRegister = new HashMap<>();
+    
+    interface EventBS<T extends IForgeRegistryEntry<T>> extends Consumer<RegistryEvent.Register<T>> {
+        
+        @SubscribeEvent
+        void accept(RegistryEvent.Register<T> event);
+    }
     
     @SuppressWarnings("unchecked")
     public static synchronized void onModLoad() {
@@ -99,7 +109,8 @@ public class Registry {
             }
         });
         
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((RegistryEvent.Register<?> e) -> {
+        
+        Consumer<RegistryEvent.Register<?>> registryHandler = (RegistryEvent.Register<?> e) -> {
             switch (e.getName().getPath()) {
                 case "block": {
                     registerBlocks((RegistryEvent.Register<Block>) e, modNamespace, classes);
@@ -122,7 +133,25 @@ public class Registry {
                     break;
                 }
             }
-        });
+        };
+        
+        // Forge went and made me unable to use my lambda, well, forge, fuck you, ima do what i want
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        try {
+            Method method = bus.getClass().getDeclaredMethod("addToListeners", Object.class, Class.class, IEventListener.class, EventPriority.class);
+            method.setAccessible(true); // fuck-a-you
+            method.invoke(bus, registryHandler, RegistryEvent.Register.class, (IEventListener) (Event e) -> {
+                if (e instanceof RegistryEvent.Register) {
+                    registryHandler.accept((RegistryEvent.Register<?>) e);
+                }
+            }, EventPriority.NORMAL);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException("couldn't find registry hook");
+            
+        }
+        
+        
         if (FMLEnvironment.dist == Dist.CLIENT) {
             FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent e) -> onClientSetup(e, modNamespace, classes));
             FMLJavaModLoadingContext.get().getModEventBus().addListener((ModelBakeEvent e) -> onModelBake(e, modNamespace, classes));
