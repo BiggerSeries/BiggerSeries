@@ -1,5 +1,6 @@
 package net.roguelogix.biggerreactors.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -37,9 +38,9 @@ public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
      * Render this element.
      */
     @Override
-    public void drawPart() {
+    public void drawPart(MatrixStack stack) {
         // Reset and bind texture.
-        super.drawPart();
+        super.drawPart(stack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.

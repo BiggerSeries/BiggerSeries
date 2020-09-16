@@ -1,11 +1,13 @@
 package net.roguelogix.biggerreactors.client.turbine;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
@@ -16,6 +18,7 @@ import net.roguelogix.phosphophyllite.gui.client.api.IHasButton;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -44,9 +47,9 @@ public class GuiTurbineActivityToggle<T extends Container> extends GuiPartBase<T
      * Render this element.
      */
     @Override
-    public void drawPart() {
+    public void drawPart(MatrixStack stack) {
         // Reset and bind texture.
-        super.drawPart();
+        super.drawPart(stack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw button.
@@ -59,12 +62,12 @@ public class GuiTurbineActivityToggle<T extends Container> extends GuiPartBase<T
     }
     
     @Override
-    public void drawTooltip(int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
             if (this.turbineActivity == TurbineActivity.ACTIVE) {
-                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.activity.deactivate").getFormattedText().split("\\n")), mouseX, mouseY);
+                this.screen.func_243308_b(stack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.activity.deactivate").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             } else {
-                this.screen.renderTooltip(Arrays.asList(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.activity.activate").getFormattedText().split("\\n")), mouseX, mouseY);
+                this.screen.func_243308_b(stack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.activity.activate").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             }
         }
     }

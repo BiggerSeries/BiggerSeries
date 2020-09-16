@@ -1,5 +1,6 @@
 package net.roguelogix.phosphophyllite.gui.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +32,7 @@ public class GuiPartBase<T extends Container> {
     /**
      * Render this element.
      */
-    protected void drawPart() {
+    protected void drawPart(MatrixStack stack) {
         // Default method resets variables for next usage.
         GuiRenderHelper.setTexture(new ResourceLocation("minecraft", "textures/block/dirt.png"));
         GuiRenderHelper.setTextureOffset(0, 0);

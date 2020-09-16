@@ -105,7 +105,7 @@ public class GuiRenderHelper extends AbstractGui {
      * @see AbstractGui#blit(int, int, int, int, int, TextureAtlasSprite)
      */
     public static void drawSprite(int xPos, int yPos, int blitOffset, int xSize, int ySize, TextureAtlasSprite sprite) {
-        AbstractGui.innerBlit(xPos, xPos + xSize, yPos, yPos + ySize, blitOffset,
+        AbstractGui.innerfiBlit(xPos, xPos + xSize, yPos, yPos + ySize, blitOffset,
                 sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
     }
     

@@ -6,6 +6,8 @@ import static net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularM
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -134,8 +136,8 @@ public abstract class MultiblockTile extends TileEntity {
     CompoundNBT controllerData = null;
     
     @Override
-    public final void read(@Nonnull CompoundNBT compound) {
-        super.read(compound);
+    public final void read(BlockState state, @Nonnull CompoundNBT compound) {
+        super.read(state, compound);
         if (compound.contains("controllerData")) {
             controllerData = compound.getCompound("controllerData");
         }
@@ -222,9 +224,9 @@ public abstract class MultiblockTile extends TileEntity {
             if (player.getHeldItemMainhand() == ItemStack.EMPTY && getBlockState().get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) == DISASSEMBLED) {
                 if (controller != null) {
                     if (controller.lastValidationError != null) {
-                        player.sendMessage(controller.lastValidationError.getTextComponent());
+                        player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());
                     }else{
-                        player.sendMessage(new TranslationTextComponent("multiblock.error.phosphophyllite.unknown"));
+                        player.sendMessage(new TranslationTextComponent("multiblock.error.phosphophyllite.unknown"), player.getUniqueID());
                     }
                 }
                 return ActionResultType.SUCCESS;
@@ -232,7 +234,7 @@ public abstract class MultiblockTile extends TileEntity {
             } else if (player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
                 // no its not getting translated, its debug info, *english*
                 if (controller != null) {
-                    player.sendMessage(new StringTextComponent(getDebugInfo()));
+                    player.sendMessage(new StringTextComponent(getDebugInfo()), player.getUniqueID());
                 }
                 return ActionResultType.SUCCESS;
                 

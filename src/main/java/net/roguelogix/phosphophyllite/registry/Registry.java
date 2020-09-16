@@ -24,7 +24,7 @@ import net.minecraft.world.gen.GenerationStage.Decoration;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig.FillerBlockType;
-import net.minecraft.world.gen.placement.CountRangeConfig;
+import net.minecraft.world.gen.feature.template.RuleTest;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -60,8 +60,8 @@ public class Registry {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
         String modNamespace = callerPackage.substring(callerPackage.lastIndexOf(".") + 1);
-
-
+        
+        
         Set<Class<?>> classes =
                 FMLLoader.getLoadingModList().getModFileById("phosphophyllite").getFile().getScanResult().getClasses().stream().map(classData -> {
                     try {
@@ -81,12 +81,12 @@ public class Registry {
                     }
                     return null;
                 }).filter(Objects::nonNull).collect(Collectors.toSet());
-
+        
         classes.forEach(clazz -> {
             for (Method declaredMethod : clazz.getDeclaredMethods()) {
-                if(Modifier.isStatic(declaredMethod.getModifiers())){
-                    if(declaredMethod.isAnnotationPresent(OnModLoad.class)){
-                        if(declaredMethod.getTypeParameters().length == 0){
+                if (Modifier.isStatic(declaredMethod.getModifiers())) {
+                    if (declaredMethod.isAnnotationPresent(OnModLoad.class)) {
+                        if (declaredMethod.getTypeParameters().length == 0) {
                             declaredMethod.setAccessible(true);
                             try {
                                 declaredMethod.invoke(null);
@@ -98,7 +98,7 @@ public class Registry {
                 }
             }
         });
-
+        
         FMLJavaModLoadingContext.get().getModEventBus().addListener((RegistryEvent.Register<?> e) -> {
             switch (e.getName().getPath()) {
                 case "block": {
@@ -297,7 +297,7 @@ public class Registry {
     }
     
     private static synchronized void registerFluids(final RegistryEvent.Register<Fluid> fluidRegistryEvent, String modNamespace, Set<Class<?>> classes) {
-        Set<Class<?>> fluids =classes.stream().filter(c -> c.isAnnotationPresent(RegisterFluid.class)).collect(Collectors.toSet());
+        Set<Class<?>> fluids = classes.stream().filter(c -> c.isAnnotationPresent(RegisterFluid.class)).collect(Collectors.toSet());
         for (Class<?> fluid : fluids) {
             RegisterFluid annotation = fluid.getAnnotation(RegisterFluid.class);
             for (Field declaredField : fluid.getDeclaredFields()) {
@@ -444,8 +444,9 @@ public class Registry {
     }
     
     private static final HashMap<Block, IBakedModel> bakedModelsToRegister;
+    
     static {
-        if(FMLEnvironment.dist == Dist.CLIENT){
+        if (FMLEnvironment.dist == Dist.CLIENT) {
             bakedModelsToRegister = new HashMap<>();
         } else {
             bakedModelsToRegister = null;
@@ -484,7 +485,7 @@ public class Registry {
     private static void registerConfig() {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
         String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
-
+        
     }
     
     private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Set<Class<?>> classes) {
@@ -520,11 +521,14 @@ public class Registry {
                             continue;
                         }
                     }
-                    
-                    FillerBlockType fillerBlock = oreInfo.isNetherOre() ? FillerBlockType.NETHERRACK : FillerBlockType.NATURAL_STONE;
-                    biome.addFeature(Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(
-                            new OreFeatureConfig(fillerBlock, oreInstance.getDefaultState(), oreInfo.size()))
-                            .withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(oreInfo.count(), oreInfo.minLevel(), oreInfo.offset(), oreInfo.maxLevel()))));
+                    // TODO 9/15/20: oregen
+//                    RuleTest NATURAL_STONE = FillerBlockType.field_241884_c;
+//                    RuleTest NETHERRACK = FillerBlockType.field_241884_c;
+//
+//                    RuleTest fillerBlock = oreInfo.isNetherOre() ? NETHERRACK : NATURAL_STONE;
+//                    biome.addFeature(Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(
+//                            new OreFeatureConfig(fillerBlock, oreInstance.getDefaultState(), oreInfo.size()))
+//                            .withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(oreInfo.count(), oreInfo.minLevel(), oreInfo.offset(), oreInfo.maxLevel()))));
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -532,9 +536,9 @@ public class Registry {
         }
     }
     
-    public static synchronized void registerConfigs(String modNamespace, Set<Class<?>> classes){
+    public static synchronized void registerConfigs(String modNamespace, Set<Class<?>> classes) {
         Set<Class<?>> configs = classes.stream().filter(c -> c.isAnnotationPresent(RegisterConfig.class)).collect(Collectors.toSet());
-    
+        
         for (Class<?> config : configs) {
             ConfigManager.registerConfig(config, modNamespace);
         }

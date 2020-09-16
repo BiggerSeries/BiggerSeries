@@ -1,5 +1,6 @@
 package net.roguelogix.biggerreactors.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -7,6 +8,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
@@ -46,9 +48,9 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
      * Render this element.
      */
     @Override
-    public void drawPart() {
+    public void drawPart(MatrixStack stack) {
         // Reset and bind texture.
-        super.drawPart();
+        super.drawPart(stack);
         GuiRenderHelper.setTexture(this.texture);
         GuiRenderHelper.setTextureOffset(0, 0);
         
@@ -92,9 +94,9 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
      * @param mouseY The cursor's Y position.
      */
     @Override
-    public void drawTooltip(int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(String.format("%d/%d mB", this.fluidStored, this.fluidCapacity), mouseX, mouseY);
+            this.screen.renderTooltip(stack, new StringTextComponent(String.format("%d/%d mB", this.fluidStored, this.fluidCapacity)), mouseX, mouseY);
         }
     }
 }

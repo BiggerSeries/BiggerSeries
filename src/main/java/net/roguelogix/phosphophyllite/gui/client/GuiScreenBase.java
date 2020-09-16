@@ -1,5 +1,6 @@
 package net.roguelogix.phosphophyllite.gui.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -44,6 +45,7 @@ public class GuiScreenBase<T extends Container> extends ContainerScreen<T> imple
         this.offsetY = offsetY;
     }
     
+    
     /**
      * Draw foreground elements.
      *
@@ -51,15 +53,15 @@ public class GuiScreenBase<T extends Container> extends ContainerScreen<T> imple
      * @param mouseY Y position of the mouse.
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        
+    
         assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(this.texture);
-        
+    
         int relativeX = (this.width - this.xSize) / 2;
         int relativeY = (this.height - this.ySize) / 2;
-        
-        this.blit(relativeX, relativeY, this.offsetX, this.offsetY, this.xSize, this.ySize);
+    
+        this.blit(matrixStack, relativeX, relativeY, this.offsetX, this.offsetY, this.xSize, this.ySize);
     }
 }

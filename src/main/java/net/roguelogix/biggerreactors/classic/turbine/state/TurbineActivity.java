@@ -10,7 +10,7 @@ public enum TurbineActivity implements IStringSerializable {
     public static final EnumProperty<TurbineActivity> TURBINE_STATE_ENUM_PROPERTY = EnumProperty.create("turbinestate", TurbineActivity.class);
     
     @Override
-    public String getName() {
+    public String getString() {
         return toString().toLowerCase();
     }
 }

@@ -16,6 +16,7 @@ public interface ROBNObject {
             throw new IllegalArgumentException("Malformed binary");
         }
         // TODO: 7/26/20 check to make sure the keys are strings
+        //noinspection unchecked
         fromROBNMap((Map<String, Object>) robnObject);
     }
     

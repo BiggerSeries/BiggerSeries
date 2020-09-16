@@ -35,7 +35,7 @@ public class ReactorPowerTap extends ReactorBaseBlock {
         public static final EnumProperty<ConnectionState> CONNECTION_STATE_ENUM_PROPERTY = EnumProperty.create("connectionstate", ConnectionState.class);
     
         @Override
-        public String getName() {
+        public String getString() {
             return toString().toLowerCase();
         }
         

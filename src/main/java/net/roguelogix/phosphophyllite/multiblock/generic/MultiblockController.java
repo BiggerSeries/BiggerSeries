@@ -291,7 +291,7 @@ public class MultiblockController {
             if (storedNBT != null) {
                 read(storedNBT.getCompound("userdata"));
             }
-            blocks.forEach(block -> world.notifyNeighbors(block.getPos(), block.getBlockState().getBlock()));
+            blocks.forEach(block -> world.notifyNeighborsOfStateChange(block.getPos(), block.getBlockState().getBlock()));
             onAssembled();
             updateNBT();
         } else {

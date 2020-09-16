@@ -1,8 +1,10 @@
 package net.roguelogix.biggerreactors.client.reactor;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
@@ -38,9 +40,9 @@ public class GuiReactorHeatBar<T extends Container> extends GuiPartBase<T> imple
      * Render this element.
      */
     @Override
-    public void drawPart() {
+    public void drawPart(MatrixStack stack) {
         // Reset and bind texture.
-        super.drawPart();
+        super.drawPart(stack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.
@@ -72,9 +74,9 @@ public class GuiReactorHeatBar<T extends Container> extends GuiPartBase<T> imple
      * @param mouseY The cursor's Y position.
      */
     @Override
-    public void drawTooltip(int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(String.format("%.1f/%.1f \u00B0C", this.heatStored, this.heatCapacity), mouseX, mouseY);
+            this.screen.renderTooltip(stack, new StringTextComponent(String.format("%.1f/%.1f \u00B0C", this.heatStored, this.heatCapacity)), mouseX, mouseY);
         }
     }
 }

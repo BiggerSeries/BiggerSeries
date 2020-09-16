@@ -10,7 +10,7 @@ public enum ReactorType implements IStringSerializable {
     public static final EnumProperty<ReactorType> REACTOR_TYPE_ENUM_PROPERTY = EnumProperty.create("reactortype", ReactorType.class);
     
     @Override
-    public String getName() {
+    public String getString() {
         return toString().toLowerCase();
     }
 }

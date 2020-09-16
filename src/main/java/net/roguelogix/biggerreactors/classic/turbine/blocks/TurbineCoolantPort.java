@@ -42,7 +42,7 @@ public class TurbineCoolantPort extends TurbineBaseBlock {
         public static final EnumProperty<PortDirection> PORT_DIRECTION_ENUM_PROPERTY = EnumProperty.create("portdirection", PortDirection.class);
         
         @Override
-        public String getName() {
+        public String getString() {
             return toString().toLowerCase();
         }
     }

@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.*;
@@ -131,7 +130,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                         continue;
                     }
                     BlockPos offsetPos = rotorShaft.getPos().offset(value);
-                    Vec3i secondaryOffset = value.getDirectionVec().crossProduct(marchDirection.getDirectionVec());
+                    net.minecraft.util.math.vector.Vector3i secondaryOffset = value.getDirectionVec().crossProduct(marchDirection.getDirectionVec());
                     Direction secondaryDirection = Direction.getFacingFromVector(secondaryOffset.getX(), secondaryOffset.getY(), secondaryOffset.getZ());
                     BlockPos secondaryOffsetPos = offsetPos.offset(secondaryDirection);
                     

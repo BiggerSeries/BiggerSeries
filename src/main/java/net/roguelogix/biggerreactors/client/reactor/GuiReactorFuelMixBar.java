@@ -1,14 +1,17 @@
 package net.roguelogix.biggerreactors.client.reactor;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class GuiReactorFuelMixBar<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
@@ -43,9 +46,9 @@ public class GuiReactorFuelMixBar<T extends Container> extends GuiPartBase<T> im
      * Render this element.
      */
     @Override
-    public void drawPart() {
+    public void drawPart(MatrixStack stack) {
         // Reset and bind texture.
-        super.drawPart();
+        super.drawPart(stack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.
@@ -82,15 +85,15 @@ public class GuiReactorFuelMixBar<T extends Container> extends GuiPartBase<T> im
      * @param mouseY The cursor's Y position.
      */
     @Override
-    public void drawTooltip(int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(Arrays.asList(
+            this.screen.func_243308_b(stack, Arrays.stream(
                     String.format("%d/%d mB\n%.1f%% Fuel, %.1f%% Waste",
                             (this.wasteStored + this.fuelStored),
                             this.fuelCapacity,
                             ((float) this.fuelStored / this.fuelCapacity * 100.0),
                             ((float) this.wasteStored / this.fuelCapacity) * 100.0)
-                            .split("\\n")), mouseX, mouseY);
+                            .split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
     }
 }

@@ -1,5 +1,7 @@
 package net.roguelogix.phosphophyllite.gui.client.api;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 public interface IHasTooltip {
     
     /**
@@ -8,5 +10,5 @@ public interface IHasTooltip {
      * @param mouseX The cursor's X position.
      * @param mouseY The cursor's Y position.
      */
-    void drawTooltip(int mouseX, int mouseY);
+    void drawTooltip(MatrixStack stack, int mouseX, int mouseY);
 }

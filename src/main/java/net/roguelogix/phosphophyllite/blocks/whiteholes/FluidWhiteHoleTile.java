@@ -1,5 +1,6 @@
 package net.roguelogix.phosphophyllite.blocks.whiteholes;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -85,9 +86,9 @@ public class FluidWhiteHoleTile extends TileEntity implements IFluidHandler, ITi
     }
     
     @Override
-    public void read(CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         fluidStack = loadFluidStackFromNBT(compound.getCompound("fluidstack"));
-        super.read(compound);
+        super.read(state, compound);
     }
     
     @Override

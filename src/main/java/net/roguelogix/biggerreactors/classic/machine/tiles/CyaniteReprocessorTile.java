@@ -120,9 +120,9 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         
         // Print tile data.
         if (ItemStack.areItemsEqual(player.getHeldItemMainhand(), new ItemStack(DebugTool.INSTANCE))) {
-            player.sendMessage(new StringTextComponent(String.format("[%s] Progress: %s/%s", BiggerReactors.modid, this.cyaniteReprocessorState.workTime, this.cyaniteReprocessorState.workTimeTotal)));
-            player.sendMessage(new StringTextComponent(String.format("[%s] Energy: %s/%s RF", BiggerReactors.modid, this.cyaniteReprocessorState.energyStored, this.cyaniteReprocessorState.energyCapacity)));
-            player.sendMessage(new StringTextComponent(String.format("[%s] Fluid Tank: %s/%s mB", BiggerReactors.modid, this.cyaniteReprocessorState.waterStored, this.cyaniteReprocessorState.waterCapacity)));
+            player.sendMessage(new StringTextComponent(String.format("[%s] Progress: %s/%s", BiggerReactors.modid, this.cyaniteReprocessorState.workTime, this.cyaniteReprocessorState.workTimeTotal)), player.getUniqueID());
+            player.sendMessage(new StringTextComponent(String.format("[%s] Energy: %s/%s RF", BiggerReactors.modid, this.cyaniteReprocessorState.energyStored, this.cyaniteReprocessorState.energyCapacity)), player.getUniqueID());
+            player.sendMessage(new StringTextComponent(String.format("[%s] Fluid Tank: %s/%s mB", BiggerReactors.modid, this.cyaniteReprocessorState.waterStored, this.cyaniteReprocessorState.waterCapacity)), player.getUniqueID());
             return ActionResultType.SUCCESS;
         }
         
@@ -328,8 +328,8 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
      * @param parentCompound The parent compound to read from.
      */
     @Override
-    public void read(@Nonnull CompoundNBT parentCompound) {
-        super.read(parentCompound);
+    public void read(BlockState state, @Nonnull CompoundNBT parentCompound) {
+        super.read(state, parentCompound);
         CompoundNBT childCompound = parentCompound.getCompound("cyaniteReprocessorState");
         
         // Read work.
