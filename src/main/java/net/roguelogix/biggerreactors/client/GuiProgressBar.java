@@ -38,14 +38,14 @@ public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
      * Render this element.
      */
     @Override
-    public void drawPart(MatrixStack stack) {
+    public void drawPart(MatrixStack mStack) {
         // Reset and bind texture.
-        super.drawPart(stack);
+        super.drawPart(mStack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.
         GuiRenderHelper.setTextureOffset(0, 65);
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
         if (this.workTimeTotal != 0) {
@@ -54,7 +54,7 @@ public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
             
             // Draw work.
             GuiRenderHelper.setTextureOffset(25, 65);
-            GuiRenderHelper.draw(this.xPos + 1, this.yPos, this.screen.getBlitOffset(), renderSize, this.ySize);
+            GuiRenderHelper.draw(mStack, this.xPos + 1, this.yPos, this.screen.getBlitOffset(), renderSize, this.ySize);
         }
     }
 }

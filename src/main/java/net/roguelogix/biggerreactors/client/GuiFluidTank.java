@@ -48,14 +48,14 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
      * Render this element.
      */
     @Override
-    public void drawPart(MatrixStack stack) {
+    public void drawPart(MatrixStack mStack) {
         // Reset and bind texture.
-        super.drawPart(stack);
+        super.drawPart(mStack);
         GuiRenderHelper.setTexture(this.texture);
         GuiRenderHelper.setTextureOffset(0, 0);
         
         // Draw background.
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
         if (this.fluidCapacity != 0) {
@@ -70,21 +70,21 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
             // Draw fluid.
             GuiRenderHelper.setTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
             GuiRenderHelper.setRenderColor(fluidAttributes.getColor());
-            GuiRenderHelper.drawSpriteGrid(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, 16, fluidSprite, 1, 4);
+            GuiRenderHelper.drawSpriteGrid(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, 16, fluidSprite, 1, 4);
             GuiRenderHelper.clearRenderColor();
             
             // Mask away empty bit.
             GuiRenderHelper.setTexture(this.texture);
             GuiRenderHelper.setTextureOffset(0, 0);
-            GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);
+            GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);
         }
         // Draw frame.
         GuiRenderHelper.setTextureOffset(18, 0);
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw level gauge.
         GuiRenderHelper.setTextureOffset(36, 0);
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
     
     /**
@@ -94,9 +94,9 @@ public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements
      * @param mouseY The cursor's Y position.
      */
     @Override
-    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(stack, new StringTextComponent(String.format("%d/%d mB", this.fluidStored, this.fluidCapacity)), mouseX, mouseY);
+            this.screen.renderTooltip(mStack, new StringTextComponent(String.format("%d/%d mB", this.fluidStored, this.fluidCapacity)), mouseX, mouseY);
         }
     }
 }

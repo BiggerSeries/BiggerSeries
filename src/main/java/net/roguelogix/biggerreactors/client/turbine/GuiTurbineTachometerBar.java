@@ -40,14 +40,14 @@ public class GuiTurbineTachometerBar<T extends Container> extends GuiPartBase<T>
      * Render this element.
      */
     @Override
-    public void drawPart(MatrixStack stack) {
+    public void drawPart(MatrixStack mStack) {
         // Reset and bind texture.
-        super.drawPart(stack);
+        super.drawPart(mStack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.
         GuiRenderHelper.setTextureOffset(54, 0);
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
         if (this.maxRPM != 0) {
@@ -56,15 +56,15 @@ public class GuiTurbineTachometerBar<T extends Container> extends GuiPartBase<T>
             
             // Draw case heat.
             GuiRenderHelper.setTextureOffset(144, 0);
-            GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+            GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
             
             // Mask away empty bit.
             GuiRenderHelper.setTextureOffset(54, 0);
-            GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);
+            GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);
         }
         // Draw frame.
         GuiRenderHelper.setTextureOffset(18, 0);
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
     
     /**
@@ -74,9 +74,9 @@ public class GuiTurbineTachometerBar<T extends Container> extends GuiPartBase<T>
      * @param mouseY The cursor's Y position.
      */
     @Override
-    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.renderTooltip(stack, new StringTextComponent(String.format("%.1f RPM", this.currentRPM)), mouseX, mouseY);
+            this.screen.renderTooltip(mStack, new StringTextComponent(String.format("%.1f RPM", this.currentRPM)), mouseX, mouseY);
         }
     }
 }

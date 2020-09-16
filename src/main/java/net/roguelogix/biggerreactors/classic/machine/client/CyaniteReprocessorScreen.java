@@ -57,13 +57,13 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
      * @param partialTicks Good question.
      */
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(mStack);
+        super.render(mStack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(mStack, mouseX, mouseY);
         
-        this.energyTank.drawTooltip(stack, mouseX, mouseY);
-        this.waterTank.drawTooltip(stack, mouseX, mouseY);
+        this.energyTank.drawTooltip(mStack, mouseX, mouseY);
+        this.waterTank.drawTooltip(mStack, mouseX, mouseY);
     }
     
     /**
@@ -73,12 +73,12 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
      * @param mouseY Y position of the mouse.
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
-        this.font.drawString(stack, new TranslationTextComponent("screen.biggerreactors.cyanite_reprocessor").getUnformattedComponentText(), 8, (this.ySize - 168), 4210752);
-        this.font.drawString(stack, this.playerInventory.getDisplayName().getUnformattedComponentText(), 8, (this.ySize - 94), 4210752);
+    protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
+        this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.cyanite_reprocessor").getUnformattedComponentText(), 8, (this.ySize - 168), 4210752);
+        this.font.drawString(mStack, this.playerInventory.getDisplayName().getUnformattedComponentText(), 8, (this.ySize - 94), 4210752);
         
-        this.progressBar.drawPart(stack);
-        this.energyTank.drawPart(stack);
-        this.waterTank.drawPart(stack);
+        this.progressBar.drawPart(mStack);
+        this.energyTank.drawPart(mStack);
+        this.waterTank.drawPart(mStack);
     }
 }

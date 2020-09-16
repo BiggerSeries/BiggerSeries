@@ -41,9 +41,9 @@ public class GuiReactorManualEjectButton<T extends Container> extends GuiPartBas
      * Render this element.
      */
     @Override
-    public void drawPart(MatrixStack stack) {
+    public void drawPart(MatrixStack mStack) {
         // Reset and bind texture.
-        super.drawPart(stack);
+        super.drawPart(mStack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw button.
@@ -52,13 +52,13 @@ public class GuiReactorManualEjectButton<T extends Container> extends GuiPartBas
         } else {
             GuiRenderHelper.setTextureOffset(64, 16);
         }
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
     
     @Override
-    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.func_243308_b(stack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.waste_eject_manual").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+            this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.waste_eject_manual").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
     }
     

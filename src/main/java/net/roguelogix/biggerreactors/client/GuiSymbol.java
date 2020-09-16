@@ -50,14 +50,14 @@ public class GuiSymbol<T extends Container> extends GuiPartBase<T> implements IH
      * Render this element.
      */
     @Override
-    public void drawPart(MatrixStack stack) {
+    public void drawPart(MatrixStack mStack) {
         // Reset and bind texture.
-        super.drawPart(stack);
+        super.drawPart(mStack);
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.
         GuiRenderHelper.setTextureOffset(xOffset, yOffset);
-        GuiRenderHelper.draw(this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
+        GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
     
     /**
@@ -67,9 +67,9 @@ public class GuiSymbol<T extends Container> extends GuiPartBase<T> implements IH
      * @param mouseY The cursor's Y position.
      */
     @Override
-    public void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.func_243308_b(stack, Arrays.stream(tooltip.split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+            this.screen.func_243308_b(mStack, Arrays.stream(tooltip.split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
     }
 }

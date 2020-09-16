@@ -32,7 +32,7 @@ public class GuiPartBase<T extends Container> {
     /**
      * Render this element.
      */
-    protected void drawPart(MatrixStack stack) {
+    protected void drawPart(MatrixStack mStack) {
         // Default method resets variables for next usage.
         GuiRenderHelper.setTexture(new ResourceLocation("minecraft", "textures/block/dirt.png"));
         GuiRenderHelper.setTextureOffset(0, 0);

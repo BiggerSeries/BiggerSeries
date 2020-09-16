@@ -10,5 +10,5 @@ public interface IHasTooltip {
      * @param mouseX The cursor's X position.
      * @param mouseY The cursor's Y position.
      */
-    void drawTooltip(MatrixStack stack, int mouseX, int mouseY);
+    void drawTooltip(MatrixStack mStack, int mouseX, int mouseY);
 }

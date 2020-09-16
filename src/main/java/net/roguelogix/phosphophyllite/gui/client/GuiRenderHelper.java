@@ -1,5 +1,6 @@
 package net.roguelogix.phosphophyllite.gui.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -66,20 +67,21 @@ public class GuiRenderHelper extends AbstractGui {
     /**
      * Draw a texture. Atlas size is assumed to be 256x256.
      *
+     * @param mStack     The matrix stack.
      * @param xPos       The X position to draw at.
      * @param yPos       The Y position to draw at.
      * @param blitOffset The blit offset to use.
      * @param xSize      The width of the texture.
      * @param ySize      The height of the texture.
-     * @see AbstractGui#blit(int, int, int, int, int, int)
      */
-    public static void draw(int xPos, int yPos, int blitOffset, int xSize, int ySize) {
-        GuiRenderHelper.draw(xPos, yPos, blitOffset, xSize, ySize, 256, 256);
+    public static void draw(MatrixStack mStack, int xPos, int yPos, int blitOffset, int xSize, int ySize) {
+        GuiRenderHelper.draw(mStack, xPos, yPos, blitOffset, xSize, ySize, 256, 256);
     }
     
     /**
      * Draw a texture with a custom atlas size.
      *
+     * @param mStack     The matrix stack.
      * @param xPos       The X position to draw at.
      * @param yPos       The Y position to draw at.
      * @param blitOffset The blit offset to use.
@@ -87,26 +89,26 @@ public class GuiRenderHelper extends AbstractGui {
      * @param ySize      The height of the texture.
      * @param xAtlasSize The width of the atlas.
      * @param yAtlasSize The height of the atlas.
-     * @see AbstractGui#blit(int, int, int, float, float, int, int, int, int)
      */
-    public static void draw(int xPos, int yPos, int blitOffset, int xSize, int ySize, int xAtlasSize, int yAtlasSize) {
-        AbstractGui.blit(xPos, yPos, blitOffset, xOffset, yOffset, xSize, ySize, xAtlasSize, yAtlasSize);
+    public static void draw(MatrixStack mStack, int xPos, int yPos, int blitOffset, int xSize, int ySize, int xAtlasSize, int yAtlasSize) {
+        AbstractGui.blit(mStack, xPos, yPos, blitOffset, xOffset, yOffset, xSize, ySize, xAtlasSize, yAtlasSize);
     }
     
     /**
      * Draw a sprite from a texture atlas.
      *
+     * @param mStack     The matrix stack.
      * @param xPos       The X position to draw at.
      * @param yPos       The Y position to draw at.
      * @param blitOffset The blit offset to use.
      * @param xSize      The width of the texture.
      * @param ySize      The height of the texture.
      * @param sprite     The sprite to draw.
-     * @see AbstractGui#blit(int, int, int, int, int, TextureAtlasSprite)
      */
-    public static void drawSprite(int xPos, int yPos, int blitOffset, int xSize, int ySize, TextureAtlasSprite sprite) {
-        AbstractGui.innerfiBlit(xPos, xPos + xSize, yPos, yPos + ySize, blitOffset,
-                sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+    public static void drawSprite(MatrixStack mStack, int xPos, int yPos, int blitOffset, int xSize, int ySize, TextureAtlasSprite sprite) {
+        //AbstractGui.innerBlit(mStack, xPos, xPos + xSize, yPos, yPos + ySize, blitOffset,
+        //        sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+        AbstractGui.blit(mStack, xPos, yPos, blitOffset, xSize, yOffset, sprite);
     }
     
     /**
@@ -121,10 +123,10 @@ public class GuiRenderHelper extends AbstractGui {
      * @param repeatX    How many times to repeat right, drawing in chunks of xSize.
      * @param repeatY    How many times to repeat down, drawing in chunks of ySize.
      */
-    public static void drawSpriteGrid(int xPos, int yPos, int blitOffset, int xSize, int ySize, TextureAtlasSprite sprite, int repeatX, int repeatY) {
+    public static void drawSpriteGrid(MatrixStack mStack, int xPos, int yPos, int blitOffset, int xSize, int ySize, TextureAtlasSprite sprite, int repeatX, int repeatY) {
         for (int iX = 0; iX < repeatX; iX++) {
             for (int iY = 0; iY < repeatY; iY++) {
-                GuiRenderHelper.drawSprite(xPos + (xSize * iX), yPos + (ySize * iY), blitOffset, xSize, ySize, sprite);
+                GuiRenderHelper.drawSprite(mStack, xPos + (xSize * iX), yPos + (ySize * iY), blitOffset, xSize, ySize, sprite);
             }
         }
     }
@@ -141,9 +143,8 @@ public class GuiRenderHelper extends AbstractGui {
      * @param maxU       The maximum U value.
      * @param minV       The minimum V value.
      * @param maxV       The maximum V value.
-     * @see AbstractGui#innerBlit(int, int, int, int, int, float, float, float, float)
      */
-    public static void drawUV(int xPos, int yPos, int blitOffset, int xSize, int ySize, float minU, float maxU, float minV, float maxV) {
-        AbstractGui.innerBlit(xPos, xPos + xSize, yPos, yPos + ySize, blitOffset, minU, maxU, minV, maxV);
-    }
+    //public static void drawUV(int xPos, int yPos, int blitOffset, int xSize, int ySize, float minU, float maxU, float minV, float maxV) {
+    //    AbstractGui.innerBlit(xPos, xPos + xSize, yPos, yPos + ySize, blitOffset, minU, maxU, minV, maxV);
+    //}
 }
