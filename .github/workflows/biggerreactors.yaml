@@ -5,6 +5,7 @@ jobs:
     runs-on: Felix
     steps:
       - uses: actions/checkout@v2
+      - run: ./gradlew clean
       - run: ./gradlew build
       - run: ./gradlew reobfShadowJar
       - run: mv build/reobfShadowJar/output.jar biggerreactors-${GITHUB_SHA::8}-reobfShadowJar.jar
