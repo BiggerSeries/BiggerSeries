@@ -20,20 +20,13 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage.Decoration;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraft.world.gen.feature.OreFeatureConfig.FillerBlockType;
-import net.minecraft.world.gen.feature.template.RuleTest;
-import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.EventBus;
-import net.minecraftforge.eventbus.api.*;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
@@ -65,6 +58,42 @@ public class Registry {
         void accept(RegistryEvent.Register<T> event);
     }
     
+
+    private static class ModEventHandler{
+        
+        String modNamespace;
+        Set<Class<?>> classes;
+        
+        ModEventHandler(String namespace, Set<Class<?>> clazzes){
+            modNamespace = namespace;
+            classes = clazzes;
+        }
+        
+        @SubscribeEvent
+        void blockRegistration(RegistryEvent.Register<Block> event){
+            registerBlocks(event, modNamespace, classes);
+        }
+    
+        @SubscribeEvent
+        void itemRegistration(RegistryEvent.Register<Item> event){
+            registerItems(event, modNamespace, classes);
+        }
+        
+        @SubscribeEvent
+        void fluidRegistration(RegistryEvent.Register<Fluid> event){
+            registerFluids(event, modNamespace, classes);
+        }
+        
+        @SubscribeEvent
+        void containerRegistration(RegistryEvent.Register<ContainerType<?>> event){
+            registerContainers(event, modNamespace, classes);
+        }
+        
+        @SubscribeEvent
+        void tileEntityRegistration(RegistryEvent.Register<TileEntityType<?>> event){
+            registerTileEntities(event, modNamespace, classes);
+        }
+    }
     @SuppressWarnings("unchecked")
     public static synchronized void onModLoad() {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
@@ -110,47 +139,8 @@ public class Registry {
         });
         
         
-        Consumer<RegistryEvent.Register<?>> registryHandler = (RegistryEvent.Register<?> e) -> {
-            switch (e.getName().getPath()) {
-                case "block": {
-                    registerBlocks((RegistryEvent.Register<Block>) e, modNamespace, classes);
-                    break;
-                }
-                case "item": {
-                    registerItems((RegistryEvent.Register<Item>) e, modNamespace, classes);
-                    break;
-                }
-                case "menu": {
-                    registerContainers((RegistryEvent.Register<ContainerType<?>>) e, modNamespace, classes);
-                    break;
-                }
-                case "block_entity_type": {
-                    registerTileEntities((RegistryEvent.Register<TileEntityType<?>>) e, modNamespace, classes);
-                    break;
-                }
-                case "fluid": {
-                    registerFluids((RegistryEvent.Register<Fluid>) e, modNamespace, classes);
-                    break;
-                }
-            }
-        };
-        
-        // Forge went and made me unable to use my lambda, well, forge, fuck you, ima do what i want
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        try {
-            Method method = bus.getClass().getDeclaredMethod("addToListeners", Object.class, Class.class, IEventListener.class, EventPriority.class);
-            method.setAccessible(true); // fuck-a-you
-            method.invoke(bus, registryHandler, RegistryEvent.Register.class, (IEventListener) (Event e) -> {
-                if (e instanceof RegistryEvent.Register) {
-                    registryHandler.accept((RegistryEvent.Register<?>) e);
-                }
-            }, EventPriority.NORMAL);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-            throw new RuntimeException("couldn't find registry hook");
-            
-        }
-        
+        // forge, im less than happy about this, let me use my lambda, ok, plz, thx
+        FMLJavaModLoadingContext.get().getModEventBus().register(new ModEventHandler(modNamespace, classes));
         
         if (FMLEnvironment.dist == Dist.CLIENT) {
             FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent e) -> onClientSetup(e, modNamespace, classes));
@@ -509,12 +499,6 @@ public class Registry {
         if (blocksRegistered == null) {
             return;
         }
-    }
-    
-    private static void registerConfig() {
-        String callerClass = new Exception().getStackTrace()[1].getClassName();
-        String callerPackage = callerClass.substring(0, callerClass.lastIndexOf("."));
-        
     }
     
     private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Set<Class<?>> classes) {
