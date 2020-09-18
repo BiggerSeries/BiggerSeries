@@ -17,7 +17,7 @@ issueTrackerURL="http://my.issue.tracker/" #optional
 # The modid of the mod
 modId="biggerreactors" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${file.jarVersion}" #mandatory
+version="0.1.0-indev" #mandatory
  # A display name for the mod
 displayName="Bigger Reactors" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
@@ -57,7 +57,7 @@ Big Reactors, but even bigger
 [[dependencies.biggerreactors]]
     modId="phosphophyllite"
     mandatory=true
-    versionRange="[0.0.0]"
+    versionRange="[0.0.0, 0.1.0)"
     ordering="NONE"
     side="BOTH"
 
