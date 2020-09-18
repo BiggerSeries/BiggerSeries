@@ -1,0 +1,5 @@
+rootProject.name = 'BiggerSeries'
+include 'Phosphophyllite'
+include 'BiggerReactors'
+
+include 'workspace'
