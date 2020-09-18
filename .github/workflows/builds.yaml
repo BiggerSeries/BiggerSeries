@@ -1,0 +1,28 @@
+name: builds
+on: [push]
+jobs:
+  BiggerReactors-reobfJar:
+    runs-on: Felix
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./gradlew clean
+      - run: ./gradlew build
+      - run: ./gradlew :BiggerReactors:reobfJar
+      - run: mv BiggerReactors/build/reobfJar/output.jar biggerreactors-${GITHUB_SHA::8}-reobfJar.jar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: reobfJar
+          path: biggerreactors-*-reobfJar.jar
+
+  Phopsphophyllite-reobfJar:
+    runs-on: Felix
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./gradlew clean
+      - run: ./gradlew build
+      - run: ./gradlew :Phosphophyllite:reobfJar
+      - run: mv Phosphophyllite/build/reobfJar/output.jar phosphophyllite-${GITHUB_SHA::8}-reobfJar.jar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: reobfJar
+          path: phosphophyllite-*-reobfJar.jar
