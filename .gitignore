@@ -20,6 +20,10 @@ build
 # other
 eclipse
 run
+# extras needed
+BiggerReactors/run
+Phosphophyllite/run
+workspace/run
 
 # Files from Forge MDK
 forge*changelog.txt
