@@ -1,5 +1,7 @@
 package net.roguelogix.biggerreactors;
 
+import net.minecraft.block.Block;
+import net.minecraft.tags.ITagCollection;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineCoilRegistry;
 import net.roguelogix.phosphophyllite.config.PhosphophylliteConfig;
@@ -285,15 +287,15 @@ public class Config {
             new TurbineCoilConfigValues("forge:storage_blocks/enderium", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.3, 1.02),
     };
     
-    public static void loadRegistries() {
+    public static void loadRegistries(ITagCollection<Block> blockTags) {
         ReactorModeratorRegistry.clearRegistry();
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
-            ReactorModeratorRegistry.registerConfigValues(reactorModerator);
+            ReactorModeratorRegistry.registerConfigValues(blockTags, reactorModerator);
         }
         
         TurbineCoilRegistry.clearRegistry();
         for (TurbineCoilConfigValues turbineCoil : turbineCoils) {
-            TurbineCoilRegistry.registerConfigValues(turbineCoil);
+            TurbineCoilRegistry.registerConfigValues(blockTags, turbineCoil);
         }
     }
 }

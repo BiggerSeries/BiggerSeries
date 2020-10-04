@@ -3,6 +3,7 @@ package net.roguelogix.biggerreactors.classic.turbine;
 import net.minecraft.block.Block;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.tags.ITagCollection;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -37,19 +38,22 @@ public class TurbineCoilRegistry {
         return registry.get(block);
     }
     
-    public static synchronized void registerConfigValues(Config.TurbineCoilConfigValues values) {
+    public static synchronized void registerConfigValues(ITagCollection<Block> blockTags, Config.TurbineCoilConfigValues values) {
         TurbineCoilData data = new TurbineCoilData(values.efficiency, values.bonus, values.extractionRate);
         if (values.locationType == Config.TurbineCoilConfigValues.LocationType.REGISTRY) {
             registry.put(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(values.location)), data);
-        }else{
-            ITag.INamedTag<Block> blockTag = BlockTags.makeWrapperTag(values.location);
+        } else {
+            ITag<Block> blockTag = blockTags.get(new ResourceLocation(values.location));
+            if (blockTag == null) {
+                return;
+            }
             for (Block element : blockTag.getAllElements()) {
                 registry.put(element, data);
             }
         }
     }
     
-    public static synchronized void clearRegistry(){
+    public static synchronized void clearRegistry() {
         registry.clear();
     }
 }

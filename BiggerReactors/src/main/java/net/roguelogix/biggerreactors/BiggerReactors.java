@@ -32,7 +32,7 @@ public class BiggerReactors {
     }
     
     public void onWorldLoad(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
-        Config.loadRegistries();
+        Config.loadRegistries(tagsUpdatedEvent.getTagManager().getBlockTags());
     }
     
     public void onClientSetup(final FMLClientSetupEvent e) {
