@@ -68,7 +68,7 @@ public class GuiSymbol<T extends Container> extends GuiPartBase<T> implements IH
      */
     @Override
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
-        if (this.isHovering(mouseX, mouseY)) {
+        if (this.isMouseOver(mouseX, mouseY)) {
             this.screen.func_243308_b(mStack, Arrays.stream(tooltip.split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
     }

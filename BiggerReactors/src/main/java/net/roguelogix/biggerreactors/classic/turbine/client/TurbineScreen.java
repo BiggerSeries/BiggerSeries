@@ -18,8 +18,6 @@ import net.roguelogix.biggerreactors.client.turbine.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-
 public class TurbineScreen extends GuiScreenBase<TurbineContainer> implements IHasContainer<TurbineContainer> {
     
     private TurbineState turbineState;
@@ -93,6 +91,57 @@ public class TurbineScreen extends GuiScreenBase<TurbineContainer> implements IH
     }
     
     /**
+     * Handle a key press.
+     *
+     * @param keyCode   The ASCII keycode for the press.
+     * @param scanCode  The scancode for the press.
+     * @param modifiers Any modifiers being held.
+     * @return Whether or not the press was consumed.
+     */
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        super.keyPressed(keyCode, scanCode, modifiers);
+        this.turbineFlowIncrease.keyPressed(keyCode, scanCode, modifiers);
+        this.turbineFlowDecrease.keyPressed(keyCode, scanCode, modifiers);
+        return true;
+    }
+    
+    /**
+     * Handle a mouse click.
+     *
+     * @param mouseX The mouse X position.
+     * @param mouseY The mouse Y position.
+     * @param button The mouse button pressed.
+     * @return Whether or not the press was consumed.
+     */
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        super.mouseClicked(mouseX, mouseY, button);
+        this.turbineActivityToggle.mouseClicked(mouseX, mouseY, button);
+        this.turbineVentStateToggle.mouseClicked(mouseX, mouseY, button);
+        this.turbineCoilToggle.mouseClicked(mouseX, mouseY, button);
+        this.turbineFlowIncrease.mouseClicked(mouseX, mouseY, button);
+        this.turbineFlowDecrease.mouseClicked(mouseX, mouseY, button);
+        return true;
+    }
+    
+    /**
+     * Handle a mouse release.
+     *
+     * @param mouseX The mouse X position.
+     * @param mouseY The mouse Y position.
+     * @param button The mouse button released.
+     * @return Whether or not the release was consumed.
+     */
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        super.mouseReleased(mouseX, mouseY, button);
+        this.turbineFlowIncrease.mouseReleased(mouseX, mouseY, button);
+        this.turbineFlowDecrease.mouseReleased(mouseX, mouseY, button);
+        return true;
+    }
+    
+    /**
      * Update logic.
      */
     @Override
@@ -150,13 +199,6 @@ public class TurbineScreen extends GuiScreenBase<TurbineContainer> implements IH
         this.symbolTurbineOutput.drawTooltip(mStack, mouseX, mouseY);
         this.symbolGovernor.drawTooltip(mStack, mouseX, mouseY);
         this.symbolRotorEfficiency.drawTooltip(mStack, mouseX, mouseY);
-        
-        // Check for updateable elements.
-        this.turbineActivityToggle.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
-        this.turbineVentStateToggle.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
-        this.turbineCoilToggle.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
-        this.turbineFlowIncrease.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
-        this.turbineFlowDecrease.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
     }
     
     @Override

@@ -37,13 +37,13 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     @Override
     public ReactorState getState() {
         this.updateState();
-        return new ReactorState(this);
+        return this.reactorState;
     }
     
     @Override
     public void updateState() {
         if (controller != null && controller instanceof ReactorMultiblockController) {
-            ((ReactorMultiblockController) controller).updateDataPacket(reactorState);
+            ((ReactorMultiblockController) controller).updateReactorState(reactorState);
         }
     }
     
@@ -76,6 +76,6 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     @Nullable
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new ReactorContainer(windowId, this.pos, playerInventory.player);
+        return new ReactorContainer(windowId, this.pos, player);
     }
 }

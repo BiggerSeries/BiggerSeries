@@ -3,13 +3,14 @@ package net.roguelogix.biggerreactors;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.roguelogix.biggerreactors.classic.machine.client.CyaniteReprocessorScreen;
 import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.client.ControlRodScreen;
 import net.roguelogix.biggerreactors.classic.reactor.client.ReactorScreen;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
 import net.roguelogix.biggerreactors.classic.turbine.client.TurbineScreen;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
@@ -42,6 +43,8 @@ public class BiggerReactors {
                 CyaniteReprocessorScreen::new);
         ScreenManager.registerFactory(ReactorContainer.INSTANCE,
                 ReactorScreen::new);
+        ScreenManager.registerFactory(ControlRodContainer.INSTANCE,
+                ControlRodScreen::new);
         ScreenManager.registerFactory(TurbineContainer.INSTANCE,
                 TurbineScreen::new);
     }

@@ -9,10 +9,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasGuiTexture;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableTexture;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiScreenBase<T extends Container> extends ContainerScreen<T> implements IHasGuiTexture {
+public class GuiScreenBase<T extends Container> extends ContainerScreen<T> implements IHasUpdatableTexture {
     
     /**
      * The texture to draw with.
@@ -55,13 +55,13 @@ public class GuiScreenBase<T extends Container> extends ContainerScreen<T> imple
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    
+        
         assert this.minecraft != null;
         this.minecraft.getTextureManager().bindTexture(this.texture);
-    
+        
         int relativeX = (this.width - this.xSize) / 2;
         int relativeY = (this.height - this.ySize) / 2;
-    
+        
         this.blit(matrixStack, relativeX, relativeY, this.offsetX, this.offsetY, this.xSize, this.ySize);
     }
 }

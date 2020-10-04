@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
 import net.roguelogix.biggerreactors.classic.reactor.simulation.ClassicReactorSimulation;
+import net.roguelogix.biggerreactors.classic.reactor.state.ControlRodState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
@@ -17,12 +18,10 @@ import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
-import net.roguelogix.phosphophyllite.util.Util;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
+import net.roguelogix.phosphophyllite.util.Util;
 
-import java.text.NumberFormat;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 public class ReactorMultiblockController extends RectangularMultiblockController {
@@ -337,20 +336,25 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     public long extractWaste(long mb, boolean simulated) {
-        if(assemblyState() != AssemblyState.ASSEMBLED){
+        if (assemblyState() != AssemblyState.ASSEMBLED) {
             return 0;
         }
         return simulation.fuelTank.extractWaste(mb, simulated);
     }
     
     public long refuel(long mb, boolean simulated) {
-        if(assemblyState() != AssemblyState.ASSEMBLED){
+        if (assemblyState() != AssemblyState.ASSEMBLED) {
             return 0;
         }
         return simulation.fuelTank.insertFuel(mb, simulated);
     }
     
-    public void updateDataPacket(ReactorState reactorState) {
+    public void updateControlRodState(ControlRodState controlRodState) {
+        controlRodState.controlRodName = "test";
+        controlRodState.controlRodInsertion = 25;
+    }
+    
+    public void updateReactorState(ReactorState reactorState) {
         // TODO: These are mixed between the new enums and old booleans. Migrate them fully to enums.
         reactorState.reactorActivity = reactorActivity;
         reactorState.reactorType = simulation.isPassive() ? ReactorType.PASSIVE : ReactorType.ACTIVE;

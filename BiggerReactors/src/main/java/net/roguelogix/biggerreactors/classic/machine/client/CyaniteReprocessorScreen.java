@@ -44,6 +44,7 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
     @Override
     public void tick() {
         this.cyaniteReprocessorState = (CyaniteReprocessorState) this.getContainer().getGuiPacket();
+        assert cyaniteReprocessorState != null;
         this.progressBar.updateWorkTime(cyaniteReprocessorState.workTime, cyaniteReprocessorState.workTimeTotal);
         this.energyTank.updateEnergy(cyaniteReprocessorState.energyStored, cyaniteReprocessorState.energyCapacity);
         this.waterTank.updateFluid(Fluids.WATER.getFluid(), cyaniteReprocessorState.waterStored, cyaniteReprocessorState.waterCapacity);

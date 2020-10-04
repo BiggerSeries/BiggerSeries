@@ -75,7 +75,7 @@ public class GuiTurbineTachometerBar<T extends Container> extends GuiPartBase<T>
      */
     @Override
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
-        if (this.isHovering(mouseX, mouseY)) {
+        if (this.isMouseOver(mouseX, mouseY)) {
             this.screen.renderTooltip(mStack, new StringTextComponent(String.format("%.1f RPM", this.currentRPM)), mouseX, mouseY);
         }
     }

@@ -1,7 +1,6 @@
 package net.roguelogix.biggerreactors.client.turbine;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -13,18 +12,19 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasButton;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_MOD_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_MOD_SHIFT;
 
-public class GuiTurbineFlowDecreaseButton<T extends Container> extends GuiPartBase<T> implements IHasTooltip, IHasButton {
+public class GuiTurbineFlowDecreaseButton<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
     private boolean debounce = false;
+    private int modifiers = 0;
     private long flowRate;
     
     /**
@@ -62,47 +62,49 @@ public class GuiTurbineFlowDecreaseButton<T extends Container> extends GuiPartBa
     
     @Override
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
-        if (this.isHovering(mouseX, mouseY)) {
+        if (this.isMouseOver(mouseX, mouseY)) {
             this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.flow.decrease").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
     }
     
     @Override
-    public void doClick(int mouseX, int mouseY, int mouseButton) {
-        if (!isHovering(mouseX, mouseY)) {
-            return;
-        }
-        
-        // Check for a click (and enable debounce).
-        if (glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS
-                && !debounce) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        this.modifiers = modifiers;
+        return true;
+    }
+    
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!this.isMouseOver(mouseX, mouseY)) {
+            return false;
+        } else {
             long newFlowRate = flowRate;
-            boolean shiftPressed = (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-                    || (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
-            boolean ctrlPressed = glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS
-                    || (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS);
-            
-            // Do click logic.
-            if (shiftPressed && ctrlPressed) {
-                newFlowRate -= 1000;
-            } else if (ctrlPressed) {
-                newFlowRate -= 100;
-            } else if (shiftPressed) {
-                newFlowRate -= 10;
+            // Check for modifiers
+            if (modifiers == GLFW_MOD_SHIFT + GLFW_MOD_CONTROL) {
+                newFlowRate -= 1000L;
+            } else if (modifiers == GLFW_MOD_CONTROL) {
+                newFlowRate -= 100L;
+            } else if (modifiers == GLFW_MOD_SHIFT) {
+                newFlowRate -= 10L;
             } else {
-                newFlowRate -= 1;
+                newFlowRate -= 1L;
             }
-            ((TurbineContainer) this.screen.getContainer()).runRequest("setMaxFlowRate", newFlowRate);
             
+            ((TurbineContainer) this.screen.getContainer()).runRequest("setMaxFlowRate", newFlowRate);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;
+            return true;
         }
-        
-        // Check for release (and disable debounce).
-        if (glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE
-                && debounce) {
+    }
+    
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (!this.isMouseOver(mouseX, mouseY)) {
+            return false;
+        } else {
             debounce = false;
+            return true;
         }
     }
 }

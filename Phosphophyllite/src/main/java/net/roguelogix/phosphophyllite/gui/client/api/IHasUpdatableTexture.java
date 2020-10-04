@@ -2,7 +2,7 @@ package net.roguelogix.phosphophyllite.gui.client.api;
 
 import net.minecraft.util.ResourceLocation;
 
-public interface IHasGuiTexture {
+public interface IHasUpdatableTexture {
     
     /**
      * Update the texture this part uses.

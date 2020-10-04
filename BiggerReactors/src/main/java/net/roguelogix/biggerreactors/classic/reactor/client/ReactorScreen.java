@@ -22,8 +22,6 @@ import net.roguelogix.biggerreactors.client.reactor.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-
 @OnlyIn(Dist.CLIENT)
 public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IHasContainer<ReactorContainer> {
     
@@ -104,6 +102,38 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
     }
     
     /**
+     * Handle a mouse click.
+     *
+     * @param mouseX The mouse X position.
+     * @param mouseY The mouse Y position.
+     * @param button The mouse button pressed.
+     * @return Whether or not the press was consumed.
+     */
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        super.mouseClicked(mouseX, mouseY, button);
+        this.reactorActivityToggle.mouseClicked(mouseX, mouseY, button);
+        this.reactorAutoEjectToggle.mouseClicked(mouseX, mouseY, button);
+        this.reactorManualEject.mouseClicked(mouseX, mouseY, button);
+        return true;
+    }
+    
+    /**
+     * Handle a mouse release.
+     *
+     * @param mouseX The mouse X position.
+     * @param mouseY The mouse Y position.
+     * @param button The mouse button released.
+     * @return Whether or not the release was consumed.
+     */
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        super.mouseReleased(mouseX, mouseY, button);
+        this.reactorManualEject.mouseReleased(mouseX, mouseY, button);
+        return true;
+    }
+    
+    /**
      * Update logic.
      */
     @Override
@@ -172,11 +202,6 @@ public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IH
         this.symbolReactorOutput.drawTooltip(mStack, mouseX, mouseY);
         this.symbolFuelConsumption.drawTooltip(mStack, mouseX, mouseY);
         this.symbolFuelReactivity.drawTooltip(mStack, mouseX, mouseY);
-        
-        // Check for updatable elements.
-        this.reactorActivityToggle.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
-        this.reactorAutoEjectToggle.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
-        this.reactorManualEject.doClick(mouseX, mouseY, GLFW_MOUSE_BUTTON_1);
     }
     
     /**

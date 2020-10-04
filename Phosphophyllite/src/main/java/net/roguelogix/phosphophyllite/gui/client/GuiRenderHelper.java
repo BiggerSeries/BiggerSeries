@@ -106,9 +106,7 @@ public class GuiRenderHelper extends AbstractGui {
      * @param sprite     The sprite to draw.
      */
     public static void drawSprite(MatrixStack mStack, int xPos, int yPos, int blitOffset, int xSize, int ySize, TextureAtlasSprite sprite) {
-        //AbstractGui.innerBlit(mStack, xPos, xPos + xSize, yPos, yPos + ySize, blitOffset,
-        //        sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
-        AbstractGui.blit(mStack, xPos, yPos, blitOffset, xSize, yOffset, sprite);
+        AbstractGui.blit(mStack, xPos, yPos, blitOffset, xSize, ySize, sprite);
     }
     
     /**
@@ -130,21 +128,4 @@ public class GuiRenderHelper extends AbstractGui {
             }
         }
     }
-    
-    /**
-     * Draw a UV.
-     *
-     * @param xPos       The X position to draw at.
-     * @param yPos       The Y position to draw at.
-     * @param blitOffset The blit offset to use.
-     * @param xSize      The width of the texture.
-     * @param ySize      The height of the texture.
-     * @param minU       The minimum U value.
-     * @param maxU       The maximum U value.
-     * @param minV       The minimum V value.
-     * @param maxV       The maximum V value.
-     */
-    //public static void drawUV(int xPos, int yPos, int blitOffset, int xSize, int ySize, float minU, float maxU, float minV, float maxV) {
-    //    AbstractGui.innerBlit(xPos, xPos + xSize, yPos, yPos + ySize, blitOffset, minU, maxU, minV, maxV);
-    //}
 }

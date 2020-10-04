@@ -75,7 +75,7 @@ public class GuiReactorHeatBar<T extends Container> extends GuiPartBase<T> imple
      */
     @Override
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
-        if (this.isHovering(mouseX, mouseY)) {
+        if (this.isMouseOver(mouseX, mouseY)) {
             this.screen.renderTooltip(mStack, new StringTextComponent(String.format("%.1f/%.1f \u00B0C", this.heatStored, this.heatCapacity)), mouseX, mouseY);
         }
     }

@@ -1,6 +1,7 @@
 package net.roguelogix.phosphophyllite.gui.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -8,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiPartBase<T extends Container> {
+public class GuiPartBase<T extends Container> implements IGuiEventListener {
     
     protected ContainerScreen<T> screen;
     protected int xPos, yPos;
@@ -46,7 +47,8 @@ public class GuiPartBase<T extends Container> {
      * @param mouseY The cursor's Y position.
      * @return True if the cursor is hovering, false otherwise.
      */
-    protected boolean isHovering(int mouseX, int mouseY) {
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
         int relativeX = this.screen.getGuiLeft() + this.xPos;
         int relativeY = this.screen.getGuiTop() + this.yPos;
         if ((mouseX > relativeX) && (mouseX < relativeX + this.xSize)) {
