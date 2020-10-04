@@ -1,8 +1,6 @@
 package net.roguelogix.phosphophyllite;
 
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.WorldEvent;
