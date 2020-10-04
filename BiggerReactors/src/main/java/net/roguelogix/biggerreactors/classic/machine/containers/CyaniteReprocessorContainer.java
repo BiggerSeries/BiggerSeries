@@ -16,6 +16,7 @@ import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @RegisterContainer(name = "cyanite_reprocessor")
 public class CyaniteReprocessorContainer extends Container implements GuiSync.IGUIPacketProvider {
@@ -49,6 +50,7 @@ public class CyaniteReprocessorContainer extends Container implements GuiSync.IG
     /**
      * @return The current state of the machine.
      */
+    @Nullable
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
         return this.tileEntity.cyaniteReprocessorState;

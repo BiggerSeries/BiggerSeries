@@ -20,6 +20,8 @@ import net.roguelogix.phosphophyllite.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.registry.OnModLoad;
 import net.roguelogix.phosphophyllite.robn.ROBN;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,8 @@ import static net.roguelogix.phosphophyllite.Phosphophyllite.modid;
 public class GuiSync {
     
     public interface IGUIPacketProvider {
+        
+        @Nullable
         IGUIPacket getGuiPacket();
         
         
@@ -61,8 +65,9 @@ public class GuiSync {
     }
     
     public interface IGUIPacket {
-        void read(Map<?, ?> data);
+        void read(@Nonnull Map<?, ?> data);
         
+        @Nullable
         Map<?, ?> write();
     }
     
@@ -126,14 +131,32 @@ public class GuiSync {
             while (true) {
                 synchronized (GuiSync.class) {
                     playerGUIs.forEach((player, gui) -> {
-                        assert player instanceof ServerPlayerEntity;
-                        ArrayList<Byte> buf = ROBN.toROBN(gui.getGuiPacket().write());
-                        GUIPacketMessage message = new GUIPacketMessage();
-                        message.bytes = new byte[buf.size()];
-                        for (int i = 0; i < buf.size(); i++) {
-                            message.bytes[i] = buf.get(i);
+                        try {
+                            assert player instanceof ServerPlayerEntity;
+                            IGUIPacket packet = gui.getGuiPacket();
+                            if (packet == null) {
+                                return;
+                            }
+                            Map<?, ?> packetMap = packet.write();
+                            if (packetMap == null) {
+                                return;
+                            }
+                            ArrayList<Byte> buf;
+                            try {
+                                buf = ROBN.toROBN(packetMap);
+                            } catch (IllegalStateException e) {
+                                e.printStackTrace();
+                                return;
+                            }
+                            GUIPacketMessage message = new GUIPacketMessage();
+                            message.bytes = new byte[buf.size()];
+                            for (int i = 0; i < buf.size(); i++) {
+                                message.bytes[i] = buf.get(i);
+                            }
+                            INSTANCE.sendTo(message, ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        INSTANCE.sendTo(message, ((ServerPlayerEntity) player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
                     });
                 }
                 try {

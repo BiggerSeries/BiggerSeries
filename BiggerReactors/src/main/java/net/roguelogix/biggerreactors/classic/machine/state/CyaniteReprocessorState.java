@@ -3,6 +3,8 @@ package net.roguelogix.biggerreactors.classic.machine.state;
 import net.roguelogix.biggerreactors.classic.machine.tiles.CyaniteReprocessorTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +47,7 @@ public class CyaniteReprocessorState implements GuiSync.IGUIPacket {
     }
     
     @Override
-    public void read(Map<?, ?> data) {
+    public void read(@Nonnull Map<?, ?> data) {
         this.workTime = (Integer) data.get("workTime");
         this.workTimeTotal = (Integer) data.get("workTimeTotal");
         this.energyStored = (Integer) data.get("energyStored");
@@ -54,6 +56,7 @@ public class CyaniteReprocessorState implements GuiSync.IGUIPacket {
         this.waterCapacity = (Integer) data.get("waterCapacity");
     }
     
+    @Nullable
     @Override
     public Map<?, ?> write() {
         this.cyaniteReprocessorTile.updateState();

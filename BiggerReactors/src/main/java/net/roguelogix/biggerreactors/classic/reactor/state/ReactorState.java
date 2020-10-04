@@ -3,6 +3,8 @@ package net.roguelogix.biggerreactors.classic.reactor.state;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorTerminalTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +96,7 @@ public class ReactorState implements GuiSync.IGUIPacket {
     }
     
     @Override
-    public void read(Map<?, ?> data) {
+    public void read(@Nonnull Map<?, ?> data) {
         reactorActivity = ((Boolean) data.get("reactorActivity")) ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE;
         reactorType = ((Boolean) data.get("reactorType")) ? ReactorType.ACTIVE : ReactorType.PASSIVE;
         
@@ -121,6 +123,7 @@ public class ReactorState implements GuiSync.IGUIPacket {
         reactorOutputRate = (Double) data.get("reactorOutputRate");
     }
     
+    @Nullable
     @Override
     public Map<?, ?> write() {
         reactorTerminalTile.updateState();

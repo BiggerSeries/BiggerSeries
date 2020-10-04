@@ -11,6 +11,7 @@ import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @RegisterContainer(name = "reactor_terminal")
 public class ReactorContainer extends Container implements GuiSync.IGUIPacketProvider {
@@ -31,6 +32,7 @@ public class ReactorContainer extends Container implements GuiSync.IGUIPacketPro
     /**
      * @return The current state of the machine.
      */
+    @Nullable
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
         return this.tileEntity.reactorState;

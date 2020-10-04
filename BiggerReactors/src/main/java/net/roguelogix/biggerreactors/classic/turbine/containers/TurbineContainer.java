@@ -10,6 +10,8 @@ import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineTerminalTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 
+import javax.annotation.Nullable;
+
 @RegisterContainer(name = "turbine_terminal")
 public class TurbineContainer extends Container implements GuiSync.IGUIPacketProvider {
     
@@ -29,6 +31,7 @@ public class TurbineContainer extends Container implements GuiSync.IGUIPacketPro
     /**
      * @return The current state of the machine.
      */
+    @Nullable
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
         return this.tileEntity.turbineState;
