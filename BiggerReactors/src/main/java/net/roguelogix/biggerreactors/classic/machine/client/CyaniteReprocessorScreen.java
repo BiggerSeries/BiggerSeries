@@ -74,8 +74,8 @@ public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorCo
      */
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.cyanite_reprocessor").getUnformattedComponentText(), 8, (this.ySize - 168), 4210752);
-        this.font.drawString(mStack, this.playerInventory.getDisplayName().getUnformattedComponentText(), 8, (this.ySize - 94), 4210752);
+        this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.cyanite_reprocessor").getString(), 8, (this.ySize - 168), 4210752);
+        this.font.drawString(mStack, this.playerInventory.getDisplayName().getString(), 8, (this.ySize - 94), 4210752);
         
         this.progressBar.drawPart(mStack);
         this.energyTank.drawPart(mStack);

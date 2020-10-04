@@ -63,7 +63,7 @@ public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBa
     @Override
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
-            this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.flow.increase").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+            this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.flow.increase").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
     }
     

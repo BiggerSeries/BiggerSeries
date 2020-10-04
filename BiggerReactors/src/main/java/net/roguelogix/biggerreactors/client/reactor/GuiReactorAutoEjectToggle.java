@@ -64,9 +64,9 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
             if (this.doAutoEject) {
-                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.waste_eject_auto.enabled").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.waste_eject_auto.enabled").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             } else {
-                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.waste_eject_auto.disabled").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.waste_eject_auto.disabled").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             }
         }
     }

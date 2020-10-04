@@ -65,9 +65,9 @@ public class GuiReactorActivityToggle<T extends Container> extends GuiPartBase<T
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
             if (this.reactorActivity == ReactorActivity.ACTIVE) {
-                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.activity.deactivate").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.activity.deactivate").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             } else {
-                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.activity.activate").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.activity.activate").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             }
         }
     }

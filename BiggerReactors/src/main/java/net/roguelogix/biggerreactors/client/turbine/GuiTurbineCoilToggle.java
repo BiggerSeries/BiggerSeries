@@ -64,9 +64,9 @@ public class GuiTurbineCoilToggle<T extends Container> extends GuiPartBase<T> im
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isHovering(mouseX, mouseY)) {
             if (this.coilStatus) {
-                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.coils.deactivate").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.coils.deactivate").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             } else {
-                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.coils.activate").getUnformattedComponentText().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+                this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.turbine.coils.activate").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
             }
         }
     }
