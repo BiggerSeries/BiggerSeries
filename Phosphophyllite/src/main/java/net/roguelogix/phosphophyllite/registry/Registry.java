@@ -20,12 +20,20 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.gen.feature.template.RuleTest;
+import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.placement.TopSolidRangeConfig;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -58,42 +66,43 @@ public class Registry {
         void accept(RegistryEvent.Register<T> event);
     }
     
-
-    private static class ModEventHandler{
+    
+    private static class ModEventHandler {
         
         String modNamespace;
         Set<Class<?>> classes;
         
-        ModEventHandler(String namespace, Set<Class<?>> clazzes){
+        ModEventHandler(String namespace, Set<Class<?>> clazzes) {
             modNamespace = namespace;
             classes = clazzes;
         }
         
         @SubscribeEvent
-        void blockRegistration(RegistryEvent.Register<Block> event){
+        void blockRegistration(RegistryEvent.Register<Block> event) {
             registerBlocks(event, modNamespace, classes);
         }
-    
+        
         @SubscribeEvent
-        void itemRegistration(RegistryEvent.Register<Item> event){
+        void itemRegistration(RegistryEvent.Register<Item> event) {
             registerItems(event, modNamespace, classes);
         }
         
         @SubscribeEvent
-        void fluidRegistration(RegistryEvent.Register<Fluid> event){
+        void fluidRegistration(RegistryEvent.Register<Fluid> event) {
             registerFluids(event, modNamespace, classes);
         }
         
         @SubscribeEvent
-        void containerRegistration(RegistryEvent.Register<ContainerType<?>> event){
+        void containerRegistration(RegistryEvent.Register<ContainerType<?>> event) {
             registerContainers(event, modNamespace, classes);
         }
         
         @SubscribeEvent
-        void tileEntityRegistration(RegistryEvent.Register<TileEntityType<?>> event){
+        void tileEntityRegistration(RegistryEvent.Register<TileEntityType<?>> event) {
             registerTileEntities(event, modNamespace, classes);
         }
     }
+    
     @SuppressWarnings("unchecked")
     public static synchronized void onModLoad() {
         String callerClass = new Exception().getStackTrace()[1].getClassName();
@@ -148,6 +157,11 @@ public class Registry {
             FMLJavaModLoadingContext.get().getModEventBus().addListener((TextureStitchEvent.Pre e) -> onTextureStitch(e, modNamespace, classes));
         }
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLLoadCompleteEvent e) -> onLoadComplete(e, modNamespace, classes));
+        
+        MinecraftForge.EVENT_BUS.addListener((BiomeLoadingEvent biomeEvent) -> {
+            registerWorldGen(modNamespace, classes, biomeEvent);
+        });
+        
         // oh yea, *right now*
         registerConfigs(modNamespace, classes);
     }
@@ -502,12 +516,11 @@ public class Registry {
     }
     
     private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Set<Class<?>> classes) {
-        Registry.registerWorldGen(modNamespace, classes);
         ConfigManager.modLoadingFinished = true;
         ConfigManager.runPostLoads();
     }
     
-    private static synchronized void registerWorldGen(String modNamespace, Set<Class<?>> classes) {
+    private static synchronized void registerWorldGen(String modNamespace, Set<Class<?>> classes, BiomeLoadingEvent biomeEvent) {
         Set<Class<?>> ores = classes.stream().filter(c -> c.isAnnotationPresent(RegisterOre.class)).collect(Collectors.toSet());
         HashSet<Block> blocksRegistered = Registry.blocksRegistered
                 .computeIfAbsent(modNamespace, k -> new HashSet<>());
@@ -527,22 +540,29 @@ public class Registry {
                 assert oreInstance instanceof IPhosphophylliteOre;
                 IPhosphophylliteOre oreInfo = (IPhosphophylliteOre) oreInstance;
                 
-                for (Biome biome : ForgeRegistries.BIOMES) {
-                    if (oreInfo.spawnBiomes().length > 0) {
-                        if (!Arrays.asList(oreInfo.spawnBiomes()).contains(
-                                Objects.requireNonNull(biome.getRegistryName()).toString())) {
-                            continue;
-                        }
+                if (oreInfo.spawnBiomes().length > 0) {
+                    if (!Arrays.asList(oreInfo.spawnBiomes()).contains(
+                            Objects.requireNonNull(biomeEvent.getName()).toString())) {
+                        continue;
                     }
-                    // TODO 9/15/20: oregen
-//                    RuleTest NATURAL_STONE = FillerBlockType.field_241884_c;
-//                    RuleTest NETHERRACK = FillerBlockType.field_241884_c;
-//
-//                    RuleTest fillerBlock = oreInfo.isNetherOre() ? NETHERRACK : NATURAL_STONE;
-//                    biome.addFeature(Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(
-//                            new OreFeatureConfig(fillerBlock, oreInstance.getDefaultState(), oreInfo.size()))
-//                            .withPlacement(Placement.COUNT_RANGE.configure(new CountRangeConfig(oreInfo.count(), oreInfo.minLevel(), oreInfo.offset(), oreInfo.maxLevel()))));
                 }
+                
+                final Block finalOreInstance = oreInstance;
+                
+                if ((biomeEvent.getCategory() == Biome.Category.NETHER) != oreInfo.isNetherOre()) {
+                    return;
+                }
+                
+                biomeEvent.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> {
+                    
+                    RuleTest fillerBlock = oreInfo.isNetherOre() ? OreFeatureConfig.FillerBlockType.field_241884_c : OreFeatureConfig.FillerBlockType.field_241882_a;
+                    
+                    return Feature.ORE
+                            .withConfiguration(new OreFeatureConfig(fillerBlock, finalOreInstance.getDefaultState(), oreInfo.size()))
+                            .withPlacement(Placement.field_242907_l.configure(new TopSolidRangeConfig(oreInfo.minLevel(), 0, oreInfo.maxLevel())))
+                            .func_242728_a()
+                            .func_242731_b(oreInfo.count());
+                });
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
