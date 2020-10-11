@@ -350,12 +350,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return simulation.fuelTank.insertFuel(mb, simulated);
     }
     
-    public void updateControlRodState(ControlRodState controlRodState) {
-        /* TODO: Wire to control rod logic. */
-        controlRodState.name = "Jim";
-        controlRodState.insertionLevel = 25D;
-    }
-    
     public void updateReactorState(ReactorState reactorState) {
         // TODO: These are mixed between the new enums and old booleans. Migrate them fully to enums.
         reactorState.reactorActivity = reactorActivity;
@@ -430,5 +424,19 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 "Water: " + simulation.coolantTank.getWaterAmount() + "\n" +
                 "Steam: " + simulation.coolantTank.getSteamAmount() + "\n" +
                 "";
+    }
+    
+    public void setAllControlRodLevels(double newLevel) {
+        controlRods.forEach(rod -> {
+            rod.setInsertion(newLevel);
+        });
+        updateControlRodLevels();
+    }
+    
+    public void updateControlRodLevels(){
+        controlRods.forEach(rod -> {
+            BlockPos pos = rod.getPos();
+            simulation.setControlRodInsertion(pos.getX() - minX() - 1, pos.getZ() - minZ() - 1, rod.getInsertion());
+        });
     }
 }

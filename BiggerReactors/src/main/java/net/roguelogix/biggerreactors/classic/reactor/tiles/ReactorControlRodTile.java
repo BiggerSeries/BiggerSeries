@@ -1,5 +1,6 @@
 package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -11,7 +12,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorControlRod;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ControlRodState;
@@ -41,9 +41,8 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     
     @Override
     public void updateState() {
-        if (controller != null && controller instanceof ReactorMultiblockController) {
-            ((ReactorMultiblockController) controller).updateControlRodState(controlRodState);
-        }
+        controlRodState.name = "Chris Richardson";
+        controlRodState.insertionLevel = insertion;
     }
     
     @Override
@@ -67,5 +66,29 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
         return new ControlRodContainer(windowId, this.pos, player);
+    }
+    
+    @Override
+    public void runRequest(String requestName, Object requestData) {
+        if (requestName.equals("setRodInsertion")) {
+            Pair<Double, Boolean> dataPair = (Pair<Double, Boolean>) requestData;
+            if(dataPair.getSecond()){
+                reactor().setAllControlRodLevels(dataPair.getFirst());
+            }else {
+                this.insertion = dataPair.getFirst();
+                reactor().updateControlRodLevels();
+            }
+        }
+        super.runRequest(requestName, requestData);
+    }
+    
+    private double insertion = 0;
+    
+    public void setInsertion(double newLevel) {
+        insertion = newLevel;
+    }
+    
+    public double getInsertion(){
+        return insertion;
     }
 }

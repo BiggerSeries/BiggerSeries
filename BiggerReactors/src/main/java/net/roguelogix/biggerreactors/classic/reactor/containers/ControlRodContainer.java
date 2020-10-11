@@ -48,6 +48,7 @@ public class ControlRodContainer extends Container implements GuiSync.IGUIPacket
         assert tileEntity.getWorld() != null;
         if (tileEntity.getWorld().isRemote) {
             runRequest(requestName, requestData);
+            return;
         }
         
         tileEntity.runRequest(requestName, requestData);
