@@ -372,7 +372,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         long steamIn = 0;
         
         if (turbineActivity == TurbineActivity.ACTIVE) {
-            steamIn = Math.min(maxFloatRate, steam);
+            steamIn = Math.min(maxFlowRate, steam);
             
             if (ventState == VentState.CLOSED) {
                 long availableSpace = Config.Turbine.TankSize - water;
@@ -488,7 +488,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         turbineState.ventState = ventState;
         turbineState.coilStatus = coilEngaged;
         
-        turbineState.flowRate = maxFloatRate;
+        turbineState.flowRate = maxFlowRate;
         turbineState.efficiencyRate = rotorEfficiencyLastTick;
         turbineState.turbineOutputRate = energyGeneratedLastTick;
         
@@ -513,7 +513,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 return;
             }
             case "changeFlowRate": {
-                long newRate = maxFloatRate + ((long) requestData);
+                long newRate = maxFlowRate + ((long) requestData);
                 setMaxFlowRate(newRate);
                 return;
             }
@@ -536,7 +536,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         ventState = newVentState;
     }
     
-    long maxFloatRate = Config.Turbine.MaxFlow;
+    long maxFlowRate = Config.Turbine.MaxFlow;
     
     private void setMaxFlowRate(long flowRate) {
         if (flowRate < 0) {
@@ -545,7 +545,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         if (flowRate > Config.Turbine.MaxFlow) {
             flowRate = Config.Turbine.MaxFlow;
         }
-        maxFloatRate = flowRate;
+        maxFlowRate = flowRate;
     }
     
     private boolean coilEngaged = true;
@@ -564,7 +564,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             compound.putDouble("storedPower", storedPower);
             compound.putString("ventState", ventState.toString());
             compound.putDouble("rotorEnergy", rotorEnergy);
-            compound.putLong("maxFloatRate", maxFloatRate);
+            compound.putLong("maxFloatRate", maxFlowRate);
             compound.putBoolean("coilEngaged", coilEngaged);
         }
         return compound;
@@ -590,7 +590,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             rotorEnergy = compound.getDouble("rotorEnergy");
         }
         if (compound.contains("maxFloatRate")) {
-            maxFloatRate = compound.getLong("maxFloatRate");
+            maxFlowRate = compound.getLong("maxFloatRate");
         }
         if (compound.contains("coilEngaged")) {
             coilEngaged = compound.getBoolean("coilEngaged");
@@ -632,7 +632,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 "Water: " + water + "\n" +
                 "Flow: " + fluidConsumedLastTick + "\n" +
                 "RotorEfficiency: " + rotorEfficiencyLastTick + "\n" +
-                "MaxFlow: " + maxFloatRate + "\n" +
+                "MaxFlow: " + maxFlowRate + "\n" +
                 "RotorRPM: " + (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0) + "\n" +
                 "";
     }
