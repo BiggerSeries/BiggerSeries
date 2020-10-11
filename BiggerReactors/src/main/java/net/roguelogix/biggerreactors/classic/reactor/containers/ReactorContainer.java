@@ -50,6 +50,7 @@ public class ReactorContainer extends Container implements GuiSync.IGUIPacketPro
         assert tileEntity.getWorld() != null;
         if (tileEntity.getWorld().isRemote) {
             runRequest(requestName, requestData);
+            return;
         }
         
         tileEntity.runRequest(requestName, requestData);
