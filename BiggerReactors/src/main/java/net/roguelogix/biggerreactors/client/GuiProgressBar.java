@@ -44,7 +44,7 @@ public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.
-        GuiRenderHelper.setTextureOffset(0, 65);
+        GuiRenderHelper.setTextureOffset(0, 64);
         GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
@@ -53,7 +53,7 @@ public class GuiProgressBar<T extends Container> extends GuiPartBase<T> {
             int renderSize = this.xSize * this.workTime / this.workTimeTotal;
             
             // Draw work.
-            GuiRenderHelper.setTextureOffset(25, 65);
+            GuiRenderHelper.setTextureOffset(25, 64);
             GuiRenderHelper.draw(mStack, this.xPos + 1, this.yPos, this.screen.getBlitOffset(), renderSize, this.ySize);
         }
     }

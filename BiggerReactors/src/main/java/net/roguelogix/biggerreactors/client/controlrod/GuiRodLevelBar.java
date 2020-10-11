@@ -43,7 +43,7 @@ public class GuiRodLevelBar<T extends Container> extends GuiPartBase<T> implemen
         GuiRenderHelper.setTexture(this.texture);
         
         // Draw background.
-        GuiRenderHelper.setTextureOffset(0, 81);
+        GuiRenderHelper.setTextureOffset(0, 82);
         GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
         
         // Draw foreground.
@@ -51,15 +51,15 @@ public class GuiRodLevelBar<T extends Container> extends GuiPartBase<T> implemen
         int renderSize = (int) (this.ySize * this.insertionLevel / 100D);
     
         // Draw energy.
-        GuiRenderHelper.setTextureOffset(36, 81);
+        GuiRenderHelper.setTextureOffset(36, 82);
         GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     
         // Mask away empty bit.
-        GuiRenderHelper.setTextureOffset(0, 81);
+        GuiRenderHelper.setTextureOffset(0, 82);
         GuiRenderHelper.draw(mStack, this.xPos, this.yPos + renderSize, this.screen.getBlitOffset(), this.xSize, this.ySize - renderSize);
         
         // Draw frame.
-        GuiRenderHelper.setTextureOffset(18, 81);
+        GuiRenderHelper.setTextureOffset(18, 82);
         GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
     
