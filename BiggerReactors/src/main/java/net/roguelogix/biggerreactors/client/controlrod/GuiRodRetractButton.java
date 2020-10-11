@@ -24,8 +24,9 @@ public class GuiRodRetractButton<T extends Container> extends GuiPartBase<T> imp
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
     private boolean debounce = false;
-    private boolean alt = false;
-    private int modifiers = 0;
+    private int alts = 0;
+    private int shifts = 0;
+    private int ctrls = 0;
     private double insertionLevel;
     
     /**
@@ -70,26 +71,42 @@ public class GuiRodRetractButton<T extends Container> extends GuiPartBase<T> imp
     
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // This is necessary to solve a weird bug.
-        this.modifiers = modifiers;
-        if(modifiers > 0x3 && modifiers < 0x8) {
-            this.alt = true;
-            this.modifiers -= GLFW_MOD_ALT;
-        } else {
-            this.alt = false;
+        switch (keyCode) {
+            case GLFW_KEY_LEFT_ALT:
+            case GLFW_KEY_RIGHT_ALT: {
+                alts++;
+                break;
+            }
+            case GLFW_KEY_LEFT_CONTROL:
+            case GLFW_KEY_RIGHT_CONTROL: {
+                ctrls++;
+                break;
+            }
+            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_RIGHT_SHIFT: {
+                shifts++;
+            }
         }
         return true;
     }
     
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        // This is necessary to solve a weird bug.
-        this.modifiers = modifiers;
-        if(modifiers > 0x3 && modifiers < 0x8) {
-            this.alt = true;
-            this.modifiers -= GLFW_MOD_ALT;
-        } else {
-            this.alt = false;
+        switch (keyCode) {
+            case GLFW_KEY_LEFT_ALT:
+            case GLFW_KEY_RIGHT_ALT: {
+                alts--;
+                break;
+            }
+            case GLFW_KEY_LEFT_CONTROL:
+            case GLFW_KEY_RIGHT_CONTROL: {
+                ctrls--;
+                break;
+            }
+            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_RIGHT_SHIFT: {
+                shifts--;
+            }
         }
         return true;
     }
@@ -99,23 +116,20 @@ public class GuiRodRetractButton<T extends Container> extends GuiPartBase<T> imp
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            double newInsertionLevel = insertionLevel;
+            double levelChange;
             // Check for modifiers
-            if (modifiers == GLFW_MOD_SHIFT + GLFW_MOD_CONTROL) {
-                newInsertionLevel -= 100D;
-            } else if (modifiers == GLFW_MOD_CONTROL) {
-                newInsertionLevel -= 50D;
-            } else if (modifiers == GLFW_MOD_SHIFT) {
-                newInsertionLevel -= 10D;
+            if (ctrls > 0 && shifts > 0) {
+                levelChange = -100D;
+            } else if (ctrls > 0) {
+                levelChange = -50D;
+            } else if (shifts > 0) {
+                levelChange = -10D;
             } else {
-                newInsertionLevel -= 1L;
+                levelChange = -1D;
             }
-    
-            // Check for bounds.
-            if(newInsertionLevel < 0D) newInsertionLevel = 0D;
-    
+            
             // Send data.
-            ((ControlRodContainer) this.screen.getContainer()).executeRequest("setRodInsertion", new Pair<>(newInsertionLevel, this.alt));
+            ((ControlRodContainer) this.screen.getContainer()).executeRequest("changeInsertionLevel", new Pair<>(levelChange, this.alts > 0));
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;

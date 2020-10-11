@@ -18,6 +18,8 @@ import net.roguelogix.biggerreactors.classic.reactor.state.ControlRodState;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
+import net.roguelogix.phosphophyllite.util.Util;
+import org.lwjgl.system.MathUtil;
 
 import javax.annotation.Nullable;
 
@@ -70,12 +72,14 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     
     @Override
     public void runRequest(String requestName, Object requestData) {
-        if (requestName.equals("setRodInsertion")) {
+        if (requestName.equals("changeInsertionLevel")) {
             Pair<Double, Boolean> dataPair = (Pair<Double, Boolean>) requestData;
+            double newLevel = this.insertion + dataPair.getFirst();
+            newLevel = Math.max(0, Math.min(100, newLevel));
             if(dataPair.getSecond()){
-                reactor().setAllControlRodLevels(dataPair.getFirst());
+                reactor().setAllControlRodLevels(newLevel);
             }else {
-                this.insertion = dataPair.getFirst();
+                this.insertion = newLevel;
                 reactor().updateControlRodLevels();
             }
         }
