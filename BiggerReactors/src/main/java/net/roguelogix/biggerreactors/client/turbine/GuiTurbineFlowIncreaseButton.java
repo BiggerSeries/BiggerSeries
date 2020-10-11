@@ -18,14 +18,16 @@ import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOD_CONTROL;
-import static org.lwjgl.glfw.GLFW.GLFW_MOD_SHIFT;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_SHIFT;
 
 public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
     private boolean debounce = false;
-    private int modifiers = 0;
+    private int alts = 0;
+    private int shifts = 0;
+    private int ctrls = 0;
     private long flowRate;
     
     /**
@@ -70,9 +72,46 @@ public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBa
     
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        this.modifiers = modifiers;
+        switch (keyCode) {
+            case GLFW_KEY_LEFT_ALT:
+            case GLFW_KEY_RIGHT_ALT: {
+                alts++;
+                break;
+            }
+            case GLFW_KEY_LEFT_CONTROL:
+            case GLFW_KEY_RIGHT_CONTROL: {
+                ctrls++;
+                break;
+            }
+            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_RIGHT_SHIFT: {
+                shifts++;
+            }
+        }
         return true;
     }
+    
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        switch (keyCode) {
+            case GLFW_KEY_LEFT_ALT:
+            case GLFW_KEY_RIGHT_ALT: {
+                alts--;
+                break;
+            }
+            case GLFW_KEY_LEFT_CONTROL:
+            case GLFW_KEY_RIGHT_CONTROL: {
+                ctrls--;
+                break;
+            }
+            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_RIGHT_SHIFT: {
+                shifts--;
+            }
+        }
+        return true;
+    }
+    
     
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -81,11 +120,11 @@ public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBa
         } else {
             long newFlowRate = flowRate;
             // Check for modifiers
-            if (modifiers == GLFW_MOD_SHIFT + GLFW_MOD_CONTROL) {
+            if (ctrls > 0 && shifts > 0) {
                 newFlowRate += 1000L;
-            } else if (modifiers == GLFW_MOD_CONTROL) {
+            } else if (ctrls > 0) {
                 newFlowRate += 100L;
-            } else if (modifiers == GLFW_MOD_SHIFT) {
+            } else if (shifts > 0) {
                 newFlowRate += 10L;
             } else {
                 newFlowRate += 1L;
