@@ -117,23 +117,20 @@ public class GuiTurbineFlowDecreaseButton<T extends Container> extends GuiPartBa
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            long newFlowRate = flowRate;
+            long flowChange;
             // Check for modifiers
             if (ctrls > 0 && shifts > 0) {
-                newFlowRate -= 1000L;
+                flowChange = -1000L;
             } else if (ctrls > 0) {
-                newFlowRate -= 100L;
+                flowChange = -100L;
             } else if (shifts > 0) {
-                newFlowRate -= 10L;
+                flowChange = -10L;
             } else {
-                newFlowRate -= 1L;
+                flowChange = -1L;
             }
-    
-            // Check for bounds.
-            if(newFlowRate < 0L) newFlowRate = 0L;
-    
+            
             // Send data.
-            ((TurbineContainer) this.screen.getContainer()).executeRequest("setMaxFlowRate", newFlowRate);
+            ((TurbineContainer) this.screen.getContainer()).executeRequest("changeFlowRate", flowChange);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;
