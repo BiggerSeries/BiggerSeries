@@ -1,5 +1,7 @@
 package net.roguelogix.phosphophyllite.robn;
 
+import com.mojang.datafixers.util.Pair;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteOrder;
@@ -213,6 +215,10 @@ public class ROBN {
             mapToROBN((Map<?, ?>) t, buf);
             return;
         }
+        if (t instanceof Pair) {
+            pairToROBN((Pair<?, ?>) t, buf);
+            return;
+        }
         throw new IllegalArgumentException("Unknown object type");
     }
     
@@ -251,7 +257,7 @@ public class ROBN {
             case Map:
                 return mapFromROBN(iterator);
             case Pair:
-                break;
+                return pairFromROBN(iterator);
             case Undefined:
                 throw new IllegalArgumentException("Malformed Binary");
         }
@@ -487,6 +493,19 @@ public class ROBN {
         }
         return map;
     }
+    
+    private static void pairToROBN(Pair<?, ?> pair, ArrayList<Byte> buf) {
+        buf.add(Type.Pair.val);
+        buf.addAll(toROBN(pair.getFirst()));
+        buf.addAll(toROBN(pair.getSecond()));
+    }
+    
+    private static Object pairFromROBN(Iterator<Byte> iterator) {
+        Object first = fromROBN(iterator);
+        Object second = fromROBN(iterator);
+        return new Pair<>(first, second);
+    }
+    
     
     private static void stringToROBN(String str, ArrayList<Byte> buf) {
         buf.ensureCapacity(buf.size() + str.length() + 2);
