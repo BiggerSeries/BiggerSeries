@@ -89,8 +89,12 @@ public class GuiTurbineFlowDecreaseButton<T extends Container> extends GuiPartBa
             } else {
                 newFlowRate -= 1L;
             }
-            
-            ((TurbineContainer) this.screen.getContainer()).runRequest("setMaxFlowRate", newFlowRate);
+    
+            // Check for bounds.
+            if(newFlowRate < 0L) newFlowRate = 0L;
+    
+            // Send data.
+            ((TurbineContainer) this.screen.getContainer()).executeRequest("setMaxFlowRate", newFlowRate);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;

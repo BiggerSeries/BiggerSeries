@@ -9,6 +9,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
+import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
@@ -90,7 +91,11 @@ public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBa
                 newFlowRate += 1L;
             }
             
-            ((TurbineContainer) this.screen.getContainer()).runRequest("setMaxFlowRate", newFlowRate);
+            // Check for bounds.
+            if(newFlowRate > Config.Turbine.MaxFlow) newFlowRate = Config.Turbine.MaxFlow;
+    
+            // Send data.
+            ((TurbineContainer) this.screen.getContainer()).executeRequest("setMaxFlowRate", newFlowRate);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;

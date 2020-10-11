@@ -73,7 +73,7 @@ public class GuiTurbineActivityToggle<T extends Container> extends GuiPartBase<T
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            ((TurbineContainer) this.screen.getContainer()).runRequest("setActive", turbineActivity != TurbineActivity.ACTIVE);
+            ((TurbineContainer) this.screen.getContainer()).executeRequest("setActive", turbineActivity != TurbineActivity.ACTIVE);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             return true;

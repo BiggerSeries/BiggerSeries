@@ -72,7 +72,7 @@ public class GuiTurbineCoilToggle<T extends Container> extends GuiPartBase<T> im
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            ((TurbineContainer) this.screen.getContainer()).runRequest("setCoilEngaged", !this.coilStatus);
+            ((TurbineContainer) this.screen.getContainer()).executeRequest("setCoilEngaged", !this.coilStatus);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             return true;

@@ -79,11 +79,11 @@ public class GuiTurbineVentStateToggle<T extends Container> extends GuiPartBase<
         } else {
             // Do click logic.
             if (ventState == VentState.OVERFLOW) {
-                ((TurbineContainer) this.screen.getContainer()).runRequest("setVentState", VentState.valueOf(VentState.ALL));
+                ((TurbineContainer) this.screen.getContainer()).executeRequest("setVentState", VentState.valueOf(VentState.ALL));
             } else if (ventState == VentState.ALL) {
-                ((TurbineContainer) this.screen.getContainer()).runRequest("setVentState", VentState.valueOf(VentState.CLOSED));
+                ((TurbineContainer) this.screen.getContainer()).executeRequest("setVentState", VentState.valueOf(VentState.CLOSED));
             } else {
-                ((TurbineContainer) this.screen.getContainer()).runRequest("setVentState", VentState.valueOf(VentState.OVERFLOW));
+                ((TurbineContainer) this.screen.getContainer()).executeRequest("setVentState", VentState.valueOf(VentState.OVERFLOW));
             }
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);

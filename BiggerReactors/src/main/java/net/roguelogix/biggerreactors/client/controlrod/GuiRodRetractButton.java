@@ -1,6 +1,7 @@
-package net.roguelogix.biggerreactors.client.reactor;
+package net.roguelogix.biggerreactors.client.controlrod;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +10,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
 import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
@@ -17,10 +18,15 @@ import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class GuiReactorManualEjectButton<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
+import static org.lwjgl.glfw.GLFW.*;
+
+public class GuiRodRetractButton<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
     private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
     private boolean debounce = false;
+    private boolean alt = false;
+    private int modifiers = 0;
+    private double insertionLevel;
     
     /**
      * @param screen The screen this instance belongs to.
@@ -29,8 +35,12 @@ public class GuiReactorManualEjectButton<T extends Container> extends GuiPartBas
      * @param xSize  The width of the part.
      * @param ySize  The height of the part.
      */
-    public GuiReactorManualEjectButton(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize) {
+    public GuiRodRetractButton(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize) {
         super(screen, xPos, yPos, xSize, ySize);
+    }
+    
+    public void updateState(double insertionLevel) {
+        this.insertionLevel = insertionLevel;
     }
     
     /**
@@ -44,9 +54,9 @@ public class GuiReactorManualEjectButton<T extends Container> extends GuiPartBas
         
         // Draw button.
         if (this.debounce) {
-            GuiRenderHelper.setTextureOffset(80, 16);
+            GuiRenderHelper.setTextureOffset(96, 48);
         } else {
-            GuiRenderHelper.setTextureOffset(64, 16);
+            GuiRenderHelper.setTextureOffset(80, 48);
         }
         GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
@@ -54,8 +64,34 @@ public class GuiReactorManualEjectButton<T extends Container> extends GuiPartBas
     @Override
     public void drawTooltip(MatrixStack mStack, int mouseX, int mouseY) {
         if (this.isMouseOver(mouseX, mouseY)) {
-            this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.reactor.waste_eject_manual").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
+            this.screen.func_243308_b(mStack, Arrays.stream(new TranslationTextComponent("tooltip.biggerreactors.buttons.control_rod.insertion.retract").getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
+    }
+    
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // This is necessary to solve a weird bug.
+        this.modifiers = modifiers;
+        if(modifiers > 0x3 && modifiers < 0x8) {
+            this.alt = true;
+            this.modifiers -= GLFW_MOD_ALT;
+        } else {
+            this.alt = false;
+        }
+        return true;
+    }
+    
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        // This is necessary to solve a weird bug.
+        this.modifiers = modifiers;
+        if(modifiers > 0x3 && modifiers < 0x8) {
+            this.alt = true;
+            this.modifiers -= GLFW_MOD_ALT;
+        } else {
+            this.alt = false;
+        }
+        return true;
     }
     
     @Override
@@ -63,7 +99,23 @@ public class GuiReactorManualEjectButton<T extends Container> extends GuiPartBas
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            ((ReactorContainer) this.screen.getContainer()).executeRequest("ejectWaste", true);
+            double newInsertionLevel = insertionLevel;
+            // Check for modifiers
+            if (modifiers == GLFW_MOD_SHIFT + GLFW_MOD_CONTROL) {
+                newInsertionLevel -= 100D;
+            } else if (modifiers == GLFW_MOD_CONTROL) {
+                newInsertionLevel -= 50D;
+            } else if (modifiers == GLFW_MOD_SHIFT) {
+                newInsertionLevel -= 10D;
+            } else {
+                newInsertionLevel -= 1L;
+            }
+    
+            // Check for bounds.
+            if(newInsertionLevel < 0D) newInsertionLevel = 0D;
+    
+            // Send data.
+            ((ControlRodContainer) this.screen.getContainer()).executeRequest("setRodInsertion", new Pair<>(newInsertionLevel, this.alt));
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;

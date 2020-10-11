@@ -1,5 +1,6 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -350,8 +351,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     public void updateControlRodState(ControlRodState controlRodState) {
-        controlRodState.controlRodName = "test";
-        controlRodState.controlRodInsertion = 25;
+        /* TODO: Wire to control rod logic. */
+        controlRodState.name = "Jim";
+        controlRodState.insertionLevel = 25D;
     }
     
     public void updateReactorState(ReactorState reactorState) {
@@ -384,6 +386,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     public void runRequest(String requestName, Object requestData) {
         switch (requestName) {
+            // Reactor.
             case "setActive": {
                 boolean newState = (boolean) requestData;
                 setActive(newState ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
@@ -396,6 +399,13 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             case "ejectWaste": {
                 ejectWaste();
                 return;
+            }
+            // Control rod.
+            case "setRodInsertion": {
+                Pair<Double, Boolean> newState = (Pair<Double, Boolean>) requestData;
+                /* TODO: Wire to control rod logic. */
+                // newState.getFirst() = Rod Insertion Level
+                // newState.getSecond() = Apply Globally
             }
         }
     }

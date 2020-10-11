@@ -48,6 +48,11 @@
   "multiblock.error.biggerreactors.no_control_rod_for_fuel_rod": "All fuel elements must be topped with a control rod (%d, %d)",
   "multiblock.error.biggerreactors.dangling_internal_part": "There appears to be another reactor inside this one, is something wrong? (%d, %d, %d)",
 
+  "tooltip.biggerreactors.symbols.control_rod.insertion": "§bRod Insertion\nChange the control rod's insertion.\nMore insertion slows reaction rate,\nwhich reduces heat, energy,\nradiation output, and\nfuel consumption.",
+
+  "tooltip.biggerreactors.buttons.control_rod.insertion.insert": "§bInsert Rod\nMore insertion reduces reaction rate.\n§8[Shift]: Insert by 10%.\n§8[Ctrl]: Insert by 50%.\n§8[Ctrl + Shift]: Insert by 100% (full insertion).\n§8[Alt]: Apply to all rods.",
+  "tooltip.biggerreactors.buttons.control_rod.insertion.retract": "§bRetract Rod\nLess insertion increases reaction rate.\n§8[Shift]: Retract by 10%.\n§8[Ctrl]: Retract by 50%.\n§8[Ctrl + Shift]: Retract by 100% (full retraction).\n§8[Alt]: Apply to all rods.",
+
   "tooltip.biggerreactors.status.reactor.activity.online": "Status: §2Online",
   "tooltip.biggerreactors.status.reactor.activity.offline": "Status: §4Offline",
 

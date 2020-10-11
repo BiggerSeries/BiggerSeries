@@ -72,7 +72,7 @@ public class GuiReactorAutoEjectToggle<T extends Container> extends GuiPartBase<
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            ((ReactorContainer) this.screen.getContainer()).runRequest("setAutoEject", !doAutoEject);
+            ((ReactorContainer) this.screen.getContainer()).executeRequest("setAutoEject", !doAutoEject);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             return true;

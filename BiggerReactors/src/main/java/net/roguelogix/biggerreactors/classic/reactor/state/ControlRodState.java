@@ -11,12 +11,12 @@ public class ControlRodState implements GuiSync.IGUIPacket {
     /**
      * The name of this control rod.
      */
-    public String controlRodName;
+    public String name;
     
     /**
      * How inserted the control rod is.
      */
-    public int controlRodInsertion;
+    public double insertionLevel;
     
     /**
      * The tile whose information this belongs to.
@@ -29,8 +29,8 @@ public class ControlRodState implements GuiSync.IGUIPacket {
     
     @Override
     public void read(Map<?, ?> data) {
-        // controlRodName = (String) data.get("controlRodName");
-        controlRodInsertion = (Integer) data.get("controlRodInsertion");
+        name = (String) data.get("name");
+        insertionLevel = (Double) data.get("insertionLevel");
     }
     
     @Override
@@ -38,8 +38,8 @@ public class ControlRodState implements GuiSync.IGUIPacket {
         controlRodTile.updateState();
         HashMap<String, Object> data = new HashMap<>();
         
-        //data.put("controlRodName", controlRodName);
-        data.put("controlRodInsertion", controlRodInsertion);
+        data.put("name", name);
+        data.put("insertionLevel", insertionLevel);
         
         return data;
     }
