@@ -112,15 +112,7 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
 
-//    compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-//    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
-//    compile fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
-//    compile fg.deobf("nl.elec332.core:ElecCore:${minecraft_version}-${eleccore_version}")
-//
-//    compile fg.deobf("curse.maven:wildnature:2837635")
-//    compile fg.deobf("curse.maven:voxelmap:2765032")
-//    compile fg.deobf("curse.maven:minimap:2849263")
-//    compile fg.deobf("curse.maven:xaero:2836597")
+    runtime fg.deobf('curse.maven:jei:3076673')
 
     compile project(':Phosphophyllite')
     compile project(':BiggerReactors')
