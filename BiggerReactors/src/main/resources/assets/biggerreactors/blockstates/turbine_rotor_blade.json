@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
+    "turbineshaftrotation=x": {
+      "model": "biggerreactors:block/turbine_rotor_blade",
+      "x" : 90,
+      "y" : 90
+    },
+    "turbineshaftrotation=y": {
       "model": "biggerreactors:block/turbine_rotor_blade"
+    },
+    "turbineshaftrotation=z": {
+      "model": "biggerreactors:block/turbine_rotor_blade",
+      "x" : 90
     }
   }
 }
