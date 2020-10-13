@@ -1,6 +1,7 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +15,7 @@ import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
+import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
@@ -23,6 +25,7 @@ import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 import net.roguelogix.phosphophyllite.util.Util;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ReactorMultiblockController extends RectangularMultiblockController {
@@ -46,7 +49,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                     block instanceof ReactorGlass ||
                     block instanceof ReactorAccessPort ||
                     block instanceof ReactorCoolantPort ||
-                    block instanceof ReactorPowerTap;
+                    block instanceof ReactorPowerTap ||
+                    block instanceof ReactorComputerPort;
         });
         interiorValidator = block -> {
             if (block instanceof ReactorFuelRod) {
@@ -433,10 +437,122 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         updateControlRodLevels();
     }
     
-    public void updateControlRodLevels(){
+    public void updateControlRodLevels() {
         controlRods.forEach(rod -> {
             BlockPos pos = rod.getPos();
             simulation.setControlRodInsertion(pos.getX() - minX() - 1, pos.getZ() - minZ() - 1, rod.getInsertion());
         });
+    }
+    
+    // -- ComputerCraft API --
+    
+    public boolean CCgetConnected() {
+        return state != MultiblockController.AssemblyState.DISASSEMBLED;
+    }
+    
+    public boolean CCgetActive() {
+        return reactorActivity == ReactorActivity.ACTIVE;
+    }
+    
+    public int CCgetNumberOfControlRods() {
+        return controlRods.size();
+    }
+    
+    public long CCgetEnergyStored() {
+        return storedPower;
+    }
+    
+    public double CCgetFuelTemperature() {
+        return simulation.getFuelHeat();
+    }
+    
+    public double CCgetCasingTemperature() {
+        return simulation.getReactorHeat();
+    }
+    
+    public long CCgetFuelAmount() {
+        return simulation.fuelTank.getFuelAmount();
+    }
+    
+    public long CCgetWasteAmount() {
+        return simulation.fuelTank.getWasteAmount();
+    }
+    
+    public long CCgetReactantAmount() {
+        return simulation.fuelTank.getTotalAmount();
+    }
+    
+    public long CCgetFuelAmountMax(){
+        return simulation.fuelTank.getCapacity();
+    }
+    
+    public String CCgetControlRodName(int index){
+        return null;
+    }
+    
+    public double CCgetControlRodLevel(int index){
+        return 0;
+    }
+    
+    public double CCgetEnergyProducedLastTick(){
+        return simulation.FEProducedLastTick;
+    }
+    
+    public double CCgetHotFluidProducedLastTick(){
+        if(simulation.isPassive()){
+            return 0;
+        }
+        return simulation.FEProducedLastTick;
+    }
+    
+    
+    public String CCgetCoolantType(){
+        if(simulation.coolantTank.getWaterAmount() == 0){
+            return null;
+        }
+        return Objects.requireNonNull(Fluids.WATER.getRegistryName()).toString();
+    }
+    
+    public long CCgetCoolantAmount(){
+        return simulation.coolantTank.getWaterAmount();
+    }
+    
+    public String CCgetHotFluidType(){
+        if(simulation.coolantTank.getSteamAmount() == 0){
+            return null;
+        }
+        return Objects.requireNonNull(FluidIrradiatedSteam.INSTANCE.getRegistryName()).toString();
+    }
+    
+    public long CCgetHotFluidAmount(){
+        return simulation.coolantTank.getSteamAmount();
+    }
+    
+    public double CCgetFuelReactivity(){
+        return simulation.getFertility();
+    }
+    
+    public double CCgetFuelConsumedLastTick(){
+        return simulation.getFuelConsumedLastTick();
+    }
+    
+    public boolean CCisActivelyCooled(){
+        return !simulation.isPassive();
+    }
+    
+    public void CCsetActive(boolean active){
+        setActive(active ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
+    }
+    
+    public void CCsetAllControlRodLevels(double insertion){
+        setAllControlRodLevels(insertion);
+    }
+    
+    public void CCsetControlRodLevel(double insertion, int index){
+    
+    }
+    
+    public void CCdoEjectWaste(){
+        ejectWaste();
     }
 }

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "biggerreactors:block/reactor_computer_port"
+    }
+  }
+}

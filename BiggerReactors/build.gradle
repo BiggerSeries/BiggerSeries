@@ -29,6 +29,9 @@ repositories {
     maven {
         url 'https://www.dogforce-games.com/maven/'
     }
+    maven {
+        url 'https://squiddev.cc/maven/'
+    }
 }
 
 
@@ -131,6 +134,8 @@ dependencies {
     // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
     compile project(':Phosphophyllite')
+
+    implementation fg.deobf("org.squiddev:cc-tweaked-1.16.3:1.93.0")
 
 //    runtime ""
 //    runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')

@@ -58,7 +58,7 @@ Big Reactors, but even bigger
 [[dependencies.biggerreactors]]
     modId="phosphophyllite"
     mandatory=true
-    versionRange="[0.0.0, 0.1.0)"
+    versionRange="[0.0.1, 0.1.0)"
     ordering="NONE"
     side="BOTH"
 
