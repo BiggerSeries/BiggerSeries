@@ -13,21 +13,22 @@ import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class ReactorPeripheral implements IDynamicPeripheral {
     
-    private final ReactorMultiblockController controller;
+    private final Supplier<ReactorMultiblockController> controllerSupplier;
     
-    public static LazyOptional<Object> create(@Nonnull ReactorMultiblockController controller) {
-        return LazyOptional.of(() -> new ReactorPeripheral(controller));
+    public static LazyOptional<Object> create(@Nonnull Supplier<ReactorMultiblockController> controllerSupplier) {
+        return LazyOptional.of(() -> new ReactorPeripheral(controllerSupplier));
     }
     
-    public ReactorPeripheral(@Nonnull ReactorMultiblockController controller) {
-        this.controller = controller;
+    public ReactorPeripheral(@Nonnull Supplier<ReactorMultiblockController> controllerSupplier) {
+        this.controllerSupplier = controllerSupplier;
     }
     
     private interface ReactorLuaFunc {
-        MethodResult func(@Nonnull ReactorMultiblockController reactor, @Nonnull IArguments args) throws LuaException;
+        MethodResult func(@Nullable ReactorMultiblockController reactor, @Nonnull IArguments args) throws LuaException;
     }
     
     private static HashMap<String, ReactorLuaFunc> methodHandlers;
@@ -36,41 +37,154 @@ public class ReactorPeripheral implements IDynamicPeripheral {
     static {
         methodHandlers = new HashMap<>();
         {
-            methodHandlers.put("getConnected", (reactor, args) -> MethodResult.of(reactor.CCgetConnected()));
-            methodHandlers.put("getActive", (reactor, args) -> MethodResult.of(reactor.CCgetActive()));
-            methodHandlers.put("getNumberOfControlRods", (reactor, args) -> MethodResult.of(reactor.CCgetNumberOfControlRods()));
-            methodHandlers.put("getEnergyStored", (reactor, args) -> MethodResult.of(reactor.CCgetEnergyStored()));
-            methodHandlers.put("getFuelTemperature", (reactor, args) -> MethodResult.of(reactor.CCgetFuelTemperature()));
-            methodHandlers.put("getCasingTemperature", (reactor, args) -> MethodResult.of(reactor.CCgetCasingTemperature()));
-            methodHandlers.put("getFuelAmount", (reactor, args) -> MethodResult.of(reactor.CCgetFuelAmount()));
-            methodHandlers.put("getWasteAmount", (reactor, args) -> MethodResult.of(reactor.CCgetWasteAmount()));
-            methodHandlers.put("getReactantAmount", (reactor, args) -> MethodResult.of(reactor.CCgetReactantAmount()));
-            methodHandlers.put("getFuelAmountMax", (reactor, args) -> MethodResult.of(reactor.CCgetFuelAmountMax()));
-            methodHandlers.put("getControlRodName", (reactor, args) -> MethodResult.of(reactor.CCgetControlRodName(args.getInt(0))));
-            methodHandlers.put("getControlRodLevel", (reactor, args) -> MethodResult.of(reactor.CCgetControlRodLevel(args.getInt(0))));
-            methodHandlers.put("getEnergyProducedLastTick", (reactor, args) -> MethodResult.of(reactor.CCgetEnergyProducedLastTick()));
-            methodHandlers.put("getHotFluidProducedLastTick", (reactor, args) -> MethodResult.of(reactor.CCgetHotFluidProducedLastTick()));
-            methodHandlers.put("getCoolantType", (reactor, args) -> MethodResult.of(reactor.CCgetCoolantType()));
-            methodHandlers.put("getCoolantAmount", (reactor, args) -> MethodResult.of(reactor.CCgetCoolantAmount()));
-            methodHandlers.put("getHotFluidType", (reactor, args) -> MethodResult.of(reactor.CCgetHotFluidType()));
-            methodHandlers.put("getHotFluidAmount", (reactor, args) -> MethodResult.of(reactor.CCgetHotFluidAmount()));
-            methodHandlers.put("getFuelReactivity", (reactor, args) -> MethodResult.of(reactor.CCgetFuelReactivity()));
-            methodHandlers.put("getFuelConsumedLastTick", (reactor, args) -> MethodResult.of(reactor.CCgetFuelConsumedLastTick()));
-            methodHandlers.put("isActivelyCooled", (reactor, args) -> MethodResult.of(reactor.CCisActivelyCooled()));
+            methodHandlers.put("getConnected", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetConnected());
+                }
+                return MethodResult.of(false);
+            });
+            methodHandlers.put("getActive", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetActive());
+                }
+                return MethodResult.of(false);
+            });
+            methodHandlers.put("getNumberOfControlRods", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetNumberOfControlRods());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getEnergyStored", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetEnergyStored());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getFuelTemperature", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetFuelTemperature());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getCasingTemperature", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetCasingTemperature());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getFuelAmount", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetFuelAmount());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getWasteAmount", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetWasteAmount());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getReactantAmount", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetReactantAmount());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getFuelAmountMax", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetFuelAmountMax());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getControlRodName", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetControlRodName(args.getInt(0)));
+                }
+                return MethodResult.of((String) null);
+            });
+            methodHandlers.put("getControlRodLevel", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetControlRodLevel(args.getInt(0)));
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getEnergyProducedLastTick", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetEnergyProducedLastTick());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getHotFluidProducedLastTick", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetHotFluidProducedLastTick());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getCoolantType", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetCoolantType());
+                }
+                return MethodResult.of((String) null);
+            });
+            methodHandlers.put("getCoolantAmount", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetCoolantAmount());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getHotFluidType", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetHotFluidType());
+                }
+                return MethodResult.of((String) null);
+            });
+            methodHandlers.put("getHotFluidAmount", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetHotFluidAmount());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getFuelReactivity", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetFuelReactivity());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getFuelConsumedLastTick", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetFuelConsumedLastTick());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("isActivelyCooled", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCisActivelyCooled());
+                }
+                return MethodResult.of(false);
+            });
             methodHandlers.put("setActive", (reactor, args) -> {
-                reactor.CCsetActive(args.getBoolean(0));
+                if (reactor != null) {
+                    reactor.CCsetActive(args.getBoolean(0));
+                }
                 return MethodResult.of();
             });
             methodHandlers.put("setAllControlRodLevels", (reactor, args) -> {
-                reactor.CCsetAllControlRodLevels(args.getDouble(0));
+                if (reactor != null) {
+                    reactor.CCsetAllControlRodLevels(args.getDouble(0));
+                }
                 return MethodResult.of();
             });
             methodHandlers.put("setControlRodLevel", (reactor, args) -> {
-                reactor.CCsetControlRodLevel(args.getDouble(0), args.getInt(1));
+                if (reactor != null) {
+                    reactor.CCsetControlRodLevel(args.getDouble(0), args.getInt(1));
+                }
                 return MethodResult.of();
             });
             methodHandlers.put("doEjectWaste", (reactor, args) -> {
-                reactor.CCdoEjectWaste();
+                if (reactor != null) {
+                    reactor.CCdoEjectWaste();
+                }
                 return MethodResult.of();
             });
         }
@@ -88,8 +202,8 @@ public class ReactorPeripheral implements IDynamicPeripheral {
     public MethodResult callMethod(@Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException {
         ReactorLuaFunc func = methodHandlers.get(methods[method]);
         try {
-            return func.func(controller, arguments);
-        }catch (RuntimeException e){
+            return func.func(controllerSupplier.get(), arguments);
+        } catch (RuntimeException e) {
             throw new LuaException(e.getMessage());
         }
     }
@@ -103,7 +217,10 @@ public class ReactorPeripheral implements IDynamicPeripheral {
     @Override
     public boolean equals(@Nullable IPeripheral other) {
         if (other instanceof ReactorPeripheral) {
-            return ((ReactorPeripheral) other).controller == controller;
+            if (controllerSupplier.get() == null) {
+                return false;
+            }
+            return ((ReactorPeripheral) other).controllerSupplier.get() == controllerSupplier.get();
         }
         return false;
     }
