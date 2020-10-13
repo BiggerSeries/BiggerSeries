@@ -122,6 +122,9 @@ public class Registry {
                             if (FMLEnvironment.dist != Dist.CLIENT && className.contains("client")) {
                                 return null;
                             }
+                            if(className.contains("deps")){
+                                return null;
+                            }
                             return Registry.class.getClassLoader().loadClass(className);
                         }
                     } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
