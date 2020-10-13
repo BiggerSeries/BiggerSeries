@@ -73,7 +73,7 @@ public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBa
         // Check for a click (and enable debounce).
         if (glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_MOUSE_BUTTON_1) == GLFW_PRESS
                 && !debounce) {
-            long newFlowRate = flowRate;
+            long newFlowRate = 0;
             boolean shiftPressed = (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
                     || (glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
             boolean ctrlPressed = glfwGetKey(Minecraft.getInstance().getMainWindow().getHandle(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS
@@ -89,7 +89,7 @@ public class GuiTurbineFlowIncreaseButton<T extends Container> extends GuiPartBa
             } else {
                 newFlowRate += 1;
             }
-            ((TurbineContainer) this.screen.getContainer()).runRequest("setMaxFlowRate", newFlowRate);
+            ((TurbineContainer) this.screen.getContainer()).runRequest("changeFlowRate", newFlowRate);
             
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);

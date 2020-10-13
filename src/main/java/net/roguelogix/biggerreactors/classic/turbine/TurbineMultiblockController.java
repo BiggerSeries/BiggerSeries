@@ -513,9 +513,9 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 setActive(newState ? TurbineActivity.ACTIVE : TurbineActivity.INACTIVE);
                 return;
             }
-            case "setMaxFlowRate": {
-                long newRate = (long) requestData;
-                setMaxFlowRate(newRate);
+            case "changeFlowRate": {
+                long rateChange = (long) requestData;
+                setMaxFlowRate(rateChange + maxFloatRate);
                 return;
             }
             case "setCoilEngaged": {
