@@ -2,6 +2,7 @@ package net.roguelogix.biggerreactors.classic.turbine;
 
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -12,6 +13,8 @@ import net.roguelogix.biggerreactors.classic.turbine.blocks.*;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.*;
+import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
@@ -20,6 +23,7 @@ import net.roguelogix.phosphophyllite.util.Util;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 // ahh shit, here we go again
@@ -42,6 +46,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                     || block instanceof TurbineCoolantPort
                     || block instanceof TurbineRotorBearing
                     || block instanceof TurbinePowerTap
+                    || block instanceof TurbineComputerPort
                     || block instanceof TurbineGlass;
         });
         interiorValidator = block -> {
@@ -635,5 +640,93 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 "MaxFlow: " + maxFlowRate + "\n" +
                 "RotorRPM: " + (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0) + "\n" +
                 "";
+    }
+    
+    // -- ComputerCraft API --
+    
+    public boolean CCgetConnected() {
+        return state != MultiblockController.AssemblyState.DISASSEMBLED;
+    }
+    
+    public boolean CCgetActive() {
+        return turbineActivity == TurbineActivity.ACTIVE;
+    }
+    
+    public long CCgetEnergyStored() {
+        return storedPower;
+    }
+    
+    public double CCgetRotorSpeed() {
+        return (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0);
+    }
+    
+    public long CCgetInputAmount() {
+        return water;
+    }
+    
+    public String CCgetInputType() {
+        if (water > 0) {
+            return Objects.requireNonNull(Fluids.WATER.getRegistryName()).toString();
+        }
+        return null;
+    }
+    
+    public long CCgetOutputAmount() {
+        return steam;
+    }
+    
+    public String CCgetOutputType() {
+        if (water > 0) {
+            return Objects.requireNonNull(FluidIrradiatedSteam.INSTANCE.getRegistryName()).toString();
+        }
+        return null;
+    }
+    
+    public long CCgetFluidAmountMax() {
+        return Config.Turbine.TankSize;
+    }
+    
+    public long CCgetFluidFlowRate() {
+        return fluidConsumedLastTick;
+    }
+    
+    public long CCgetFluidFlowRateMax() {
+        return maxFlowRate;
+    }
+    
+    public long CCgetFluidFlowRateMaxMax() {
+        return Config.Turbine.MaxFlow;
+    }
+    
+    public double CCgetEnergyProducedLastTick() {
+        return energyGeneratedLastTick;
+    }
+    
+    public boolean CCgetInductorEngaged() {
+        return coilEngaged;
+    }
+    
+    public void CCsetActive(boolean active) {
+        setActive(active ? TurbineActivity.ACTIVE : TurbineActivity.INACTIVE);
+    }
+    
+    public void CCsetFluidFlowRateMax(long maxFlowRate) {
+        setMaxFlowRate(maxFlowRate);
+    }
+    
+    public void CCsetVentNone() {
+        setVentState(VentState.CLOSED);
+    }
+    
+    public void CCsetVentOverflow() {
+        setVentState(VentState.OVERFLOW);
+    }
+    
+    public void CCsetVentAll() {
+        setVentState(VentState.ALL);
+    }
+    
+    public void CCsetInductorEngaged(boolean engaged){
+        setCoilEngaged(engaged);
     }
 }
