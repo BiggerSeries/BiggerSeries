@@ -1,6 +1,7 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
 import com.mojang.datafixers.util.Pair;
+import dan200.computercraft.api.lua.LuaException;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -24,9 +25,7 @@ import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblo
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 import net.roguelogix.phosphophyllite.util.Util;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class ReactorMultiblockController extends RectangularMultiblockController {
     
@@ -103,7 +102,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private ReactorActivity reactorActivity = ReactorActivity.INACTIVE;
     
     private final Set<ReactorTerminalTile> terminals = new HashSet<>();
-    private final Set<ReactorControlRodTile> controlRods = new HashSet<>();
+    private final List<ReactorControlRodTile> controlRods = new ArrayList<>();
     private final Set<ReactorFuelRodTile> fuelRods = new HashSet<>();
     private final Set<ReactorPowerTapTile> powerPorts = new HashSet<>();
     private final Set<ReactorAccessPortTile> accessPorts = new HashSet<>();
@@ -116,7 +115,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             terminals.add((ReactorTerminalTile) tile);
         }
         if (tile instanceof ReactorControlRodTile) {
-            controlRods.add((ReactorControlRodTile) tile);
+            synchronized (controlRods) {
+                if(!controlRods.contains(tile)){
+                    controlRods.add((ReactorControlRodTile) tile);
+                }
+            }
         }
         if (tile instanceof ReactorFuelRodTile) {
             fuelRods.add((ReactorFuelRodTile) tile);
@@ -125,7 +128,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             powerPorts.add((ReactorPowerTapTile) tile);
         }
         if (tile instanceof ReactorAccessPortTile) {
-            accessPorts.add((ReactorAccessPortTile) tile);
+            synchronized (accessPorts) {
+                accessPorts.add((ReactorAccessPortTile) tile);
+            }
         }
         if (tile instanceof ReactorCoolantPortTile) {
             coolantPorts.add((ReactorCoolantPortTile) tile);
@@ -139,7 +144,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             terminals.remove(tile);
         }
         if (tile instanceof ReactorControlRodTile) {
-            controlRods.remove(tile);
+            synchronized (controlRods) {
+                controlRods.remove(tile);
+            }
         }
         if (tile instanceof ReactorFuelRodTile) {
             fuelRods.remove(tile);
@@ -148,7 +155,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             powerPorts.remove(tile);
         }
         if (tile instanceof ReactorAccessPortTile) {
-            accessPorts.remove(tile);
+            synchronized (accessPorts) {
+                accessPorts.remove(tile);
+            }
         }
         if (tile instanceof ReactorCoolantPortTile) {
             coolantPorts.remove(tile);
@@ -162,7 +171,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         });
     }
     
-    public void setActive(ReactorActivity newState) {
+    public synchronized void setActive(ReactorActivity newState) {
         if (reactorActivity != newState) {
             reactorActivity = newState;
             updateBlockStates();
@@ -431,10 +440,12 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     public void setAllControlRodLevels(double newLevel) {
-        controlRods.forEach(rod -> {
-            rod.setInsertion(newLevel);
-        });
-        updateControlRodLevels();
+        synchronized (controlRods) {
+            controlRods.forEach(rod -> {
+                rod.setInsertion(newLevel);
+            });
+            updateControlRodLevels();
+        }
     }
     
     public void updateControlRodLevels() {
@@ -482,77 +493,95 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return simulation.fuelTank.getTotalAmount();
     }
     
-    public long CCgetFuelAmountMax(){
+    public long CCgetFuelAmountMax() {
         return simulation.fuelTank.getCapacity();
     }
     
-    public String CCgetControlRodName(int index){
-        return null;
+    public String CCgetControlRodName(int index) {
+        synchronized (controlRods) {
+            if (index >= controlRods.size()) {
+                throw new RuntimeException("control rod index out of bounds");
+            }
+            return controlRods.get(index).getName();
+        }
     }
     
-    public double CCgetControlRodLevel(int index){
-        return 0;
+    public double CCgetControlRodLevel(int index) {
+        synchronized (controlRods) {
+            if (index >= controlRods.size()) {
+                throw new RuntimeException("control rod index out of bounds");
+            }
+            return controlRods.get(index).getInsertion();
+        }
     }
     
-    public double CCgetEnergyProducedLastTick(){
+    public double CCgetEnergyProducedLastTick() {
         return simulation.FEProducedLastTick;
     }
     
-    public double CCgetHotFluidProducedLastTick(){
-        if(simulation.isPassive()){
+    public double CCgetHotFluidProducedLastTick() {
+        if (simulation.isPassive()) {
             return 0;
         }
         return simulation.FEProducedLastTick;
     }
     
     
-    public String CCgetCoolantType(){
-        if(simulation.coolantTank.getWaterAmount() == 0){
+    public String CCgetCoolantType() {
+        if (simulation.coolantTank.getWaterAmount() == 0) {
             return null;
         }
         return Objects.requireNonNull(Fluids.WATER.getRegistryName()).toString();
     }
     
-    public long CCgetCoolantAmount(){
+    public long CCgetCoolantAmount() {
         return simulation.coolantTank.getWaterAmount();
     }
     
-    public String CCgetHotFluidType(){
-        if(simulation.coolantTank.getSteamAmount() == 0){
+    public String CCgetHotFluidType() {
+        if (simulation.coolantTank.getSteamAmount() == 0) {
             return null;
         }
         return Objects.requireNonNull(FluidIrradiatedSteam.INSTANCE.getRegistryName()).toString();
     }
     
-    public long CCgetHotFluidAmount(){
+    public long CCgetHotFluidAmount() {
         return simulation.coolantTank.getSteamAmount();
     }
     
-    public double CCgetFuelReactivity(){
-        return simulation.getFertility();
+    public double CCgetFuelReactivity() {
+        return simulation.getFertility() * 100;
     }
     
-    public double CCgetFuelConsumedLastTick(){
+    public double CCgetFuelConsumedLastTick() {
         return simulation.getFuelConsumedLastTick();
     }
     
-    public boolean CCisActivelyCooled(){
+    public boolean CCisActivelyCooled() {
         return !simulation.isPassive();
     }
     
-    public void CCsetActive(boolean active){
+    public void CCsetActive(boolean active) {
         setActive(active ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
     }
     
-    public void CCsetAllControlRodLevels(double insertion){
+    public void CCsetAllControlRodLevels(double insertion) {
         setAllControlRodLevels(insertion);
     }
     
-    public void CCsetControlRodLevel(double insertion, int index){
-    
+    public void CCsetControlRodLevel(double insertion, int index) {
+        synchronized (controlRods) {
+            if (index >= controlRods.size()) {
+                throw new RuntimeException("control rod index out of bounds");
+            }
+            controlRods.get(index).setInsertion(insertion);
+            updateControlRodLevels();
+        }
     }
     
-    public void CCdoEjectWaste(){
-        ejectWaste();
+    public void CCdoEjectWaste() {
+        synchronized (accessPorts) {
+            ejectWaste();
+        }
     }
 }

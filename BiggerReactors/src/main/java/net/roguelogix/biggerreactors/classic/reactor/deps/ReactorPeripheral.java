@@ -9,7 +9,6 @@ import dan200.computercraft.api.peripheral.IDynamicPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.common.util.LazyOptional;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
-import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,8 +46,8 @@ public class ReactorPeripheral implements IDynamicPeripheral {
             methodHandlers.put("getWasteAmount", (reactor, args) -> MethodResult.of(reactor.CCgetWasteAmount()));
             methodHandlers.put("getReactantAmount", (reactor, args) -> MethodResult.of(reactor.CCgetReactantAmount()));
             methodHandlers.put("getFuelAmountMax", (reactor, args) -> MethodResult.of(reactor.CCgetFuelAmountMax()));
-//            methodHandlers.put("getControlRodName", (reactor, args) -> MethodResult.of(reactor.CCgetControlRodName(args.getInt(0))));
-//            methodHandlers.put("getControlRodLevel", (reactor, args) -> MethodResult.of(reactor.CCgetControlRodLevel(args.getInt(0))));
+            methodHandlers.put("getControlRodName", (reactor, args) -> MethodResult.of(reactor.CCgetControlRodName(args.getInt(0))));
+            methodHandlers.put("getControlRodLevel", (reactor, args) -> MethodResult.of(reactor.CCgetControlRodLevel(args.getInt(0))));
             methodHandlers.put("getEnergyProducedLastTick", (reactor, args) -> MethodResult.of(reactor.CCgetEnergyProducedLastTick()));
             methodHandlers.put("getHotFluidProducedLastTick", (reactor, args) -> MethodResult.of(reactor.CCgetHotFluidProducedLastTick()));
             methodHandlers.put("getCoolantType", (reactor, args) -> MethodResult.of(reactor.CCgetCoolantType()));
@@ -66,10 +65,10 @@ public class ReactorPeripheral implements IDynamicPeripheral {
                 reactor.CCsetAllControlRodLevels(args.getDouble(0));
                 return MethodResult.of();
             });
-//            methodHandlers.put("setControlRodLevel", (reactor, args) -> {
-//                reactor.CCsetControlRodLevel(args.getDouble(0), args.getInt(1));
-//                return MethodResult.of();
-//            });
+            methodHandlers.put("setControlRodLevel", (reactor, args) -> {
+                reactor.CCsetControlRodLevel(args.getDouble(0), args.getInt(1));
+                return MethodResult.of();
+            });
             methodHandlers.put("doEjectWaste", (reactor, args) -> {
                 reactor.CCdoEjectWaste();
                 return MethodResult.of();
@@ -88,7 +87,11 @@ public class ReactorPeripheral implements IDynamicPeripheral {
     @Override
     public MethodResult callMethod(@Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException {
         ReactorLuaFunc func = methodHandlers.get(methods[method]);
-        return func.func(controller, arguments);
+        try {
+            return func.func(controller, arguments);
+        }catch (RuntimeException e){
+            throw new LuaException(e.getMessage());
+        }
     }
     
     @Nonnull

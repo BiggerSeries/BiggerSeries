@@ -21,6 +21,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 import net.roguelogix.phosphophyllite.util.Util;
 import org.lwjgl.system.MathUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_control_rod")
@@ -94,5 +95,15 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     
     public double getInsertion(){
         return insertion;
+    }
+    
+    private String name = "";
+    
+    public void setName(@Nonnull String name){
+        this.name = name;
+    }
+    
+    public String getName() {
+        return name;
     }
 }
