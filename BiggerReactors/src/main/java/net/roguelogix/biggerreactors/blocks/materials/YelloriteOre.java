@@ -34,4 +34,12 @@ public class YelloriteOre extends Block implements IPhosphophylliteOre {
     public int maxLevel() {
         return Config.WorldGen.YelloriteOreMaxSpawnY;
     }
+    
+    @Override
+    public String[] spawnBiomes() {
+        if(!Config.WorldGen.EnableYelloriteGeneration){
+            return new String[]{""};
+        }
+        return new String[0];
+    }
 }

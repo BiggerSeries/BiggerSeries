@@ -19,6 +19,8 @@ public class Config {
         public static int YelloriteMaxOrePerCluster = 10;
         @PhosphophylliteConfig.Value(min = 5)
         public static int YelloriteOreMaxSpawnY = 50;
+        @PhosphophylliteConfig.Value
+        public static boolean EnableYelloriteGeneration = true;
     }
     
     @PhosphophylliteConfig
