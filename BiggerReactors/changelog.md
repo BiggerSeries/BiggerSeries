@@ -1,3 +1,14 @@
+# 1.16.3-0.1.1
+computer ports and rotor rotation
+
+## Reactor
+Computer port implemented
+## Turbine
+Computer port implemented
+Rotor will now rotate to the correct axis
+## Misc
+Added config option to disable oregen
+
 # 1.16.3-0.1.0
 fist 1.16 release, minor changes
 
