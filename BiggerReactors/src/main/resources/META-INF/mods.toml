@@ -26,7 +26,7 @@ displayName="Bigger Reactors" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+logoFile="BiggerReactors.png" #optional
 # A text field displayed in the mod UI
 credits="ErogeneousBeef for the origional Big Reactors mod, that this is spirtually (and semi-literally) derived from" #optional
 # A text field displayed in the mod UI
