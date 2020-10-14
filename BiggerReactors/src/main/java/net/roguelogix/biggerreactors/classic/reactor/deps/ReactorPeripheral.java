@@ -31,8 +31,8 @@ public class ReactorPeripheral implements IDynamicPeripheral {
         MethodResult func(@Nullable ReactorMultiblockController reactor, @Nonnull IArguments args) throws LuaException;
     }
     
-    private static HashMap<String, ReactorLuaFunc> methodHandlers;
-    private static String[] methods;
+    private static final HashMap<String, ReactorLuaFunc> methodHandlers;
+    private static final String[] methods;
     
     static {
         methodHandlers = new HashMap<>();

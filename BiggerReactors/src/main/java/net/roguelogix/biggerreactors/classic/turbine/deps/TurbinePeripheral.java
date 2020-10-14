@@ -32,8 +32,8 @@ public class TurbinePeripheral implements IDynamicPeripheral {
         MethodResult func(@Nullable TurbineMultiblockController Turbine, @Nonnull IArguments args) throws LuaException;
     }
     
-    private static HashMap<String, TurbinePeripheral.TurbineLuaFunc> methodHandlers;
-    private static String[] methods;
+    private static final HashMap<String, TurbinePeripheral.TurbineLuaFunc> methodHandlers;
+    private static final String[] methods;
     
     static {
         methodHandlers = new HashMap<>();
