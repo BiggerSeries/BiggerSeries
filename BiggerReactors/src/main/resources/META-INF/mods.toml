@@ -34,6 +34,8 @@ authors="RogueLogix, Gizmocodes" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Big Reactors, but even bigger
+
+Part of the BiggerSeries of mods
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
