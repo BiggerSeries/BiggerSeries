@@ -26,9 +26,9 @@ displayName="Phosphophyllite" #mandatory
 # A URL for the "homepage" for this mod, displayed in the mod UI
 #displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+logoFile="Phosphophyllite.png" #optional
 # A text field displayed in the mod UI
-credits="" #optional
+#credits="" #optional
 # A text field displayed in the mod UI
 authors="RogueLogix, Gizmocodes" #optional
 # The description text for the mod (multi line!) (#mandatory)
