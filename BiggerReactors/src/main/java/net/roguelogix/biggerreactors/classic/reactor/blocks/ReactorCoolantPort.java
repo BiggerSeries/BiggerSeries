@@ -19,6 +19,8 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Set;
+
 import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort.PortDirection.*;
 
 @RegisterBlock(name = "reactor_coolant_port", tileEntityClass = ReactorCoolantPortTile.class)
@@ -46,18 +48,21 @@ public class ReactorCoolantPort extends ReactorBaseBlock {
     @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-        if(handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem().getTags().contains(new ResourceLocation("forge:tools/wrench"))){
-            ReactorAccessPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
-            direction = direction == INLET ? OUTLET : INLET;
-            state = state.with(PORT_DIRECTION_ENUM_PROPERTY, direction);
-            worldIn.setBlockState(pos, state);
-            if (!worldIn.isRemote()) {
-                TileEntity te = worldIn.getTileEntity(pos);
-                if (te instanceof ReactorCoolantPortTile) {
-                    ((ReactorCoolantPortTile) te).setDirection(direction);
+        if (handIn == Hand.MAIN_HAND) {
+            Set<ResourceLocation> tags = player.getHeldItemMainhand().getItem().getTags();
+            if (tags.contains(new ResourceLocation("forge:tools/wrench")) || tags.contains(new ResourceLocation("forge:wrenches"))) {
+                ReactorAccessPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
+                direction = direction == INLET ? OUTLET : INLET;
+                state = state.with(PORT_DIRECTION_ENUM_PROPERTY, direction);
+                worldIn.setBlockState(pos, state);
+                if (!worldIn.isRemote()) {
+                    TileEntity te = worldIn.getTileEntity(pos);
+                    if (te instanceof ReactorCoolantPortTile) {
+                        ((ReactorCoolantPortTile) te).setDirection(direction);
+                    }
                 }
+                return ActionResultType.SUCCESS;
             }
-            return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
