@@ -40,6 +40,7 @@
   "block.biggerreactors.reactor_power_tap": "Reactor Power Tap",
   "block.biggerreactors.reactor_access_port": "Reactor Access Port",
   "block.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
+  "block.biggerreactors.reactor_computer_port": "Reactor Computer Port",
 
   "multiblock.error.biggerreactors.no_terminal": "Reactors require at least one terminal",
   "multiblock.error.biggerreactors.no_rods": "Reactors must have at least one fuel element",
@@ -83,6 +84,7 @@
   "block.biggerreactors.turbine_rotor_bearing": "Turbine Rotor Bearing",
   "block.biggerreactors.turbine_coolant_port": "Turbine Coolant Port",
   "block.biggerreactors.turbine_power_tap": "Turbine Power Tap",
+  "block.biggerreactors.turbine_computer_port": "Turbine Computer Port",
 
   "tooltip.biggerreactors.status.turbine.activity.online": "Status: §2Online",
   "tooltip.biggerreactors.status.turbine.activity.offline": "Status: §4Offline",
