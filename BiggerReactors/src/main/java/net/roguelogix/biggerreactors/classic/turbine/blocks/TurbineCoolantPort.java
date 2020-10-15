@@ -18,6 +18,8 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.Set;
+
 import static net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineCoolantPort.PortDirection.*;
 
 @RegisterBlock(name = "turbine_coolant_port", tileEntityClass = TurbineCoolantPortTile.class)
@@ -58,18 +60,21 @@ public class TurbineCoolantPort extends TurbineBaseBlock {
     @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-        if(handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem().getTags().contains(new ResourceLocation("forge:tools/wrench"))){
-            TurbineCoolantPort.PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
-            direction = direction == INLET ? OUTLET : INLET;
-            state = state.with(PORT_DIRECTION_ENUM_PROPERTY, direction);
-            worldIn.setBlockState(pos, state);
-            if (!worldIn.isRemote()) {
-                TileEntity te = worldIn.getTileEntity(pos);
-                if (te instanceof TurbineCoolantPortTile) {
-                    ((TurbineCoolantPortTile) te).setDirection(direction);
+        if (handIn == Hand.MAIN_HAND) {
+            Set<ResourceLocation> tags = player.getHeldItemMainhand().getItem().getTags();
+            if (tags.contains(new ResourceLocation("forge:tools/wrench")) || tags.contains(new ResourceLocation("forge:wrenches"))) {
+                PortDirection direction = state.get(PORT_DIRECTION_ENUM_PROPERTY);
+                direction = direction == INLET ? OUTLET : INLET;
+                state = state.with(PORT_DIRECTION_ENUM_PROPERTY, direction);
+                worldIn.setBlockState(pos, state);
+                if (!worldIn.isRemote()) {
+                    TileEntity te = worldIn.getTileEntity(pos);
+                    if (te instanceof TurbineCoolantPortTile) {
+                        ((TurbineCoolantPortTile) te).setDirection(direction);
+                    }
                 }
+                return ActionResultType.SUCCESS;
             }
-            return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }

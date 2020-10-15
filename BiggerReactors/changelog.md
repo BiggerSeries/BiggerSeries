@@ -1,3 +1,13 @@
+# 1.16.3-0.1.2
+wrench compat
+
+## Reactor
+Fixed wrench compat with mekanism
+Control rods save their insertion
+
+## Turbine
+Fixed wrench compat with mekanism
+
 # 1.16.3-0.1.1
 computer ports and rotor rotation
 
