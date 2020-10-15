@@ -1,0 +1,18 @@
+{
+    "type": "mekanism:enriching",
+    "conditions": [
+        {
+            "modid": "mekanism",
+            "type": "forge:mod_loaded"
+        }
+    ],
+    "input": {
+        "ingredient": {
+            "item": "biggerreactors:yellorite_ore"
+        }
+    },
+    "output": {
+        "item": "biggerreactors:yellorium_dust",
+        "count": 2
+    }
+}

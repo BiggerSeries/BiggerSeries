@@ -1,0 +1,18 @@
+{
+    "type": "mekanism:crushing",
+    "conditions": [
+        {
+            "modid": "mekanism",
+            "type": "forge:mod_loaded"
+        }
+    ],
+    "input": {
+        "ingredient": {
+            "item": "biggerreactors:blutonium_ingot"
+        }
+    },
+    "output": {
+        "item": "biggerreactors:blutonium_dust",
+        "count": 1
+    }
+}

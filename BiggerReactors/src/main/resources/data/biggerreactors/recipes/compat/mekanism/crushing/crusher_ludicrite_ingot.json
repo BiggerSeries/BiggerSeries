@@ -1,0 +1,18 @@
+{
+    "type": "mekanism:crushing",
+    "conditions": [
+        {
+            "modid": "mekanism",
+            "type": "forge:mod_loaded"
+        }
+    ],
+    "input": {
+        "ingredient": {
+            "item": "biggerreactors:ludicrite_ingot"
+        }
+    },
+    "output": {
+        "item": "biggerreactors:ludicrite_dust",
+        "count": 1
+    }
+}
