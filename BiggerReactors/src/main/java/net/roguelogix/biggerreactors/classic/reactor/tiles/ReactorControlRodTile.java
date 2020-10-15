@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -77,9 +78,9 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
             Pair<Double, Boolean> dataPair = (Pair<Double, Boolean>) requestData;
             double newLevel = this.insertion + dataPair.getFirst();
             newLevel = Math.max(0, Math.min(100, newLevel));
-            if(dataPair.getSecond()){
+            if (dataPair.getSecond()) {
                 reactor().setAllControlRodLevels(newLevel);
-            }else {
+            } else {
                 this.insertion = newLevel;
                 reactor().updateControlRodLevels();
             }
@@ -93,17 +94,32 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
         insertion = newLevel;
     }
     
-    public double getInsertion(){
+    public double getInsertion() {
         return insertion;
     }
     
     private String name = "";
     
-    public void setName(@Nonnull String name){
+    public void setName(@Nonnull String name) {
         this.name = name;
     }
     
     public String getName() {
         return name;
+    }
+    
+    @Override
+    protected CompoundNBT writeNBT() {
+        CompoundNBT compound = super.writeNBT();
+        compound.putDouble("insertion", insertion);
+        return compound;
+    }
+    
+    @Override
+    protected void readNBT(CompoundNBT compound) {
+        super.readNBT(compound);
+        if (compound.contains("insertion")) {
+            insertion = compound.getDouble("insertion");
+        }
     }
 }
