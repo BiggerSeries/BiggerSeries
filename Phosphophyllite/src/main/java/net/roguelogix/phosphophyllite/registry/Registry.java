@@ -17,6 +17,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -270,6 +271,12 @@ public class Registry {
                 @Override
                 public ItemStack createIcon() {
                     return new ItemStack(ForgeRegistries.ITEMS.getValue(block.getRegistryName()));
+                }
+
+                @Override
+                public void fill(NonNullList<ItemStack> items) {
+                    super.fill(items);
+                    items.sort((o1, o2) -> o1.getDisplayName().getString().compareToIgnoreCase(o2.getDisplayName().getString()));
                 }
             };
         }
