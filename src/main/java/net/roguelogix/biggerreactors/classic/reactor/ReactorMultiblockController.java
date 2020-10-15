@@ -414,4 +414,20 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 "Steam: " + simulation.coolantTank.getSteamAmount() + "\n" +
                 "";
     }
+
+    public void setAllControlRodLevels(double newLevel) {
+        synchronized (controlRods) {
+            controlRods.forEach(rod -> {
+                rod.setInsertion(newLevel);
+            });
+            updateControlRodLevels();
+        }
+    }
+
+    public void updateControlRodLevels() {
+        controlRods.forEach(rod -> {
+            BlockPos pos = rod.getPos();
+            simulation.setControlRodInsertion(pos.getX() - minX() - 1, pos.getZ() - minZ() - 1, rod.getInsertion());
+        });
+    }
 }

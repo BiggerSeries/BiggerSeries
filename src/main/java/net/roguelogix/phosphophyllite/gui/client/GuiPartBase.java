@@ -1,5 +1,6 @@
 package net.roguelogix.phosphophyllite.gui.client;
 
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -7,7 +8,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiPartBase<T extends Container> {
+public class GuiPartBase<T extends Container> implements IGuiEventListener {
     
     protected ContainerScreen<T> screen;
     protected int xPos, yPos;
