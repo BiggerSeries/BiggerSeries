@@ -1,5 +1,11 @@
 {
     "type": "minecraft:crafting_shaped",
+    "conditions": [
+        {
+            "modid": "thermal_expansion",
+            "type": "forge:mod_loaded"
+        }
+    ],
     "pattern": [
         "BRB",
         "E E",
