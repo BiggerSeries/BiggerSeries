@@ -661,23 +661,23 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     public long CCgetInputAmount() {
-        return water;
+        return steam;
     }
     
     public String CCgetInputType() {
-        if (water > 0) {
-            return Objects.requireNonNull(Fluids.WATER.getRegistryName()).toString();
+        if (steam > 0) {
+            return Objects.requireNonNull(FluidIrradiatedSteam.INSTANCE.getRegistryName()).toString();
         }
         return null;
     }
     
     public long CCgetOutputAmount() {
-        return steam;
+        return water;
     }
     
     public String CCgetOutputType() {
         if (water > 0) {
-            return Objects.requireNonNull(FluidIrradiatedSteam.INSTANCE.getRegistryName()).toString();
+            return Objects.requireNonNull(Fluids.WATER.getRegistryName()).toString();
         }
         return null;
     }
