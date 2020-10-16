@@ -1,5 +1,7 @@
 package net.roguelogix.biggerreactors.classic.turbine;
 
+import javax.annotation.Nonnull;
+
 public enum VentState {
     OVERFLOW(0),
     ALL(1),
@@ -23,15 +25,7 @@ public enum VentState {
         throw new IndexOutOfBoundsException("Invalid index when converting to vent state");
     }
     
-    public static int valueOf(VentState state) {
-        switch (state) {
-            case OVERFLOW:
-                return 0;
-            case ALL:
-                return 1;
-            case CLOSED:
-                return 2;
-        }
-        throw new IndexOutOfBoundsException("Invalid vent state when converting to index");
+    public static int valueOf(@Nonnull VentState state) {
+        return state.value;
     }
 }

@@ -142,6 +142,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     FluidTank EMPTY_TANK = new FluidTank(0);
     private ReactorAccessPort.PortDirection direction = INLET;
     
+    @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             steamOutputDirection = null;
@@ -161,6 +162,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         neighborChanged();
     }
     
+    @SuppressWarnings("DuplicatedCode")
     public void neighborChanged() {
         steamOutput = LazyOptional.empty();
         if (steamOutputDirection == null) {
@@ -206,13 +208,14 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     }
     
     @Override
-    protected void readNBT(CompoundNBT compound) {
+    protected void readNBT(@Nonnull CompoundNBT compound) {
         if (compound.contains("direction")) {
             direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
         }
     }
     
     @Override
+    @Nonnull
     protected CompoundNBT writeNBT() {
         CompoundNBT NBT = new CompoundNBT();
         NBT.putString("direction", String.valueOf(direction));

@@ -2,7 +2,6 @@ package net.roguelogix.biggerreactors.classic.turbine.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -41,6 +40,7 @@ public class TurbineRotorBlade extends TurbineBaseBlock {
         return new TurbineRotorBladeTile();
     }
     
+    @SuppressWarnings("deprecation")
     @OnlyIn(Dist.CLIENT)
     public float getAmbientOcclusionLightValue(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 1.0F;

@@ -8,6 +8,7 @@ public enum TurbineShaftRotationState implements IStringSerializable {
     Y,
     Z;
     
+    @SuppressWarnings("SpellCheckingInspection")
     public static final EnumProperty<TurbineShaftRotationState> TURBINE_SHAFT_ROTATION_STATE_ENUM_PROPERTY = EnumProperty.create("turbineshaftrotation", TurbineShaftRotationState.class);
     
     @Override

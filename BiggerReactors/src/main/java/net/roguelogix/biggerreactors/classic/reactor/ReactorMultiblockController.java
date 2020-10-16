@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
 import net.roguelogix.biggerreactors.classic.reactor.simulation.ClassicReactorSimulation;
@@ -25,11 +26,13 @@ import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblo
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 import net.roguelogix.phosphophyllite.util.Util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class ReactorMultiblockController extends RectangularMultiblockController {
     
-    public ReactorMultiblockController(World world) {
+    public ReactorMultiblockController(@Nonnull World world) {
         super(world);
         
         minX = minY = minZ = 3;
@@ -109,7 +112,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorCoolantPortTile> coolantPorts = new HashSet<>();
     
     @Override
-    protected void onPartAdded(MultiblockTile tile) {
+    protected void onPartAdded(@Nonnull MultiblockTile tile) {
         distributeFuel();
         if (tile instanceof ReactorTerminalTile) {
             terminals.add((ReactorTerminalTile) tile);
@@ -138,7 +141,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onPartRemoved(MultiblockTile tile) {
+    protected void onPartRemoved(@Nonnull MultiblockTile tile) {
         distributeFuel();
         if (tile instanceof ReactorTerminalTile) {
             terminals.remove(tile);
@@ -171,7 +174,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         });
     }
     
-    public synchronized void setActive(ReactorActivity newState) {
+    public synchronized void setActive(@Nonnull ReactorActivity newState) {
         if (reactorActivity != newState) {
             reactorActivity = newState;
             updateBlockStates();
@@ -183,7 +186,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         setActive(reactorActivity == ReactorActivity.ACTIVE ? ReactorActivity.INACTIVE : ReactorActivity.ACTIVE);
     }
     
-    protected void read(CompoundNBT compound) {
+    protected void read(@Nonnull CompoundNBT compound) {
         if (compound.contains("reactorState")) {
             reactorActivity = ReactorActivity.valueOf(compound.getString("reactorState").toUpperCase());
             simulation.setActive(reactorActivity == ReactorActivity.ACTIVE);
@@ -196,6 +199,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         updateBlockStates();
     }
     
+    @Nonnull
     protected CompoundNBT write() {
         CompoundNBT compound = new CompoundNBT();
         {
@@ -206,7 +210,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onMerge(MultiblockController otherController) {
+    protected void onMerge(@Nonnull MultiblockController otherController) {
         setActive(ReactorActivity.INACTIVE);
         distributeFuel();
         assert otherController instanceof ReactorMultiblockController;
@@ -327,7 +331,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             fuelRod.fuel -= simulation.fuelTank.insertFuel(fuelRod.fuel, false);
             fuelRod.waste -= simulation.fuelTank.insertWaste(fuelRod.waste, false);
             if (fuelRod.fuel != 0 || fuelRod.waste != 0) {
-                // TODO: 7/9/20 log this shit, shouldn't happen
+                BiggerReactors.LOGGER.warn("Reactor overfilled with fuel at " + fuelRod.getPos().toString());
                 // for now, just void the fuel
                 fuelRod.fuel = 0;
                 fuelRod.waste = 0;
@@ -372,7 +376,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return simulation.fuelTank.insertFuel(mb, simulated);
     }
     
-    public void updateReactorState(ReactorState reactorState) {
+    public void updateReactorState(@Nonnull ReactorState reactorState) {
         // TODO: These are mixed between the new enums and old booleans. Migrate them fully to enums.
         reactorState.reactorActivity = reactorActivity;
         reactorState.reactorType = simulation.isPassive() ? ReactorType.PASSIVE : ReactorType.ACTIVE;
@@ -400,7 +404,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         reactorState.reactorOutputRate = simulation.getFEProducedLastTick();
     }
     
-    public void runRequest(String requestName, Object requestData) {
+    public void runRequest(@Nonnull String requestName, @Nullable Object requestData) {
         switch (requestName) {
             // Reactor.
             case "setActive": {
@@ -427,6 +431,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
+    @Nonnull
     public String getDebugInfo() {
         return super.getDebugInfo() +
                 "State: " + reactorActivity.toString() + "\n" +
@@ -516,6 +521,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return simulation.fuelTank.getCapacity();
     }
     
+    @Nonnull
     public String CCgetControlRodName(int index) {
         synchronized (controlRods) {
             if (index >= controlRods.size()) {
@@ -546,6 +552,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     
+    @Nullable
     public String CCgetCoolantType() {
         if (simulation.coolantTank.getWaterAmount() == 0) {
             return null;
@@ -557,6 +564,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return simulation.coolantTank.getWaterAmount();
     }
     
+    @Nullable
     public String CCgetHotFluidType() {
         if (simulation.coolantTank.getSteamAmount() == 0) {
             return null;

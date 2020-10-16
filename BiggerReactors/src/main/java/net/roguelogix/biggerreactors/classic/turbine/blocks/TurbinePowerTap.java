@@ -32,6 +32,7 @@ public class TurbinePowerTap extends TurbineBaseBlock {
         CONNECTED,
         DISCONNECTED;
         
+        @SuppressWarnings("SpellCheckingInspection")
         public static final EnumProperty<ConnectionState> CONNECTION_STATE_ENUM_PROPERTY = EnumProperty.create("connectionstate", ConnectionState.class);
         
         @Override

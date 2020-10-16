@@ -35,6 +35,7 @@ public class TurbineGlass extends TurbineBaseBlock {
         return RenderType.getCutout();
     }
     
+    @SuppressWarnings("deprecation")
     @OnlyIn(Dist.CLIENT)
     public float getAmbientOcclusionLightValue(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 1.0F;

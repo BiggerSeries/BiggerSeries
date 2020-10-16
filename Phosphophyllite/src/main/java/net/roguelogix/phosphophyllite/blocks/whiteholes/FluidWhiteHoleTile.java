@@ -86,13 +86,16 @@ public class FluidWhiteHoleTile extends TileEntity implements IFluidHandler, ITi
     }
     
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(@Nonnull BlockState state, CompoundNBT compound) {
+        //noinspection SpellCheckingInspection
         fluidStack = loadFluidStackFromNBT(compound.getCompound("fluidstack"));
         super.read(state, compound);
     }
     
+    @Nonnull
     @Override
     public CompoundNBT write(CompoundNBT compound) {
+        //noinspection SpellCheckingInspection
         compound.put("fluidstack", fluidStack.writeToNBT(new CompoundNBT()));
         return super.write(compound);
     }

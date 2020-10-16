@@ -10,6 +10,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("unused")
 @RegisterBlock(name = "item_black_hole", tileEntityClass = ItemBlackHoleTile.class)
 public class ItemBlackHole extends Block {
     

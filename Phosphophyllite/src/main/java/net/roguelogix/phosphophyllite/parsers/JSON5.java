@@ -15,15 +15,11 @@ public class JSON5 {
     private static Element parseObject(Object obj, @Nullable String name) {
         if (obj instanceof Map) {
             final ArrayList<Element> subElements = new ArrayList<>();
-            ((Map<?, ?>) obj).forEach((str, obj1) -> {
-                subElements.add(parseObject(obj1, (String) str));
-            });
+            ((Map<?, ?>) obj).forEach((str, obj1) -> subElements.add(parseObject(obj1, (String) str)));
             return new Element(Element.Type.Section, null, name, subElements.toArray());
         } else if (obj instanceof List) {
             final ArrayList<Element> subElements = new ArrayList<>();
-            ((List<?>) obj).forEach(e -> {
-                subElements.add(parseObject(e, null));
-            });
+            ((List<?>) obj).forEach(e -> subElements.add(parseObject(e, null)));
             return new Element(Element.Type.Array, null, name, subElements.toArray());
         } else if (obj instanceof String) {
             return new Element(Element.Type.String, null, name, obj);

@@ -4,6 +4,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.roguelogix.biggerreactors.Config;
 
+import javax.annotation.Nonnull;
+
 public class CoolantTank implements INBTSerializable<CompoundNBT> {
     
     private long perSideCapacity = 0;
@@ -79,6 +81,7 @@ public class CoolantTank implements INBTSerializable<CompoundNBT> {
     }
     
     @Override
+    @Nonnull
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putLong("perSideCapacity", perSideCapacity);
@@ -88,7 +91,7 @@ public class CoolantTank implements INBTSerializable<CompoundNBT> {
     }
     
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(@Nonnull CompoundNBT nbt) {
         if (nbt.contains("perSideCapacity")) {
             perSideCapacity = nbt.getLong("perSideCapacity");
         }

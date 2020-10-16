@@ -1,15 +1,11 @@
 package net.roguelogix.biggerreactors.classic.turbine;
 
 import net.minecraft.block.Block;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ITagCollection;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.roguelogix.biggerreactors.Config;
-import net.roguelogix.biggerreactors.blocks.materials.LudicriteBlock;
 
 import java.util.HashMap;
 

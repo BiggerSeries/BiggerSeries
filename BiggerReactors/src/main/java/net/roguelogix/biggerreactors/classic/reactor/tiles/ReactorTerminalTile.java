@@ -20,6 +20,7 @@ import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_terminal")
@@ -35,6 +36,7 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     public final ReactorState reactorState = new ReactorState(this);
     
     @Override
+    @Nonnull
     public ReactorState getState() {
         this.updateState();
         return this.reactorState;
@@ -47,11 +49,14 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
         }
     }
     
+    @SuppressWarnings("DuplicatedCode")
     @Override
-    public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
+    @Nonnull
+    public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (player.isCrouching() && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
-            if (controller != null) {
-                reactor().toggleActive();
+            ReactorMultiblockController reactor = reactor();
+            if (reactor != null) {
+                reactor.toggleActive();
             }
             return ActionResultType.SUCCESS;
         }
@@ -69,13 +74,14 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     }
     
     @Override
+    @Nonnull
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorTerminal.INSTANCE.getTranslationKey());
     }
     
     @Nullable
     @Override
-    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
+    public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
         return new ReactorContainer(windowId, this.pos, player);
     }
 }

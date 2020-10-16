@@ -10,17 +10,17 @@ import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.util.Util;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
 import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
 
-/*
-Assembly errors
- */
 public class RectangularMultiblockController extends MultiblockController {
     
-    public RectangularMultiblockController(World world) {
+    public RectangularMultiblockController(@Nonnull World world) {
         super(world);
-        setAssemblyValidator(k -> true);
+        setAssemblyValidator(null);
     }
     
     protected boolean orientationAgnostic = true;
@@ -175,7 +175,11 @@ public class RectangularMultiblockController extends MultiblockController {
     };
     
     @Override
-    protected final void setAssemblyValidator(Validator<MultiblockController> validator) {
+    protected final void setAssemblyValidator(@Nullable Validator<MultiblockController> validator) {
+        if(validator == null){
+            super.setAssemblyValidator(mainValidator);
+            return;
+        }
         super.setAssemblyValidator(Validator.and(mainValidator, validator));
     }
     

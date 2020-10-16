@@ -5,6 +5,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 
+@SuppressWarnings("unused")
 public class InvalidBlock extends ValidationError {
     
     public InvalidBlock() {

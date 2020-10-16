@@ -11,7 +11,7 @@ import static net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularM
 
 public class RectangularMultiblockBlock extends MultiblockBlock {
     
-    public RectangularMultiblockBlock(Properties properties) {
+    public RectangularMultiblockBlock(@Nonnull Properties properties) {
         super(properties);
         if (usesBlockState()) {
             setDefaultState(getStateContainer().getBaseState().with(POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));

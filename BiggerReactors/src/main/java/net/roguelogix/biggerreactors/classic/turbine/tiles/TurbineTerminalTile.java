@@ -13,7 +13,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
-import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineTerminal;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
@@ -21,6 +20,7 @@ import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "turbine_terminal")
@@ -35,6 +35,7 @@ public class TurbineTerminalTile extends TurbineBaseTile implements INamedContai
     public final TurbineState turbineState = new TurbineState(this);
     
     @Override
+    @Nonnull
     public TurbineState getState() {
         this.updateState();
         return new TurbineState(this);
@@ -47,8 +48,10 @@ public class TurbineTerminalTile extends TurbineBaseTile implements INamedContai
         }
     }
     
+    @SuppressWarnings("DuplicatedCode")
     @Override
-    public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
+    @Nonnull
+    public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (player.isCrouching() && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
             if (controller != null) {
                 turbine().toggleActive();
@@ -70,13 +73,14 @@ public class TurbineTerminalTile extends TurbineBaseTile implements INamedContai
     }
     
     @Override
+    @Nonnull
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorTerminal.INSTANCE.getTranslationKey());
     }
     
     @Nullable
     @Override
-    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
+    public Container createMenu(int windowId, PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
         return new TurbineContainer(windowId, this.pos, playerInventory.player);
     }
 }

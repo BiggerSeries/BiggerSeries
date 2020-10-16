@@ -72,6 +72,7 @@ public class ConfigManager {
                     throw new RuntimeException("TOML not supported");
             }
             try {
+                //noinspection ResultOfMethodCallIgnored
                 file.getParentFile().mkdirs();
                 Files.write(Paths.get(String.valueOf(file)), str.getBytes());
             } catch (IOException e) {

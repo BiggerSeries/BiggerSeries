@@ -43,11 +43,13 @@ public class GuiSync {
          * @param requestName The request to make.
          * @param requestData The payload to send.
          */
-        default void runRequest(String requestName, Object requestData) {
+        default void runRequest(@Nonnull String requestName, @Nullable Object requestData) {
             HashMap<String, Object> map = new HashMap<>();
             
             map.put("request", requestName);
-            map.put("data", requestData);
+            if (requestData != null) {
+                map.put("data", requestData);
+            }
             
             ArrayList<Byte> buf = ROBN.toROBN(map);
             
@@ -78,27 +80,27 @@ public class GuiSync {
         
         }
         
-        public GUIPacketMessage(byte[] readByteArray) {
+        public GUIPacketMessage(@Nonnull byte[] readByteArray) {
             bytes = readByteArray;
         }
     }
     
     private static final HashMap<PlayerEntity, IGUIPacketProvider> playerGUIs = new HashMap<>();
     
-    public static synchronized void onContainerOpen(PlayerContainerEvent.Open e) {
+    public static synchronized void onContainerOpen(@Nonnull PlayerContainerEvent.Open e) {
         Container container = e.getContainer();
         if (container instanceof IGUIPacketProvider) {
             playerGUIs.put(e.getPlayer(), (IGUIPacketProvider) container);
         }
     }
     
-    public static synchronized void onContainerClose(PlayerContainerEvent.Close e) {
+    public static synchronized void onContainerClose(@Nonnull PlayerContainerEvent.Close e) {
         playerGUIs.remove(e.getPlayer());
     }
     
     private static IGUIPacketProvider currentGUI;
     
-    public static synchronized void GuiOpenEvent(GuiOpenEvent e) {
+    public static synchronized void GuiOpenEvent(@Nonnull GuiOpenEvent e) {
         
         Screen gui = e.getGui();
         if (gui instanceof ContainerScreen) {
@@ -160,6 +162,7 @@ public class GuiSync {
                     });
                 }
                 try {
+                    //noinspection BusyWait
                     Thread.sleep(PhosphophylliteConfig.GUI.UpdateIntervalMS);
                 } catch (InterruptedException e) {
                     break;
@@ -170,17 +173,17 @@ public class GuiSync {
         updateThread.start();
     }
     
-    private static void encodePacket(GUIPacketMessage packet, PacketBuffer buf) {
+    private static void encodePacket(@Nonnull GUIPacketMessage packet, @Nonnull PacketBuffer buf) {
         buf.writeBytes(packet.bytes);
     }
     
-    private static GUIPacketMessage decodePacket(PacketBuffer buf) {
+    private static GUIPacketMessage decodePacket(@Nonnull PacketBuffer buf) {
         byte[] byteBuf = new byte[buf.readableBytes()];
         buf.readBytes(byteBuf);
         return new GUIPacketMessage(byteBuf);
     }
     
-    private static void handler(GUIPacketMessage packet, Supplier<NetworkEvent.Context> ctx) {
+    private static void handler(@Nonnull GUIPacketMessage packet, @Nonnull Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             NetworkDirection direction = ctx.get().getDirection();
             IGUIPacketProvider currentGUI;
@@ -193,7 +196,10 @@ public class GuiSync {
             if (direction == NetworkDirection.PLAY_TO_CLIENT) {
                 currentGUI = GuiSync.currentGUI;
                 if (currentGUI != null) {
-                    currentGUI.getGuiPacket().read(map);
+                    IGUIPacket guiPacket = currentGUI.getGuiPacket();
+                    if (guiPacket != null) {
+                        guiPacket.read(map);
+                    }
                 }
             } else {
                 currentGUI = playerGUIs.get(ctx.get().getSender());

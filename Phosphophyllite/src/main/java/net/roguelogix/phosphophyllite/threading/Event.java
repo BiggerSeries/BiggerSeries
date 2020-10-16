@@ -11,6 +11,7 @@ public class Event {
         return wasTriggered.get();
     }
     
+    @SuppressWarnings("unused")
     public synchronized void join() {
         if (wasTriggered.get()) {
             return;
@@ -39,7 +40,7 @@ public class Event {
     }
     
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() {
         trigger();
     }
 }

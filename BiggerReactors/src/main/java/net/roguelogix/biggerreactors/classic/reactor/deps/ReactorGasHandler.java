@@ -29,7 +29,7 @@ public class ReactorGasHandler implements IGasHandler {
         return LazyOptional.of(() -> new ReactorGasHandler(controllerSupplier));
     }
     
-    public ReactorGasHandler(Supplier<ReactorMultiblockController> controllerSupplier) {
+    public ReactorGasHandler(@Nonnull Supplier<ReactorMultiblockController> controllerSupplier) {
         this.controllerSupplier = controllerSupplier;
     }
     

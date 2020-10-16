@@ -18,6 +18,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 @RegisterTileEntity(name = "item_white_hole")
 public class ItemWhiteHoleTile extends TileEntity implements IItemHandler, ITickableTileEntity {
@@ -45,17 +46,18 @@ public class ItemWhiteHoleTile extends TileEntity implements IItemHandler, ITick
     }
     
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(@Nonnull BlockState state, CompoundNBT compound) {
         if (compound.contains("item")) {
             item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(compound.getString("item")));
         }
         super.read(state, compound);
     }
     
+    @Nonnull
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT write(@Nonnull CompoundNBT compound) {
         if (item != null) {
-            compound.putString("item", item.getRegistryName().toString());
+            compound.putString("item", Objects.requireNonNull(item.getRegistryName()).toString());
         }
         return super.write(compound);
     }
@@ -69,6 +71,7 @@ public class ItemWhiteHoleTile extends TileEntity implements IItemHandler, ITick
                 if (te != null) {
                     te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite()).ifPresent(c -> {
                         for (int i = 0; i < c.getSlots(); i++) {
+                            //noinspection deprecation
                             c.insertItem(i, new ItemStack(item, item.getMaxStackSize()), false);
                         }
                     });
@@ -85,6 +88,7 @@ public class ItemWhiteHoleTile extends TileEntity implements IItemHandler, ITick
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
+        //noinspection deprecation
         return new ItemStack(item, item.getMaxStackSize());
     }
     

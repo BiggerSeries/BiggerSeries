@@ -51,22 +51,6 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
     
     LazyOptional<IEnergyStorage> energyOutput = LazyOptional.empty();
     
-    public void neighborChanged() {
-        energyOutput = LazyOptional.empty();
-        if (powerOutputDirection == null) {
-            setConnected(false);
-            return;
-        }
-        assert world != null;
-        TileEntity te = world.getTileEntity(pos.offset(powerOutputDirection));
-        if (te == null) {
-            setConnected(false);
-            return;
-        }
-        energyOutput = te.getCapability(CapabilityEnergy.ENERGY, powerOutputDirection.getOpposite());
-        setConnected(energyOutput.isPresent());
-    }
-    
     public long distributePower(long toDistribute, boolean simulate) {
         IEnergyStorage e = energyOutput.orElse(ENERGY_ZERO);
         if (e.canReceive()) {
@@ -105,6 +89,7 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
         return false;
     }
     
+    @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             powerOutputDirection = null;
@@ -123,4 +108,22 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
         }
         neighborChanged();
     }
+    
+    @SuppressWarnings("DuplicatedCode")
+    public void neighborChanged() {
+        energyOutput = LazyOptional.empty();
+        if (powerOutputDirection == null) {
+            setConnected(false);
+            return;
+        }
+        assert world != null;
+        TileEntity te = world.getTileEntity(pos.offset(powerOutputDirection));
+        if (te == null) {
+            setConnected(false);
+            return;
+        }
+        energyOutput = te.getCapability(CapabilityEnergy.ENERGY, powerOutputDirection.getOpposite());
+        setConnected(energyOutput.isPresent());
+    }
+    
 }

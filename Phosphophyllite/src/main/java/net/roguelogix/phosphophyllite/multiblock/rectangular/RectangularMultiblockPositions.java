@@ -4,6 +4,8 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.client.model.data.ModelProperty;
 
+import javax.annotation.Nonnull;
+
 public enum RectangularMultiblockPositions implements IStringSerializable {
     DISASSEMBLED("disassembled"),
     CORNER("corner"),
@@ -15,21 +17,22 @@ public enum RectangularMultiblockPositions implements IStringSerializable {
     
     private final String name;
     
-    RectangularMultiblockPositions(String name) {
+    RectangularMultiblockPositions(@Nonnull String name) {
         this.name = name;
     }
     
     @Override
+    @Nonnull
     public String getString() {
         return toString().toLowerCase();
     }
     
     @Override
+    @Nonnull
     public String toString() {
         return name;
     }
     
     public static final EnumProperty<RectangularMultiblockPositions> POSITIONS_ENUM_PROPERTY = EnumProperty.create("direction", RectangularMultiblockPositions.class);
-    public static final ModelProperty<RectangularMultiblockPositions> POSITIONS_MODEL_PROPERTY = new ModelProperty<>();
     
 }

@@ -1,19 +1,9 @@
 package net.roguelogix.phosphophyllite.multiblock.generic;
 
-import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
-import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
-import static net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions.DISASSEMBLED;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
@@ -21,12 +11,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
+
+import javax.annotation.Nonnull;
+
+import static net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions.DISASSEMBLED;
 
 public abstract class MultiblockTile extends TileEntity {
     protected MultiblockController controller;
@@ -48,7 +41,7 @@ public abstract class MultiblockTile extends TileEntity {
     @SuppressWarnings("CanBeFinal")
     protected Validator<MultiblockController> attachableControllerValidator = c -> true;
     
-    public MultiblockTile(TileEntityType<?> tileEntityTypeIn) {
+    public MultiblockTile(@Nonnull TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
     
@@ -70,6 +63,7 @@ public abstract class MultiblockTile extends TileEntity {
                         pos.add(0, -1, 0),
                         pos.add(0, 1, 0),
                 };
+                @SuppressWarnings({"DuplicatedCode", "deprecation"})
                 TileEntity[] possibleTiles = {
                         world.isBlockLoaded(possiblePositions[0]) ? world.getTileEntity(possiblePositions[0]) : null,
                         world.isBlockLoaded(possiblePositions[1]) ? world.getTileEntity(possiblePositions[1]) : null,
@@ -124,11 +118,13 @@ public abstract class MultiblockTile extends TileEntity {
         }
     }
     
+    @Nonnull
     public abstract MultiblockController createController();
     
-    protected void readNBT(CompoundNBT compound) {
+    protected void readNBT(@Nonnull CompoundNBT compound) {
     }
     
+    @Nonnull
     protected CompoundNBT writeNBT() {
         return new CompoundNBT();
     }
@@ -136,13 +132,10 @@ public abstract class MultiblockTile extends TileEntity {
     CompoundNBT controllerData = null;
     
     @Override
-    public final void read(BlockState state, @Nonnull CompoundNBT compound) {
+    public final void read(@Nonnull BlockState state, @Nonnull CompoundNBT compound) {
         super.read(state, compound);
         if (compound.contains("controllerData")) {
             controllerData = compound.getCompound("controllerData");
-        }
-        if (compound.contains("bakedmodeldata")) {
-            updateBakedModelState(compound.getCompound("bakedmodeldata"));
         }
         if (compound.contains("userdata")) {
             readNBT(compound.getCompound("userdata"));
@@ -151,48 +144,20 @@ public abstract class MultiblockTile extends TileEntity {
     
     
     @Override
+    @Nonnull
     public final CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
         if (controller != null && controller.blocks.contains(this)) {
             compound.put("controllerData", controller.getNBT());
         }
-        compound.put("bakedmodeldata", getBakedModelState());
         compound.put("userdata", writeNBT());
         return compound;
-    }
-    
-    public CompoundNBT getBakedModelState() {
-        return new CompoundNBT();
-    }
-    
-    public void updateBakedModelState(CompoundNBT nbt) {
-    
     }
     
     @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
         return write(new CompoundNBT());
-    }
-    
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.put("bakedmodeldata", getBakedModelState());
-        return new SUpdateTileEntityPacket(pos, 1, nbt);
-    }
-    
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        ModelDataManager.requestModelDataRefresh(this);
-        CompoundNBT nbt = pkt.getNbtCompound();
-        if (nbt.contains("bakedmodeldata")) {
-            updateBakedModelState(nbt.getCompound("bakedmodeldata"));
-        }
-        ModelDataManager.requestModelDataRefresh(this);
-        assert world != null;
-        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), BLOCK_UPDATE + NOTIFY_NEIGHBORS);
     }
     
     public boolean doBlockStateUpdate() {
@@ -217,17 +182,19 @@ public abstract class MultiblockTile extends TileEntity {
         return controller.getDebugInfo();
     }
     
-    public ActionResultType onBlockActivated(PlayerEntity player, Hand handIn) {
+    @Nonnull
+    public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (handIn == Hand.MAIN_HAND) {
             // TODO: 8/8/20 add a generic layer for this to check against
             //              currently not a problem as a only use rectangular multiblocks
             if (player.getHeldItemMainhand() == ItemStack.EMPTY && getBlockState().get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) == DISASSEMBLED) {
-                if (controller != null) {
+                if (controller != null && controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
                     if (controller.lastValidationError != null) {
                         player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());
-                    }else{
+                    } else {
                         player.sendMessage(new TranslationTextComponent("multiblock.error.phosphophyllite.unknown"), player.getUniqueID());
                     }
+                    
                 }
                 return ActionResultType.SUCCESS;
                 

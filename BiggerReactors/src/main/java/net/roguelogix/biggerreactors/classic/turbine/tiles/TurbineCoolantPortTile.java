@@ -133,6 +133,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     FluidTank EMPTY_TANK = new FluidTank(0);
     private TurbineCoolantPort.PortDirection direction = INLET;
     
+    @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             waterOutputDirection = null;
@@ -152,6 +153,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         neighborChanged();
     }
     
+    @SuppressWarnings("DuplicatedCode")
     public void neighborChanged() {
         waterOutput = LazyOptional.empty();
         if (waterOutputDirection == null) {
@@ -182,12 +184,13 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     }
     
     @Override
-    protected void readNBT(CompoundNBT compound) {
+    protected void readNBT(@Nonnull CompoundNBT compound) {
         if (compound.contains("direction")) {
             direction = TurbineCoolantPort.PortDirection.valueOf(compound.getString("direction"));
         }
     }
     
+    @Nonnull
     @Override
     protected CompoundNBT writeNBT() {
         CompoundNBT NBT = new CompoundNBT();

@@ -7,6 +7,7 @@ public enum TurbineActivity implements IStringSerializable {
     ACTIVE,
     INACTIVE;
     
+    @SuppressWarnings("SpellCheckingInspection")
     public static final EnumProperty<TurbineActivity> TURBINE_STATE_ENUM_PROPERTY = EnumProperty.create("turbinestate", TurbineActivity.class);
     
     @Override

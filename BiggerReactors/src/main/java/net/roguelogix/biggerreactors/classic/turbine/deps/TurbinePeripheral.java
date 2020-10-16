@@ -8,7 +8,6 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IDynamicPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.common.util.LazyOptional;
-import net.roguelogix.biggerreactors.classic.reactor.deps.ReactorPeripheral;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
 
 import javax.annotation.Nonnull;
@@ -148,7 +147,7 @@ public class TurbinePeripheral implements IDynamicPeripheral {
             });
             methodHandlers.put("setVentAll", (turbine, args) -> {
                 if (turbine != null) {
-                    turbine.CCsetVentNone();
+                    turbine.CCsetVentAll();
                 }
                 return MethodResult.of();
             });

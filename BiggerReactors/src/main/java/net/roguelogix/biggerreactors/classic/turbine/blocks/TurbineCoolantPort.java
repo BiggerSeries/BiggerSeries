@@ -36,6 +36,7 @@ public class TurbineCoolantPort extends TurbineBaseBlock {
         INLET,
         OUTLET;
         
+        @SuppressWarnings("SpellCheckingInspection")
         public static final EnumProperty<PortDirection> PORT_DIRECTION_ENUM_PROPERTY = EnumProperty.create("portdirection", PortDirection.class);
         
         @Override
@@ -80,6 +81,7 @@ public class TurbineCoolantPort extends TurbineBaseBlock {
     }
     
     
+    @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);

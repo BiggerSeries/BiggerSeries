@@ -177,7 +177,8 @@ public class Config {
         public final float moderation;
         @PhosphophylliteConfig.Value
         public final float conductivity;
-        
+    
+        @SuppressWarnings("unused")
         ReactorModeratorConfigValues() {
             location = null;
             locationType = null;
@@ -250,6 +251,7 @@ public class Config {
         @PhosphophylliteConfig.Value
         public final double bonus;
     
+        @SuppressWarnings("unused")
         TurbineCoilConfigValues() {
             location = null;
             locationType = null;

@@ -54,7 +54,7 @@ public class ROBN {
         
         public final byte val;
         
-        private Type(int i) {
+        Type(int i) {
             val = (byte) i;
         }
         
@@ -88,7 +88,7 @@ public class ROBN {
                 return BigInt;
             }
             
-            // java doesnt have unsigned integers, *sooooooo*
+            // java doesnt have unsigned integers, *so*
             
             if (tClass == float.class || tClass == java.lang.Float.class) {
                 return Float;
@@ -180,6 +180,7 @@ public class ROBN {
             val = (byte) i;
         }
         
+        @SuppressWarnings("unused")
         public static Endianness fromByte(byte b) {
             if ((b & (1 << 7)) != 0) {
                 return BIG;
@@ -264,6 +265,7 @@ public class ROBN {
         throw new IllegalArgumentException("Incompatible Binary");
     }
     
+    @SuppressWarnings("DuplicatedCode")
     private static void numberToROBN(Number number, ArrayList<Byte> buf) {
         if (number instanceof Byte) {
             buf.add(Type.Int8.val);
@@ -315,9 +317,11 @@ public class ROBN {
             buf.add((byte) ((val >> (8 * (Endianness.NATIVE.val == Endianness.BIG.val ? 1 : 6))) & 0xFF));
             buf.add((byte) ((val >> (8 * (Endianness.NATIVE.val == Endianness.BIG.val ? 0 : 7))) & 0xFF));
             return;
-        } else if (number instanceof BigDecimal) {
+        } else //noinspection StatementWithEmptyBody
+            if (number instanceof BigDecimal) {
             // TODO: 7/24/20  BigDecimal
-        } else if (number instanceof BigInteger) {
+        } else //noinspection StatementWithEmptyBody
+                if (number instanceof BigInteger) {
             // TODO: 7/24/20  BigInteger
         }
         throw new IllegalArgumentException("Unsupported number type");
@@ -432,6 +436,7 @@ public class ROBN {
         
     }
     
+    @SuppressWarnings("DuplicatedCode")
     private static Object vectorFromROBN(Iterator<Byte> iterator) {
         Object vectorLengthObj = fromROBN(iterator);
         if (!(vectorLengthObj instanceof Number)) {
@@ -471,6 +476,7 @@ public class ROBN {
         // that was easy
     }
     
+    @SuppressWarnings("DuplicatedCode")
     private static Object mapFromROBN(Iterator<Byte> iterator) {
         Object mapLengthOBJ = fromROBN(iterator);
         if (!(mapLengthOBJ instanceof Number)) {

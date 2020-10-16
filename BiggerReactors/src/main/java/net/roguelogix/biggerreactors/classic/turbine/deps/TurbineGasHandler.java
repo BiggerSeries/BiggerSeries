@@ -38,6 +38,7 @@ public class TurbineGasHandler implements IGasHandler{
         return 1;
     }
     
+    @Nonnull
     @Override
     public GasStack getChemicalInTank(int tank) {
         if(tank == 0){
@@ -48,7 +49,7 @@ public class TurbineGasHandler implements IGasHandler{
     }
     
     @Override
-    public void setChemicalInTank(int tank, GasStack stack) {
+    public void setChemicalInTank(int tank, @Nonnull GasStack stack) {
     }
     
     @Override
@@ -57,15 +58,16 @@ public class TurbineGasHandler implements IGasHandler{
     }
     
     @Override
-    public boolean isValid(int tank, GasStack stack) {
+    public boolean isValid(int tank, @Nonnull GasStack stack) {
         if(tank == 0){
             return stack.getRaw() == steam;
         }
         return false;
     }
     
+    @Nonnull
     @Override
-    public GasStack insertChemical(int tank, GasStack stack, Action action) {
+    public GasStack insertChemical(int tank, @Nonnull GasStack stack, @Nonnull Action action) {
         if(tank != 0 || stack.getRaw() != steam){
             return stack;
         }
@@ -79,8 +81,9 @@ public class TurbineGasHandler implements IGasHandler{
         return stack;
     }
     
+    @Nonnull
     @Override
-    public GasStack extractChemical(int tank, long amount, Action action) {
+    public GasStack extractChemical(int tank, long amount, @Nonnull Action action) {
         return GasStack.EMPTY;
     }
 }

@@ -24,7 +24,7 @@ public class BiggerReactors {
     
     public static final String modid = "biggerreactors";
     
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     
     public BiggerReactors() {
         Registry.onModLoad();

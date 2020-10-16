@@ -5,6 +5,8 @@ import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockTile;
 
+import javax.annotation.Nonnull;
+
 public class TurbineBaseTile extends RectangularMultiblockTile {
     TurbineMultiblockController turbine() {
         return (TurbineMultiblockController) controller;
@@ -14,6 +16,7 @@ public class TurbineBaseTile extends RectangularMultiblockTile {
         super(tileEntityTypeIn);
     }
     
+    @Nonnull
     @Override
     public final MultiblockController createController() {
         return new TurbineMultiblockController(world);

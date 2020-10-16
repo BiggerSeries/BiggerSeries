@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+@SuppressWarnings("unused")
 @Mod(Phosphophyllite.modid)
 public class Phosphophyllite {
     public static final String modid = "phosphophyllite";
@@ -53,13 +54,6 @@ public class Phosphophyllite {
         if (e.phase != TickEvent.Phase.END) {
             return;
         }
-        long timeNow = System.nanoTime();
-        float ms = (float) (timeNow - lastTime) / 1_000_000f;
-        if (ms > 50) {
-//            System.out.println("Over tick time! " + (ms));
-        }
-//        System.out.println(ms);
-        lastTime = timeNow;
         tick++;
         ArrayList<MultiblockController> controllersToTick = new ArrayList<>(Phosphophyllite.controllersToTick);
         ArrayList<MultiblockTile> tilesToAttach = new ArrayList<>(Phosphophyllite.tilesToAttach);

@@ -7,6 +7,8 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.phosphophyllite.registry.PhosphophylliteFluid;
 import net.roguelogix.phosphophyllite.registry.RegisterFluid;
 
+import javax.annotation.Nonnull;
+
 @RegisterFluid(name = "fluid_yellorium", registerBucket = true)
 public class FluidYellorium extends PhosphophylliteFluid {
     
@@ -17,11 +19,12 @@ public class FluidYellorium extends PhosphophylliteFluid {
     private final ResourceLocation TEXTURE_FLOWING = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_flowing");
     private final ResourceLocation TEXTURE_OVERLAY = new ResourceLocation(BiggerReactors.modid, "fluid/yellorium_overlay");
     
-    public FluidYellorium(Properties properties) {
+    public FluidYellorium(@Nonnull Properties properties) {
         super(properties);
     }
     
     @Override
+    @Nonnull
     public FluidAttributes createAttributes() {
         return FluidAttributes.builder(TEXTURE_STILL, TEXTURE_FLOWING)
                 .color(0xBCBA50)

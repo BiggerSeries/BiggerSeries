@@ -22,6 +22,8 @@ import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblo
 import net.roguelogix.phosphophyllite.util.Util;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -36,12 +38,15 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         maxZ = Config.Turbine.MaxWidth;
         maxY = Config.Turbine.MaxHeight;
         tileAttachValidator = tile -> {
+            //noinspection CodeBlock2Expr
             return tile instanceof TurbineBaseTile;
         };
         frameValidator = block -> {
+            //noinspection CodeBlock2Expr
             return block instanceof TurbineCasing;
         };
         exteriorValidator = Validator.or(frameValidator, block -> {
+            //noinspection CodeBlock2Expr
             return block instanceof TurbineTerminal
                     || block instanceof TurbineCoolantPort
                     || block instanceof TurbineRotorBearing
@@ -215,7 +220,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     private final Set<TurbinePowerTapTile> powerTaps = new HashSet<>();
     
     @Override
-    protected void onPartAdded(MultiblockTile tile) {
+    protected void onPartAdded(@Nonnull MultiblockTile tile) {
         if (tile instanceof TurbineTerminalTile) {
             terminals.add((TurbineTerminalTile) tile);
         }
@@ -237,7 +242,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onPartRemoved(MultiblockTile tile) {
+    protected void onPartRemoved(@Nonnull MultiblockTile tile) {
         if (tile instanceof TurbineTerminalTile) {
             terminals.remove(tile);
         }
@@ -425,7 +430,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                     efficiency = Math.min(0.5, efficiency);
                 }
                 
-                // oh noes, there is a cap now, *no overspeeding your fucking turbines*
+                // oh noes, there is a cap now, *no over speeding your fucking turbines*
                 if (rotorSpeed > 2245) {
                     efficiency = -rotorSpeed / 4490;
                     efficiency += 1;
@@ -490,7 +495,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         markDirty();
     }
     
-    public void updateDataPacket(TurbineState turbineState) {
+    public void updateDataPacket(@Nonnull TurbineState turbineState) {
         turbineState.turbineActivity = turbineActivity;
         turbineState.ventState = ventState;
         turbineState.coilStatus = coilEngaged;
@@ -512,24 +517,37 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         turbineState.energyCapacity = Config.Turbine.BatterySize;
     }
     
-    public void runRequest(String requestName, Object requestData) {
+    @SuppressWarnings("UnnecessaryReturnStatement")
+    public void runRequest(@Nonnull String requestName, @Nullable Object requestData) {
         switch (requestName) {
             case "setActive": {
+                if (!(requestData instanceof Boolean)) {
+                    return;
+                }
                 boolean newState = (boolean) requestData;
                 setActive(newState ? TurbineActivity.ACTIVE : TurbineActivity.INACTIVE);
                 return;
             }
             case "changeFlowRate": {
+                if (!(requestData instanceof Long)) {
+                    return;
+                }
                 long newRate = maxFlowRate + ((long) requestData);
                 setMaxFlowRate(newRate);
                 return;
             }
             case "setCoilEngaged": {
+                if (!(requestData instanceof Boolean)) {
+                    return;
+                }
                 boolean newState = (boolean) requestData;
                 setCoilEngaged(newState);
                 return;
             }
             case "setVentState": {
+                if (!(requestData instanceof Integer)) {
+                    return;
+                }
                 VentState newState = VentState.valueOf((int) requestData);
                 setVentState(newState);
                 return;
@@ -539,7 +557,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     
     VentState ventState = VentState.OVERFLOW;
     
-    private void setVentState(VentState newVentState) {
+    private void setVentState(@Nonnull VentState newVentState) {
         ventState = newVentState;
     }
     
@@ -561,7 +579,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         coilEngaged = engaged;
     }
     
-    
+    @Nonnull
     protected CompoundNBT write() {
         CompoundNBT compound = new CompoundNBT();
         {
@@ -577,7 +595,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         return compound;
     }
     
-    protected void read(CompoundNBT compound) {
+    protected void read(@Nonnull CompoundNBT compound) {
         if (compound.contains("steam")) {
             steam = compound.getLong("steam");
         }
@@ -618,6 +636,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     @Override
+    @Nonnull
     public String getDebugInfo() {
         return super.getDebugInfo() + "\n" +
                 "rotorMass: " + rotorMass + "\n" +
@@ -650,7 +669,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         return Config.Turbine.TankSize;
     }
     
-    public long getSteamAmount(){
+    public long getSteamAmount() {
         return steam;
     }
     
@@ -718,27 +737,33 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         return coilEngaged;
     }
     
+    @SuppressWarnings("SpellCheckingInspection")
     public void CCsetActive(boolean active) {
         setActive(active ? TurbineActivity.ACTIVE : TurbineActivity.INACTIVE);
     }
     
+    @SuppressWarnings("SpellCheckingInspection")
     public void CCsetFluidFlowRateMax(long maxFlowRate) {
         setMaxFlowRate(maxFlowRate);
     }
     
+    @SuppressWarnings("SpellCheckingInspection")
     public void CCsetVentNone() {
         setVentState(VentState.CLOSED);
     }
     
+    @SuppressWarnings("SpellCheckingInspection")
     public void CCsetVentOverflow() {
         setVentState(VentState.OVERFLOW);
     }
     
+    @SuppressWarnings("SpellCheckingInspection")
     public void CCsetVentAll() {
         setVentState(VentState.ALL);
     }
     
-    public void CCsetInductorEngaged(boolean engaged){
+    @SuppressWarnings("SpellCheckingInspection")
+    public void CCsetInductorEngaged(boolean engaged) {
         setCoilEngaged(engaged);
     }
 }

@@ -187,6 +187,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
      * @return The current state of the tile.
      */
     @Override
+    @Nonnull
     public CyaniteReprocessorState getState() {
         this.updateState();
         return this.cyaniteReprocessorState;

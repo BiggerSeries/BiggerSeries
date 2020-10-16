@@ -6,6 +6,7 @@ import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
@@ -390,6 +391,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     }
     
     @Override
+    @Nonnull
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.put("fuelTank", fuelTank.serializeNBT());
@@ -401,7 +403,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     }
     
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(@Nonnull CompoundNBT nbt) {
         if (nbt.contains("fuelTank")) {
             fuelTank.deserializeNBT(nbt.getCompound("fuelTank"));
         }

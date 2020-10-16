@@ -5,10 +5,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
-import net.roguelogix.phosphophyllite.util.Util;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
-import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
+import net.roguelogix.phosphophyllite.util.Util;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -27,7 +28,7 @@ public class MultiblockController {
     private long updateAssemblyAtTick = Long.MAX_VALUE;
     protected final Set<MultiblockController> controllersToMerge = new HashSet<>();
     
-    public MultiblockController(World world) {
+    public MultiblockController(@Nonnull World world) {
         this.world = world;
         Phosphophyllite.controllersToTick.add(this);
     }
@@ -104,7 +105,7 @@ public class MultiblockController {
         MaxZ = maxZ;
     }
     
-    final void attemptAttach(MultiblockTile toAttach) {
+    final void attemptAttach(@Nonnull MultiblockTile toAttach) {
         if (tileAttachValidator != null && !tileAttachValidator.validate(toAttach)) {
             return;
         }
@@ -123,14 +124,14 @@ public class MultiblockController {
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
     
-    protected void onPartAdded(MultiblockTile toAttach) {
+    protected void onPartAdded(@Nonnull MultiblockTile toAttach) {
     }
     
-    final void detach(MultiblockTile toDetach) {
+    final void detach(@Nonnull MultiblockTile toDetach) {
         detach(toDetach, false);
     }
     
-    final void detach(MultiblockTile toDetach, boolean onChunkUnload) {
+    final void detach(@Nonnull MultiblockTile toDetach, boolean onChunkUnload) {
         blocks.remove(toDetach);
         onPartRemoved(toDetach);
         toDetach.attemptAttach();
@@ -148,15 +149,15 @@ public class MultiblockController {
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
     
-    protected void onPartRemoved(MultiblockTile tile) {
+    protected void onPartRemoved(@Nonnull MultiblockTile tile) {
     }
     
-    protected void onMerge(MultiblockController otherController) {
+    protected void onMerge(@Nonnull MultiblockController otherController) {
     }
     
     private Validator<MultiblockController> assemblyValidator = c -> true;
     
-    protected void setAssemblyValidator(Validator<MultiblockController> validator) {
+    protected void setAssemblyValidator(@Nullable Validator<MultiblockController> validator) {
         if (validator != null) {
             assemblyValidator = validator;
         }
@@ -200,6 +201,7 @@ public class MultiblockController {
                         pos.add(0, 1, 0),
                         pos.add(0, -1, 0),
                 };
+                @SuppressWarnings({"DuplicatedCode", "deprecation"})
                 TileEntity[] possibleTiles = {
                         world.isBlockLoaded(possiblePositions[0]) ? world.getTileEntity(possiblePositions[0]) : null,
                         world.isBlockLoaded(possiblePositions[1]) ? world.getTileEntity(possiblePositions[1]) : null,
@@ -252,6 +254,7 @@ public class MultiblockController {
     public void tick() {
     }
     
+    @Nonnull
     public AssemblyState assemblyState() {
         return state;
     }
@@ -325,6 +328,7 @@ public class MultiblockController {
         CompoundNBT multiblockData = nbt.getCompound("multiblockData");
         if (this.multiblockData.getInt("controller") != multiblockData.getInt("controller")) {
             // todo merge the NBTs
+            //noinspection UnnecessaryReturnStatement
             return;
         }
     }
@@ -354,6 +358,7 @@ public class MultiblockController {
         }
     }
     
+    @Nonnull
     final CompoundNBT getNBT() {
         if (storedNBT == null) {
             updateNBT();
@@ -379,13 +384,15 @@ public class MultiblockController {
         Util.markRangeDirty(world, new Vector2i(minX(), minZ()), new Vector2i(maxX(), maxZ()));
     }
     
-    protected void read(CompoundNBT compound) {
+    protected void read(@Nonnull CompoundNBT compound) {
     }
     
+    @Nonnull
     protected CompoundNBT write() {
         return new CompoundNBT();
     }
     
+    @Nonnull
     public String getDebugInfo() {
         return "BlockCount: " + blocks.size() + "\n" +
                 "Min (" + minX() + ", " + minY() + ", " + minZ() + ")\n" +

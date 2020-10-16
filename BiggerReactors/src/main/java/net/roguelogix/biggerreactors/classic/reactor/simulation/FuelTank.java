@@ -3,6 +3,8 @@ package net.roguelogix.biggerreactors.classic.reactor.simulation;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nonnull;
+
 public class FuelTank implements INBTSerializable<CompoundNBT> {
     private long capacity;
     
@@ -104,6 +106,7 @@ public class FuelTank implements INBTSerializable<CompoundNBT> {
     }
     
     @Override
+    @Nonnull
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putLong("capacity", capacity);
@@ -114,7 +117,7 @@ public class FuelTank implements INBTSerializable<CompoundNBT> {
     }
     
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(@Nonnull CompoundNBT nbt) {
         if (nbt.contains("capacity")) {
             capacity = nbt.getLong("capacity");
         }

@@ -15,7 +15,7 @@ public class ConfigLoader {
             throw new RuntimeException();
         }
     }
-    private static Element buildCurrentElementTree(Class<?> configClass, Object curentobject) throws IllegalAccessException {
+    private static Element buildCurrentElementTree(Class<?> configClass, Object currentObject) throws IllegalAccessException {
         if (!configClass.isAnnotationPresent(PhosphophylliteConfig.class)) {
             // these get ignored
             return null;
@@ -28,12 +28,12 @@ public class ConfigLoader {
             if (!field.isAnnotationPresent(PhosphophylliteConfig.Value.class)) {
                 continue;
             }
-            if (Modifier.isStatic(field.getModifiers()) != (curentobject == null)) {
+            if (Modifier.isStatic(field.getModifiers()) != (currentObject == null)) {
                 continue;
             }
             field.setAccessible(true);
             
-            Object fieldObject = field.get(curentobject);
+            Object fieldObject = field.get(currentObject);
             
             PhosphophylliteConfig.Value fieldAnnotation = field.getAnnotation(PhosphophylliteConfig.Value.class);
             StringBuilder comment = new StringBuilder(fieldAnnotation.comment());
@@ -78,7 +78,7 @@ public class ConfigLoader {
             subElements.add(buildElementForObject(fieldObject, field.getName(), comment.length() == 0 ? null : comment.toString()));
         }
         
-        if (curentobject == null) {
+        if (currentObject == null) {
             Class<?>[] classes = configClass.getDeclaredClasses();
             for (Class<?> subclass : classes) {
                 subElements.add(buildCurrentElementTree(subclass, null));

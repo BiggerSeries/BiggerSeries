@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+@SuppressWarnings("unused")
 public class WorkQueue {
     private final Queue<Runnable> queue = new ConcurrentLinkedQueue<>();
     
@@ -68,7 +69,7 @@ public class WorkQueue {
     }
     
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() {
         finish();
     }
     
