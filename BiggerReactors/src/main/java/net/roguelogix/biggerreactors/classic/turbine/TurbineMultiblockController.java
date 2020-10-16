@@ -642,6 +642,16 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 "";
     }
     
+    // -- Mekanism compat
+    
+    public long getSteamCapacity() {
+        return Config.Turbine.TankSize;
+    }
+    
+    public long getSteamAmount(){
+        return steam;
+    }
+    
     // -- ComputerCraft API --
     
     public boolean CCgetConnected() {

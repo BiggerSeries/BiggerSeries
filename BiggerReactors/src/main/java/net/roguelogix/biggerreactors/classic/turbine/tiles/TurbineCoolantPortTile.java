@@ -1,5 +1,6 @@
 package net.roguelogix.biggerreactors.classic.turbine.tiles;
 
+import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -7,12 +8,14 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineCoolantPort;
+import net.roguelogix.biggerreactors.classic.turbine.deps.TurbineGasHandler;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -32,11 +35,17 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         super(TYPE);
     }
     
+    @CapabilityInject(IGasHandler.class)
+    public static Capability<IGasHandler> GAS_HANDLER_CAPABILITY = null;
+    
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return LazyOptional.of(() -> this).cast();
+        }
+        if (cap == GAS_HANDLER_CAPABILITY) {
+            return TurbineGasHandler.create(this::turbine).cast();
         }
         return super.getCapability(cap, side);
     }

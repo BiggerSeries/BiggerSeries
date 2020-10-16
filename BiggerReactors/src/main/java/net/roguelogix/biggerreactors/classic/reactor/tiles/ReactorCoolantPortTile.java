@@ -1,11 +1,14 @@
 package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
+import mekanism.api.Action;
+import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -13,6 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort;
+import net.roguelogix.biggerreactors.classic.reactor.deps.ReactorGasHandler;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -21,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort.PortDirection.*;
+import static net.roguelogix.biggerreactors.classic.reactor.deps.ReactorGasHandler.steamStack;
 
 @RegisterTileEntity(name = "reactor_coolant_port")
 public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHandler {
@@ -32,11 +37,17 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         super(TYPE);
     }
     
+    @CapabilityInject(IGasHandler.class)
+    public static Capability<IGasHandler> GAS_HANDLER_CAPABILITY = null;
+    
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return LazyOptional.of(() -> this).cast();
+        }
+        if (cap == GAS_HANDLER_CAPABILITY) {
+            return ReactorGasHandler.create(this::reactor).cast();
         }
         return super.getCapability(cap, side);
     }
@@ -112,14 +123,22 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         if (!connected || direction == INLET) {
             return 0;
         }
-        steam.setAmount((int) amount);
-        return steamOutput.orElse(EMPTY_TANK).fill(steam, FluidAction.EXECUTE);
+        if(steamGasOutput != null && steamGasOutput.isPresent()){
+            IGasHandler output = steamGasOutput.orElse(ReactorGasHandler.EMPTY_TANK);
+            steamStack.setAmount(amount);
+            return amount - output.insertChemical(steamStack, Action.EXECUTE).getAmount();
+        }else if (steamOutput != null && steamOutput.isPresent()){
+            steam.setAmount((int) amount);
+            return steamOutput.orElse(EMPTY_TANK).fill(steam, FluidAction.EXECUTE);
+        }
+        return 0;
     }
     
     
     private boolean connected = false;
     Direction steamOutputDirection = null;
     LazyOptional<IFluidHandler> steamOutput = null;
+    LazyOptional<IGasHandler> steamGasOutput = null;
     FluidTank EMPTY_TANK = new FluidTank(0);
     private ReactorAccessPort.PortDirection direction = INLET;
     
@@ -154,16 +173,31 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
             connected = false;
             return;
         }
-        steamOutput = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, steamOutputDirection.getOpposite());
         connected = false;
-        IFluidHandler handler = steamOutput.orElse(EMPTY_TANK);
-        for (int i = 0; i < handler.getTanks(); i++) {
-            if (handler.isFluidValid(i, steam)) {
-                connected = true;
-                break;
+        steamOutput = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, steamOutputDirection.getOpposite());
+        if(steamOutput.isPresent()){
+            IFluidHandler handler = steamOutput.orElse(EMPTY_TANK);
+            for (int i = 0; i < handler.getTanks(); i++) {
+                if (handler.isFluidValid(i, steam)) {
+                    connected = true;
+                    break;
+                }
             }
         }
-        connected = connected && steamOutput.isPresent();
+        if (GAS_HANDLER_CAPABILITY != null) {
+            steamGasOutput = te.getCapability(GAS_HANDLER_CAPABILITY, steamOutputDirection.getOpposite());
+            if (steamGasOutput.isPresent()) {
+                IGasHandler handler = steamGasOutput.orElse(ReactorGasHandler.EMPTY_TANK);
+                for (int i = 0; i < handler.getTanks(); i++) {
+                    if (handler.isValid(i, steamStack)) {
+                        connected = true;
+                        break;
+                    }
+                }
+            }
+            
+        }
+        connected = connected && (steamOutput.isPresent() || steamGasOutput.isPresent());
     }
     
     public void setDirection(ReactorAccessPort.PortDirection direction) {

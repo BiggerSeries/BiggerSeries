@@ -109,6 +109,9 @@ repositories {
     maven {
         url = "https://www.cursemaven.com"
     }
+    maven {
+        url 'https://modmaven.k-4u.nl/'
+    }
 }
 
 dependencies {
@@ -136,6 +139,8 @@ dependencies {
     compile project(':Phosphophyllite')
 
     implementation fg.deobf("org.squiddev:cc-tweaked-1.16.3:1.93.0")
+
+    compileOnly "mekanism:Mekanism:1.16.3-10.0.11.436:api"
 
 //    runtime ""
 //    runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')

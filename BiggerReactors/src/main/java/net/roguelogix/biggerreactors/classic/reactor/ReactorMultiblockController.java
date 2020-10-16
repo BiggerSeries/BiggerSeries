@@ -455,6 +455,16 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         });
     }
     
+    // -- Mekanism compat
+    
+    public long getSteamCapacity() {
+        return simulation.coolantTank.getPerSideCapacity();
+    }
+    
+    public long getSteamAmount(){
+        return simulation.coolantTank.getSteamAmount();
+    }
+    
     // -- ComputerCraft API --
     
     public boolean CCgetConnected() {
