@@ -195,6 +195,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (compound.contains("simulationData")) {
             simulation.deserializeNBT(compound.getCompound("simulationData"));
         }
+    
+        if (compound.contains("storedPower")) {
+            storedPower = compound.getLong("storedPower");
+        }
         
         updateBlockStates();
     }
@@ -204,6 +208,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         CompoundNBT compound = new CompoundNBT();
         {
             compound.putString("reactorState", reactorActivity.toString());
+            compound.putLong("storedPower", storedPower);
             compound.put("simulationData", simulation.serializeNBT());
         }
         return compound;
