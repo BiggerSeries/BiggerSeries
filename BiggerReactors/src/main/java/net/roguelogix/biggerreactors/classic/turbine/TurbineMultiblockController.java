@@ -336,6 +336,8 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             }
         });
         
+        inductorDragCoefficient *= Config.Turbine.CoilDragMultiplier;
+        
         frictionDrag = rotorMass * Config.Turbine.MassDragMultiplier;
         bladeDrag = Config.Turbine.BladeDragMultiplier * bladeSurfaceArea;
         
