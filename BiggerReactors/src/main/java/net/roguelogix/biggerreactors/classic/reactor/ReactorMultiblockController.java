@@ -339,13 +339,22 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     private void ejectWaste() {
         for (ReactorAccessPortTile accessPort : accessPorts) {
-            // todo, output to inputs if there aren't any outputs left
             if (accessPort.isInlet()) {
                 continue;
             }
             long wastePushed = accessPort.pushWaste((int) simulation.fuelTank.getWasteAmount(), false);
             simulation.fuelTank.extractWaste(wastePushed, false);
             
+        }
+        
+        // outlets have already taken as much as they can, now just hose it out the inlets too
+        // this will only actually do anything with items, so, we only care if there is a full ingot or more
+        // if/when fluid fueling is added, only oulets will output it
+        if(simulation.fuelTank.getWasteAmount() > Config.Reactor.FuelMBPerIngot){
+            for (ReactorAccessPortTile accessPort : accessPorts) {
+                long wastePushed = accessPort.pushWaste((int) simulation.fuelTank.getWasteAmount(), false);
+                simulation.fuelTank.extractWaste(wastePushed, false);
+            }
         }
     }
     
