@@ -1,3 +1,19 @@
+# 1.16.3-0.1.3
+Mekanism compatibility
+
+## Reactor
+Reactor can now produce Mekanism gas steam, just connect a Mekanism gas pipe to the coolant port
+
+## Turbine
+Turbine can now accept Mekanism gas steam, just connect a Mekanism gas pipe to the coolant port.
+
+Computer Craft API bug fixed. Steam and water were being reported as each other.
+
+## Misc
+Mekanism Enrichment Chamber and Crusher compatibility added. Pretty much the same as the Pulverizer.
+
+Computer ports have names in the lang file now.
+
 # 1.16.3-0.1.2
 wrench compat
 
