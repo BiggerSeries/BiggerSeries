@@ -13,7 +13,7 @@
       "item": "biggerreactors:graphite_ingot"
     },
     "Y": {
-      "item": "biggerreactors:yellorium_ingot"
+      "tag": "forge:ingots/uranium"
     }
   },
   "result": {

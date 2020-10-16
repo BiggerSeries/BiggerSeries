@@ -10,7 +10,7 @@
       "item": "biggerreactors:reactor_casing"
     },
     "Y": {
-      "item": "biggerreactors:yellorium_ingot"
+      "tag": "forge:ingots/uranium"
     },
     "G": {
       "item": "biggerreactors:graphite_ingot"

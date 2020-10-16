@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -113,7 +114,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             return stack;
         }
         stack = stack.copy();
-        if (stack.getItem() == YelloriumIngot.INSTANCE || stack.getItem() == BlutoniumIngot.INSTANCE) {
+        if (stack.getItem().getTags().contains(new ResourceLocation("forge:ingots/uranium")) || stack.getItem() == BlutoniumIngot.INSTANCE) {
             long maxAcceptable = reactor.refuel(stack.getCount() * Config.Reactor.FuelMBPerIngot, true);
             long canAccept = maxAcceptable - (maxAcceptable % Config.Reactor.FuelMBPerIngot);
             reactor.refuel(canAccept, simulate);
@@ -147,7 +148,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return stack.getItem() == YelloriumIngot.INSTANCE || stack.getItem() == BlutoniumIngot.INSTANCE;
+        return stack.getItem().getTags().contains(new ResourceLocation("forge:ingots/uranium")) || stack.getItem() == BlutoniumIngot.INSTANCE;
     }
     
     public int pushWaste(int waste, boolean simulated) {
