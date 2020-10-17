@@ -199,14 +199,9 @@ public class Config {
     }
     
     // todo: blocks to add
-    //      osmium (mek exists for 1.15/1.16)
     //      brass?
-    //      zinc?
-    //      aluminum (does mek have this?)
-    //      steel (mek, again)
     //      fluxed electrum (lemming may port RA, unsure)
-    //      platinum (cant find tag in thermal)
-    //      thermal fluids (again, cant find)
+    //      thermal fluids (dont exist yet)
     @PhosphophylliteConfig.Value
     public static ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
             new ReactorModeratorConfigValues("minecraft:air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
@@ -220,11 +215,16 @@ public class Config {
             new ReactorModeratorConfigValues("minecraft:snow_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.15f, 0.33f, 1.05f, 0.05f),
             
             new ReactorModeratorConfigValues("forge:storage_blocks/copper", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.75f, 1.4f, 1f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/osmium", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
             new ReactorModeratorConfigValues("forge:storage_blocks/bronze", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/zinc", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/aluminum", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.78f, 1.42f, 0.6f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/steel", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.78f, 1.42f, 0.6f),
             new ReactorModeratorConfigValues("forge:storage_blocks/invar", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.79f, 1.43f, 0.6f),
             new ReactorModeratorConfigValues("forge:storage_blocks/silver", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.79f, 1.43f, 1.5f),
             new ReactorModeratorConfigValues("forge:storage_blocks/lead", ReactorModeratorConfigValues.LocationType.TAG, 0.75f, 0.75f, 1.75f, 1.5f),
             new ReactorModeratorConfigValues("forge:storage_blocks/electrum", ReactorModeratorConfigValues.LocationType.TAG, 0.75f, 0.75f, 1.75f, 1.5f),
+            new ReactorModeratorConfigValues("forge:storage_blocks/platinum", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.86f, 1.58f, 1.5f),
             new ReactorModeratorConfigValues("forge:storage_blocks/enderium", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.88f, 1.6f, 3f),
             
             new ReactorModeratorConfigValues("minecraft:water", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
@@ -271,12 +271,8 @@ public class Config {
     
     
     // todo: blocks to add
-    //      osmium (mek exists for 1.15/1.16)
     //      brass?
-    //      aluminum (does mek have this?)
-    //      steel (mek, again)
     //      fluxed electrum (lemming may port RA, unsure)
-    //      platinum (cant find tag in thermal)
     @PhosphophylliteConfig.Value
     public static TurbineCoilConfigValues[] turbineCoils = new TurbineCoilConfigValues[]{
             new TurbineCoilConfigValues("minecraft:iron_block", TurbineCoilConfigValues.LocationType.REGISTRY, 0.33, 0.1, 1),
@@ -285,9 +281,13 @@ public class Config {
             new TurbineCoilConfigValues("biggerreactors:ludicrite_block", TurbineCoilConfigValues.LocationType.REGISTRY, 1.155, 0.35, 1.02),
             
             new TurbineCoilConfigValues("forge:storage_blocks/copper", TurbineCoilConfigValues.LocationType.TAG, 0.396, 0.12, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/osmium", TurbineCoilConfigValues.LocationType.TAG, 0.462, 0.12, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/aluminum", TurbineCoilConfigValues.LocationType.TAG, 0.495, 0.13, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/steel", TurbineCoilConfigValues.LocationType.TAG, 0.495, 0.13, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/invar", TurbineCoilConfigValues.LocationType.TAG, 0.495, 0.14, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/silver", TurbineCoilConfigValues.LocationType.TAG, 0.561, 0.15, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/electrum", TurbineCoilConfigValues.LocationType.TAG, 0.825, 0.2, 1),
+            new TurbineCoilConfigValues("forge:storage_blocks/platinum", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.25, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/enderium", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.3, 1.02),
     };
     
