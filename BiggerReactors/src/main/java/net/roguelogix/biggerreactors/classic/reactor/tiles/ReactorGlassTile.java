@@ -12,9 +12,4 @@ public class ReactorGlassTile extends ReactorBaseTile {
     public ReactorGlassTile() {
         super(TYPE);
     }
-    
-    @Override
-    public boolean doBlockStateUpdate() {
-        return false;
-    }
 }
