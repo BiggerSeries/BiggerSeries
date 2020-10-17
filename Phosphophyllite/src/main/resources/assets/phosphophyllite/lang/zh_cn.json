@@ -1,0 +1,22 @@
+    "itemGroup.net.roguelogix.phosphophyllite.Phosphophyllite": "磷叶石",
+    "multiblock.error.phosphophyllite.invalid_block.frame": "无效方块框架 (%s)，位于%s",
+    "multiblock.error.phosphophyllite.invalid_block.exterior": "无效外部方块 (%s)，位于%s",
+    "multiblock.error.phosphophyllite.invalid_block.interior": "无效内部方块 (%s)，位于%s",
+    "multiblock.error.phosphophyllite.invalid_block.corner": "无效角落方块 (%s)，位于%s",
+    "multiblock.error.phosphophyllite.invalid_block.generic": "无效方块 (%s)，位于%s",
+    "multiblock.error.phosphophyllite.unknown": "出现了未知的多方块结构错误，请联系作者",
+    "multiblock.error.phosphophyllite.dimensions": "无法在该维度使用 \n实际：%d, %d, %d, \n允许最小值：%d, %d, %d, \n允许最大值：%d, %d, %d,",
+
+    "block.phosphophyllite.item_black_hole": "物品黑洞",
+    "block.phosphophyllite.item_white_hole": "物品白洞",
+    "block.phosphophyllite.fluid_black_hole": "液体黑洞",
+    "block.phosphophyllite.fluid_white_hole": "液体白洞",
+    "block.phosphophyllite.power_black_hole": "能量黑洞",
+    "block.phosphophyllite.power_white_hole": "能量白洞",
+
+    "block.phosphophyllite.phosphophyllite_ore": "磷叶石矿石",
+
+    "item.phosphophyllite.debug_tool": "调试工具",
+
+    "random.bullshit.that.doesnt.actually.get.used.anywhere": "这只是个结尾"
+}
