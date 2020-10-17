@@ -1,0 +1,113 @@
+{
+  "itemGroup.net.roguelogix.biggerreactors.BiggerReactors": "大型反应堆",
+
+  "item.biggerreactors.wrench": "反应堆扳手",
+
+  "item.biggerreactors.fluid_yellorium_bucket": "液态黄铀桶",
+  "fluid.biggerreactors.fluid_irradiated_steam": "辐射蒸汽",
+
+  "block.biggerreactors.yellorite_ore": "黄铀矿石",
+  "block.biggerreactors.yellorium_block": "黄铀块",
+  "item.biggerreactors.yellorium_dust": "黄铀粉",
+  "item.biggerreactors.yellorium_ingot": "黄铀锭",
+
+  "block.biggerreactors.blutonium_block": "蓝钚块",
+  "item.biggerreactors.blutonium_dust": "蓝钚粉",
+  "item.biggerreactors.blutonium_ingot": "蓝钚锭",
+
+  "block.biggerreactors.cyanite_block": "蓝晶块",
+  "item.biggerreactors.cyanite_dust": "蓝晶粉",
+  "item.biggerreactors.cyanite_ingot": "蓝晶锭",
+
+  "block.biggerreactors.graphite_block": "石墨块",
+  "item.biggerreactors.graphite_dust": "石墨粉",
+  "item.biggerreactors.graphite_ingot": "石墨锭",
+
+  "block.biggerreactors.ludicrite_block": "镥块",
+  "item.biggerreactors.ludicrite_dust": "镥粉",
+  "item.biggerreactors.ludicrite_ingot": "镥锭",
+
+  "screen.biggerreactors.cyanite_reprocessor": "蓝晶再处理器",
+  "block.biggerreactors.cyanite_reprocessor": "蓝晶再处理器",
+
+  "screen.biggerreactors.reactor_terminal": "反应堆信息",
+  "block.biggerreactors.reactor_terminal": "反应堆终端",
+  "block.biggerreactors.reactor_casing": "反应堆外壳",
+  "block.biggerreactors.reactor_glass": "反应堆玻璃",
+  "screen.biggerreactors.reactor_control_rod": "反应堆控制杆",
+  "block.biggerreactors.reactor_control_rod": "反应堆控制杆",
+  "block.biggerreactors.reactor_fuel_rod": "反应堆燃料棒",
+  "block.biggerreactors.reactor_power_tap": "反应堆能量接口",
+  "block.biggerreactors.reactor_access_port": "反应堆访问端口",
+  "block.biggerreactors.reactor_coolant_port": "反应堆冷却端口",
+  "block.biggerreactors.reactor_computer_port": "反应堆电脑端口",
+
+  "multiblock.error.biggerreactors.no_terminal": "反应堆需要至少一个终端",
+  "multiblock.error.biggerreactors.no_rods": "反应堆至少要有一个燃料元件",
+  "multiblock.error.biggerreactors.control_rod_not_on_top": "控制杆只能放在反应堆上方(%d, %d, %d)",
+  "multiblock.error.biggerreactors.fuel_rod_gap": "所有燃料元件必须从反应堆上方延伸至其底部(%d, %d, %d)",
+  "multiblock.error.biggerreactors.no_control_rod_for_fuel_rod": "所有的燃料元件必须用控制杆控制(%d, %d)",
+  "multiblock.error.biggerreactors.dangling_internal_part": "这里面似乎还有一个反应堆，是不是出了什么问题？(%d, %d, %d)",
+
+  "tooltip.biggerreactors.symbols.control_rod.insertion": "§b杆插口\n更改控制杆的插入程度。\n杆的插入程度越深，反应速度越慢，\n即降低热量、能量、\n辐射输出和\n燃料消耗。",
+
+  "tooltip.biggerreactors.buttons.control_rod.insertion.insert": "§b插入杆\n杆的插入程度越深，反应速度越慢。\n§8[Shift]：插入10%。\n§8[Ctrl]：插入50%。\n§8[Ctrl + Shift]插入100% (完全插入)。\n§8[Alt]：应用于所有杆。",
+  "tooltip.biggerreactors.buttons.control_rod.insertion.retract": "§b缩回杆\n杆的插入程度越浅，反应速度越块。\n§8[Shift]：缩回10%。\n§8[Ctrl]：缩回50%。\n§8[Ctrl + Shift]：缩回100% (完全缩回)。\n§8[Alt]]：应用于所有杆。",
+
+  "tooltip.biggerreactors.status.reactor.activity.online": "状态：§2在线",
+  "tooltip.biggerreactors.status.reactor.activity.offline": "状态：§4离线",
+
+  "tooltip.biggerreactors.buttons.reactor.activity.activate": "§b启动反应堆",
+  "tooltip.biggerreactors.buttons.reactor.activity.deactivate": "§b关闭反应堆\n余热仍然会\n产生能量/消耗冷却液。",
+  "tooltip.biggerreactors.buttons.reactor.waste_eject_auto.enabled": "§b自动排出废料\n核心里的废料将会尽快被排出。",
+  "tooltip.biggerreactors.buttons.reactor.waste_eject_auto.disabled": "§b不自动排出废料\n§d废料只能手动排出！",
+  "tooltip.biggerreactors.buttons.reactor.waste_eject_manual": "§b现在排出废料\n排出核心中的废料。\n1000 mB的废料等于1块锭。\n§8[Shift]：倾泻所有多余的废料。",
+
+  "tooltip.biggerreactors.symbols.reactor.fuel_mix": "§b燃油混合",
+  "tooltip.biggerreactors.symbols.reactor.case_heat": "§b堆体热量\n反应堆燃料的热量。\n高热量会提高燃料的使用量。\n核心的热量将传递到外壳上。\n转移率基于\n反应堆的内部设计。",
+  "tooltip.biggerreactors.symbols.reactor.fuel_heat": "§b燃料热量\n反应堆外壳的热量。\n高热量会提高能量输出\n和冷却液的转换。",
+  "tooltip.biggerreactors.symbols.reactor.energy_tank": "§b能量缓冲",
+  "tooltip.biggerreactors.symbols.reactor.coolant_tank": "§b冷却液罐\n堆体热量会使罐中的冷却液\n过热。",
+  "tooltip.biggerreactors.symbols.reactor.hot_tank": "§b热液罐\n过热冷却液\n会被泵入到该罐中，\n且必须通过\n冷却端口排出。",
+
+  "tooltip.biggerreactors.symbols.reactor.temperature": "§b核心稳固\n反应堆核心的温度。\n高温会导致\n燃料消耗速度增加。",
+  "tooltip.biggerreactors.symbols.reactor.output": "§b反应堆输出",
+  "tooltip.biggerreactors.symbols.reactor.fuel_consumption": "§b燃料消耗率\n燃料消耗\n并化为废料的速率。",
+  "tooltip.biggerreactors.symbols.reactor.fuel_reactivity": "§b燃料反应性\n核心的辐射程度。\n较高的辐射度会\n降低燃料消耗。",
+
+  "screen.biggerreactors.turbine_terminal": "涡轮机信息",
+  "block.biggerreactors.turbine_terminal": "涡轮机终端",
+  "block.biggerreactors.turbine_casing": "涡轮机外壳",
+  "block.biggerreactors.turbine_glass": "涡轮机玻璃",
+  "block.biggerreactors.turbine_rotor_shaft": "涡轮机转轴",
+  "block.biggerreactors.turbine_rotor_blade": "涡轮机叶片",
+  "block.biggerreactors.turbine_rotor_bearing": "涡轮机转子轴承",
+  "block.biggerreactors.turbine_coolant_port": "涡轮机冷却端口",
+  "block.biggerreactors.turbine_power_tap": "涡轮机能量接口",
+  "block.biggerreactors.turbine_computer_port": "涡轮机电脑端口",
+
+  "tooltip.biggerreactors.status.turbine.activity.online": "状态：§2在线",
+  "tooltip.biggerreactors.status.turbine.activity.offline": "状态：§4离线",
+
+  "tooltip.biggerreactors.buttons.turbine.activity.activate": "§b启动涡轮机\n使进气流体流向转子。\n流体流动会使转子旋转起来。",
+  "tooltip.biggerreactors.buttons.turbine.activity.deactivate": "§b关闭涡轮机\n关闭进气口。\n转子会停止旋转。",
+
+  "tooltip.biggerreactors.buttons.turbine.coils.activate": "§b啮合线圈\n啮合感应线圈。\n将从转子中提取能量\n并转化为RF。\n提取能量会\n对转子产生阻力，\n使其减速。",
+  "tooltip.biggerreactors.buttons.turbine.coils.deactivate": "§b取消啮合线圈\n取消啮合感应线圈。\n不会从转子中\n提取能量，\n可让转子转得更快。",
+
+  "tooltip.biggerreactors.buttons.turbine.vent_state.overflow": "§b仅排出多余废料\n倾泻多余的废料。\n如果废料液罐满了，\n多余的液体就会流失。",
+  "tooltip.biggerreactors.buttons.turbine.vent_state.all": "§b排出所有废料\n倾泻所有的废料。\n不会填充\n废料液罐。",
+  "tooltip.biggerreactors.buttons.turbine.vent_state.closed": "§b不排出\n保留所有多余废料。\n如果废料储罐已满，\n涡轮机会减慢或停止输入液体。",
+
+  "tooltip.biggerreactors.buttons.turbine.flow.increase": "§b增加最大流量\n更高的流量可增加转子转速。\n§8[Shift]：增加 10 mB/t。\n§8[Ctrl]：增加 100 mB/t。\n§8[Ctrl + Shift]：增加 1000 mB/t。",
+  "tooltip.biggerreactors.buttons.turbine.flow.decrease": "§b降低最大流量\n降低流量会降低转子转速。\n§8[Shift]：降低 10 mB/t。\n§8[Ctrl]：降低 100 mB/t。\n§8[Ctrl + Shift]：降低 1000 mB/t.",
+
+  "tooltip.biggerreactors.symbols.turbine.tachometer": "§b转速表/转子在900或1800转/分左右时性能最佳。\n转子超速时间过长，\n可能会出现故障。",
+  "tooltip.biggerreactors.symbols.turbine.intake_tank": "§b进料液罐",
+  "tooltip.biggerreactors.symbols.turbine.exhaust_tank": "§b废料液罐",
+  "tooltip.biggerreactors.symbols.turbine.energy_tank": "§b能量缓冲",
+
+  "tooltip.biggerreactors.symbols.turbine.governor": "§b流量管理\n控制最大流量，\n即涡轮机\n可处理的液体量。",
+  "tooltip.biggerreactors.symbols.turbine.output": "§b涡轮机输出\n涡轮机通过放置在\n旋转转子周围的金属感应线圈\n产生能量。\n更多(或更高质量)的线圈\n产生能量的速度更快。",
+  "tooltip.biggerreactors.symbols.turbine.rotor_efficiency": "§b转子效率\n每片转子叶片\n只能捕获多少液体。\n如果输入流量超过了容量，\n效率就会下降。"
+}
