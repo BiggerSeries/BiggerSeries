@@ -1,3 +1,11 @@
+#1.16.3-0.1.5
+more tagging, fix for ATM6 dust smelting
+
+## Misc
+add ingots to forge:ingots
+add dusts to forge:dusts
+add yellorium_dust to forge:dusts/uranium_dust
+
 # 1.16.3-0.1.4
 tagging
 
