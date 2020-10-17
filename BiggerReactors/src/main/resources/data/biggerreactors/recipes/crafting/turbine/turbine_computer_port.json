@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "modid": "computercraft",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "pattern": [
+    "CDC",
+    "GRG",
+    "CDC"
+  ],
+  "key": {
+    "C": {
+      "item": "biggerreactors:turbine_casing"
+    },
+    "R": {
+      "item": "minecraft:repeater"
+    },
+    "D": {
+      "item": "minecraft:redstone"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "item": "biggerreactors:turbine_computer_port"
+  }
+}
