@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "biggerreactors:yellorium_dust"
+      "tag": "forge:ingots/uranium"
     },
     {
       "item": "minecraft:sand"
