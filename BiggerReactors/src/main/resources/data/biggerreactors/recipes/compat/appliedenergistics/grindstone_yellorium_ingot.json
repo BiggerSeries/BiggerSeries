@@ -1,0 +1,19 @@
+{
+    "type": "appliedenergistics2:grinder",
+    "conditions": [
+        {
+            "modid": "appliedenergistics2",
+            "type": "forge:mod_loaded"
+        }
+    ],
+    "input": {
+        "item": "biggerreactors:yellorium_ingot"
+    },
+    "result": {
+        "primary": {
+            "item": "biggerreactors:yellorium_dust",
+            "count": 1
+        }
+    },
+    "turns": 8
+}
