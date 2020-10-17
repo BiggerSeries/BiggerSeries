@@ -78,7 +78,7 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
     /**
      * Capability access to the item handler.
      */
-    private final LazyOptional<IItemHandler> ITEM_HANDLER_CAPABILITY = LazyOptional.of(() -> this.itemHandler);
+    private final LazyOptional<IItemHandler> ITEM_HANDLER_CAPABILITY = LazyOptional.of(() -> this.itemHandler.pipeHandler());
     /**
      * The energy storage.
      */
@@ -476,5 +476,9 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
         }
         
         return Objects.requireNonNull(super.getCapability(capability, side));
+    }
+    
+    public CyaniteReprocessorItemHandler getItemHandler() {
+        return itemHandler;
     }
 }

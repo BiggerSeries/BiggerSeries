@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.roguelogix.biggerreactors.classic.machine.blocks.CyaniteReprocessor;
 import net.roguelogix.biggerreactors.classic.machine.tiles.CyaniteReprocessorTile;
@@ -35,12 +36,11 @@ public class CyaniteReprocessorContainer extends Container implements GuiSync.IG
         
         // Populate machine slots.
         if (this.tileEntity != null) {
-            tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-                // Add input slot.
-                this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorItemHandler.INPUT_SLOT_INDEX, 44, 41));
-                // Add output slot.
-                this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorItemHandler.OUTPUT_SLOT_INDEX, 116, 41));
-            });
+            IItemHandler handler = tileEntity.getItemHandler();
+            // Add input slot.
+            this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorItemHandler.INPUT_SLOT_INDEX, 44, 41));
+            // Add output slot.
+            this.addSlot(new SlotItemHandler(handler, CyaniteReprocessorItemHandler.OUTPUT_SLOT_INDEX, 116, 41));
         }
         
         // Populate player inventory.
