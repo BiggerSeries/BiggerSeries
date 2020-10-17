@@ -1,0 +1,10 @@
+{
+    "replace": false,
+    "values": [
+        "biggerreactors:blutonium_ingot",
+        "biggerreactors:cyanite_ingot",
+        "biggerreactors:graphite_ingot",
+        "biggerreactors:ludicrite_ingot",
+        "biggerreactors:yellorium_ingot"
+    ]
+}
