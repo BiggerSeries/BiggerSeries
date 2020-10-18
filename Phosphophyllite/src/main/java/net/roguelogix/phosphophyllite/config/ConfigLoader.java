@@ -154,17 +154,6 @@ public class ConfigLoader {
         }
     }
     
-    static Field modifiersField;
-    
-    static {
-        try {
-            modifiersField = Field.class.getDeclaredField("modifiers");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        modifiersField.setAccessible(true);
-    }
-    
     private static void writeElementTree(Element tree, Class<?> configClass, Object currentObject) throws IllegalAccessException {
         if (!configClass.isAnnotationPresent(PhosphophylliteConfig.class)) {
             // these get ignored
@@ -187,7 +176,6 @@ public class ConfigLoader {
                 continue;
             }
             field.setAccessible(true);
-            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL); // yes i know this is evil
             Object newValue = buildConfigObject(element, field.getType());
             field.set(currentObject, newValue);
         }
