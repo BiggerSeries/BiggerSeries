@@ -1,12 +1,21 @@
 package net.roguelogix.biggerreactors.classic.turbine.tiles;
 
 import mekanism.api.chemical.gas.IGasHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
@@ -14,10 +23,19 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fml.network.NetworkHooks;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
+import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorCoolantPort;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorCoolantPortState;
+import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineCoolantPort;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPortContainer;
 import net.roguelogix.biggerreactors.classic.turbine.deps.TurbineGasHandler;
+import net.roguelogix.biggerreactors.classic.turbine.state.TurbineCoolantPortState;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
+import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nonnull;
@@ -26,7 +44,7 @@ import javax.annotation.Nullable;
 import static net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineCoolantPort.PortDirection.*;
 
 @RegisterTileEntity(name = "turbine_coolant_port")
-public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHandler {
+public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHandler, INamedContainerProvider, IHasUpdatableState<TurbineCoolantPortState> {
     
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
@@ -125,13 +143,13 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         water.setAmount((int) amount);
         return waterOutput.orElse(EMPTY_TANK).fill(water, IFluidHandler.FluidAction.EXECUTE);
     }
-    
-    
+
     private boolean connected = false;
     Direction waterOutputDirection = null;
     LazyOptional<IFluidHandler> waterOutput = null;
     FluidTank EMPTY_TANK = new FluidTank(0);
     private TurbineCoolantPort.PortDirection direction = INLET;
+    public final TurbineCoolantPortState coolantPortState = new TurbineCoolantPortState(this);
     
     @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
@@ -202,5 +220,58 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     protected void onAssemblyAttempted() {
         assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
+    }
+
+    @Override
+    @Nonnull
+    public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
+        assert world != null;
+        if (world.getBlockState(pos).get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) != RectangularMultiblockPositions.DISASSEMBLED) {
+            if (!world.isRemote) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
+            }
+            return ActionResultType.SUCCESS;
+        }
+        return super.onBlockActivated(player, handIn);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void runRequest(String requestName, Object requestData) {
+        TurbineMultiblockController turbine = turbine();
+        if(turbine == null){
+            return;
+        }
+
+        if (requestName.equals("setInputState")) {
+            boolean state = (Boolean) requestData;
+            this.setDirection(state ? INLET : OUTLET);
+            world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
+
+        }
+        super.runRequest(requestName, requestData);
+    }
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return new TranslationTextComponent(TurbineCoolantPort.INSTANCE.getTranslationKey());
+    }
+
+    @Nullable
+    @Override
+    public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
+        return new TurbineCoolantPortContainer(windowId, this.pos, player);
+    }
+
+    @Nullable
+    @Override
+    public TurbineCoolantPortState getState() {
+        this.updateState();
+        return this.coolantPortState;
+    }
+
+    @Override
+    public void updateState() {
+        coolantPortState.inputState = (this.direction == INLET);
     }
 }

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class GuiSymbol<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     
-    private final ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
+    private ResourceLocation texture = new ResourceLocation(BiggerReactors.modid, "textures/screen/parts/gui_symbols.png");
     private String tooltip;
     private int xOffset;
     private int yOffset;
@@ -34,7 +34,20 @@ public class GuiSymbol<T extends Container> extends GuiPartBase<T> implements IH
         this.yOffset = yOffset;
         this.tooltip = tooltip;
     }
-    
+
+    public void updateTooltip(String tooltip) {
+        this.tooltip = tooltip;
+    }
+
+    /**
+     * Update the energy values this part uses.
+     *
+     * @param resource The X offset of the texture.
+     */
+    public void updateTexture(ResourceLocation resource) {
+        this.texture = resource;
+    }
+
     /**
      * Update the energy values this part uses.
      *

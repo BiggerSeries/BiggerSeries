@@ -9,11 +9,17 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.roguelogix.biggerreactors.classic.machine.client.CyaniteReprocessorScreen;
 import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.client.ControlRodScreen;
+import net.roguelogix.biggerreactors.classic.reactor.client.ReactorAccessPortScreen;
+import net.roguelogix.biggerreactors.classic.reactor.client.ReactorCoolantPortScreen;
 import net.roguelogix.biggerreactors.classic.reactor.client.ReactorScreen;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorAccessPortContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorCoolantPortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.turbine.client.TurbineCoolantPortScreen;
 import net.roguelogix.biggerreactors.classic.turbine.client.TurbineScreen;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPortContainer;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,8 +51,14 @@ public class BiggerReactors {
                 ReactorScreen::new);
         ScreenManager.registerFactory(ControlRodContainer.INSTANCE,
                 ControlRodScreen::new);
+        ScreenManager.registerFactory(ReactorCoolantPortContainer.INSTANCE,
+                ReactorCoolantPortScreen::new);
+        ScreenManager.registerFactory(ReactorAccessPortContainer.INSTANCE,
+                ReactorAccessPortScreen::new);
         ScreenManager.registerFactory(TurbineContainer.INSTANCE,
                 TurbineScreen::new);
+        ScreenManager.registerFactory(TurbineCoolantPortContainer.INSTANCE,
+                TurbineCoolantPortScreen::new);
     }
     
 }

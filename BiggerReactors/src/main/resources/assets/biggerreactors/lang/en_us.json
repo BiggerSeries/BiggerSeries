@@ -75,6 +75,19 @@
   "tooltip.biggerreactors.symbols.reactor.fuel_consumption": "§bFuel Burn-up Rate\nThe rate at which fuel is fissioned\ninto waste in the core.",
   "tooltip.biggerreactors.symbols.reactor.fuel_reactivity": "§bFuel Reactivity\nHow heavily irradiated the core is.\nHigher levels of radiation reduce\nfuel burn-up.",
 
+  "screen.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
+  "screen.biggerreactors.reactor_access_port": "Reactor Access Port",
+  "screen.biggerreactors.turbine_coolant_port": "Turbine Coolant Port",
+
+  "tooltip.biggerreactors.status.io.input": "§2Accepting Input",
+  "tooltip.biggerreactors.status.io.output": "§cProviding Output",
+
+  "tooltip.biggerreactors.buttons.io": "§bToggle port I/O.",
+
+  "tooltip.biggerreactors.symbols.io.gui_change": "§b\"This GUI is missing the input slots!\"\nThe I/O ports have been rewritten!\nTo insert/extract materials, use a\nhopper or pipe.",
+  "tooltip.biggerreactors.symbols.io.input": "§bThis port is currently accepting input.",
+  "tooltip.biggerreactors.symbols.io.input": "§bThis port is currently providing output.",
+
   "screen.biggerreactors.turbine_terminal": "Turbine Info",
   "block.biggerreactors.turbine_terminal": "Turbine Terminal",
   "block.biggerreactors.turbine_casing": "Turbine Casing",
