@@ -168,10 +168,11 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         if (tempDiff > 0.01f) {
             double rfTransferred = tempDiff * reactorToCoolantSystemHeatTransferCoefficient;
             double reactorRf = getRFFromVolumeAndTemp(reactorVolume(), reactorHeat);
+            rfTransferred *= Config.Reactor.OutputMultiplier;
             
             if (passive) {
                 rfTransferred *= Config.Reactor.PassiveCoolingTransferEfficiency;
-                FEProducedLastTick = rfTransferred * Config.Reactor.PowerOutputMultiplier;
+                FEProducedLastTick = rfTransferred;
             } else {
                 rfTransferred -= coolantTank.absorbHeat(rfTransferred);
                 FEProducedLastTick = coolantTank.getFluidVaporizedLastTick(); // Piggyback so we don't have useless stuff in the update packet
