@@ -250,6 +250,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         simulation.setPassivelyCooled(coolantPorts.isEmpty());
         simulation.updateInternalValues();
+        updateControlRodLevels();
         collectFuel();
     }
     
