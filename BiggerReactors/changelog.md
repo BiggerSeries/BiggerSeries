@@ -1,10 +1,27 @@
-#1.16.3-0.1.5
+# 1.16.3-0.1.6
+bug fixes
+
+## Reactor
+ - GUIs added for ports, only allow toggle
+ - OutputMultiplier fixed for active reactors
+ - Control rod levels apply after reload
+
+## Turbine
+ - GUIs added for coolant port, only allows toggle
+ - Default turbine max flow rate changed to 5,000mB/t, and tank size to 10,000mB
+ - Internal battery size adjusted by 2.5x to match above change
+
+## Misc
+ - fixed cyanite reprocessor voiding items
+ - corrected the uranium to cyanite recipe
+
+# 1.16.3-0.1.5
 more tagging, fix for ATM6 dust smelting
 
 ## Misc
-add ingots to forge:ingots
-add dusts to forge:dusts
-add yellorium_dust to forge:dusts/uranium_dust
+ - add ingots to forge:ingots
+ - add dusts to forge:dusts
+ - add yellorium_dust to forge:dusts/uranium_dust
 
 # 1.16.3-0.1.4
 tagging
