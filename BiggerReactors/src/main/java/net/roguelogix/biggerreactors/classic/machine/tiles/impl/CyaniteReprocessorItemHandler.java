@@ -13,15 +13,6 @@ public class CyaniteReprocessorItemHandler extends ItemStackHandler {
     public static final int INPUT_SLOT_INDEX = 0;
     public static final int OUTPUT_SLOT_INDEX = 1;
     
-    @Nonnull
-    @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        if (slot != INPUT_SLOT_INDEX) {
-            return stack;
-        }
-        return super.insertItem(slot, stack, simulate);
-    }
-    
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         switch (slot) {
