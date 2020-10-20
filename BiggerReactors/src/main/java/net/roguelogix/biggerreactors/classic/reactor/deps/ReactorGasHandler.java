@@ -8,6 +8,7 @@ import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.LazyOptional;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
+import net.roguelogix.phosphophyllite.gui.GuiSync;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -16,13 +17,27 @@ public class ReactorGasHandler implements IGasHandler {
     
     private final Supplier<ReactorMultiblockController> controllerSupplier;
     public static final Gas steam;
-    public static final GasStack steamStack;
-    public static final IGasHandler EMPTY_TANK;
+    public static GasStack steamStack;
+    public static IGasHandler EMPTY_TANK;
     
     static {
         steam = Gas.getFromRegistry(new ResourceLocation("mekanism:steam"));
         steamStack = new GasStack(steam, 0);
         EMPTY_TANK = (IGasHandler) ChemicalTankBuilder.GAS.createDummy(0);
+    }
+    
+    public static long pushSteamToHandler(IGasHandler handler, long amount){
+        steamStack.setAmount(amount);
+        return amount - handler.insertChemical(steamStack, Action.EXECUTE).getAmount();
+    }
+    
+    public static boolean isValidHandler(IGasHandler handler){
+        for (int i = 0; i < handler.getTanks(); i++) {
+            if (handler.isValid(i, steamStack)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public static LazyOptional<Object> create(@Nonnull Supplier<ReactorMultiblockController> controllerSupplier) {

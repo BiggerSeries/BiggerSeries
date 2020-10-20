@@ -1,6 +1,5 @@
 package net.roguelogix.biggerreactors.classic.reactor.tiles;
 
-import mekanism.api.Action;
 import mekanism.api.chemical.gas.IGasHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -40,21 +39,20 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort.PortDirection.*;
-import static net.roguelogix.biggerreactors.classic.reactor.deps.ReactorGasHandler.steamStack;
 
 @RegisterTileEntity(name = "reactor_coolant_port")
 public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHandler, INamedContainerProvider, IHasUpdatableState<ReactorCoolantPortState> {
-
+    
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-
+    
     public ReactorCoolantPortTile() {
         super(TYPE);
     }
-
+    
     @CapabilityInject(IGasHandler.class)
     public static Capability<IGasHandler> GAS_HANDLER_CAPABILITY = null;
-
+    
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -66,15 +64,15 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         return super.getCapability(cap, side);
     }
-
+    
     private final FluidStack water = new FluidStack(Fluids.WATER, 0);
     private final FluidStack steam = new FluidStack(FluidIrradiatedSteam.INSTANCE, 0);
-
+    
     @Override
     public int getTanks() {
         return 2;
     }
-
+    
     @Nonnull
     @Override
     public FluidStack getFluidInTank(int tank) {
@@ -86,12 +84,12 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         return FluidStack.EMPTY;
     }
-
+    
     @Override
     public int getTankCapacity(int tank) {
         return Integer.MAX_VALUE;
     }
-
+    
     @Override
     public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
         if (tank == 0 && stack.getRawFluid() == Fluids.WATER) {
@@ -99,7 +97,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         return tank == 1 && stack.getRawFluid() == FluidIrradiatedSteam.INSTANCE;
     }
-
+    
     @Override
     public int fill(FluidStack resource, FluidAction action) {
         if (direction == OUTLET) {
@@ -114,7 +112,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         return 0;
     }
-
+    
     @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
@@ -123,7 +121,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         return FluidStack.EMPTY;
     }
-
+    
     @Nonnull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
@@ -133,23 +131,22 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         steam.setAmount((int) ((ReactorMultiblockController) controller).extractSteam(maxDrain, action.simulate()));
         return steam.copy();
     }
-
+    
     public long pushSteam(long amount) {
         if (!connected || direction == INLET) {
             return 0;
         }
         if (steamGasOutput != null && steamGasOutput.isPresent()) {
             IGasHandler output = steamGasOutput.orElse(ReactorGasHandler.EMPTY_TANK);
-            steamStack.setAmount(amount);
-            return amount - output.insertChemical(steamStack, Action.EXECUTE).getAmount();
+            return ReactorGasHandler.pushSteamToHandler(output, amount);
         } else if (steamOutput != null && steamOutput.isPresent()) {
             steam.setAmount((int) amount);
             return steamOutput.orElse(EMPTY_TANK).fill(steam, FluidAction.EXECUTE);
         }
         return 0;
     }
-
-
+    
+    
     private boolean connected = false;
     Direction steamOutputDirection = null;
     LazyOptional<IFluidHandler> steamOutput = null;
@@ -157,7 +154,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     FluidTank EMPTY_TANK = new FluidTank(0);
     private ReactorAccessPort.PortDirection direction = INLET;
     public final ReactorCoolantPortState coolantPortState = new ReactorCoolantPortState(this);
-
+    
     @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
@@ -177,7 +174,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         neighborChanged();
     }
-
+    
     @SuppressWarnings("DuplicatedCode")
     public void neighborChanged() {
         steamOutput = LazyOptional.empty();
@@ -206,30 +203,27 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
             steamGasOutput = te.getCapability(GAS_HANDLER_CAPABILITY, steamOutputDirection.getOpposite());
             if (steamGasOutput.isPresent()) {
                 IGasHandler handler = steamGasOutput.orElse(ReactorGasHandler.EMPTY_TANK);
-                for (int i = 0; i < handler.getTanks(); i++) {
-                    if (handler.isValid(i, steamStack)) {
-                        connected = true;
-                        break;
-                    }
+                if (ReactorGasHandler.isValidHandler(handler)) {
+                    connected = true;
                 }
             }
-
         }
-        connected = connected && (steamOutput.isPresent() || steamGasOutput.isPresent());
-    }
 
+        connected = connected && ((steamOutput != null && steamOutput.isPresent()) || (steamGasOutput != null && steamGasOutput.isPresent()));
+    }
+    
     public void setDirection(ReactorAccessPort.PortDirection direction) {
         this.direction = direction;
         this.markDirty();
     }
-
+    
     @Override
     protected void readNBT(@Nonnull CompoundNBT compound) {
         if (compound.contains("direction")) {
             direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
         }
     }
-
+    
     @Override
     @Nonnull
     protected CompoundNBT writeNBT() {
@@ -237,13 +231,13 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         NBT.putString("direction", String.valueOf(direction));
         return NBT;
     }
-
+    
     @Override
     protected void onAssemblyAttempted() {
         assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
     }
-
+    
     @Override
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
@@ -256,7 +250,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         }
         return super.onBlockActivated(player, handIn);
     }
-
+    
     @SuppressWarnings("unchecked")
     @Override
     public void runRequest(String requestName, Object requestData) {
@@ -264,34 +258,34 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         if (reactor == null) {
             return;
         }
-
+        
         if (requestName.equals("setInputState")) {
             boolean state = (Boolean) requestData;
             this.setDirection(state ? INLET : OUTLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
-
+            
         }
         super.runRequest(requestName, requestData);
     }
-
+    
     @Override
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorCoolantPort.INSTANCE.getTranslationKey());
     }
-
+    
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
         return new ReactorCoolantPortContainer(windowId, this.pos, player);
     }
-
+    
     @Override
     @Nonnull
     public ReactorCoolantPortState getState() {
         this.updateState();
         return this.coolantPortState;
     }
-
+    
     @Override
     public void updateState() {
         coolantPortState.inputState = (this.direction == INLET);
