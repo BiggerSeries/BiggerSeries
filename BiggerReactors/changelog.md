@@ -1,3 +1,14 @@
+# 1.16.3-0.1.7
+more bug fixes
+
+## Reactor
+ - Fix loading issue due to mekanism steam compatability
+ - Fix crash when using gui to toggle directions
+ - Fix dupe glitch with mekanism pipes, also causes log spawm
+
+## Misc
+ - Uranium to cyanite actually fixed now
+
 # 1.16.3-0.1.6
 bug fixes
 
