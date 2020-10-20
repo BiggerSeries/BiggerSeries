@@ -1,3 +1,4 @@
+{    
     "itemGroup.net.roguelogix.phosphophyllite.Phosphophyllite": "磷叶石",
     "multiblock.error.phosphophyllite.invalid_block.frame": "无效方块框架 (%s)，位于%s",
     "multiblock.error.phosphophyllite.invalid_block.exterior": "无效外部方块 (%s)，位于%s",
