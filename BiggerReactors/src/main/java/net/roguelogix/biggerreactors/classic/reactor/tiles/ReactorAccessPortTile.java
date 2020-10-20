@@ -110,7 +110,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        if (slot == 1) {
+        if (slot == 0) {
             return ItemStack.EMPTY;
         } else {
             return new ItemStack(CyaniteIngot.INSTANCE, 64);
@@ -122,7 +122,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
 
-        if (!isInlet() || reactor == null) {
+        if (!isInlet() || reactor == null || slot == 1) {
             return stack;
         }
         stack = stack.copy();
@@ -142,7 +142,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
 
-        if (isInlet() || reactor == null) {
+        if (isInlet() || reactor == null || slot == 0) {
             return ItemStack.EMPTY;
         }
 
@@ -160,7 +160,11 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return stack.getItem().getTags().contains(new ResourceLocation("forge:ingots/uranium")) || stack.getItem() == BlutoniumIngot.INSTANCE;
+        if(slot == 0) {
+            return stack.getItem().getTags().contains(new ResourceLocation("forge:ingots/uranium")) || stack.getItem() == BlutoniumIngot.INSTANCE;
+        }else{
+            return stack.getItem() == CyaniteIngot.INSTANCE;
+        }
     }
 
     public int pushWaste(int waste, boolean simulated) {
