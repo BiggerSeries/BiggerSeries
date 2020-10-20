@@ -37,7 +37,7 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelUsageMultiplier = 1;
         @PhosphophylliteConfig.Value(min = 0)
-        public static float PowerOutputMultiplier = 0.5f;
+        public static float OutputMultiplier = 0.5f;
         @PhosphophylliteConfig.Value(min = 0)
         public static float AmbientTemperature = 20.0f;
         @PhosphophylliteConfig.Value(min = 1)
@@ -124,9 +124,9 @@ public class Config {
         public static int MaxHeight = 48;
         
         @PhosphophylliteConfig.Value(min = 1)
-        public static long TankSize = 4000;
+        public static long TankSize = 10000;
         @PhosphophylliteConfig.Value(min = 1)
-        public static long MaxFlow = 2000;
+        public static long MaxFlow = 5000;
         @PhosphophylliteConfig.Value(min = 1)
         public static long FluidPerBlade = 25;
         @PhosphophylliteConfig.Value(min = 1)
@@ -140,7 +140,7 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0)
         public static double CoilDragMultiplier = 1;
         @PhosphophylliteConfig.Value(min = 0)
-        public static long BatterySize = 1_000_000;
+        public static long BatterySize = 2_500_000;
     }
     @PhosphophylliteConfig
     public static class CyaniteReprocessor {
