@@ -133,6 +133,12 @@ public class ReactorPeripheral implements IDynamicPeripheral {
                 }
                 return MethodResult.of(0);
             });
+            methodHandlers.put("getCoolantAmountMax", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetCoolantAmountMax());
+                }
+                return MethodResult.of(0);
+            });
             methodHandlers.put("getHotFluidType", (reactor, args) -> {
                 if (reactor != null) {
                     return MethodResult.of(reactor.CCgetHotFluidType());
@@ -142,6 +148,12 @@ public class ReactorPeripheral implements IDynamicPeripheral {
             methodHandlers.put("getHotFluidAmount", (reactor, args) -> {
                 if (reactor != null) {
                     return MethodResult.of(reactor.CCgetHotFluidAmount());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getHotFluidAmountMax", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetHotFluidAmountMax());
                 }
                 return MethodResult.of(0);
             });

@@ -617,4 +617,12 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             ejectWaste();
         }
     }
+    
+    public long CCgetCoolantAmountMax() {
+        return simulation.coolantTank.getPerSideCapacity();
+    }
+    
+    public long CCgetHotFluidAmountMax() {
+        return simulation.coolantTank.getPerSideCapacity();
+    }
 }
