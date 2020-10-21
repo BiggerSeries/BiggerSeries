@@ -138,7 +138,6 @@ public class MultiblockController {
         if (onChunkUnload) {
             state = AssemblyState.PAUSED;
             onPaused();
-            updateNBT();
         }
         
         if (blocks.isEmpty()) {
@@ -247,7 +246,6 @@ public class MultiblockController {
         controllersToMerge.clear();
         if (state == AssemblyState.ASSEMBLED) {
             tick();
-            updateNBT();
         }
     }
     
@@ -296,12 +294,10 @@ public class MultiblockController {
             }
             blocks.forEach(block -> world.notifyNeighborsOfStateChange(block.getPos(), block.getBlockState().getBlock()));
             onAssembled();
-            updateNBT();
         } else {
             if (oldState == AssemblyState.ASSEMBLED) {
                 state = AssemblyState.DISASSEMBLED;
                 onDisassembled();
-                updateNBT();
             }
         }
         for (MultiblockTile block : blocks) {
@@ -360,13 +356,6 @@ public class MultiblockController {
     
     @Nonnull
     final CompoundNBT getNBT() {
-        if (storedNBT == null) {
-            updateNBT();
-        }
-        return storedNBT.copy();
-    }
-    
-    final void updateNBT() {
         CompoundNBT compound = new CompoundNBT();
         compound.put("userdata", write());
         CompoundNBT multiblockData = new CompoundNBT();
@@ -377,7 +366,8 @@ public class MultiblockController {
             multiblockData.putInt("controller", hashCode());
             multiblockData.putString("assemblyState", state.toString());
         }
-        storedNBT = compound;
+        storedNBT = compound.copy();
+        return compound;
     }
     
     protected void markDirty(){
