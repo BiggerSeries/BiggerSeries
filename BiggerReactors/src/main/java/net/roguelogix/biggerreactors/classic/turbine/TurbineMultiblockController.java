@@ -687,6 +687,10 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         return storedPower;
     }
     
+    public long CCgetMaxEnergyStored() {
+        return Config.Turbine.BatterySize;
+    }
+    
     public double CCgetRotorSpeed() {
         return (rotorBlades.size() > 0 && rotorMass > 0 ? rotorEnergy / (double) (rotorBlades.size() * rotorMass) : 0);
     }

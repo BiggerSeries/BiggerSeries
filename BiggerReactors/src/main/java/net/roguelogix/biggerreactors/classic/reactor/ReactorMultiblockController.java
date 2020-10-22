@@ -503,6 +503,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return storedPower;
     }
     
+    public long CCgetMaxEnergyStored() {
+        return Config.Reactor.PassiveBatterySize;
+    }
+    
     public double CCgetFuelTemperature() {
         return simulation.getFuelHeat();
     }
@@ -555,6 +559,13 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             return 0;
         }
         return simulation.FEProducedLastTick;
+    }
+    
+    public double CCgetMaxHotFluidProducedLastTick() {
+        if (simulation.isPassive()) {
+            return 0;
+        }
+        return simulation.coolantTank.getMaxFluidVaporizedLastTick();
     }
     
     

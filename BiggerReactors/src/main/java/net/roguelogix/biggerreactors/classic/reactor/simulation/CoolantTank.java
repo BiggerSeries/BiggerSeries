@@ -13,9 +13,14 @@ public class CoolantTank implements INBTSerializable<CompoundNBT> {
     private long steamAmount = 0;
     
     private long vaporizedLastTick = 0;
+    private long maxVaporizedLastTick = 0;
     
     public long getFluidVaporizedLastTick() {
         return vaporizedLastTick;
+    }
+    
+    public long getMaxFluidVaporizedLastTick() {
+        return maxVaporizedLastTick;
     }
     
     public long getSteamAmount() {
@@ -40,8 +45,10 @@ public class CoolantTank implements INBTSerializable<CompoundNBT> {
             return rfTransferred;
         }
         
-        long amountVaporized = Math.min(waterAmount, (long) (rfTransferred / Config.Reactor.CoolantVaporizationEnergy));
+        long amountVaporized = (long) (rfTransferred / Config.Reactor.CoolantVaporizationEnergy);
+        maxVaporizedLastTick = amountVaporized;
         
+        amountVaporized = Math.min(waterAmount, amountVaporized);
         amountVaporized = Math.min(amountVaporized, perSideCapacity - steamAmount);
         
         if (amountVaporized < 1) {

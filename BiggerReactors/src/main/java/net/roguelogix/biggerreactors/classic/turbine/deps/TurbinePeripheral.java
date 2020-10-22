@@ -55,6 +55,12 @@ public class TurbinePeripheral implements IDynamicPeripheral {
                 }
                 return MethodResult.of(0);
             });
+            methodHandlers.put("getMaxEnergyStored", (turbine, args) -> {
+                if (turbine != null) {
+                    return MethodResult.of(turbine.CCgetMaxEnergyStored());
+                }
+                return MethodResult.of(0);
+            });
             methodHandlers.put("getRotorSpeed", (turbine, args) -> {
                 if (turbine != null) {
                     return MethodResult.of(turbine.CCgetRotorSpeed());
