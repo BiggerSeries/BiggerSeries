@@ -1,3 +1,17 @@
+# 1.16.3-0.1.8
+ComputerCraft API
+
+## Reactor
+ - Added ability to get the maximum amount of fluid that *could* have been produced this tick
+ - Added ability to query battery size, as it is now configurable
+ - Ported ability to query active reactor tank size, missed in first round
+ 
+## Turbine
+ - Added ability to query batter size, as it is now configurable
+
+## Misc
+ - update to zh_cn translation
+
 # 1.16.3-0.1.7
 more bug fixes
 
