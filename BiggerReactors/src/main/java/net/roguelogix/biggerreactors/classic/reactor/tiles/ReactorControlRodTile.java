@@ -99,6 +99,12 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     private double insertion = 0;
     
     public void setInsertion(double newLevel) {
+        if(newLevel < 0){
+            newLevel = 0;
+        }
+        if(newLevel > 100){
+            newLevel = 100;
+        }
         insertion = newLevel;
     }
     
