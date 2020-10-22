@@ -75,6 +75,19 @@
   "tooltip.biggerreactors.symbols.reactor.fuel_consumption": "§b燃料消耗率\n燃料消耗\n并化为废料的速率。",
   "tooltip.biggerreactors.symbols.reactor.fuel_reactivity": "§b燃料反应性\n核心的辐射程度。\n较高的辐射度会\n降低燃料消耗。",
 
+  "screen.biggerreactors.reactor_coolant_port": "反应堆冷却端口",
+  "screen.biggerreactors.reactor_access_port": "反应堆访问端口",
+  "screen.biggerreactors.turbine_coolant_port": "涡轮机冷却端口",
+
+  "tooltip.biggerreactors.status.io.input": "§2接受输入",
+  "tooltip.biggerreactors.status.io.output": "§c提供输出",
+
+  "tooltip.biggerreactors.buttons.io": "§b切换端口 I/O。",
+
+  "tooltip.biggerreactors.symbols.io.gui_change": "§b\"这个GUI缺少输入栏！\"\nI/O 端口已被重写！\n请用漏斗或管道\n运输材料。",
+  "tooltip.biggerreactors.symbols.io.input": "§b该端口目前接受输入。",
+  "tooltip.biggerreactors.symbols.io.input": "§b该端口目前提供输出。", 
+  
   "screen.biggerreactors.turbine_terminal": "涡轮机信息",
   "block.biggerreactors.turbine_terminal": "涡轮机终端",
   "block.biggerreactors.turbine_casing": "涡轮机外壳",
