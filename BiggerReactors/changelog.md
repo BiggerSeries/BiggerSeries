@@ -1,3 +1,9 @@
+# 1.16.3-0.1.9
+CC Bug fix
+
+## Reactor
+ - Clamp control rod insertion with CC API
+
 # 1.16.3-0.1.8
 ComputerCraft API
 
