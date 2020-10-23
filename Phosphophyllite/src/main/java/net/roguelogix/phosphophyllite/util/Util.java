@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -68,7 +69,11 @@ public class Util {
                         for (int y = sectionMinY; y < sectionMaxY; y++) {
                             for (int z = sectionMinZ; z < sectionMaxZ; z++) {
                                 currentPosition.set(x, y, z);
-                                func.accept(chunkSection.getBlockState(x & 15, y & 15, z & 15), currentPosition);
+                                BlockState state = Blocks.AIR.getDefaultState();
+                                if(chunkSection != null){
+                                    state = chunkSection.getBlockState(x & 15, y & 15, z & 15);
+                                }
+                                func.accept(state, currentPosition);
                             }
                         }
                     }
