@@ -41,6 +41,7 @@
   "block.biggerreactors.reactor_access_port": "Reactor Access Port",
   "block.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
   "block.biggerreactors.reactor_computer_port": "Reactor Computer Port",
+  "block.biggerreactors.reactor_redstone_port": "Reactor Redstone Port",
 
   "multiblock.error.biggerreactors.no_terminal": "Reactors require at least one terminal",
   "multiblock.error.biggerreactors.no_rods": "Reactors must have at least one fuel element",

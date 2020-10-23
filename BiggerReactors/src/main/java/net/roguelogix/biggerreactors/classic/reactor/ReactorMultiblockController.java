@@ -52,6 +52,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                     block instanceof ReactorAccessPort ||
                     block instanceof ReactorCoolantPort ||
                     block instanceof ReactorPowerTap ||
+                    block instanceof ReactorRedstonePort ||
                     block instanceof ReactorComputerPort;
         });
         interiorValidator = block -> {
