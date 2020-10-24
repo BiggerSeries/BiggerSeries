@@ -12,4 +12,12 @@ public class ReactorRedstonePortTile extends ReactorBaseTile {
     public ReactorRedstonePortTile() {
         super(TYPE);
     }
+    
+    public boolean isEmitting() {
+        return false;
+    }
+    
+    public void setPowered(boolean powered) {
+        
+    }
 }
