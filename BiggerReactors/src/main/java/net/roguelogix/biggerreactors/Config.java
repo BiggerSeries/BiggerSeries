@@ -205,6 +205,8 @@ public class Config {
     @PhosphophylliteConfig.Value
     public static ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
             new ReactorModeratorConfigValues("minecraft:air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
+            new ReactorModeratorConfigValues("minecraft:void_air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
+            new ReactorModeratorConfigValues("minecraft:cave_air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
             
             new ReactorModeratorConfigValues("minecraft:iron_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.5f, 0.75f, 1.4f, 0.6f),
             new ReactorModeratorConfigValues("minecraft:gold_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.52f, 0.8f, 1.45f, 2f),
