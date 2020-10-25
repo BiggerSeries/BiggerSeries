@@ -1,6 +1,7 @@
 package net.roguelogix.phosphophyllite.multiblock.rectangular;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -12,6 +13,8 @@ import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.HashMap;
 
 import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
 import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
@@ -176,7 +179,7 @@ public class RectangularMultiblockController extends MultiblockController {
     
     @Override
     protected final void setAssemblyValidator(@Nullable Validator<MultiblockController> validator) {
-        if(validator == null){
+        if (validator == null) {
             super.setAssemblyValidator(mainValidator);
             return;
         }
@@ -184,6 +187,7 @@ public class RectangularMultiblockController extends MultiblockController {
     }
     
     private void assembledBlockStates() {
+        HashMap<BlockPos, BlockState> newStates = new HashMap<>();
         blocks.forEach(block -> {
             BlockPos pos = block.getPos();
             
@@ -234,28 +238,27 @@ public class RectangularMultiblockController extends MultiblockController {
                     break;
                 }
             }
-            if (block.doBlockStateUpdate()) {
-                world.setBlockState(pos, block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, position));
-            }
             if (block instanceof RectangularMultiblockTile) {
                 ((RectangularMultiblockTile) block).position = position;
             }
-            world.notifyBlockUpdate(pos, block.getBlockState(), block.getBlockState(), BLOCK_UPDATE + NOTIFY_NEIGHBORS);
-            block.markDirty();
+            if (block.doBlockStateUpdate()) {
+                newStates.put(pos, block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, position));
+            }
         });
+        Util.setBlockStates(newStates, world);
     }
     
     private void disassembledBlockStates() {
+        HashMap<BlockPos, BlockState> newStates = new HashMap<>();
         blocks.forEach(block -> {
-            if (block.doBlockStateUpdate()) {
-                world.setBlockState(block.getPos(), block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
-            }
             if (block instanceof RectangularMultiblockTile) {
                 ((RectangularMultiblockTile) block).position = RectangularMultiblockPositions.DISASSEMBLED;
             }
-            world.notifyBlockUpdate(block.getPos(), block.getBlockState(), block.getBlockState(), BLOCK_UPDATE + NOTIFY_NEIGHBORS);
-            block.markDirty();
+            if (block.doBlockStateUpdate()) {
+                newStates.put(block.getPos(), block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
+            }
         });
+        Util.setBlockStates(newStates, world);
     }
     
     protected void onAssembly() {

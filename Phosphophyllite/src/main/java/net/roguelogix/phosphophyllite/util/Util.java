@@ -3,10 +3,13 @@ package net.roguelogix.phosphophyllite.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -16,6 +19,9 @@ import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class Util {
@@ -70,7 +76,7 @@ public class Util {
                             for (int z = sectionMinZ; z < sectionMaxZ; z++) {
                                 currentPosition.set(x, y, z);
                                 BlockState state = Blocks.AIR.getDefaultState();
-                                if(chunkSection != null){
+                                if (chunkSection != null) {
                                     state = chunkSection.getBlockState(x & 15, y & 15, z & 15);
                                 }
                                 func.accept(state, currentPosition);
@@ -91,5 +97,31 @@ public class Util {
                 chunk.markDirty();
             }
         }
+    }
+    
+    public static void setBlockStates(Map<BlockPos, BlockState> newStates, World world) {
+        HashMap<BlockPos, HashMap<BlockPos, BlockState>> stateChunks = new HashMap<>();
+        BlockPos.Mutable chunkPos = new BlockPos.Mutable();
+        newStates.forEach((pos, state) -> {
+            chunkPos.setPos(pos.getX() >> 4, 0, pos.getZ() >> 4);
+            HashMap<BlockPos, BlockState> chunksNewStates = stateChunks.get(chunkPos);
+            if (chunksNewStates == null) {
+                chunksNewStates = new HashMap<>();
+                stateChunks.put(chunkPos.toImmutable(), chunksNewStates);
+            }
+            chunksNewStates.put(pos, state);
+        });
+        stateChunks.forEach((cPos, states) -> {
+            Chunk chunk = world.getChunk(cPos.getX(), cPos.getZ());
+            ChunkSection[] chunkSections = chunk.getSections();
+            states.forEach((bPos, state) -> {
+                ChunkSection section = chunkSections[bPos.getY() >> 4];
+                if(section != null) {
+                    BlockState oldState = section.setBlockState(bPos.getX() & 15, bPos.getY() & 15, bPos.getZ() & 15, state);
+                    world.notifyBlockUpdate(bPos, oldState, state, 0);
+                }
+            });
+            chunk.markDirty();
+        });
     }
 }
