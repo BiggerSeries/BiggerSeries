@@ -27,12 +27,12 @@ public class Config {
     public static class Reactor {
         //TODO: remove max, its only there because of the render system
         //      multiblock system can take *much* larger structures
-        @PhosphophylliteConfig.Value(min = 3, max = 32)
-        public static int MaxLength = 32;
-        @PhosphophylliteConfig.Value(min = 3, max = 32)
-        public static int MaxWidth = 32;
-        @PhosphophylliteConfig.Value(min = 3, max = 48)
-        public static int MaxHeight = 48;
+        @PhosphophylliteConfig.Value(min = 3, max = 192)
+        public static int MaxLength = 64;
+        @PhosphophylliteConfig.Value(min = 3, max = 192)
+        public static int MaxWidth = 64;
+        @PhosphophylliteConfig.Value(min = 3, max = 256)
+        public static int MaxHeight = 96;
         
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelUsageMultiplier = 1;
@@ -116,11 +116,11 @@ public class Config {
     
     @PhosphophylliteConfig
     public static class Turbine {
-        @PhosphophylliteConfig.Value(min = 5, max = 32)
+        @PhosphophylliteConfig.Value(min = 5, max = 192)
         public static int MaxLength = 32;
-        @PhosphophylliteConfig.Value(min = 5, max = 32)
+        @PhosphophylliteConfig.Value(min = 5, max = 192)
         public static int MaxWidth = 32;
-        @PhosphophylliteConfig.Value(min = 4, max = 48)
+        @PhosphophylliteConfig.Value(min = 4, max = 256)
         public static int MaxHeight = 48;
         
         @PhosphophylliteConfig.Value(min = 1)
