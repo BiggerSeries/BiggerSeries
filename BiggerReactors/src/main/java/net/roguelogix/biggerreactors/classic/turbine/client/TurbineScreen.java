@@ -72,9 +72,9 @@ public class TurbineScreen extends GuiScreenBase<TurbineContainer> implements IH
         // Initialize turbine bar symbols.
         this.symbolTachometer = new GuiSymbol<>(this, 89, 5, 0, 32,
                 new TranslationTextComponent("tooltip.biggerreactors.symbols.turbine.tachometer").getString());
-        this.symbolIntakeTank = new GuiSymbol<>(this, 111, 5, 32, 32,
+        this.symbolIntakeTank = new GuiSymbol<>(this, 111, 5, 48, 32,
                 new TranslationTextComponent("tooltip.biggerreactors.symbols.turbine.intake_tank").getString());
-        this.symbolExhaustTank = new GuiSymbol<>(this, 133, 5, 48, 32,
+        this.symbolExhaustTank = new GuiSymbol<>(this, 133, 5, 32, 32,
                 new TranslationTextComponent("tooltip.biggerreactors.symbols.turbine.exhaust_tank").getString());
         this.symbolEnergyTank = new GuiSymbol<>(this, 155, 5, 96, 32,
                 new TranslationTextComponent("tooltip.biggerreactors.symbols.turbine.energy_tank").getString());
