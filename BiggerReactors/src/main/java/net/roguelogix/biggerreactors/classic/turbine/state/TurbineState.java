@@ -14,65 +14,65 @@ public class TurbineState implements GuiSync.IGUIPacket {
     /**
      * The activity status for the turbine.
      */
-    public TurbineActivity turbineActivity;
+    public TurbineActivity turbineActivity = TurbineActivity.INACTIVE;
     /**
      * The current vent state.
      */
-    public VentState ventState;
+    public VentState ventState = VentState.CLOSED;
     /**
      * Status of the induction coils.
      */
-    public boolean coilStatus;
+    public boolean coilStatus = false;
     
     /**
      * The current max flow rate.
      */
-    public long flowRate;
+    public long flowRate = 0;
     
     /**
      * The current energy efficiency of the turbine.
      */
-    public double efficiencyRate;
+    public double efficiencyRate = 0;
     /**
      * Output rate of the turbine.
      */
-    public double turbineOutputRate;
+    public double turbineOutputRate = 0;
     
     /**
      * The current RPM of the turbine.
      */
-    public double currentRPM;
+    public double currentRPM = 0;
     /**
      * The max RPM the turbine can handle.
      */
-    public double maxRPM;
+    public double maxRPM = 0;
     
     /**
      * The amount of intake stored in t he turbine.
      */
-    public long intakeStored;
+    public long intakeStored = 0;
     /**
      * The max intake capacity of the turbine.
      */
-    public long intakeCapacity;
+    public long intakeCapacity = 0;
     
     /**
      * The amount of exhaust stored in the turbine.
      */
-    public long exhaustStored;
+    public long exhaustStored = 0;
     /**
      * The max exhaust capacity of the turbine.
      */
-    public long exhaustCapacity;
+    public long exhaustCapacity = 0;
     
     /**
      * The amount of energy stored in the turbine.
      */
-    public long energyStored;
+    public long energyStored = 0;
     /**
      * The max energy capacity of the turbine.
      */
-    public long energyCapacity;
+    public long energyCapacity = 0;
     
     /**
      * The tile whose information this belongs to.

@@ -1,5 +1,6 @@
 package net.roguelogix.biggerreactors.classic.reactor.state;
 
+import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorTerminalTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 
@@ -13,78 +14,78 @@ public class ReactorState implements GuiSync.IGUIPacket {
     /**
      * The activity status for the reactor.
      */
-    public ReactorActivity reactorActivity;
+    public ReactorActivity reactorActivity = ReactorActivity.INACTIVE;
     /**
      * The type of reactor.
      */
-    public ReactorType reactorType;
+    public ReactorType reactorType = ReactorType.PASSIVE;
     
     /**
      * Is auto-ejection of waste enabled.
      */
-    public boolean doAutoEject;
+    public boolean doAutoEject = false;
     
     /**
      * The amount of energy stored in the reactor.
      */
-    public long energyStored;
+    public long energyStored = 0;
     /**
      * The max energy capacity of the reactor.
      */
-    public long energyCapacity;
+    public long energyCapacity = 0;
     
     /**
      * The amount of waste stored in the reactor.
      */
-    public long wasteStored;
+    public long wasteStored = 0;
     /**
      * The amount of fuel stored in the reactor.
      */
-    public long fuelStored;
+    public long fuelStored = 0;
     /**
      * The max fuel capacity of the reactor.
      */
-    public long fuelCapacity;
+    public long fuelCapacity = 0;
     
     /**
      * The temperature of the fuel in the reactor.
      */
-    public double fuelHeatStored;
+    public double fuelHeatStored = 0;
     /**
      * The temperature of the case of the reactor.
      */
-    public double caseHeatStored;
+    public double caseHeatStored = 0;
     
     /**
      * The rate at which reactions occur (per tick).
      */
-    public double reactivityRate;
+    public double reactivityRate = 0;
     /**
      * The rate at which fuel is consumed (per tick).
      */
-    public double fuelUsageRate;
+    public double fuelUsageRate = 0;
     /**
      * Output rate of the reactor (RF for passive, Steam for active).
      */
-    public double reactorOutputRate;
+    public double reactorOutputRate = 0;
     
     /**
      * [Active-Only] The amount of coolant stored in the reactor.
      */
-    public long coolantStored;
+    public long coolantStored = 0;
     /**
      * [Active-Only] The max coolant capacity of the reactor.
      */
-    public long coolantCapacity;
+    public long coolantCapacity = 0;
     
     /**
      * [Active-Only] The amount of steam stored in the reactor.
      */
-    public long steamStored;
+    public long steamStored = 0;
     /**
      * [Active-Only] The max steam capacity of the reactor.
      */
-    public long steamCapacity;
+    public long steamCapacity = 0;
     
     /**
      * The tile whose information this belongs to.

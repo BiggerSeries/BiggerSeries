@@ -78,7 +78,33 @@
 
   "screen.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
   "screen.biggerreactors.reactor_access_port": "Reactor Access Port",
+  "screen.biggerreactors.reactor_redstone_port": "Reactor Redstone Port",
   "screen.biggerreactors.turbine_coolant_port": "Turbine Coolant Port",
+
+  "tooltip.biggerreactors.buttons.redstone_port.commit": "§bCommit changes.",
+  "tooltip.biggerreactors.buttons.redstone_port.revert": "§bRevert changes.",
+
+  "screen.biggerreactors.status.redstone.pick_setting": "Pick a setting:",
+  "screen.biggerreactors.status.redstone.input_activity": "Input - Enable/Disable",
+  "screen.biggerreactors.status.redstone.input_control_rod_insertion": "Input - Control Rod Insertion",
+  "screen.biggerreactors.status.redstone.input_eject_waste": "Input - Eject Waste",
+  "screen.biggerreactors.status.redstone.output_fuel_temp": "Output - Fuel Temperature",
+  "screen.biggerreactors.status.redstone.output_casing_temp": "Output - Casing Temperature",
+  "screen.biggerreactors.status.redstone.output_fuel_enrichment": "Output - Fuel Enrichment",
+  "screen.biggerreactors.status.redstone.output_fuel_amount": "Output - Fuel Amount",
+  "screen.biggerreactors.status.redstone.output_waste_amount": "Output - Waste Amount",
+  "screen.biggerreactors.status.redstone.output_energy_amount": "Output - Energy Amount",
+
+  "screen.biggerreactors.status.redstone.while_on": "While on:",
+  "screen.biggerreactors.status.redstone.while_off": "While off:",
+  "screen.biggerreactors.status.redstone.trigger_at": "Trigger at:",
+  "screen.biggerreactors.status.redstone.set_to": "Set to:",
+  "screen.biggerreactors.status.redstone.set_on_pulse": "Set on Pulse",
+  "screen.biggerreactors.status.redstone.toggle_on_pulse": "Toggle on Pulse",
+  "screen.biggerreactors.status.redstone.set_from_signal": "Set on Signal",
+  "screen.biggerreactors.status.redstone.eject_on_pulse": "Eject on Pulse",
+  "screen.biggerreactors.status.redstone.active_while_below": "Active while Below",
+  "screen.biggerreactors.status.redstone.active_while_above": "Active while Above",
 
   "tooltip.biggerreactors.status.io.input": "§2Accepting Input",
   "tooltip.biggerreactors.status.io.output": "§cProviding Output",
@@ -87,7 +113,7 @@
 
   "tooltip.biggerreactors.symbols.io.gui_change": "§b\"This GUI is missing the input slots!\"\nThe I/O ports have been rewritten!\nTo insert/extract materials, use a\nhopper or pipe.",
   "tooltip.biggerreactors.symbols.io.input": "§bThis port is currently accepting input.",
-  "tooltip.biggerreactors.symbols.io.input": "§bThis port is currently providing output.",
+  "tooltip.biggerreactors.symbols.io.output": "§bThis port is currently providing output.",
 
   "screen.biggerreactors.turbine_terminal": "Turbine Info",
   "block.biggerreactors.turbine_terminal": "Turbine Terminal",
