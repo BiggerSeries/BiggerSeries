@@ -168,13 +168,12 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         if (tempDiff > 0.01f) {
             double rfTransferred = tempDiff * reactorToCoolantSystemHeatTransferCoefficient;
             double reactorRf = getRFFromVolumeAndTemp(reactorVolume(), reactorHeat);
-            rfTransferred *= Config.Reactor.OutputMultiplier;
             
             if (passive) {
                 rfTransferred *= Config.Reactor.PassiveCoolingTransferEfficiency;
-                FEProducedLastTick = rfTransferred;
+                FEProducedLastTick = rfTransferred * Config.Reactor.OutputMultiplier * Config.Reactor.PassiveOutputMultiplier;
             } else {
-                rfTransferred -= coolantTank.absorbHeat(rfTransferred);
+                rfTransferred -= coolantTank.absorbHeat(rfTransferred * Config.Reactor.OutputMultiplier * Config.Reactor.ActiveOutputMultiplier);
                 FEProducedLastTick = coolantTank.getFluidVaporizedLastTick(); // Piggyback so we don't have useless stuff in the update packet
             }
             
@@ -260,11 +259,11 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         rawRadIntensity = rawRadIntensity * controlRodModifier;
         
         // Now nerf actual radiation production based on heat.
-        double effectiveRadIntensity = scaledRadIntensity * (1f + (double) (-Config.Reactor.RadIntensityScalingMultiplier * Math.exp(-10f * Config.Reactor.RadIntensityScalingShiftMultiplier * Math.exp(-0.001f * Config.Reactor.RadIntensityScalingRateExponentMultiplier * fuelHeat))));
+        double effectiveRadIntensity = scaledRadIntensity * (1f + (-Config.Reactor.RadIntensityScalingMultiplier * Math.exp(-10f * Config.Reactor.RadIntensityScalingShiftMultiplier * Math.exp(-0.001f * Config.Reactor.RadIntensityScalingRateExponentMultiplier * fuelHeat))));
         
         // Radiation hardness starts at 20% and asymptotically approaches 100% as heat rises.
         // This will make radiation harder and harder to capture.
-        double radHardness = 0.2f + (double) (0.8 * radiationPenaltyBase);
+        double radHardness = 0.2f + (0.8 * radiationPenaltyBase);
         
         // Calculate based on propagation-to-self
         double rawFuelUsage = (Config.Reactor.FuelPerRadiationUnit * rawRadIntensity / getFertility()) * Config.Reactor.FuelUsageMultiplier; // Not a typo. Fuel usage is thus penalized at high heats.
@@ -371,7 +370,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         if (fuelFertility <= 1f) {
             return 1f;
         } else {
-            return (double) (Math.log10(fuelFertility) + 1);
+            return Math.log10(fuelFertility) + 1;
         }
     }
     

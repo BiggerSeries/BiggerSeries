@@ -2,6 +2,7 @@ package net.roguelogix.phosphophyllite.multiblock.rectangular;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -246,6 +247,7 @@ public class RectangularMultiblockController extends MultiblockController {
             }
         });
         Util.setBlockStates(newStates, world);
+        blocks.forEach(TileEntity::markDirty);
     }
     
     private void disassembledBlockStates() {
@@ -259,6 +261,7 @@ public class RectangularMultiblockController extends MultiblockController {
             }
         });
         Util.setBlockStates(newStates, world);
+        blocks.forEach(TileEntity::markDirty);
     }
     
     protected void onAssembly() {

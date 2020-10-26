@@ -37,7 +37,11 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelUsageMultiplier = 1;
         @PhosphophylliteConfig.Value(min = 0)
-        public static float OutputMultiplier = 0.5f;
+        public static float OutputMultiplier = 1.0f;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float PassiveOutputMultiplier = 0.5f;
+        @PhosphophylliteConfig.Value(min = 0)
+        public static float ActiveOutputMultiplier = 1.0f;
         @PhosphophylliteConfig.Value(min = 0)
         public static float AmbientTemperature = 20.0f;
         @PhosphophylliteConfig.Value(min = 1)
