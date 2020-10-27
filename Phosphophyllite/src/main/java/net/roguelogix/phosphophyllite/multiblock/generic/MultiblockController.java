@@ -289,9 +289,8 @@ public class MultiblockController {
 //        System.out.println("VALIDATED! " + this.hashCode() + "\t" + validated + "\t" + ((float) (endTime - startTime) / 1_000_000));
         if (validated) {
             state = AssemblyState.ASSEMBLED;
-            if (storedNBT != null) {
+            if (storedNBT != null && oldState == AssemblyState.PAUSED) {
                 read(storedNBT.getCompound("userdata"));
-                storedNBT = null;
             }
             blocks.forEach(block -> world.notifyNeighborsOfStateChange(block.getPos(), block.getBlockState().getBlock()));
             onAssembled();
@@ -348,7 +347,8 @@ public class MultiblockController {
                 // dont just shove this into this.state
                 // if you do onDisassembled will be called incorrectly
                 AssemblyState nbtState = AssemblyState.valueOf(multiblockData.getString("assemblyState"));
-                if (state == AssemblyState.DISASSEMBLED && nbtState == AssemblyState.PAUSED) {
+                // because minecraft is dumb, and saves chunks before unloading them, i need to treat assembled as paused too
+                if (state == AssemblyState.DISASSEMBLED && (nbtState == AssemblyState.PAUSED || nbtState == AssemblyState.ASSEMBLED)) {
                     state = AssemblyState.PAUSED;
                 }
             }
