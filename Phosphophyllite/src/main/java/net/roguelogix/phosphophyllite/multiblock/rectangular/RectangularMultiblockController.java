@@ -190,60 +190,60 @@ public class RectangularMultiblockController extends MultiblockController {
     private void assembledBlockStates() {
         HashMap<BlockPos, BlockState> newStates = new HashMap<>();
         blocks.forEach(block -> {
-            BlockPos pos = block.getPos();
-            
-            int extremes = 0;
-            int frameLoc = 0;
-            if (pos.getX() == minX() || pos.getX() == maxX()) {
-                extremes++;
-                frameLoc += 1;
-            }
-            if (pos.getY() == minY() || pos.getY() == maxY()) {
-                extremes++;
-                frameLoc += 2;
-            }
-            if (pos.getZ() == minZ() || pos.getZ() == maxZ()) {
-                extremes++;
-                frameLoc += 4;
-            }
-            RectangularMultiblockPositions position;
-            switch (extremes) {
-                case 3: {
-                    position = RectangularMultiblockPositions.CORNER;
-                    break;
-                }
-                case 2: {
-                    switch (frameLoc) {
-                        case 3: {
-                            position = RectangularMultiblockPositions.FRAME_Z;
-                            break;
-                        }
-                        default:
-                        case 5: {
-                            position = RectangularMultiblockPositions.FRAME_Y;
-                            break;
-                        }
-                        case 6: {
-                            position = RectangularMultiblockPositions.FRAME_X;
-                            break;
-                        }
-                    }
-                    break;
-                }
-                case 1: {
-                    position = RectangularMultiblockPositions.FACE;
-                    break;
-                }
-                default: {
-                    position = RectangularMultiblockPositions.INTERIOR;
-                    break;
-                }
-            }
             if (block instanceof RectangularMultiblockTile) {
+                BlockPos pos = block.getPos();
+                
+                int extremes = 0;
+                int frameLoc = 0;
+                if (pos.getX() == minX() || pos.getX() == maxX()) {
+                    extremes++;
+                    frameLoc += 1;
+                }
+                if (pos.getY() == minY() || pos.getY() == maxY()) {
+                    extremes++;
+                    frameLoc += 2;
+                }
+                if (pos.getZ() == minZ() || pos.getZ() == maxZ()) {
+                    extremes++;
+                    frameLoc += 4;
+                }
+                RectangularMultiblockPositions position;
+                switch (extremes) {
+                    case 3: {
+                        position = RectangularMultiblockPositions.CORNER;
+                        break;
+                    }
+                    case 2: {
+                        switch (frameLoc) {
+                            case 3: {
+                                position = RectangularMultiblockPositions.FRAME_Z;
+                                break;
+                            }
+                            default:
+                            case 5: {
+                                position = RectangularMultiblockPositions.FRAME_Y;
+                                break;
+                            }
+                            case 6: {
+                                position = RectangularMultiblockPositions.FRAME_X;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case 1: {
+                        position = RectangularMultiblockPositions.FACE;
+                        break;
+                    }
+                    default: {
+                        position = RectangularMultiblockPositions.INTERIOR;
+                        break;
+                    }
+                }
                 ((RectangularMultiblockTile) block).position = position;
-            }
-            if (block.doBlockStateUpdate()) {
-                newStates.put(pos, block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, position));
+                if (block.doBlockStateUpdate()) {
+                    newStates.put(pos, block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, position));
+                }
             }
         });
         Util.setBlockStates(newStates, world);
@@ -255,9 +255,9 @@ public class RectangularMultiblockController extends MultiblockController {
         blocks.forEach(block -> {
             if (block instanceof RectangularMultiblockTile) {
                 ((RectangularMultiblockTile) block).position = RectangularMultiblockPositions.DISASSEMBLED;
-            }
-            if (block.doBlockStateUpdate()) {
-                newStates.put(block.getPos(), block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
+                if (block.doBlockStateUpdate()) {
+                    newStates.put(block.getPos(), block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
+                }
             }
         });
         Util.setBlockStates(newStates, world);
