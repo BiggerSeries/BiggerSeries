@@ -24,6 +24,7 @@ public class MultiblockController {
     protected final World world;
     
     protected final Set<MultiblockTile> blocks = new HashSet<>();
+    protected final Set<ITickableMultiblockTile> toTick = new HashSet<>();
     private boolean checkForDetachments = false;
     private long updateAssemblyAtTick = Long.MAX_VALUE;
     protected final Set<MultiblockController> controllersToMerge = new HashSet<>();
@@ -115,6 +116,9 @@ public class MultiblockController {
         
         // ok, its a valid tile to attach, so ima attach it
         blocks.add(toAttach);
+        if(toAttach instanceof ITickableMultiblockTile){
+            toTick.add((ITickableMultiblockTile) toAttach);
+        }
         toAttach.controller = this;
         onPartAdded(toAttach);
         world.setBlockState(toAttach.getPos(), toAttach.getBlockState().getBlock().getDefaultState());
@@ -133,6 +137,9 @@ public class MultiblockController {
     
     final void detach(@Nonnull MultiblockTile toDetach, boolean onChunkUnload) {
         blocks.remove(toDetach);
+        if(toDetach instanceof ITickableMultiblockTile) {
+            toTick.remove(toDetach);
+        }
         onPartRemoved(toDetach);
         toDetach.attemptAttach();
         if (onChunkUnload) {
@@ -223,6 +230,8 @@ public class MultiblockController {
             HashSet<MultiblockTile> toOrphan = new HashSet<>(blocks);
             toOrphan.removeAll(toSave);
             blocks.removeAll(toOrphan);
+            //noinspection SuspiciousMethodCalls
+            toTick.removeAll(toOrphan);
             if (!toOrphan.isEmpty()) {
                 for (MultiblockTile tile : toOrphan) {
                     detach(tile);
@@ -246,6 +255,7 @@ public class MultiblockController {
         controllersToMerge.clear();
         if (state == AssemblyState.ASSEMBLED) {
             tick();
+            toTick.forEach(ITickableMultiblockTile::tick);
         }
     }
     
