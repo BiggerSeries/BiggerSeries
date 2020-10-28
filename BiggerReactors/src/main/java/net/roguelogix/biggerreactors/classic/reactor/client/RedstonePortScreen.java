@@ -49,15 +49,25 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.updateTexture(new ResourceLocation(BiggerReactors.modid, "textures/screen/redstone_port.png"), 0, 0);
 
         // Initialize selectors.
-        selectorInputActivity = new GuiRedstoneTriggerSelectorToggle<>(this, 8, 30, 16, 16, "", RedstonePortSelector.INPUT_ACTIVITY);
-        selectorInputControlRodInsertion = new GuiRedstoneTriggerSelectorToggle<>(this, 28, 30, 16, 16, "", RedstonePortSelector.INPUT_CONTROL_ROD_INSERTION);
-        selectorInputEjectWaste = new GuiRedstoneTriggerSelectorToggle<>(this, 48, 30, 16, 16, "", RedstonePortSelector.INPUT_EJECT_WASTE);
-        selectorOutputFuelTemp = new GuiRedstoneTriggerSelectorToggle<>(this, 68, 30, 16, 16, "", RedstonePortSelector.OUTPUT_FUEL_TEMP);
-        selectorOutputCasingTemp = new GuiRedstoneTriggerSelectorToggle<>(this, 88, 30, 16, 16, "", RedstonePortSelector.OUTPUT_CASING_TEMP);
-        selectorOutputFuelEnrichment = new GuiRedstoneTriggerSelectorToggle<>(this, 8,  50, 16, 16, "", RedstonePortSelector.OUTPUT_FUEL_ENRICHMENT);
-        selectorOutputFuelAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 28, 50, 16, 16, "", RedstonePortSelector.OUTPUT_FUEL_AMOUNT);
-        selectorOutputWasteAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 48, 50, 16, 16, "", RedstonePortSelector.OUTPUT_WASTE_AMOUNT);
-        selectorOutputEnergyAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 68, 50, 16, 16, "", RedstonePortSelector.OUTPUT_ENERGY_AMOUNT);
+        // I reuse the translation strings for the screen.
+        selectorInputActivity = new GuiRedstoneTriggerSelectorToggle<>(this, 8, 30, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_activity").getString(), RedstonePortSelector.INPUT_ACTIVITY);
+        selectorInputControlRodInsertion = new GuiRedstoneTriggerSelectorToggle<>(this, 28, 30, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_control_rod_insertion").getString(), RedstonePortSelector.INPUT_CONTROL_ROD_INSERTION);
+        selectorInputEjectWaste = new GuiRedstoneTriggerSelectorToggle<>(this, 48, 30, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_eject_waste").getString(), RedstonePortSelector.INPUT_EJECT_WASTE);
+        selectorOutputFuelTemp = new GuiRedstoneTriggerSelectorToggle<>(this, 68, 30, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_temp").getString(), RedstonePortSelector.OUTPUT_FUEL_TEMP);
+        selectorOutputCasingTemp = new GuiRedstoneTriggerSelectorToggle<>(this, 88, 30, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_casing_temp").getString(), RedstonePortSelector.OUTPUT_CASING_TEMP);
+        selectorOutputFuelEnrichment = new GuiRedstoneTriggerSelectorToggle<>(this, 8, 50, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_enrichment").getString(), RedstonePortSelector.OUTPUT_FUEL_ENRICHMENT);
+        selectorOutputFuelAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 28, 50, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_amount").getString(), RedstonePortSelector.OUTPUT_FUEL_AMOUNT);
+        selectorOutputWasteAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 48, 50, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_waste_amount").getString(), RedstonePortSelector.OUTPUT_WASTE_AMOUNT);
+        selectorOutputEnergyAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 68, 50, 16, 16,
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_energy_amount").getString(), RedstonePortSelector.OUTPUT_ENERGY_AMOUNT);
 
         commitButton = new GuiRedstoneCommitButton<>(this, 152, 30, 16, 16, true);
         revertButton = new GuiRedstoneCommitButton<>(this, 152, 50, 16, 16, false);
@@ -112,7 +122,8 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
                 toggleActiveAboveOrBelow.mouseClicked(mouseX, mouseY, button);
                 break;
             }
-            default: break;
+            default:
+                break;
         }
 
         textMainBuffer.mouseClicked(mouseX, mouseY, button);
@@ -167,7 +178,8 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
                 textMainBuffer.mouseReleased(mouseX, mouseY, button);
                 break;
             }
-            default: break;
+            default:
+                break;
         }
 
         return true;
@@ -257,16 +269,35 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         selectorOutputEnergyAmount.drawPart(mStack);
 
         switch (RedstonePortSelector.valueOf(this.redstonePortState.settingId)) {
-            case INPUT_ACTIVITY: renderInputActivityOptions(mStack); break;
-            case INPUT_CONTROL_ROD_INSERTION: renderInputControlRodInsertion(mStack); break;
-            case INPUT_EJECT_WASTE: renderInputEjectWaste(mStack); break;
-            case OUTPUT_FUEL_TEMP: renderOutputFuelTemp(mStack); break;
-            case OUTPUT_CASING_TEMP: renderOutputCasingTemp(mStack); break;
-            case OUTPUT_FUEL_ENRICHMENT: renderOutputFuelEnrichment(mStack); break;
-            case OUTPUT_FUEL_AMOUNT: renderOutputFuelAmount(mStack); break;
-            case OUTPUT_WASTE_AMOUNT: renderOutputWasteAmount(mStack); break;
-            case OUTPUT_ENERGY_AMOUNT: renderOutputEnergyAmount(mStack); break;
-            default: break;
+            case INPUT_ACTIVITY:
+                renderInputActivityOptions(mStack);
+                break;
+            case INPUT_CONTROL_ROD_INSERTION:
+                renderInputControlRodInsertion(mStack);
+                break;
+            case INPUT_EJECT_WASTE:
+                renderInputEjectWaste(mStack);
+                break;
+            case OUTPUT_FUEL_TEMP:
+                renderOutputFuelTemp(mStack);
+                break;
+            case OUTPUT_CASING_TEMP:
+                renderOutputCasingTemp(mStack);
+                break;
+            case OUTPUT_FUEL_ENRICHMENT:
+                renderOutputFuelEnrichment(mStack);
+                break;
+            case OUTPUT_FUEL_AMOUNT:
+                renderOutputFuelAmount(mStack);
+                break;
+            case OUTPUT_WASTE_AMOUNT:
+                renderOutputWasteAmount(mStack);
+                break;
+            case OUTPUT_ENERGY_AMOUNT:
+                renderOutputEnergyAmount(mStack);
+                break;
+            default:
+                break;
         }
 
         commitButton.drawPart(mStack);
@@ -277,7 +308,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.togglePulseOrSignal.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.input_activity").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerPulseOrSignal) {
+        if (redstonePortState.triggerPulseOrSignal) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.set_from_signal").getString(), 26, 96, 4210752);
         } else {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.toggle_on_pulse").getString(), 26, 96, 4210752);
@@ -288,7 +319,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.togglePulseOrSignal.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.input_control_rod_insertion").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerPulseOrSignal) {
+        if (redstonePortState.triggerPulseOrSignal) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.set_from_signal").getString(), 26, 96, 4210752);
 
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.while_on").getString(), 8, 114, 4210752);
@@ -317,7 +348,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.toggleActiveAboveOrBelow.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_temp").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerAboveOrBelow) {
+        if (redstonePortState.triggerAboveOrBelow) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_below").getString(), 26, 96, 4210752);
         } else {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_above").getString(), 26, 96, 4210752);
@@ -332,7 +363,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.toggleActiveAboveOrBelow.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.output_casing_temp").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerAboveOrBelow) {
+        if (redstonePortState.triggerAboveOrBelow) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_below").getString(), 26, 96, 4210752);
         } else {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_above").getString(), 26, 96, 4210752);
@@ -347,7 +378,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.toggleActiveAboveOrBelow.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_enrichment").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerAboveOrBelow) {
+        if (redstonePortState.triggerAboveOrBelow) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_below").getString(), 26, 96, 4210752);
         } else {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_above").getString(), 26, 96, 4210752);
@@ -362,7 +393,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.toggleActiveAboveOrBelow.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_amount").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerAboveOrBelow) {
+        if (redstonePortState.triggerAboveOrBelow) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_below").getString(), 26, 96, 4210752);
         } else {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_above").getString(), 26, 96, 4210752);
@@ -377,7 +408,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.toggleActiveAboveOrBelow.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.output_waste_amount").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerAboveOrBelow) {
+        if (redstonePortState.triggerAboveOrBelow) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_below").getString(), 26, 96, 4210752);
         } else {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_above").getString(), 26, 96, 4210752);
@@ -392,7 +423,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         this.toggleActiveAboveOrBelow.drawPart(mStack);
         this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.output_energy_amount").getString(), 8, 76, 4210752);
 
-        if(redstonePortState.triggerAboveOrBelow) {
+        if (redstonePortState.triggerAboveOrBelow) {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_below").getString(), 26, 96, 4210752);
         } else {
             this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.active_while_above").getString(), 26, 96, 4210752);
