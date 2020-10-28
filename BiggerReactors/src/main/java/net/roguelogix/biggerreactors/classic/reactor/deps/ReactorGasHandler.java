@@ -26,12 +26,12 @@ public class ReactorGasHandler implements IGasHandler {
         EMPTY_TANK = (IGasHandler) ChemicalTankBuilder.GAS.createDummy(0);
     }
     
-    public static long pushSteamToHandler(IGasHandler handler, long amount){
+    public static long pushSteamToHandler(IGasHandler handler, long amount) {
         steamStack.setAmount(amount);
         return amount - handler.insertChemical(steamStack, Action.EXECUTE).getAmount();
     }
     
-    public static boolean isValidHandler(IGasHandler handler){
+    public static boolean isValidHandler(IGasHandler handler) {
         for (int i = 0; i < handler.getTanks(); i++) {
             if (handler.isValid(i, steamStack)) {
                 return true;
@@ -56,7 +56,7 @@ public class ReactorGasHandler implements IGasHandler {
     @Override
     @Nonnull
     public GasStack getChemicalInTank(int tank) {
-        if(tank == 0){
+        if (tank == 0 && controllerSupplier.get() != null) {
             steamStack.setAmount(controllerSupplier.get().getSteamAmount());
             return steamStack;
         }
@@ -69,11 +69,8 @@ public class ReactorGasHandler implements IGasHandler {
     
     @Override
     public long getTankCapacity(int tank) {
-        if(tank == 0) {
+        if (tank == 0 && controllerSupplier.get() != null) {
             ReactorMultiblockController controller = controllerSupplier.get();
-            if (controller == null) {
-                return 0;
-            }
             return controller.getSteamCapacity();
         }
         return 0;
@@ -81,7 +78,7 @@ public class ReactorGasHandler implements IGasHandler {
     
     @Override
     public boolean isValid(int tank, @Nonnull GasStack stack) {
-        if(tank == 0){
+        if (tank == 0) {
             return stack.getRaw() == steam;
         }
         return false;
@@ -96,7 +93,7 @@ public class ReactorGasHandler implements IGasHandler {
     @Override
     @Nonnull
     public GasStack extractChemical(int tank, long amount, @Nonnull Action action) {
-        if(tank == 1) {
+        if (tank == 1 && controllerSupplier.get() != null) {
             boolean simulate = action.simulate();
             long extracted = controllerSupplier.get().extractSteam(amount, simulate);
             steamStack.setAmount(extracted);

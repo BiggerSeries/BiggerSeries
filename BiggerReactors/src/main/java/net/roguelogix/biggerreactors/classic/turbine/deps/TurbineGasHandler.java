@@ -41,7 +41,7 @@ public class TurbineGasHandler implements IGasHandler{
     @Nonnull
     @Override
     public GasStack getChemicalInTank(int tank) {
-        if(tank == 0){
+        if(tank == 0 && controllerSupplier.get() != null){
             steamStack.setAmount(controllerSupplier.get().CCgetInputAmount());
             return steamStack;
         }
@@ -68,7 +68,7 @@ public class TurbineGasHandler implements IGasHandler{
     @Nonnull
     @Override
     public GasStack insertChemical(int tank, @Nonnull GasStack stack, @Nonnull Action action) {
-        if(tank != 0 || stack.getRaw() != steam){
+        if(tank != 0 || stack.getRaw() != steam || controllerSupplier.get() == null){
             return stack;
         }
         boolean simulated = action.simulate();
