@@ -1,20 +1,20 @@
 # 1.16.3-0.0.4
-Fix saving issues with dedicated servers
-updated zh_cn translation
+ - Fix saving issues with dedicated servers
+ - updated zh_cn translation
 
 # 1.16.3-0.0.3
-fix java 9+ compatibility
+ - fix java 9+ compatibility
 
 # 1.16.3-0.0.2
-alphabetically sort creative menu
-add zh_cn translation (thanks qsefthuopq)
-remove ROTN
-remove baked model support from multiblock API
+ - alphabetically sort creative menu
+ - add zh_cn translation (thanks qsefthuopq)
+ - remove ROTN
+ - remove baked model support from multiblock API
 
 # 1.16.3-0.0.1
-added deps package as ignored package in the registry for soft dependencies
+ - added deps package as ignored package in the registry for soft dependencies
 
 # 1.16.3-0.0.0
-first separated release
+ - first separated release
 
 what changes did you expect, there is nothing to change before here
