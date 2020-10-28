@@ -9,7 +9,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterFluid;
 
 import javax.annotation.Nonnull;
 
-@RegisterFluid(name = "fluid_irradiated_steam")
+@RegisterFluid(name = "fluid_irradiated_steam", registerBucket = true)
 public class FluidIrradiatedSteam extends PhosphophylliteFluid {
     
     @RegisterFluid.Instance
