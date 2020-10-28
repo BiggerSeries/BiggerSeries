@@ -27,7 +27,7 @@ public class FluidYellorium extends PhosphophylliteFluid {
     @Nonnull
     public FluidAttributes createAttributes() {
         return FluidAttributes.builder(TEXTURE_STILL, TEXTURE_FLOWING)
-                .color(0xBCBA50)
+                .color(0xFFBCBA50)
                 .sound(SoundEvents.ITEM_BUCKET_FILL, SoundEvents.ITEM_BUCKET_EMPTY)
                 .overlay(TEXTURE_OVERLAY)
                 .density(1)

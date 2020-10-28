@@ -3,6 +3,7 @@
 
   "item.biggerreactors.wrench": "Reactor Wrench",
 
+  "fluid.biggerreactors.fluid_yellorium": "Fluid Yellorium",
   "item.biggerreactors.fluid_yellorium_bucket": "Fluid Yellorium Bucket",
   "fluid.biggerreactors.fluid_irradiated_steam": "Irradiated Steam",
   "item.biggerreactors.fluid_irradiated_steam_bucket": "Irradiated Steam Bucket",
@@ -88,7 +89,7 @@
 
   "tooltip.biggerreactors.symbols.io.gui_change": "§b\"This GUI is missing the input slots!\"\nThe I/O ports have been rewritten!\nTo insert/extract materials, use a\nhopper or pipe.",
   "tooltip.biggerreactors.symbols.io.input": "§bThis port is currently accepting input.",
-  "tooltip.biggerreactors.symbols.io.input": "§bThis port is currently providing output.",
+  "tooltip.biggerreactors.symbols.io.output": "§bThis port is currently providing output.",
 
   "screen.biggerreactors.turbine_terminal": "Turbine Info",
   "block.biggerreactors.turbine_terminal": "Turbine Terminal",
