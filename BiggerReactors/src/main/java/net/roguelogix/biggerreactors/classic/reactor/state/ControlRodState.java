@@ -13,12 +13,12 @@ public class ControlRodState implements GuiSync.IGUIPacket {
     /**
      * The name of this control rod.
      */
-    public String name;
+    public String name = "";
     
     /**
      * How inserted the control rod is.
      */
-    public double insertionLevel;
+    public double insertionLevel = 0;
     
     /**
      * The tile whose information this belongs to.

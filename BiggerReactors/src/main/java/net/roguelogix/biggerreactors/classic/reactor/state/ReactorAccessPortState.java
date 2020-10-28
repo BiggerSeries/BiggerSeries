@@ -13,7 +13,7 @@ public class ReactorAccessPortState implements GuiSync.IGUIPacket {
     /**
      * The input state of the port. True for input, false for output.
      */
-    public boolean inputState;
+    public boolean inputState = false;
 
     /**
      * The tile whose information this belongs to.
