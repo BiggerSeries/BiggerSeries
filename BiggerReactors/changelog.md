@@ -1,3 +1,25 @@
+# 1.16.3-0.2.0
+Redstone Port
+
+## Reactor
+ - Added redstone port
+ - Added air types to default moderator list
+ - Increase default maximum size to 64x64x96
+ - Increase config maximum size limit to 192x192x256
+ - Computer Port drop added
+ - Change transparent blocks sound type to glass, mostly for the glass
+ - Fix overproduction bug with a production multiplier in wrong place, added more config options to allow tuning of both passive and active output separately
+ 
+## Turbine
+ - Increase default maximum size to 64x64x96
+ - Increase config maximum size limit to 192x192x256
+ - Computer Port drop added
+ - Input/Exhaust GUI icons corrected
+ 
+## Misc
+ - Bucket added for irradiated steam
+ - Yellorium fluid shows up in JEI now, it was transparent
+
 # 1.16.3-0.1.9
 CC Bug fix
 

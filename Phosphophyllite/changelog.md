@@ -1,3 +1,8 @@
+# 1.16.3-0.0.5
+ - Misc NBT save fixes, reactors were voiding fuel sometimes, turbines were staying at speed when disassembled, should be fixed, but its hard to test when it srandom
+ - Fixed renderer stall when updating large multiblock blockstates
+ - Fixed NPE with some rectangular multiblock configurations hitting an empty/null chunk section
+
 # 1.16.3-0.0.4
  - Fix saving issues with dedicated servers
  - updated zh_cn translation
