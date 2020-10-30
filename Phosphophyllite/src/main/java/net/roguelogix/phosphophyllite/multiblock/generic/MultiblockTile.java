@@ -154,26 +154,10 @@ public abstract class MultiblockTile extends TileEntity {
         return compound;
     }
     
-    @Nonnull
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
-    }
-    
     public boolean doBlockStateUpdate() {
         return true;
     }
     
-    @Nonnull
-    @Override
-    public IModelData getModelData() {
-        ModelDataMap.Builder builder = new ModelDataMap.Builder();
-        appendModelData(builder);
-        return builder.build();
-    }
-    
-    protected void appendModelData(ModelDataMap.Builder builder) {
-    }
     
     protected void onAssemblyAttempted() {
     }

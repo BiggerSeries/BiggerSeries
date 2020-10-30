@@ -47,12 +47,12 @@ public class RectangularMultiblockController extends MultiblockController {
         
         RectangularMultiblockController controller = (RectangularMultiblockController) genericController;
         
-        int minX = controller.minX();
-        int minY = controller.minY();
-        int minZ = controller.minZ();
-        int maxX = controller.maxX();
-        int maxY = controller.maxY();
-        int maxZ = controller.maxZ();
+        int minX = controller.minCoord().x();
+        int minY = controller.minCoord().y();
+        int minZ = controller.minCoord().z();
+        int maxX = controller.maxCoord().x();
+        int maxY = controller.maxCoord().y();
+        int maxZ = controller.maxCoord().z();
         
         Vector3i[] allowedOrientations = new Vector3i[controller.orientationAgnostic ? 6 : controller.xzAgnostic ? 2 : 1];
         
@@ -195,15 +195,15 @@ public class RectangularMultiblockController extends MultiblockController {
                 
                 int extremes = 0;
                 int frameLoc = 0;
-                if (pos.getX() == minX() || pos.getX() == maxX()) {
+                if (pos.getX() == minCoord().x() || pos.getX() == maxCoord().x()) {
                     extremes++;
                     frameLoc += 1;
                 }
-                if (pos.getY() == minY() || pos.getY() == maxY()) {
+                if (pos.getY() == minCoord().y() || pos.getY() == maxCoord().y()){
                     extremes++;
                     frameLoc += 2;
                 }
-                if (pos.getZ() == minZ() || pos.getZ() == maxZ()) {
+                if (pos.getZ() == minCoord().z() || pos.getZ() == maxCoord().z()){
                     extremes++;
                     frameLoc += 4;
                 }
@@ -282,11 +282,12 @@ public class RectangularMultiblockController extends MultiblockController {
         onDisassembly();
     }
     
-    protected void onPause() {
+    protected void onUnpause() {
     }
     
     @Override
-    protected final void onPaused() {
-        onPause();
+    protected final void onUnpaused() {
+        assembledBlockStates();
+        onUnpause();
     }
 }

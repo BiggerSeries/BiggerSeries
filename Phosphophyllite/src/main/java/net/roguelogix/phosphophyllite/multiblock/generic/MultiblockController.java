@@ -5,7 +5,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
+import net.roguelogix.phosphophyllite.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
+import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
+import net.roguelogix.phosphophyllite.repack.org.joml.Vector3ic;
 import net.roguelogix.phosphophyllite.util.Util;
 
 import javax.annotation.Nonnull;
@@ -13,11 +16,6 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-
-/*
-todo:
-assembly errors
- */
 
 public class MultiblockController {
     
@@ -29,40 +27,41 @@ public class MultiblockController {
     private long updateAssemblyAtTick = Long.MAX_VALUE;
     protected final Set<MultiblockController> controllersToMerge = new HashSet<>();
     
+    private final Vector3i minCoord = new Vector3i();
+    private final Vector3i maxCoord = new Vector3i();
+    
+    public enum AssemblyState {
+        ASSEMBLED,
+        DISASSEMBLED,
+        PAUSED,
+    }
+    
+    protected AssemblyState state = AssemblyState.DISASSEMBLED;
+    
+    private boolean shouldUpdateNBT = true;
+    private CompoundNBT cachedNBT = null;
+    
+    protected Validator<MultiblockTile> tileAttachValidator;
+    private Validator<MultiblockController> assemblyValidator = c -> true;
+    
+    protected ValidationError lastValidationError = null;
+    
+    long lastTick = -1;
+    
+    
     public MultiblockController(@Nonnull World world) {
         this.world = world;
         Phosphophyllite.controllersToTick.add(this);
     }
     
-    private int MinX, MinY, MinZ;
-    private int MaxX, MaxY, MaxZ;
-    
-    public int minX() {
-        return MinX;
+    public Vector3ic minCoord() {
+        return minCoord;
     }
     
-    public int minY() {
-        return MinY;
+    public Vector3ic maxCoord() {
+        return maxCoord;
     }
     
-    public int minZ() {
-        return MinZ;
-    }
-    
-    public int maxX() {
-        return MaxX;
-    }
-    
-    public int maxY() {
-        return MaxY;
-    }
-    
-    public int maxZ() {
-        return MaxZ;
-    }
-    
-    
-    protected Validator<MultiblockTile> tileAttachValidator;
     
     private void updateMinMaxCoordinates() {
         if (blocks.isEmpty()) {
@@ -98,12 +97,8 @@ public class MultiblockController {
                 maxZ = pos.getZ();
             }
         }
-        MinX = minX;
-        MinY = minY;
-        MinZ = minZ;
-        MaxX = maxX;
-        MaxY = maxY;
-        MaxZ = maxZ;
+        minCoord.set(minX, minY, minZ);
+        maxCoord.set(maxX, maxY, maxZ);
     }
     
     final void attemptAttach(@Nonnull MultiblockTile toAttach) {
@@ -116,19 +111,24 @@ public class MultiblockController {
         
         // ok, its a valid tile to attach, so ima attach it
         blocks.add(toAttach);
-        if(toAttach instanceof ITickableMultiblockTile){
+        if (toAttach instanceof ITickableMultiblockTile) {
             toTick.add((ITickableMultiblockTile) toAttach);
         }
         toAttach.controller = this;
-        onPartAdded(toAttach);
-        world.setBlockState(toAttach.getPos(), toAttach.getBlockState().getBlock().getDefaultState());
         if (toAttach.controllerData != null) {
             onBlockWithNBTAttached(toAttach.controllerData);
+            onPartAttached(toAttach);
+        } else {
+            if (state == AssemblyState.PAUSED) {
+                // this is only possible with large multiblocks and low render distances
+                // dont, just dont, it can break shit, and i dont want to deal with it right now
+                // fun thing, relaunching should get around this
+                throw new IllegalStateException("Attempt to add a new block to a paused multiblock");
+            }
+            onPartPlaced(toAttach);
         }
+        world.setBlockState(toAttach.getPos(), toAttach.getBlockState().getBlock().getDefaultState());
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
-    }
-    
-    protected void onPartAdded(@Nonnull MultiblockTile toAttach) {
     }
     
     final void detach(@Nonnull MultiblockTile toDetach) {
@@ -137,15 +137,24 @@ public class MultiblockController {
     
     final void detach(@Nonnull MultiblockTile toDetach, boolean onChunkUnload) {
         blocks.remove(toDetach);
-        if(toDetach instanceof ITickableMultiblockTile) {
+        if (toDetach instanceof ITickableMultiblockTile) {
             toTick.remove(toDetach);
         }
-        onPartRemoved(toDetach);
-        toDetach.attemptAttach();
+        
         if (onChunkUnload) {
+            onPartDetached(toDetach);
             state = AssemblyState.PAUSED;
-            onPaused();
+        } else {
+            if (state == AssemblyState.PAUSED) {
+                // this is only possible with large multiblocks and low render distances
+                // dont, just dont, it can break shit, and i dont want to deal with it right now
+                // fun thing, relaunching should get around this
+                throw new IllegalStateException("Attempt to remove a block from a paused multiblock");
+            }
+            onPartBroken(toDetach);
         }
+        
+        toDetach.attemptAttach();
         
         if (blocks.isEmpty()) {
             Phosphophyllite.controllersToTick.remove(this);
@@ -154,22 +163,6 @@ public class MultiblockController {
         checkForDetachments = true;
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
-    
-    protected void onPartRemoved(@Nonnull MultiblockTile tile) {
-    }
-    
-    protected void onMerge(@Nonnull MultiblockController otherController) {
-    }
-    
-    private Validator<MultiblockController> assemblyValidator = c -> true;
-    
-    protected void setAssemblyValidator(@Nullable Validator<MultiblockController> validator) {
-        if (validator != null) {
-            assemblyValidator = validator;
-        }
-    }
-    
-    long lastTick = -1;
     
     public void update() {
         if (lastTick >= Phosphophyllite.tickNumber()) {
@@ -246,7 +239,7 @@ public class MultiblockController {
             this.blocks.addAll(otherController.blocks);
             for (MultiblockTile block : otherController.blocks) {
                 block.controller = this;
-                onPartAdded(block);
+                onPartPlaced(block);
                 if (block.doBlockStateUpdate()) {
                     world.setBlockState(block.getPos(), block.getBlockState().getBlock().getDefaultState());
                 }
@@ -259,14 +252,6 @@ public class MultiblockController {
         }
     }
     
-    public void tick() {
-    }
-    
-    @Nonnull
-    public AssemblyState assemblyState() {
-        return state;
-    }
-    
     public void suicide() {
         Set<MultiblockTile> blocks = new HashSet<>(this.blocks);
         for (MultiblockTile block : blocks) {
@@ -274,20 +259,8 @@ public class MultiblockController {
         }
     }
     
-    public enum AssemblyState {
-        ASSEMBLED,
-        DISASSEMBLED,
-        PAUSED,
-    }
-    
-    protected AssemblyState state = AssemblyState.DISASSEMBLED;
-    
-    protected ValidationError lastValidationError = null;
-    
     private void updateAssemblyState() {
         AssemblyState oldState = state;
-//        System.out.println("VALIDATING! " + this.hashCode());
-//        long startTime = System.nanoTime();
         boolean validated = false;
         lastValidationError = null;
         try {
@@ -295,19 +268,22 @@ public class MultiblockController {
         } catch (ValidationError e) {
             lastValidationError = e;
         }
-//        long endTime = System.nanoTime();
-//        System.out.println("VALIDATED! " + this.hashCode() + "\t" + validated + "\t" + ((float) (endTime - startTime) / 1_000_000));
         if (validated) {
             state = AssemblyState.ASSEMBLED;
-            if (storedNBT != null && oldState == AssemblyState.PAUSED) {
-                read(storedNBT.getCompound("userdata"));
+            if (cachedNBT != null) {
+                read(cachedNBT.getCompound("userdata"));
             }
             blocks.forEach(block -> world.notifyNeighborsOfStateChange(block.getPos(), block.getBlockState().getBlock()));
-            onAssembled();
+            if (oldState == AssemblyState.PAUSED) {
+                onUnpaused();
+            } else {
+                onAssembled();
+            }
         } else {
             if (oldState == AssemblyState.ASSEMBLED) {
                 state = AssemblyState.DISASSEMBLED;
                 onDisassembled();
+                updateCachedNBT();
             }
         }
         for (MultiblockTile block : blocks) {
@@ -315,44 +291,36 @@ public class MultiblockController {
         }
     }
     
-    protected void onAssembled() {
-    }
-    
-    protected void onDisassembled() {
-    }
-    
-    protected void onPaused() {
-    }
-    
-    private CompoundNBT storedNBT = null;
-    private CompoundNBT multiblockData = null;
     
     private void onBlockWithNBTAttached(CompoundNBT nbt) {
-        if (multiblockData == null) {
+        if (cachedNBT == null) {
             readNBT(nbt);
         }
+        if (!nbt.equals(cachedNBT)) {
+            // TODO: introduce when i can maybe worlds
+//            if (PhosphophylliteConfig.Multiblock.StrictNBTConsistency) {
+//                throw new IllegalStateException("Inconsistent Multiblock NBT! " + minCoord.toString());
+//            }else{
+            Phosphophyllite.LOGGER.warn("Inconsistent Multiblock NBT! " + minCoord.toString());
+//            }
+        }
         CompoundNBT multiblockData = nbt.getCompound("multiblockData");
-        if (this.multiblockData.getInt("controller") != multiblockData.getInt("controller")) {
+        if (cachedNBT.getCompound("multiblockData").getInt("controller") != multiblockData.getInt("controller")) {
             // todo merge the NBTs
             //noinspection UnnecessaryReturnStatement
             return;
         }
     }
     
+    /**
+     * Read from the NBT saved by member blocks
+     *
+     * @param nbt previously returned by getNBT that represents this multiblock
+     */
     final void readNBT(CompoundNBT nbt) {
-        /*
-         * to future me, or someone else, i dont judge
-         * if you are looking here because a reactor is loading in weird when its between loaded and unloaded
-         * whats happening is that the NBT is loading it in as Assembled, not caring
-         * then it sits at disassembled, really shouldn't be causing an issue, but hey, here you are, reading this
-         * which means it is
-         * solution that is 100% not tested (because why would i do that)
-         * when reading NBT, check for an assembled state being read, check if the area is loaded, and if not, pause it
-         * im not doing that because *performance* (not that i seem to care elsewhere, meh)
-         */
         if (!nbt.isEmpty()) {
-            storedNBT = nbt.copy();
-            multiblockData = storedNBT.getCompound("multiblockData");
+            cachedNBT = nbt.copy();
+            CompoundNBT multiblockData = cachedNBT.getCompound("multiblockData");
             if (multiblockData.contains("assemblyState")) {
                 // dont just shove this into this.state
                 // if you do onDisassembled will be called incorrectly
@@ -365,40 +333,191 @@ public class MultiblockController {
         }
     }
     
+    /**
+     * Called by member blocks when saving to world
+     * may not directly call write() from here
+     * <p>
+     * DO NOT EDIT THE RETURNED NBT, weird things can happen if you do
+     *
+     * @return NBT that represents this multiblock
+     */
     @Nonnull
     final CompoundNBT getNBT() {
-        CompoundNBT compound = new CompoundNBT();
-        compound.put("userdata", write());
+        if (shouldUpdateNBT) {
+            shouldUpdateNBT = false;
+            updateCachedNBT();
+        }
+        return cachedNBT;
+    }
+    
+    private void updateCachedNBT() {
+        cachedNBT = new CompoundNBT();
+        cachedNBT.put("userdata", write());
         CompoundNBT multiblockData = new CompoundNBT();
-        compound.put("multiblockData", multiblockData);
+        cachedNBT.put("multiblockData", multiblockData);
         {
             // instead of storing an exhaustive list of all the blocks we had
             // just save the controller hash, and make sure we have the right number
             multiblockData.putInt("controller", hashCode());
             multiblockData.putString("assemblyState", state.toString());
         }
-        storedNBT = compound.copy();
-        return compound;
     }
     
-    protected void markDirty(){
-        Util.markRangeDirty(world, new Vector2i(minX(), minZ()), new Vector2i(maxX(), maxZ()));
-    }
-    
-    protected void read(@Nonnull CompoundNBT compound) {
+    /**
+     * Marks multiblocks structure as dirty to minecraft so it is saved
+     */
+    protected final void markDirty() {
+        shouldUpdateNBT = true;
+        Util.markRangeDirty(world, new Vector2i(minCoord.x, minCoord.z), new Vector2i(maxCoord.x, maxCoord.z));
     }
     
     @Nonnull
-    protected CompoundNBT write() {
-        return new CompoundNBT();
+    public AssemblyState assemblyState() {
+        return state;
     }
     
+    /**
+     * Gets the info printed to chat when block is clicked with the @DebugTool
+     * safe to override, just append to the string returned by super.getDebugInfo
+     * not my fault if you manage to break it
+     *
+     * @return string to print
+     */
     @Nonnull
     public String getDebugInfo() {
         return "BlockCount: " + blocks.size() + "\n" +
-                "Min (" + minX() + ", " + minY() + ", " + minZ() + ")\n" +
-                "Max (" + maxX() + ", " + maxY() + ", " + maxZ() + ")\n" +
+                "Min " + minCoord.toString() + "\n" +
+                "Max " + maxCoord.toString() + "\n" +
                 "Controller: " + this + "\n" +
                 "AssemblyState: " + state + "\n";
+    }
+    
+    
+    // -- API --
+    
+    /**
+     * Sets, or removes, the validator to be used to determine if the multiblock is assembled or not
+     *
+     * @param validator the new Validator, or null to remove
+     */
+    
+    protected void setAssemblyValidator(@Nullable Validator<MultiblockController> validator) {
+        if (validator != null) {
+            assemblyValidator = validator;
+        }
+    }
+    
+    
+    /**
+     * Called at the end of a tick for assembled multiblocks only
+     * is not called if the multiblock is dissassembled or paused
+     */
+    public void tick() {
+    }
+    
+    /**
+     * Called when a part is added to the multiblock structure
+     * not called in conjunction with onPartPlaced
+     * <p>
+     * CANNOT ALTER NBT STATE
+     *
+     * @param toAttach, the part that was added
+     */
+    protected void onPartAttached(@Nonnull MultiblockTile toAttach) {
+    
+    }
+    
+    /**
+     * Called when a part is removed to the multiblock structure
+     * not called in conjunction with onPartBroken
+     * <p>
+     * CANNOT ALTER NBT STATE
+     *
+     * @param toDetach, the part that was removed
+     */
+    protected void onPartDetached(@Nonnull MultiblockTile toDetach) {
+    
+    }
+    
+    /**
+     * Called when a new part is added to the world, or a block is merged in from another multiblock
+     * <p>
+     * not called when a previously placed block is reloaded
+     *
+     * @param placed the block that was placed
+     */
+    protected void onPartPlaced(@Nonnull MultiblockTile placed) {
+    
+    }
+    
+    /**
+     * Called when a part is removed from the world, or a block is detached durring separation
+     * <p>
+     * not called when a part is unloaded
+     *
+     * @param broken the block that was broken
+     */
+    protected void onPartBroken(@Nonnull MultiblockTile broken) {
+    
+    }
+    
+    /**
+     * Called when two multiblock controllers are merged together
+     * <p>
+     * this happens with a block connecting the two is placed
+     * <p>
+     * only called for the controller that will reside over the blocks both controllers control
+     * <p>
+     * called before blocks have been moved to the primary controller
+     *
+     * @param otherController the controller to merge into this one
+     */
+    protected void onMerge(@Nonnull MultiblockController otherController) {
+    }
+    
+    /**
+     * Called when a multiblock is assembled by a placed block
+     * <p>
+     * called after @onPartPlaced
+     */
+    protected void onAssembled() {
+    }
+    
+    /**
+     * Called when a multiblock is assembled by a destroyed block
+     * <p>
+     * called after @onPartBroken, called before @write
+     */
+    protected void onDisassembled() {
+    }
+    
+    /**
+     * Called when a multiblock is to be resumed from a paused state
+     * <p>
+     * called after @read but before first call to @tick
+     */
+    protected void onUnpaused() {
+    }
+    
+    /**
+     * Called after a multiblock has passes assembly validation, and has an NBT to read from
+     * <p>
+     * may not be called for new multiblocks
+     *
+     * @param compound the NBT that was written to in the last write call
+     */
+    protected void read(@Nonnull CompoundNBT compound) {
+    }
+    
+    /**
+     * Create an NBT tag to be saved and re-read upon multiblock re-assembly
+     * <p>
+     * Can be called at any time, and multiblock must be able to resume from this NBT regardless of its current state
+     *
+     * @return the NBT to save
+     */
+    @Nonnull
+    protected CompoundNBT write() {
+        return new CompoundNBT();
     }
 }

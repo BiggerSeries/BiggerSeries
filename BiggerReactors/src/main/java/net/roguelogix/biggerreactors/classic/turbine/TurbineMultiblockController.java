@@ -70,17 +70,17 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             TurbineRotorBearingTile bearing = rotorBearings.iterator().next();
             BlockPos bearingPosition = bearing.getPos();
             Direction marchDirection;
-            if (bearingPosition.getX() == minX()) {
+            if (bearingPosition.getX() == minCoord().x()) {
                 marchDirection = Direction.EAST;
-            } else if (bearingPosition.getX() == maxX()) {
+            } else if (bearingPosition.getX() == maxCoord().x()) {
                 marchDirection = Direction.WEST;
-            } else if (bearingPosition.getY() == minY()) {
+            } else if (bearingPosition.getY() == minCoord().y()) {
                 marchDirection = Direction.UP;
-            } else if (bearingPosition.getY() == maxY()) {
+            } else if (bearingPosition.getY() == maxCoord().y()) {
                 marchDirection = Direction.DOWN;
-            } else if (bearingPosition.getZ() == minZ()) {
+            } else if (bearingPosition.getZ() == minCoord().z()) {
                 marchDirection = Direction.SOUTH;
-            } else if (bearingPosition.getZ() == maxZ()) {
+            } else if (bearingPosition.getZ() == maxCoord().z()) {
                 marchDirection = Direction.NORTH;
             } else {
                 throw new ValidationError("multiblock.error.biggerreactors.turbine.rotor_bearing_position_undefined");
@@ -186,7 +186,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             
             int[] totalCoilBlocks = new int[]{0};
             
-            Util.chunkCachedBlockStateIteration(new Vector3i(minX(), minY(), minZ()), new Vector3i(maxX(), maxY(), maxZ()), world, (block, pos) -> {
+            Util.chunkCachedBlockStateIteration(new Vector3i(minCoord().x(), minCoord().y(), minCoord().y()), new Vector3i(maxCoord().x(), maxCoord().y(), maxCoord().y()), world, (block, pos) -> {
                 if (block.getBlock() instanceof TurbineBaseBlock) {
                     TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
                     if (te instanceof TurbineBaseTile) {
@@ -220,7 +220,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     private final Set<TurbinePowerTapTile> powerTaps = new HashSet<>();
     
     @Override
-    protected void onPartAdded(@Nonnull MultiblockTile tile) {
+    protected void onPartAttached(@Nonnull MultiblockTile tile) {
         if (tile instanceof TurbineTerminalTile) {
             terminals.add((TurbineTerminalTile) tile);
         }
@@ -242,7 +242,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onPartRemoved(@Nonnull MultiblockTile tile) {
+    protected void onPartDetached(@Nonnull MultiblockTile tile) {
         if (tile instanceof TurbineTerminalTile) {
             terminals.remove(tile);
         }
@@ -306,22 +306,30 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     
     @Override
     protected void onAssembly() {
-        
+        rotorMass = 0;
+        bladeSurfaceArea = 0;
+        coilSize = 0;
+        rotorEnergy = 0;
+        onUnpause();
+    }
+    
+    @Override
+    protected void onUnpause() {
         for (TurbinePowerTapTile powerPort : powerTaps) {
             powerPort.updateOutputDirection();
         }
         for (TurbineCoolantPortTile coolantPort : coolantPorts) {
             coolantPort.updateOutputDirection();
         }
-        
+    
         rotorMass = 0;
         bladeSurfaceArea = 0;
         coilSize = 0;
         inductionEfficiency = 0;
         inductorDragCoefficient = 0;
         inductionEnergyExponentBonus = 0;
-        
-        Util.chunkCachedBlockStateIteration(new Vector3i(minX() + 1, minY() + 1, minZ() + 1), new Vector3i(maxX() - 1, maxY() - 1, maxZ() - 1), world, (blockState, pos) -> {
+    
+        Util.chunkCachedBlockStateIteration(new Vector3i(minCoord().x() + 1, minCoord().y() + 1, minCoord().z() + 1), new Vector3i(maxCoord().x() - 1, maxCoord().y() - 1, maxCoord().z() - 1), world, (blockState, pos) -> {
             Block block = blockState.getBlock();
             if (block instanceof AirBlock) {
                 return;
@@ -340,12 +348,12 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 coilSize++;
             }
         });
-        
+    
         inductorDragCoefficient *= Config.Turbine.CoilDragMultiplier;
-        
+    
         frictionDrag = rotorMass * Config.Turbine.MassDragMultiplier;
         bladeDrag = Config.Turbine.BladeDragMultiplier * bladeSurfaceArea;
-        
+    
         if (coilSize <= 0) {
             inductionEfficiency = 0;
             inductorDragCoefficient = 0;
@@ -356,14 +364,6 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             inductionEnergyExponentBonus = Math.max(1f, (inductionEnergyExponentBonus / coilSize));
             inductorDragCoefficient = (inductorDragCoefficient / coilSize);
         }
-    }
-    
-    @Override
-    protected void onDisassembly() {
-        rotorMass = 0;
-        bladeSurfaceArea = 0;
-        coilSize = 0;
-        rotorEnergy = 0;
     }
     
     long storedPower = 0;

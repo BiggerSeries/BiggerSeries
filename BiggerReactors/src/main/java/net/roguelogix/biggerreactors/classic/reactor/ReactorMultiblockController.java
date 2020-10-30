@@ -72,10 +72,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 throw new ValidationError("multiblock.error.biggerreactors.no_rods");
             }
             for (ReactorControlRodTile controlRod : controlRods) {
-                if (controlRod.getPos().getY() != maxY()) {
+                if (controlRod.getPos().getY() !=  maxCoord().y()) {
                     throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.control_rod_not_on_top", controlRod.getPos().getX(), controlRod.getPos().getY(), controlRod.getPos().getZ()));
                 }
-                for (int i = 0; i < maxY() - minY() - 1; i++) {
+                for (int i = 0; i <  maxCoord().y() -  minCoord().y() - 1; i++) {
                     if (!(world.getBlockState(controlRod.getPos().add(0, -1 - i, 0)).getBlock() instanceof ReactorFuelRod)) {
                         throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.fuel_rod_gap", controlRod.getPos().getX(), -1 - i, controlRod.getPos().getZ()));
                     }
@@ -83,12 +83,12 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             }
             
             for (ReactorFuelRodTile fuelRod : fuelRods) {
-                if (!(world.getBlockState(new BlockPos(fuelRod.getPos().getX(), maxY(), fuelRod.getPos().getZ())).getBlock() instanceof ReactorControlRod)) {
+                if (!(world.getBlockState(new BlockPos(fuelRod.getPos().getX(),  maxCoord().y(), fuelRod.getPos().getZ())).getBlock() instanceof ReactorControlRod)) {
                     throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.no_control_rod_for_fuel_rod", fuelRod.getPos().getX(), fuelRod.getPos().getZ()));
                 }
             }
             
-            Util.chunkCachedBlockStateIteration(new Vector3i(minX(), minY(), minZ()), new Vector3i(maxX(), maxY(), maxZ()), world, (block, pos) -> {
+            Util.chunkCachedBlockStateIteration(new Vector3i( minCoord().x(),  minCoord().y(),  minCoord().z()), new Vector3i( maxCoord().x(),  maxCoord().y(),  maxCoord().z()), world, (block, pos) -> {
                 if (block.getBlock() instanceof ReactorBaseBlock) {
                     TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
                     if (te instanceof ReactorBaseTile) {
@@ -113,8 +113,15 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorCoolantPortTile> coolantPorts = new HashSet<>();
     
     @Override
-    protected void onPartAdded(@Nonnull MultiblockTile tile) {
+    protected void onPartPlaced(@Nonnull MultiblockTile placed) {
         distributeFuel();
+        onPartAttached(placed);
+        collectFuel();
+    }
+    
+    
+    @Override
+    protected void onPartAttached(@Nonnull MultiblockTile tile) {
         if (tile instanceof ReactorTerminalTile) {
             terminals.add((ReactorTerminalTile) tile);
         }
@@ -142,8 +149,14 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onPartRemoved(@Nonnull MultiblockTile tile) {
+    protected void onPartBroken(@Nonnull MultiblockTile broken) {
         distributeFuel();
+        onPartDetached(broken);
+        collectFuel();
+    }
+    
+    @Override
+    protected void onPartDetached(@Nonnull MultiblockTile tile) {
         if (tile instanceof ReactorTerminalTile) {
             terminals.remove(tile);
         }
@@ -236,9 +249,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         for (ReactorAccessPortTile accessPort : accessPorts) {
             accessPort.updateOutputDirection();
         }
-        simulation.resize(maxX() - minX() - 1, maxY() - minY() - 1, maxZ() - minZ() - 1);
-        Vector3i start = new Vector3i(minX() + 1, minY() + 1, minZ() + 1);
-        Vector3i end = new Vector3i(maxX() - 1, maxY() - 1, maxZ() - 1);
+        simulation.resize( maxCoord().x() -  minCoord().x() - 1,  maxCoord().y() -  minCoord().y() - 1,  maxCoord().z() -  minCoord().z() - 1);
+        Vector3i start = new Vector3i( minCoord().x() + 1,  minCoord().y() + 1,  minCoord().z() + 1);
+        Vector3i end = new Vector3i( maxCoord().x() - 1,  maxCoord().y() - 1,  maxCoord().z() - 1);
         Util.chunkCachedBlockStateIteration(start, end, world, (state, pos) -> {
             pos.sub(start);
             if (state.getBlock() != ReactorFuelRod.INSTANCE) {
@@ -253,6 +266,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         simulation.updateInternalValues();
         updateControlRodLevels();
         collectFuel();
+    }
+    
+    @Override
+    protected void onUnpause() {
+        onAssembly();
     }
     
     @Override
@@ -330,6 +348,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 fuelRod.fuel += simulation.fuelTank.extractFuel(Long.MAX_VALUE, false);
                 fuelRod.waste += simulation.fuelTank.extractWaste(Long.MAX_VALUE, false);
             }
+            markDirty();
         }
     }
     
@@ -344,6 +363,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 fuelRod.waste = 0;
             }
         }
+        markDirty();
     }
     
     private boolean autoEjectWaste = true;
@@ -472,7 +492,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     public void updateControlRodLevels() {
         controlRods.forEach(rod -> {
             BlockPos pos = rod.getPos();
-            simulation.setControlRodInsertion(pos.getX() - minX() - 1, pos.getZ() - minZ() - 1, rod.getInsertion());
+            simulation.setControlRodInsertion(pos.getX() - minCoord().x() - 1, pos.getZ() - minCoord().z() - 1, rod.getInsertion());
         });
     }
     

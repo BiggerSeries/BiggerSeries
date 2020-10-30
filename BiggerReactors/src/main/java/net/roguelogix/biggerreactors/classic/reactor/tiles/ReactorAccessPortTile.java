@@ -196,17 +196,17 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             itemOutputDirection = null;
-        } else if (pos.getX() == controller.minX()) {
+        } else if (pos.getX() == controller.minCoord().x()) {
             itemOutputDirection = Direction.WEST;
-        } else if (pos.getX() == controller.maxX()) {
+        } else if (pos.getX() == controller.maxCoord().x()) {
             itemOutputDirection = Direction.EAST;
-        } else if (pos.getY() == controller.minY()) {
+        } else if (pos.getY() == controller.minCoord().y()) {
             itemOutputDirection = Direction.DOWN;
-        } else if (pos.getY() == controller.maxY()) {
+        } else if (pos.getY() == controller.maxCoord().y()) {
             itemOutputDirection = Direction.UP;
-        } else if (pos.getZ() == controller.minZ()) {
+        } else if (pos.getZ() == controller.minCoord().z()) {
             itemOutputDirection = Direction.NORTH;
-        } else if (pos.getZ() == controller.maxZ()) {
+        } else if (pos.getZ() == controller.maxCoord().z()) {
             itemOutputDirection = Direction.SOUTH;
         }
         neighborChanged();

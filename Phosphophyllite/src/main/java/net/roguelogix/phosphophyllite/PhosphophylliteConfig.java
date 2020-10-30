@@ -16,4 +16,9 @@ public class PhosphophylliteConfig {
         @net.roguelogix.phosphophyllite.config.PhosphophylliteConfig.Value(min = 50)
         public static long UpdateIntervalMS = 200;
     }
+    
+//    public static class Multiblock{
+//        @net.roguelogix.phosphophyllite.config.PhosphophylliteConfig.Value
+//        public static boolean StrictNBTConsistency = true;
+//    }
 }

@@ -159,17 +159,17 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             steamOutputDirection = null;
-        } else if (pos.getX() == controller.minX()) {
+        } else if (pos.getX() == controller.minCoord().x()) {
             steamOutputDirection = Direction.WEST;
-        } else if (pos.getX() == controller.maxX()) {
+        } else if (pos.getX() == controller.maxCoord().x()) {
             steamOutputDirection = Direction.EAST;
-        } else if (pos.getY() == controller.minY()) {
+        } else if (pos.getY() == controller.minCoord().y()) {
             steamOutputDirection = Direction.DOWN;
-        } else if (pos.getY() == controller.maxY()) {
+        } else if (pos.getY() == controller.maxCoord().y()) {
             steamOutputDirection = Direction.UP;
-        } else if (pos.getZ() == controller.minZ()) {
+        } else if (pos.getZ() == controller.minCoord().z()) {
             steamOutputDirection = Direction.NORTH;
-        } else if (pos.getZ() == controller.maxZ()) {
+        } else if (pos.getZ() == controller.maxCoord().z()) {
             steamOutputDirection = Direction.SOUTH;
         }
         neighborChanged();
