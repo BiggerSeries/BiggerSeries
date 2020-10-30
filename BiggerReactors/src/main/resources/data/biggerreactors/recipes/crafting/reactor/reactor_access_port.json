@@ -10,7 +10,7 @@
       "item": "biggerreactors:reactor_casing"
     },
     "V": {
-      "item": "minecraft:chest"
+      "tag": "forge:chests/wooden"
     },
     "P": {
       "item": "minecraft:piston"
