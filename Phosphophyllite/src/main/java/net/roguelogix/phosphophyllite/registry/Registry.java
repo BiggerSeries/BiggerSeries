@@ -565,12 +565,12 @@ public class Registry {
                 
                 biomeEvent.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> {
                     
-                    RuleTest fillerBlock = oreInfo.isNetherOre() ? OreFeatureConfig.FillerBlockType.field_241884_c : OreFeatureConfig.FillerBlockType.field_241882_a;
+                    RuleTest fillerBlock = oreInfo.isNetherOre() ? OreFeatureConfig.FillerBlockType.BASE_STONE_NETHER : OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD;
                     
                     return Feature.ORE
                             .withConfiguration(new OreFeatureConfig(fillerBlock, finalOreInstance.getDefaultState(), oreInfo.size()))
-                            .withPlacement(Placement.field_242907_l.configure(new TopSolidRangeConfig(oreInfo.minLevel(), 0, oreInfo.maxLevel())))
-                            .func_242728_a()
+                            .withPlacement(Placement.RANGE.configure(new TopSolidRangeConfig(oreInfo.minLevel(), 0, oreInfo.maxLevel())))
+                            .square()
                             .func_242731_b(oreInfo.count());
                 });
             } catch (NullPointerException e) {
