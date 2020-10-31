@@ -32,11 +32,8 @@ import java.util.Set;
 public class TurbineMultiblockController extends RectangularMultiblockController {
     public TurbineMultiblockController(World world) {
         super(world);
-        minX = minZ = 5;
-        minY = 4;
-        maxX = Config.Turbine.MaxLength;
-        maxZ = Config.Turbine.MaxWidth;
-        maxY = Config.Turbine.MaxHeight;
+        minSize.set(5, 4, 5);
+        maxSize.set(Config.Turbine.MaxLength, Config.Turbine.MaxHeight, Config.Turbine.MaxWidth);
         tileAttachValidator = tile -> {
             //noinspection CodeBlock2Expr
             return tile instanceof TurbineBaseTile;

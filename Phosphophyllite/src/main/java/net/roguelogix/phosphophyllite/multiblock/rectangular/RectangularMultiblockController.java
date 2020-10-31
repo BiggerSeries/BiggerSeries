@@ -29,8 +29,9 @@ public class RectangularMultiblockController extends MultiblockController {
     
     protected boolean orientationAgnostic = true;
     protected boolean xzAgnostic = true;
-    protected int minX = -1, minY = -1, minZ = -1;
-    protected int maxX = -1, maxY = -1, maxZ = -1;
+    
+    protected final Vector3i minSize = new Vector3i();
+    protected final Vector3i maxSize = new Vector3i();
     
     protected Validator<Block> cornerValidator = null;
     protected Validator<Block> frameValidator = null;
@@ -77,22 +78,22 @@ public class RectangularMultiblockController extends MultiblockController {
             // if all are positive, technically zero is valid for them
             // dont know why you would use zero, but that's not my problem
             // i guess to lock out using the machine?
-            if ((controller.minX | controller.minY | controller.minZ) > 0) {
+            if ((controller.minSize.x | controller.minSize.y | controller.minSize.z) > 0) {
                 if (
-                        allowedOrientation.x < controller.minX ||
-                                allowedOrientation.y < controller.minY ||
-                                allowedOrientation.z < controller.minZ
+                        allowedOrientation.x < controller.minSize.x ||
+                                allowedOrientation.y < controller.minSize.y ||
+                                allowedOrientation.z < controller.minSize.z
                 ) {
                     continue;
                 }
             }
             // you can also just set one of these lower than the above
             // see the below bounds checks
-            if ((controller.maxX | controller.maxY | controller.maxZ) > 0) {
+            if ((controller.maxSize.x | controller.maxSize.y | controller.maxSize.z) > 0) {
                 if (
-                        allowedOrientation.x > controller.maxX ||
-                                allowedOrientation.y > controller.maxY ||
-                                allowedOrientation.z > controller.maxZ
+                        allowedOrientation.x > controller.maxSize.x ||
+                                allowedOrientation.y > controller.maxSize.y ||
+                                allowedOrientation.z > controller.maxSize.z
                 ) {
                     continue;
                 }
@@ -105,8 +106,8 @@ public class RectangularMultiblockController extends MultiblockController {
             // TODO: 6/29/20 dimensions error
             throw new ValidationError(new TranslationTextComponent("multiblock.error.phosphophyllite.dimensions",
                     allowedOrientations[0].x, allowedOrientations[0].y, allowedOrientations[0].z,
-                    controller.minX, controller.minY, controller.minZ,
-                    controller.maxX, controller.maxY, controller.maxZ));
+                    controller.minSize.x, controller.minSize.y, controller.minSize.z,
+                    controller.maxSize.x, controller.maxSize.y, controller.maxSize.z));
         }
         // or it didnt, at this point i dont really know, and you dont either, works(tm)
         
