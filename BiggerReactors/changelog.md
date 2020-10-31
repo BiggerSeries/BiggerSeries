@@ -1,3 +1,13 @@
+# 1.16.3-0.2.1
+Bug fixing
+
+## Reactor
+ - Fix NPE with Mekanism gas handler
+ - Allow access ports to be crafted with any wooden chest
+
+## Turbine
+ - Fix NPE with Mekanism gas handler
+
 # 1.16.3-0.2.0
 Redstone Port
 

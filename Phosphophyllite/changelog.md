@@ -1,3 +1,7 @@
+# 1.16.3-0.1.0
+ - Rework of multiblock NBT system, breaks mod backwards compatibility, worlds should be ok
+ - Other misc breaking changes to multiblock system
+
 # 1.16.3-0.0.5
  - Misc NBT save fixes, reactors were voiding fuel sometimes, turbines were staying at speed when disassembled, should be fixed, but its hard to test when it srandom
  - Fixed renderer stall when updating large multiblock blockstates
