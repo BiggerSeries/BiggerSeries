@@ -38,7 +38,7 @@ public class MultiblockController {
     
     protected AssemblyState state = AssemblyState.DISASSEMBLED;
     
-    private boolean shouldUpdateNBT = true;
+    private boolean shouldUpdateNBT = false;
     private CompoundNBT cachedNBT = null;
     
     protected Validator<MultiblockTile> tileAttachValidator;
@@ -272,6 +272,7 @@ public class MultiblockController {
             state = AssemblyState.ASSEMBLED;
             if (cachedNBT != null) {
                 read(cachedNBT.getCompound("userdata"));
+                shouldUpdateNBT = true;
             }
             blocks.forEach(block -> world.notifyNeighborsOfStateChange(block.getPos(), block.getBlockState().getBlock()));
             if (oldState == AssemblyState.PAUSED) {
