@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all" : "phosphophyllite:block/item_white_hole"
+  }
+}
