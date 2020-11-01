@@ -217,6 +217,11 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     private final Set<TurbinePowerTapTile> powerTaps = new HashSet<>();
     
     @Override
+    protected void onPartPlaced(@Nonnull MultiblockTile placed) {
+        onPartAttached(placed);
+    }
+    
+    @Override
     protected void onPartAttached(@Nonnull MultiblockTile tile) {
         if (tile instanceof TurbineTerminalTile) {
             terminals.add((TurbineTerminalTile) tile);
@@ -236,6 +241,11 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         if (tile instanceof TurbinePowerTapTile) {
             powerTaps.add((TurbinePowerTapTile) tile);
         }
+    }
+    
+    @Override
+    protected void onPartBroken(@Nonnull MultiblockTile broken) {
+        onPartDetached(broken);
     }
     
     @Override
