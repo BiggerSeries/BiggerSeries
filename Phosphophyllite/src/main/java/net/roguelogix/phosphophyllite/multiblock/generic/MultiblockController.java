@@ -348,7 +348,7 @@ public class MultiblockController {
             shouldUpdateNBT = false;
             updateCachedNBT();
         }
-        return cachedNBT;
+        return cachedNBT == null ? new CompoundNBT() :  cachedNBT;
     }
     
     private void updateCachedNBT() {
