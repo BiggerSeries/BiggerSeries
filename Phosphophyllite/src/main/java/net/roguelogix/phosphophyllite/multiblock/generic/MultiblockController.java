@@ -117,6 +117,7 @@ public class MultiblockController {
         toAttach.controller = this;
         if (toAttach.controllerData != null) {
             onBlockWithNBTAttached(toAttach.controllerData);
+            toAttach.controllerData = null;
             onPartAttached(toAttach);
         } else {
             if (state == AssemblyState.PAUSED) {
