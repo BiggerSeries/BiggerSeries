@@ -114,9 +114,17 @@ dependencies {
 
     runtime fg.deobf('curse.maven:jei:3076673')
     runtime fg.deobf('curse.maven:prettypipes:3062663')
+
+    runtime fg.deobf('curse.maven:cofhcore:3099194')
+    runtime fg.deobf('curse.maven:thermalfoundation:3099202')
+    runtime fg.deobf('curse.maven:thermalexpansion:3099261')
+
     runtime fg.deobf('curse.maven:mek:3075056')
     runtime fg.deobf('curse.maven:mek-tool:3075059')
     runtime fg.deobf('curse.maven:mek-gen:3075058')
+
+    compile fg.deobf('curse.maven:er2:3098974')
+    compile fg.deobf('curse.maven:zc2:3098958')
 
     compile project(':Phosphophyllite')
     compile project(':BiggerReactors')
