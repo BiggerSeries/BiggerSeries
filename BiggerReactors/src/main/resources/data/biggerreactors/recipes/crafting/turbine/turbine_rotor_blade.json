@@ -8,7 +8,7 @@
       "item": "minecraft:iron_ingot"
     },
     "C" : {
-      "item": "biggerreactors:cyanite_ingot"
+      "tag": "forge:ingots/cyanite"
     }
   },
   "result": {

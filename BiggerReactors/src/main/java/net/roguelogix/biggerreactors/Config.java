@@ -232,10 +232,10 @@ public class Config {
             new ReactorModeratorConfigValues("forge:storage_blocks/electrum", ReactorModeratorConfigValues.LocationType.TAG, 0.75f, 0.75f, 1.75f, 1.5f),
             new ReactorModeratorConfigValues("forge:storage_blocks/platinum", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.86f, 1.58f, 1.5f),
             new ReactorModeratorConfigValues("forge:storage_blocks/enderium", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.88f, 1.6f, 3f),
-            
+            new ReactorModeratorConfigValues("forge:storage_blocks/graphite", ReactorModeratorConfigValues.LocationType.TAG, 0.1f, 0.5f, 2f, 2f),
+        
             new ReactorModeratorConfigValues("minecraft:water", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
             
-            new ReactorModeratorConfigValues("biggerreactors:graphite_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.5f, 2f, 2f),
     };
     
     @PhosphophylliteConfig

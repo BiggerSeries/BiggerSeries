@@ -10,13 +10,13 @@
       "item": "minecraft:iron_ingot"
     },
     "G": {
-      "item": "biggerreactors:graphite_ingot"
+      "tag": "forge:ingots/graphite"
     },
     "Q": {
       "item": "minecraft:quartz"
     },
     "C": {
-      "item": "biggerreactors:cyanite_ingot"
+      "tag": "forge:ingots/cyanite"
     }
   },
   "result": {
