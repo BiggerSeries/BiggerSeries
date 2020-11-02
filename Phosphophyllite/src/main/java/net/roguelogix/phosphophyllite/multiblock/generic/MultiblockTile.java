@@ -129,6 +129,7 @@ public abstract class MultiblockTile extends TileEntity {
         return new CompoundNBT();
     }
     
+    boolean preExistingBlock = false;
     CompoundNBT controllerData = null;
     
     @Override
@@ -140,6 +141,7 @@ public abstract class MultiblockTile extends TileEntity {
         if (compound.contains("userdata")) {
             readNBT(compound.getCompound("userdata"));
         }
+        preExistingBlock = true;
     }
     
     

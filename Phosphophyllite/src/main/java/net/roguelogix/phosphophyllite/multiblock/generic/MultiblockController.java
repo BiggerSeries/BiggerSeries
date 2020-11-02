@@ -115,9 +115,11 @@ public class MultiblockController {
             toTick.add((ITickableMultiblockTile) toAttach);
         }
         toAttach.controller = this;
-        if (toAttach.controllerData != null) {
-            onBlockWithNBTAttached(toAttach.controllerData);
-            toAttach.controllerData = null;
+        if (toAttach.preExistingBlock) {
+            if(toAttach.controllerData != null) {
+                onBlockWithNBTAttached(toAttach.controllerData);
+                toAttach.controllerData = null;
+            }
             onPartAttached(toAttach);
         } else {
             if (state == AssemblyState.PAUSED) {
