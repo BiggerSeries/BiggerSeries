@@ -112,9 +112,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     @Override
     protected void onPartPlaced(@Nonnull MultiblockTile placed) {
-        distributeFuel();
         onPartAttached(placed);
-        collectFuel();
     }
     
     
@@ -148,9 +146,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     @Override
     protected void onPartBroken(@Nonnull MultiblockTile broken) {
-        distributeFuel();
         onPartDetached(broken);
-        collectFuel();
     }
     
     @Override
@@ -273,6 +269,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     @Override
     protected void onDisassembly() {
+        distributeFuel();
         setActive(ReactorActivity.INACTIVE);
         for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
