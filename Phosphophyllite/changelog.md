@@ -1,3 +1,8 @@
+# 1.16.3-0.1.1
+ - null the tile's caches NBT after it attaches to a controller, should reduce memory usage
+ - add models for black holes and white holes
+ - fix NPE when saving a multiblock that hasn't yet been assembled
+
 # 1.16.3-0.1.0
  - Rework of multiblock NBT system, breaks mod backwards compatibility, worlds should be ok
  - Other misc breaking changes to multiblock system

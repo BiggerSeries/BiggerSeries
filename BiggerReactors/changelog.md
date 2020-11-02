@@ -1,3 +1,16 @@
+# 1.16.3-0.2.2
+Bug fixes! *again*
+And compat
+
+## Reactor
+ - Fix redstone port recipe
+
+## Turbine
+ - Fix a new turbine not assembling
+ 
+## Misc
+ - Compatability with ER2, tagging for items/blocks and recipes where applicable
+
 # 1.16.3-0.2.1
 Bug fixing
 
