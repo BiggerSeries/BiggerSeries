@@ -10,7 +10,7 @@
       "item": "minecraft:iron_ingot"
     },
     "G": {
-      "item": "biggerreactors:graphite_ingot"
+      "tag": "forge:ingots/graphite"
     },
     "Y": {
       "tag": "forge:ingots/uranium"
