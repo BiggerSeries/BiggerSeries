@@ -123,8 +123,8 @@ dependencies {
     runtime fg.deobf('curse.maven:mek-tool:3075059')
     runtime fg.deobf('curse.maven:mek-gen:3075058')
 
-    compile fg.deobf('curse.maven:er2:3098974')
-    compile fg.deobf('curse.maven:zc2:3098958')
+    compile fg.deobf('curse.maven:er2:3100010')
+    compile fg.deobf('curse.maven:zc2:3099974')
 
     compile project(':Phosphophyllite')
     compile project(':BiggerReactors')
