@@ -86,7 +86,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 }
             }
             
-            Util.chunkCachedBlockStateIteration(new Vector3i(minCoord().x(), minCoord().y(), minCoord().z()), new Vector3i(maxCoord().x(), maxCoord().y(), maxCoord().z()), world, (block, pos) -> {
+            Util.chunkCachedBlockStateIteration(minCoord(), maxCoord(), world, (block, pos) -> {
                 if (block.getBlock() instanceof ReactorBaseBlock) {
                     TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
                     if (te instanceof ReactorBaseTile) {
@@ -244,8 +244,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             accessPort.updateOutputDirection();
         }
         simulation.resize(maxCoord().x() - minCoord().x() - 1, maxCoord().y() - minCoord().y() - 1, maxCoord().z() - minCoord().z() - 1);
-        Vector3i start = new Vector3i(minCoord().x() + 1, minCoord().y() + 1, minCoord().z() + 1);
-        Vector3i end = new Vector3i(maxCoord().x() - 1, maxCoord().y() - 1, maxCoord().z() - 1);
+        Vector3i start = new Vector3i(1).add(minCoord());
+        Vector3i end = new Vector3i(-1).add(maxCoord());
         Util.chunkCachedBlockStateIteration(start, end, world, (state, pos) -> {
             pos.sub(start);
             if (state.getBlock() != ReactorFuelRod.INSTANCE) {

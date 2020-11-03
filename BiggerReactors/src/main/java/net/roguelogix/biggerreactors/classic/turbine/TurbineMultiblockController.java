@@ -183,7 +183,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             
             int[] totalCoilBlocks = new int[]{0};
             
-            Util.chunkCachedBlockStateIteration(new Vector3i(minCoord().x(), minCoord().y(), minCoord().z()), new Vector3i(maxCoord().x(), maxCoord().y(), maxCoord().z()), world, (block, pos) -> {
+            Util.chunkCachedBlockStateIteration(new Vector3i(1).add(minCoord()), new Vector3i(-1).add(maxCoord()), world, (block, pos) -> {
                 if (block.getBlock() instanceof TurbineBaseBlock) {
                     TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
                     if (te instanceof TurbineBaseTile) {
@@ -336,7 +336,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         inductorDragCoefficient = 0;
         inductionEnergyExponentBonus = 0;
     
-        Util.chunkCachedBlockStateIteration(new Vector3i(minCoord().x() + 1, minCoord().y() + 1, minCoord().z() + 1), new Vector3i(maxCoord().x() - 1, maxCoord().y() - 1, maxCoord().z() - 1), world, (blockState, pos) -> {
+        Util.chunkCachedBlockStateIteration(new Vector3i(1).add(minCoord()), new Vector3i(-1).add(maxCoord()), world, (blockState, pos) -> {
             Block block = blockState.getBlock();
             if (block instanceof AirBlock) {
                 return;

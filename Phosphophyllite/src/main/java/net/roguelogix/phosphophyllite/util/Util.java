@@ -15,6 +15,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
+import net.roguelogix.phosphophyllite.repack.org.joml.Vector3ic;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,23 +55,23 @@ public class Util {
         return null;
     }
     
-    public static void chunkCachedBlockStateIteration(Vector3i start, Vector3i end, World world, BiConsumer<BlockState, Vector3i> func) {
+    public static void chunkCachedBlockStateIteration(Vector3ic start, Vector3ic end, World world, BiConsumer<BlockState, Vector3i> func) {
         Vector3i currentPosition = new Vector3i();
-        for (int X = start.x; X < ((end.x + 16) & 0xFFFFFFF0); X += 16) {
-            for (int Z = start.z; Z < ((end.z + 16) & 0xFFFFFFF0); Z += 16) {
+        for (int X = start.x(); X < ((end.x() + 16) & 0xFFFFFFF0); X += 16) {
+            for (int Z = start.z(); Z < ((end.z() + 16) & 0xFFFFFFF0); Z += 16) {
                 int chunkX = X >> 4;
                 int chunkZ = Z >> 4;
                 Chunk chunk = world.getChunk(chunkX, chunkZ);
                 ChunkSection[] chunkSections = chunk.getSections();
-                for (int Y = start.y; Y < ((end.y + 16) & 0xFFFFFFF0); Y += 16) {
+                for (int Y = start.y(); Y < ((end.y() + 16) & 0xFFFFFFF0); Y += 16) {
                     int chunkSectionIndex = Y >> 4;
                     ChunkSection chunkSection = chunkSections[chunkSectionIndex];
-                    int sectionMinX = Math.max((X) & 0xFFFFFFF0, start.x);
-                    int sectionMinY = Math.max((Y) & 0xFFFFFFF0, start.y);
-                    int sectionMinZ = Math.max((Z) & 0xFFFFFFF0, start.z);
-                    int sectionMaxX = Math.min((X + 16) & 0xFFFFFFF0, end.x + 1);
-                    int sectionMaxY = Math.min((Y + 16) & 0xFFFFFFF0, end.y + 1);
-                    int sectionMaxZ = Math.min((Z + 16) & 0xFFFFFFF0, end.z + 1);
+                    int sectionMinX = Math.max((X) & 0xFFFFFFF0, start.x());
+                    int sectionMinY = Math.max((Y) & 0xFFFFFFF0, start.y());
+                    int sectionMinZ = Math.max((Z) & 0xFFFFFFF0, start.z());
+                    int sectionMaxX = Math.min((X + 16) & 0xFFFFFFF0, end.x() + 1);
+                    int sectionMaxY = Math.min((Y + 16) & 0xFFFFFFF0, end.y() + 1);
+                    int sectionMaxZ = Math.min((Z + 16) & 0xFFFFFFF0, end.z() + 1);
                     for (int x = sectionMinX; x < sectionMaxX; x++) {
                         for (int y = sectionMinY; y < sectionMaxY; y++) {
                             for (int z = sectionMinZ; z < sectionMaxZ; z++) {

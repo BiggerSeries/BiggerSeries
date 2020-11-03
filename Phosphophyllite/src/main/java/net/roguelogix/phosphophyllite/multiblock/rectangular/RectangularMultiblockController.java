@@ -111,7 +111,7 @@ public class RectangularMultiblockController extends MultiblockController {
         }
         // or it didnt, at this point i dont really know, and you dont either, works(tm)
         
-        Util.chunkCachedBlockStateIteration(new Vector3i(minX, minY, minZ), new Vector3i(maxX, maxY, maxZ), controller.world, (blockState, pos) -> {
+        Util.chunkCachedBlockStateIteration(controller.minCoord(), controller.maxCoord(), controller.world, (blockState, pos) -> {
             Block block = blockState.getBlock();
             int extremes = 0;
             if (pos.x == minX || pos.x == maxX) {
