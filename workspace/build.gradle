@@ -114,6 +114,7 @@ dependencies {
 
     runtime fg.deobf('curse.maven:jei:3076673')
     runtime fg.deobf('curse.maven:prettypipes:3062663')
+    runtime fg.deobf('curse.maven:constructionwands:3068734')
 
     runtime fg.deobf('curse.maven:cofhcore:3099194')
     runtime fg.deobf('curse.maven:thermalfoundation:3099202')
