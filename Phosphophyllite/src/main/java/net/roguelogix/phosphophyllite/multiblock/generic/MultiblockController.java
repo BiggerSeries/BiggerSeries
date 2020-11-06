@@ -300,6 +300,9 @@ public class MultiblockController {
         if (cachedNBT == null) {
             readNBT(nbt);
         }
+        if(cachedNBT == null){
+            return;
+        }
         if (!nbt.equals(cachedNBT)) {
             // TODO: introduce when i can maybe worlds
 //            if (PhosphophylliteConfig.Multiblock.StrictNBTConsistency) {
