@@ -128,6 +128,10 @@
   "block.biggerreactors.turbine_power_tap": "Turbine Power Tap",
   "block.biggerreactors.turbine_computer_port": "Turbine Computer Port",
 
+  "multiblock.error.biggerreactors.turbine.mixed_blades_and_coil": "Blades and coils cannot exist at the same rotor shaft position",
+  "multiblock.error.biggerreactors.turbine.multiple_groups": "Only one blade pack and one coil pack may exist at a time",
+  "multiblock.error.biggerreactors.turbine.dangling_coil": "All coil blocks must be in the 8 blocks closest to the turbine shaft",
+
   "tooltip.biggerreactors.status.turbine.activity.online": "Status: §2Online",
   "tooltip.biggerreactors.status.turbine.activity.offline": "Status: §4Offline",
 
