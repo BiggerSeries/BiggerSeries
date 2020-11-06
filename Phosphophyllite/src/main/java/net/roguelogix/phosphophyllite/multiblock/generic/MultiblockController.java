@@ -130,7 +130,6 @@ public class MultiblockController {
             }
             onPartPlaced(toAttach);
         }
-        world.setBlockState(toAttach.getPos(), toAttach.getBlockState().getBlock().getDefaultState());
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
     
@@ -243,9 +242,6 @@ public class MultiblockController {
             for (MultiblockTile block : otherController.blocks) {
                 block.controller = this;
                 onPartPlaced(block);
-                if (block.doBlockStateUpdate()) {
-                    world.setBlockState(block.getPos(), block.getBlockState().getBlock().getDefaultState());
-                }
             }
         }
         controllersToMerge.clear();

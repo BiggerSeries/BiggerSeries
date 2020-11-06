@@ -43,4 +43,9 @@ public class ReactorGlass extends ReactorBaseBlock {
     public boolean propagatesSkylightDown(@Nonnull BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos) {
         return true;
     }
+    
+    @Override
+    public boolean connectedTexture() {
+        return true;
+    }
 }

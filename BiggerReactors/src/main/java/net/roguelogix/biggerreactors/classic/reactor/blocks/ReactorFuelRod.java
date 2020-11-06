@@ -44,4 +44,8 @@ public class ReactorFuelRod extends ReactorBaseBlock {
         return true;
     }
     
+    @Override
+    public boolean usesBlockState() {
+        return false;
+    }
 }

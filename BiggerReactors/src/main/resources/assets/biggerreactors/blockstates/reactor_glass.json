@@ -1,7 +1,196 @@
 {
-  "variants": {
-    "": {
-      "model": "biggerreactors:block/reactor_glass"
+    "variants": {
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_t"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_none"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tb"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_b"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tw"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_w"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbw"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=false,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_bw"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_te"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_e"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbe"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_be"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tew"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_ew"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbew"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=true,north_connected=false,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_bew"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tn"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_n"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbn"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_bn"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tnw"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_nw"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbnw"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=false,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_bnw"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tne"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_ne"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbne"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_bne"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tnew"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_new"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbnew"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=true,north_connected=true,south_connected=false": {
+            "model": "biggerreactors:block/reactor_glass_connected_bnew"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_ts"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_s"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbs"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bs"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tsw"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_sw"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbsw"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=false,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bsw"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tse"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_se"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbse"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bse"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tsew"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_sew"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbsew"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=true,north_connected=false,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bsew"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tns"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_ns"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbns"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bns"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tnsw"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_nsw"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbnsw"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=false,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bnsw"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=false,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tnse"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=false,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_nse"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=false,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tbnse"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=false,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bnse"
+        },
+        "top_connected=true,bottom_connected=false,west_connected=true,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_tnsew"
+        },
+        "top_connected=false,bottom_connected=false,west_connected=true,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_nsew"
+        },
+        "top_connected=true,bottom_connected=true,west_connected=true,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_all"
+        },
+        "top_connected=false,bottom_connected=true,west_connected=true,east_connected=true,north_connected=true,south_connected=true": {
+            "model": "biggerreactors:block/reactor_glass_connected_bnsew"
+        }
     }
-  }
 }

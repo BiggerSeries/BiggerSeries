@@ -14,7 +14,7 @@ public class RectangularMultiblockBlock extends MultiblockBlock {
     public RectangularMultiblockBlock(@Nonnull Properties properties) {
         super(properties);
         if (usesBlockState()) {
-            setDefaultState(getStateContainer().getBaseState().with(POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
+            setDefaultState(getDefaultState().with(POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
         }
     }
     
