@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "up" : "biggerreactors:block/turbine_glass_connected_tl",
+    "down" : "biggerreactors:block/turbine_glass_connected_bl",
+    "north" : "phosphophyllite:block/transparent",
+    "south" : "biggerreactors:block/turbine_glass_connected_l",
+    "east" : "biggerreactors:block/turbine_glass_connected_r",
+    "west" : "phosphophyllite:block/transparent",
+    "particle": "biggerreactors:block/turbine_glass_connected_none"
+  }
+}
