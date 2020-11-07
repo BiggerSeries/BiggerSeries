@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.PhosphophylliteConfig;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
@@ -13,6 +14,7 @@ import net.roguelogix.phosphophyllite.util.Util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -51,7 +53,7 @@ public class MultiblockController {
     
     public MultiblockController(@Nonnull World world) {
         this.world = world;
-        Phosphophyllite.controllersToTick.add(this);
+        Phosphophyllite.controllersToTick.computeIfAbsent((ServerWorld) world, k -> new ArrayList<>()).add(this);
     }
     
     public Vector3ic minCoord() {
@@ -116,7 +118,7 @@ public class MultiblockController {
         }
         toAttach.controller = this;
         if (toAttach.preExistingBlock) {
-            if(toAttach.controllerData != null) {
+            if (toAttach.controllerData != null) {
                 onBlockWithNBTAttached(toAttach.controllerData);
                 toAttach.controllerData = null;
             }
@@ -159,7 +161,11 @@ public class MultiblockController {
         toDetach.attemptAttach();
         
         if (blocks.isEmpty()) {
-            Phosphophyllite.controllersToTick.remove(this);
+            //noinspection SuspiciousMethodCalls
+            ArrayList<MultiblockController> controllers = Phosphophyllite.controllersToTick.get(world);
+            if (controllers != null) {
+                controllers.remove(this);
+            }
         }
         
         checkForDetachments = true;
@@ -180,7 +186,11 @@ public class MultiblockController {
         
         if (blocks.isEmpty()) {
             // why are we being ticked?
-            Phosphophyllite.controllersToTick.remove(this);
+            //noinspection SuspiciousMethodCalls
+            ArrayList<MultiblockController> controllers = Phosphophyllite.controllersToTick.get(world);
+            if (controllers != null) {
+                controllers.remove(this);
+            }
             checkForDetachments = false;
         }
         
@@ -235,7 +245,8 @@ public class MultiblockController {
             checkForDetachments = false;
         }
         for (MultiblockController otherController : controllersToMerge) {
-            Phosphophyllite.controllersToTick.remove(otherController);
+            //noinspection SuspiciousMethodCalls
+            Phosphophyllite.controllersToTick.get(world).remove(otherController);
             otherController.controllersToMerge.clear();
             this.onMerge(otherController);
             this.blocks.addAll(otherController.blocks);
@@ -245,7 +256,7 @@ public class MultiblockController {
             }
         }
         controllersToMerge.clear();
-        if (state == AssemblyState.ASSEMBLED) {
+        if (state == AssemblyState.ASSEMBLED && world.isAreaLoaded(minCoord().x(), minCoord().y(), minCoord().z(), maxCoord().x(), maxCoord().y(), maxCoord().z())) {
             tick();
             toTick.forEach(ITickableMultiblockTile::tick);
         }
@@ -255,6 +266,11 @@ public class MultiblockController {
         Set<MultiblockTile> blocks = new HashSet<>(this.blocks);
         for (MultiblockTile block : blocks) {
             block.onChunkUnloaded();
+        }
+        //noinspection SuspiciousMethodCalls
+        ArrayList<MultiblockController> controllers = Phosphophyllite.controllersToTick.get(world);
+        if (controllers != null) {
+            controllers.remove(this);
         }
     }
     
@@ -296,7 +312,7 @@ public class MultiblockController {
         if (cachedNBT == null) {
             readNBT(nbt);
         }
-        if(cachedNBT == null){
+        if (cachedNBT == null) {
             return;
         }
         if (!nbt.equals(cachedNBT)) {
@@ -350,7 +366,7 @@ public class MultiblockController {
             shouldUpdateNBT = false;
             updateCachedNBT();
         }
-        return cachedNBT == null ? new CompoundNBT() :  cachedNBT;
+        return cachedNBT == null ? new CompoundNBT() : cachedNBT;
     }
     
     private void updateCachedNBT() {

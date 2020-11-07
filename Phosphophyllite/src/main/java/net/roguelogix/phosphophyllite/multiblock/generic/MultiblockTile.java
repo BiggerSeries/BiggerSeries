@@ -11,6 +11,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
@@ -18,6 +19,8 @@ import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 
 import javax.annotation.Nonnull;
+
+import java.util.ArrayList;
 
 import static net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions.DISASSEMBLED;
 
@@ -31,7 +34,7 @@ public abstract class MultiblockTile extends TileEntity {
         attemptAttach = true;
         assert world != null;
         if (!world.isRemote) {
-            Phosphophyllite.tilesToAttach.add(this);
+            Phosphophyllite.tilesToAttach.computeIfAbsent((ServerWorld) world, k -> new ArrayList<>()).add(this);
         }
     }
     
