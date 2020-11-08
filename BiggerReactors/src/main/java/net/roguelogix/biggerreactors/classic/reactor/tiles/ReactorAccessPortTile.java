@@ -110,10 +110,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        if (slot == 0) {
+        ReactorMultiblockController reactor = reactor();
+        if (slot == 0 || reactor == null) {
             return ItemStack.EMPTY;
         } else {
-            return new ItemStack(CyaniteIngot.INSTANCE, 64);
+            long availableIngots = reactor.CCgetWasteAmount() / Config.Reactor.FuelMBPerIngot;
+            return new ItemStack(CyaniteIngot.INSTANCE, (int) availableIngots);
         }
     }
 
@@ -155,7 +157,9 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
 
     @Override
     public int getSlotLimit(int slot) {
-        return 64;
+        ReactorMultiblockController reactor = reactor();
+        assert reactor != null;
+        return (int) (reactor.CCgetFuelAmountMax() / Config.Reactor.FuelMBPerIngot);
     }
 
     @Override
