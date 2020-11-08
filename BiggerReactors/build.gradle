@@ -19,7 +19,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = '0.2.2-beta'
+version = '0.2.3-beta'
 group = 'net.roguelogix.biggerreactors' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'biggerreactors-1.16.3'
 

@@ -1,3 +1,9 @@
+# 1.16.3-0.2.0
+ - Connecting, textures, you are welcome
+ - use constant vectors where applicable
+ - fix NPE when loading a multiblock that hasn't yet been assembled
+ - change multiblock ticks to the world tick events instead of server tick event
+
 # 1.16.3-0.1.1
  - null the tile's caches NBT after it attaches to a controller, should reduce memory usage
  - add models for black holes and white holes

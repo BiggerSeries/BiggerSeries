@@ -1,3 +1,17 @@
+# 1.16.3-0.2.3
+
+## Reactor
+ - Connecting, textures, for the glass
+ 
+## Turbine
+ - Connecting, textures, for the glass
+ - fix dangling coil bug
+ - add errors to lang file
+
+## Misc
+ - More ER2 compatibility
+ - tag yellorite ore item as uranium
+
 # 1.16.3-0.2.2
 Bug fixes! *again*
 And compat
@@ -9,7 +23,7 @@ And compat
  - Fix a new turbine not assembling
  
 ## Misc
- - Compatability with ER2, tagging for items/blocks and recipes where applicable
+ - Compatibility with ER2, tagging for items/blocks and recipes where applicable
 
 # 1.16.3-0.2.1
 Bug fixing
