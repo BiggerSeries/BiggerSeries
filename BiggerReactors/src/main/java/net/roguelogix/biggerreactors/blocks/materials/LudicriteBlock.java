@@ -8,6 +8,9 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 @RegisterBlock(name = "ludicrite_block")
 public class LudicriteBlock extends Block {
     
+    @RegisterBlock.Instance
+    public static LudicriteBlock INSTANCE;
+    
     public LudicriteBlock() {
         super(
                 Properties.create(Material.IRON)

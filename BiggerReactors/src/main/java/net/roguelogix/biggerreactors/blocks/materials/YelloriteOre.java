@@ -12,6 +12,9 @@ import net.roguelogix.phosphophyllite.registry.RegisterOre;
 @RegisterOre
 public class YelloriteOre extends Block implements IPhosphophylliteOre {
     
+    @RegisterBlock.Instance
+    public static YelloriteOre INSTANCE;
+    
     public YelloriteOre() {
         super(
                 Properties.create(Material.ROCK)

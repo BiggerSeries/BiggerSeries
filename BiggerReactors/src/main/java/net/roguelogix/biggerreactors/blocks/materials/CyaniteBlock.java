@@ -8,6 +8,9 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 @RegisterBlock(name = "cyanite_block")
 public class CyaniteBlock extends Block {
     
+    @RegisterBlock.Instance
+    public static CyaniteBlock INSTANCE;
+    
     public CyaniteBlock() {
         super(
                 Properties.create(Material.IRON)

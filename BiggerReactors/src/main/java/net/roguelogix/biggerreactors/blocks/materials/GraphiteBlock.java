@@ -8,6 +8,9 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 @RegisterBlock(name = "graphite_block")
 public class GraphiteBlock extends Block {
     
+    @RegisterBlock.Instance
+    public static GraphiteBlock INSTANCE;
+    
     public GraphiteBlock() {
         super(
                 Properties.create(Material.IRON)

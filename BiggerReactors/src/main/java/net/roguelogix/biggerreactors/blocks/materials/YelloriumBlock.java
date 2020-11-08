@@ -8,6 +8,9 @@ import net.roguelogix.phosphophyllite.registry.RegisterBlock;
 @RegisterBlock(name = "yellorium_block")
 public class YelloriumBlock extends Block {
     
+    @RegisterBlock.Instance
+    public static YelloriumBlock INSTANCE;
+    
     public YelloriumBlock() {
         super(
                 Properties.create(Material.IRON)
