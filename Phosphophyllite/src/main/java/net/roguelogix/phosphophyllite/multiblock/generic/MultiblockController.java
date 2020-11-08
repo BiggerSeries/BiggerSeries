@@ -239,7 +239,7 @@ public class MultiblockController {
             toTick.removeAll(toOrphan);
             if (!toOrphan.isEmpty()) {
                 for (MultiblockTile tile : toOrphan) {
-                    detach(tile);
+                    detach(tile, state == AssemblyState.PAUSED);
                 }
             }
             checkForDetachments = false;
