@@ -22,6 +22,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 import net.roguelogix.biggerreactors.Config;
+import net.roguelogix.biggerreactors.blocks.materials.BlutoniumBlock;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorAccessPortContainer;
@@ -43,6 +44,9 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
+    
+    private static ResourceLocation uraniumIngotTag = new ResourceLocation("forge:ingots/uranium");
+    private static ResourceLocation uraniumBlockTag = new ResourceLocation("forge:storage_blocks/uranium");
     
     public ReactorAccessPortTile() {
         super(TYPE);
@@ -128,12 +132,20 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             return stack;
         }
         stack = stack.copy();
-        if (stack.getItem().getTags().contains(new ResourceLocation("forge:ingots/uranium")) || stack.getItem() == BlutoniumIngot.INSTANCE) {
+        if (stack.getItem().getTags().contains(uraniumIngotTag) || stack.getItem() == BlutoniumIngot.INSTANCE) {
             long maxAcceptable = reactor.refuel(stack.getCount() * Config.Reactor.FuelMBPerIngot, true);
             long canAccept = maxAcceptable - (maxAcceptable % Config.Reactor.FuelMBPerIngot);
             reactor.refuel(canAccept, simulate);
             if (canAccept > 0) {
                 stack.setCount(stack.getCount() - (int) (canAccept / Config.Reactor.FuelMBPerIngot));
+            }
+        }
+        if (stack.getItem().getTags().contains(uraniumBlockTag) || stack.getItem() == BlutoniumBlock.INSTANCE.asItem()) {
+            long maxAcceptable = reactor.refuel(stack.getCount() * (Config.Reactor.FuelMBPerIngot * 9), true);
+            long canAccept = maxAcceptable - (maxAcceptable % (Config.Reactor.FuelMBPerIngot * 9));
+            reactor.refuel(canAccept, simulate);
+            if (canAccept > 0) {
+                stack.setCount(stack.getCount() - (int) (canAccept / (Config.Reactor.FuelMBPerIngot * 9)));
             }
         }
         return stack;
@@ -165,7 +177,8 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         if (slot == 0) {
-            return stack.getItem().getTags().contains(new ResourceLocation("forge:ingots/uranium")) || stack.getItem() == BlutoniumIngot.INSTANCE;
+            return stack.getItem().getTags().contains(uraniumIngotTag) || stack.getItem() == BlutoniumIngot.INSTANCE
+                    || stack.getItem().getTags().contains(uraniumBlockTag) || stack.getItem() == BlutoniumBlock.INSTANCE.asItem();
         } else {
             return stack.getItem() == CyaniteIngot.INSTANCE;
         }
