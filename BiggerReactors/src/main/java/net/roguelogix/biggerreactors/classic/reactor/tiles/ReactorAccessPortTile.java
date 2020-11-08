@@ -40,37 +40,37 @@ import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccess
 
 @RegisterTileEntity(name = "reactor_access_port")
 public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandler, INamedContainerProvider, IHasUpdatableState<ReactorAccessPortState> {
-
+    
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-
+    
     public ReactorAccessPortTile() {
         super(TYPE);
     }
-
+    
     private ReactorAccessPort.PortDirection direction = INLET;
-
+    
     public boolean isInlet() {
         return direction == INLET;
     }
-
+    
     public void setDirection(ReactorAccessPort.PortDirection direction) {
         this.direction = direction;
         this.markDirty();
     }
-
+    
     @Override
     public void onLoad() {
         super.onLoad();
     }
-
+    
     @Override
     protected void readNBT(@Nonnull CompoundNBT compound) {
         if (compound.contains("direction")) {
             direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
         }
     }
-
+    
     @Override
     @Nonnull
     protected CompoundNBT writeNBT() {
@@ -78,21 +78,21 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         NBT.putString("direction", String.valueOf(direction));
         return NBT;
     }
-
+    
     @Override
     @Nonnull
     protected String getDebugInfo() {
         return direction.toString();
     }
-
+    
     @Override
     protected void onAssemblyAttempted() {
         assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
     }
-
+    
     LazyOptional<IItemHandler> itemStackHandler = LazyOptional.of(() -> this);
-
+    
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -101,12 +101,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return super.getCapability(cap, side);
     }
-
+    
     @Override
     public int getSlots() {
         return 2;
     }
-
+    
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
@@ -118,12 +118,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             return new ItemStack(CyaniteIngot.INSTANCE, (int) availableIngots);
         }
     }
-
+    
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
-
+        
         if (!isInlet() || reactor == null || slot == 1) {
             return stack;
         }
@@ -138,39 +138,39 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return stack;
     }
-
+    
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
-
+        
         if (isInlet() || reactor == null || slot == 0) {
             return ItemStack.EMPTY;
         }
-
+        
         long maxExtractable = reactor.extractWaste(amount * Config.Reactor.FuelMBPerIngot, true);
         long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
         long extracted = reactor.extractWaste(toExtracted, simulate);
-
+        
         return new ItemStack(CyaniteIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
     }
-
+    
     @Override
     public int getSlotLimit(int slot) {
         ReactorMultiblockController reactor = reactor();
         assert reactor != null;
         return (int) (reactor.CCgetFuelAmountMax() / Config.Reactor.FuelMBPerIngot);
     }
-
+    
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        if(slot == 0) {
+        if (slot == 0) {
             return stack.getItem().getTags().contains(new ResourceLocation("forge:ingots/uranium")) || stack.getItem() == BlutoniumIngot.INSTANCE;
-        }else{
+        } else {
             return stack.getItem() == CyaniteIngot.INSTANCE;
         }
     }
-
+    
     public int pushWaste(int waste, boolean simulated) {
         if (itemOutput.isPresent()) {
             IItemHandler output = itemOutput.orElse(EmptyHandler.INSTANCE);
@@ -189,13 +189,13 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return 0;
     }
-
+    
     Direction itemOutputDirection;
     boolean connected;
     LazyOptional<IItemHandler> itemOutput = LazyOptional.empty();
     public final ReactorAccessPortState accessPortState = new ReactorAccessPortState(this);
-
-
+    
+    
     @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
@@ -215,7 +215,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         neighborChanged();
     }
-
+    
     @SuppressWarnings("DuplicatedCode")
     public void neighborChanged() {
         itemOutput = LazyOptional.empty();
@@ -232,7 +232,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         itemOutput = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, itemOutputDirection.getOpposite());
         connected = itemOutput.isPresent();
     }
-
+    
     @Override
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
@@ -245,7 +245,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return super.onBlockActivated(player, handIn);
     }
-
+    
     @SuppressWarnings("unchecked")
     @Override
     public void runRequest(String requestName, Object requestData) {
@@ -253,34 +253,34 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (reactor == null) {
             return;
         }
-
+        
         if (requestName.equals("setInputState")) {
             boolean state = (Boolean) requestData;
             this.setDirection(state ? INLET : OUTLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
-
+            
         }
         super.runRequest(requestName, requestData);
     }
-
+    
     @Override
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorAccessPort.INSTANCE.getTranslationKey());
     }
-
+    
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
         return new ReactorAccessPortContainer(windowId, this.pos, player);
     }
-
+    
     @Nullable
     @Override
     public ReactorAccessPortState getState() {
         this.updateState();
         return this.accessPortState;
     }
-
+    
     @Override
     public void updateState() {
         accessPortState.inputState = (this.direction == INLET);
