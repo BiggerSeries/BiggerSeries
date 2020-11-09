@@ -374,7 +374,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             inductionEnergyExponentBonus = Math.max(1f, (inductionEnergyExponentBonus / coilSize));
             inductorDragCoefficient = (inductorDragCoefficient / coilSize);
         }
-    
+        
         flowRateLimit = bladeSurfaceArea * Config.Turbine.FluidPerBlade * Config.Turbine.BladeToFlowRateMultiplier;
         tankSize = flowRateLimit * Config.Turbine.FlowRateToTankSizeMultiplier;
         maxStoredPower = (coilSize + 1) * Config.Turbine.BatterySizePerCoilBlock;
@@ -699,6 +699,11 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     public long CCgetEnergyStored() {
+        // backwards compatible with the old CC API, which requires this assumption
+        return (storedPower * 1_000_000) / maxStoredPower;
+    }
+    
+    public long CCgetEnergyStoredUnscaled() {
         return storedPower;
     }
     

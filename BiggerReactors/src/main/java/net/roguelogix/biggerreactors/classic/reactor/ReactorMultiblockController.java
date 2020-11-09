@@ -507,6 +507,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     public long CCgetEnergyStored() {
+        // backwards compatible with the old CC API, which requires this assumption
+        return (simulation.battery.storedPower() * 10_000_000) / simulation.battery.size();
+    }
+    
+    public long CCgetEnergyStoredUnscaled() {
         return simulation.battery.storedPower();
     }
     
