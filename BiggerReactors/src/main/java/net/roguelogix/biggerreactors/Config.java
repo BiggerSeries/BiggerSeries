@@ -123,7 +123,7 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 5, max = 192)
         public static int MaxWidth = 32;
         @PhosphophylliteConfig.Value(min = 4, max = 256)
-        public static int MaxHeight = 48;
+        public static int MaxHeight = 192;
         
         @PhosphophylliteConfig.Value(min = 1)
         public static long FluidPerBlade = 25;
