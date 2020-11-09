@@ -13,6 +13,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
     
     public final FuelTank fuelTank = new FuelTank();
     public final CoolantTank coolantTank = new CoolantTank();
+    public final Battery battery = new Battery();
     private final ArrayList<ControlRod> controlRods = new ArrayList<>();
     private final Vector2i[] directions = new Vector2i[]{
             new Vector2i(1, 0),
@@ -116,6 +117,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         
         if (passive) {
             coolantTank.setPerSideCapacity(0);
+            battery.setMaxStoredPower((((x + 2) * (y + 2) * (z + 2)) - (x * y * z)) * Config.Reactor.PassiveBatteryPerExternalBlock);
         } else {
             coolantTank.setPerSideCapacity((((x + 2) * (y + 2) * (z + 2)) - (x * y * z)) * Config.Reactor.CoolantTankAmountPerExternalBlock);
         }
@@ -172,6 +174,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
             if (passive) {
                 rfTransferred *= Config.Reactor.PassiveCoolingTransferEfficiency;
                 FEProducedLastTick = rfTransferred * Config.Reactor.OutputMultiplier * Config.Reactor.PassiveOutputMultiplier;
+                battery.addPower(FEProducedLastTick);
             } else {
                 rfTransferred -= coolantTank.absorbHeat(rfTransferred * Config.Reactor.OutputMultiplier * Config.Reactor.ActiveOutputMultiplier);
                 FEProducedLastTick = coolantTank.getFluidVaporizedLastTick(); // Piggyback so we don't have useless stuff in the update packet
@@ -396,6 +399,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         CompoundNBT nbt = new CompoundNBT();
         nbt.put("fuelTank", fuelTank.serializeNBT());
         nbt.put("coolantTank", coolantTank.serializeNBT());
+        nbt.put("battery", battery.serializeNBT());
         nbt.putDouble("fuelFertility", fuelFertility);
         nbt.putDouble("fuelHeat", fuelHeat);
         nbt.putDouble("reactorHeat", reactorHeat);
@@ -409,6 +413,9 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         }
         if (nbt.contains("coolantTank")) {
             coolantTank.deserializeNBT(nbt.getCompound("coolantTank"));
+        }
+        if (nbt.contains("battery")) {
+            battery.deserializeNBT(nbt.getCompound("battery"));
         }
         if (nbt.contains("fuelFertility")) {
             fuelFertility = nbt.getDouble("fuelFertility");

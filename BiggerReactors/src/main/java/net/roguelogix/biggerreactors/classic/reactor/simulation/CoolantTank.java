@@ -36,7 +36,7 @@ public class CoolantTank implements INBTSerializable<CompoundNBT> {
     }
     
     public void setPerSideCapacity(long capacity) {
-        perSideCapacity = Math.min(capacity, Config.Reactor.MaxActiveTankSize);
+        perSideCapacity = capacity;
     }
     
     public double absorbHeat(double rfTransferred) {

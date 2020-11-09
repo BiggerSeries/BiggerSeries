@@ -279,6 +279,8 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     
     private long steam;
     private long water;
+    private long flowRateLimit;
+    private long tankSize;
     
     public long extractWater(long maxDrain, boolean simulate) {
         long toExtract = Math.min(maxDrain, water);
@@ -292,7 +294,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     public long addSteam(long amount, boolean simulate) {
-        long toAdd = Math.min(amount, Config.Turbine.TankSize - steam);
+        long toAdd = Math.min(amount, tankSize - steam);
         if (toAdd < 0) {
             toAdd = 0;
         }
@@ -318,6 +320,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         coilSize = 0;
         rotorEnergy = 0;
         onUnpause();
+        maxFlowRate = bladeSurfaceArea * Config.Turbine.FluidPerBlade;
     }
     
     @Override
@@ -328,14 +331,14 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         for (TurbineCoolantPortTile coolantPort : coolantPorts) {
             coolantPort.updateOutputDirection();
         }
-    
+        
         rotorMass = 0;
         bladeSurfaceArea = 0;
         coilSize = 0;
         inductionEfficiency = 0;
         inductorDragCoefficient = 0;
         inductionEnergyExponentBonus = 0;
-    
+        
         Util.chunkCachedBlockStateIteration(new Vector3i(1).add(minCoord()), new Vector3i(-1).add(maxCoord()), world, (blockState, pos) -> {
             Block block = blockState.getBlock();
             if (block instanceof AirBlock) {
@@ -355,12 +358,12 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 coilSize++;
             }
         });
-    
+        
         inductorDragCoefficient *= Config.Turbine.CoilDragMultiplier;
-    
+        
         frictionDrag = rotorMass * Config.Turbine.MassDragMultiplier;
         bladeDrag = Config.Turbine.BladeDragMultiplier * bladeSurfaceArea;
-    
+        
         if (coilSize <= 0) {
             inductionEfficiency = 0;
             inductorDragCoefficient = 0;
@@ -371,9 +374,14 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             inductionEnergyExponentBonus = Math.max(1f, (inductionEnergyExponentBonus / coilSize));
             inductorDragCoefficient = (inductorDragCoefficient / coilSize);
         }
+    
+        flowRateLimit = bladeSurfaceArea * Config.Turbine.FluidPerBlade * Config.Turbine.BladeToFlowRateMultiplier;
+        tankSize = flowRateLimit * Config.Turbine.FlowRateToTankSizeMultiplier;
+        maxStoredPower = (coilSize + 1) * Config.Turbine.BatterySizePerCoilBlock;
     }
     
     long storedPower = 0;
+    long maxStoredPower = 0;
     
     private double energyGeneratedLastTick;
     private long fluidConsumedLastTick;
@@ -394,7 +402,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             steamIn = Math.min(maxFlowRate, steam);
             
             if (ventState == VentState.CLOSED) {
-                long availableSpace = Config.Turbine.TankSize - water;
+                long availableSpace = tankSize - water;
                 steamIn = Math.min(steamIn, availableSpace);
             }
         }
@@ -450,7 +458,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 
                 energyGeneratedLastTick = energyToGenerate;
                 
-                energyToGenerate = Math.min(energyToGenerate, Config.Turbine.BatterySize - storedPower);
+                energyToGenerate = Math.min(energyToGenerate, maxStoredPower - storedPower);
                 
                 if (energyToGenerate > 0) {
                     storedPower += energyToGenerate;
@@ -473,8 +481,8 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                     water += steamIn;
                 }
             }
-            if (water > Config.Turbine.TankSize) {
-                water = Config.Turbine.TankSize;
+            if (water > tankSize) {
+                water = tankSize;
             }
         }
         
@@ -515,13 +523,13 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         turbineState.maxRPM = 2200.0;
         
         turbineState.intakeStored = steam;
-        turbineState.intakeCapacity = Config.Turbine.TankSize;
+        turbineState.intakeCapacity = tankSize;
         
         turbineState.exhaustStored = water;
-        turbineState.exhaustCapacity = Config.Turbine.TankSize;
+        turbineState.exhaustCapacity = tankSize;
         
         turbineState.energyStored = storedPower;
-        turbineState.energyCapacity = Config.Turbine.BatterySize;
+        turbineState.energyCapacity = maxStoredPower;
     }
     
     @SuppressWarnings("UnnecessaryReturnStatement")
@@ -568,14 +576,14 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         ventState = newVentState;
     }
     
-    long maxFlowRate = Config.Turbine.MaxFlow;
+    long maxFlowRate = 0;
     
     private void setMaxFlowRate(long flowRate) {
         if (flowRate < 0) {
             flowRate = 0;
         }
-        if (flowRate > Config.Turbine.MaxFlow) {
-            flowRate = Config.Turbine.MaxFlow;
+        if (flowRate > flowRateLimit) {
+            flowRate = flowRateLimit;
         }
         maxFlowRate = flowRate;
     }
@@ -673,7 +681,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     // -- Mekanism compat
     
     public long getSteamCapacity() {
-        return Config.Turbine.TankSize;
+        return tankSize;
     }
     
     public long getSteamAmount() {
@@ -695,7 +703,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     public long CCgetMaxEnergyStored() {
-        return Config.Turbine.BatterySize;
+        return maxStoredPower;
     }
     
     public double CCgetRotorSpeed() {
@@ -725,7 +733,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     public long CCgetFluidAmountMax() {
-        return Config.Turbine.TankSize;
+        return tankSize;
     }
     
     public long CCgetFluidFlowRate() {
@@ -737,7 +745,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     public long CCgetFluidFlowRateMaxMax() {
-        return Config.Turbine.MaxFlow;
+        return flowRateLimit;
     }
     
     public double CCgetEnergyProducedLastTick() {

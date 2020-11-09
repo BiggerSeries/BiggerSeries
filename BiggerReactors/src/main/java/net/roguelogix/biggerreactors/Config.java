@@ -82,12 +82,10 @@ public class Config {
         public static float CasingHeatTransferCoefficient = 0.6f;
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelRodHeatTransferCoefficient = 1f;
-        @PhosphophylliteConfig.Value(min = 0)
-        public static long PassiveBatterySize = 10_000_000;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long PassiveBatteryPerExternalBlock = 10_000;
         @PhosphophylliteConfig.Value(min = 1)
         public static long FuelMBPerIngot = 1000;
-        @PhosphophylliteConfig.Value(min = 0)
-        public static long MaxActiveTankSize = 50_000;
         @PhosphophylliteConfig.Value(min = 0)
         public static long CoolantTankAmountPerExternalBlock = 100;
         @PhosphophylliteConfig.Value(min = 0)
@@ -128,11 +126,11 @@ public class Config {
         public static int MaxHeight = 48;
         
         @PhosphophylliteConfig.Value(min = 1)
-        public static long TankSize = 10000;
-        @PhosphophylliteConfig.Value(min = 1)
-        public static long MaxFlow = 5000;
-        @PhosphophylliteConfig.Value(min = 1)
         public static long FluidPerBlade = 25;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long BladeToFlowRateMultiplier = 4;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long FlowRateToTankSizeMultiplier= 4;
         @PhosphophylliteConfig.Value(min = 1)
         public static long SteamCondensationEnergy = 10;
         @PhosphophylliteConfig.Value(min = 1)
@@ -143,8 +141,8 @@ public class Config {
         public static double BladeDragMultiplier = 0.000025;
         @PhosphophylliteConfig.Value(min = 0)
         public static double CoilDragMultiplier = 1;
-        @PhosphophylliteConfig.Value(min = 0)
-        public static long BatterySize = 2_500_000;
+        @PhosphophylliteConfig.Value(min = 1)
+        public static long BatterySizePerCoilBlock = 30_000;
     }
     @PhosphophylliteConfig
     public static class CyaniteReprocessor {

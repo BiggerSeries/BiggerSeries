@@ -205,7 +205,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         
         if (compound.contains("storedPower")) {
-            storedPower = compound.getLong("storedPower");
+            simulation.battery.extractPower(-compound.getLong("storedPower"));
         }
         
         updateBlockStates();
@@ -216,7 +216,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         CompoundNBT compound = new CompoundNBT();
         {
             compound.putString("reactorState", reactorActivity.toString());
-            compound.putLong("storedPower", storedPower);
             compound.put("simulationData", simulation.serializeNBT());
         }
         return compound;
@@ -228,7 +227,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         distributeFuel();
         assert otherController instanceof ReactorMultiblockController;
         ((ReactorMultiblockController) otherController).distributeFuel();
-        storedPower = 0;
         simulation = new ClassicReactorSimulation();
     }
     
@@ -282,8 +280,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     private ClassicReactorSimulation simulation = new ClassicReactorSimulation();
     
-    private long storedPower = 0;
-    
     public long addCoolant(long coolant, boolean simulated) {
         return simulation.coolantTank.insertWater(coolant, simulated);
     }
@@ -296,29 +292,24 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     public void tick() {
         
         simulation.tick();
-        if (!Double.isNaN(simulation.FEProducedLastTick) && simulation.isPassive()) {
-            storedPower += simulation.FEProducedLastTick;
-            if (storedPower > Config.Reactor.PassiveBatterySize) {
-                storedPower = Config.Reactor.PassiveBatterySize;
-            }
-        }
         if (autoEjectWaste) {
             ejectWaste();
         }
         
         
         long totalPowerRequested = 0;
+        final long startingPower = simulation.battery.storedPower();
         for (ReactorPowerTapTile powerPort : powerPorts) {
-            totalPowerRequested += powerPort.distributePower(storedPower, true);
+            totalPowerRequested += powerPort.distributePower(startingPower, true);
         }
-        long startingPower = storedPower;
         
-        float distributionMultiplier = Math.min(1f, (float) storedPower / (float) totalPowerRequested);
+        float distributionMultiplier = Math.min(1f, (float) startingPower / (float) totalPowerRequested);
         for (ReactorPowerTapTile powerPort : powerPorts) {
             long powerRequested = powerPort.distributePower(startingPower, true);
             powerRequested *= distributionMultiplier;
-            powerRequested = Math.min(storedPower, powerRequested); // just in case
-            storedPower -= powerPort.distributePower(powerRequested, false);
+            powerRequested = Math.min(simulation.battery.storedPower(), powerRequested); // just in casei
+            long powerAccepted = powerPort.distributePower(powerRequested, false);
+            simulation.battery.extractPower(powerAccepted);
         }
         
         // i know this is just a hose out, not sure if it should be changed or not
@@ -405,8 +396,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         
         reactorState.doAutoEject = autoEjectWaste;
         
-        reactorState.energyStored = storedPower;
-        reactorState.energyCapacity = Config.Reactor.PassiveBatterySize;
+        reactorState.energyStored = simulation.battery.storedPower();
+        reactorState.energyCapacity = simulation.battery.size();
         
         reactorState.wasteStored = simulation.fuelTank.getWasteAmount();
         reactorState.fuelStored = simulation.fuelTank.getFuelAmount();
@@ -457,7 +448,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     public String getDebugInfo() {
         return super.getDebugInfo() +
                 "State: " + reactorActivity.toString() + "\n" +
-                "StoredPower: " + storedPower + "\n" +
+                "StoredPower: " + simulation.battery.storedPower() + "\n" +
                 "PowerProduction: " + simulation.getFEProducedLastTick() + "\n" +
                 "FuelUsage: " + simulation.getFuelConsumedLastTick() + "\n" +
                 "ReactantCapacity: " + simulation.fuelTank.getCapacity() + "\n" +
@@ -516,11 +507,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     public long CCgetEnergyStored() {
-        return storedPower;
+        return simulation.battery.storedPower();
     }
     
     public long CCgetMaxEnergyStored() {
-        return Config.Reactor.PassiveBatterySize;
+        return simulation.battery.size();
     }
     
     public double CCgetFuelTemperature() {
