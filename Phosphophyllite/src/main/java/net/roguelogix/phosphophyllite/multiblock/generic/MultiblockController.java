@@ -124,12 +124,6 @@ public class MultiblockController {
             }
             onPartAttached(toAttach);
         } else {
-            if (state == AssemblyState.PAUSED) {
-                // this is only possible with large multiblocks and low render distances
-                // dont, just dont, it can break shit, and i dont want to deal with it right now
-                // fun thing, relaunching should get around this
-                throw new IllegalStateException("Attempt to add a new block to a paused multiblock");
-            }
             onPartPlaced(toAttach);
         }
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
@@ -149,12 +143,6 @@ public class MultiblockController {
             onPartDetached(toDetach);
             state = AssemblyState.PAUSED;
         } else {
-            if (state == AssemblyState.PAUSED) {
-                // this is only possible with large multiblocks and low render distances
-                // dont, just dont, it can break shit, and i dont want to deal with it right now
-                // fun thing, relaunching should get around this
-                throw new IllegalStateException("Attempt to remove a block from a paused multiblock");
-            }
             onPartBroken(toDetach);
         }
         
