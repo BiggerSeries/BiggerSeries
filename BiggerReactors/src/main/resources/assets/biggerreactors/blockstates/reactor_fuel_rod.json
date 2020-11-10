@@ -1,7 +1,267 @@
 {
-  "variants": {
-    "": {
-      "model": "biggerreactors:block/reactor_fuel_rod"
+  "multipart": [
+    {
+      "when": {
+        "fuel_level": "1"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_1"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "2"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_2"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "3"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_3"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "4"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_4"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "5"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_5"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "6"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_6"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "7"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_7"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "8"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_8"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "9"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_9"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "10"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_10"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "11"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_11"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "12"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_12"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "13"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_13"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "14"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_14"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "15"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_15"
+      }
+    },
+    {
+      "when": {
+        "fuel_level": "16"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/fuel/level_16"
+      }
+    },
+
+    {
+      "when": {
+        "waste_level": "1"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_1"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "2"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_2"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "3"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_3"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "4"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_4"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "5"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_5"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "6"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_6"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "7"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_7"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "8"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_8"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "9"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_9"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "10"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_10"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "11"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_11"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "12"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_12"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "13"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_13"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "14"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_14"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "15"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_15"
+      }
+    },
+    {
+      "when": {
+        "waste_level": "16"
+      },
+      "apply": {
+        "model": "biggerreactors:block/reactor/fuel_rod/waste/level_16"
+      }
+    },
+
+    {
+      "apply": {
+        "model": "biggerreactors:block/reactor_fuel_rod"
+      }
     }
-  }
+  ]
 }

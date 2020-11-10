@@ -1,7 +1,7 @@
 package net.roguelogix.biggerreactors.classic.reactor;
 
 import com.mojang.datafixers.util.Pair;
-import dan200.computercraft.api.lua.LuaException;
+import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -12,7 +12,6 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.*;
 import net.roguelogix.biggerreactors.classic.reactor.simulation.ClassicReactorSimulation;
-import net.roguelogix.biggerreactors.classic.reactor.state.ControlRodState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
@@ -106,6 +105,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorTerminalTile> terminals = new HashSet<>();
     private final List<ReactorControlRodTile> controlRods = new ArrayList<>();
     private final Set<ReactorFuelRodTile> fuelRods = new HashSet<>();
+    private final ArrayList<Set<ReactorFuelRodTile>> fuelRodsByLevel = new ArrayList<>();
     private final Set<ReactorPowerTapTile> powerPorts = new HashSet<>();
     private final Set<ReactorAccessPortTile> accessPorts = new HashSet<>();
     private final Set<ReactorCoolantPortTile> coolantPorts = new HashSet<>();
@@ -258,6 +258,29 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         simulation.updateInternalValues();
         updateControlRodLevels();
         collectFuel();
+        
+        int levels = this.maxCoord().y() - this.minCoord().y() - 1;
+        fuelRodsByLevel.clear();
+        fuelRodsByLevel.ensureCapacity(levels);
+        for (int i = 0; i < levels; i++) {
+            fuelRodsByLevel.add(new HashSet<>());
+        }
+        
+        fuelRods.forEach(rod -> {
+            int rodLevel = rod.getPos().getY();
+            rodLevel -= this.minCoord().y();
+            rodLevel -= 1;
+            fuelRodsByLevel.get(rodLevel).add(rod);
+        });
+        
+        currentFuelRenderLevel = fuelRodsByLevel.size() * 16;
+        
+        updateFuelRenderingLevel();
+        
+        currentFuelRenderLevel = 0;
+        currentWasteRenderLevel = 0;
+        
+        updateFuelRenderingLevel();
     }
     
     @Override
@@ -317,7 +340,56 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             simulation.coolantTank.extractSteam(coolantPort.pushSteam(simulation.coolantTank.extractSteam(Integer.MAX_VALUE, true)), false);
         }
         
+        updateFuelRenderingLevel();
+        
         markDirty();
+    }
+    
+    long currentFuelRenderLevel = 0;
+    long currentWasteRenderLevel = 0;
+    
+    private void updateFuelRenderingLevel() {
+        
+        long rodPixels = fuelRodsByLevel.size() * 16;
+        long fuelPixels = (simulation.fuelTank.getTotalAmount() * rodPixels) / simulation.fuelTank.getCapacity();
+        long wastePixels = (simulation.fuelTank.getWasteAmount() * rodPixels) / simulation.fuelTank.getCapacity();
+        
+        if (fuelPixels == currentFuelRenderLevel && wastePixels == currentWasteRenderLevel) {
+            return;
+        }
+        
+        long lowerUpdatePixel = Math.min(Math.min(currentFuelRenderLevel, fuelPixels), Math.min(currentWasteRenderLevel, wastePixels));
+        long upperUpdatePixel = Math.max(Math.max(currentFuelRenderLevel, fuelPixels), Math.max(currentWasteRenderLevel, wastePixels));
+        
+        long lowerUpdateLevel = lowerUpdatePixel / 16;
+        long upperUpdateLevel = upperUpdatePixel / 16 + (((upperUpdatePixel % 16) > 0) ? 1 : 0);
+        
+        HashMap<BlockPos, BlockState> map = new HashMap<>();
+        
+        for (long i = lowerUpdateLevel; i < upperUpdateLevel; i++) {
+            long levelBasePixel = i * 16;
+            int levelFuelPixel = (int) Math.max(Math.min(fuelPixels - levelBasePixel, 16), 0);
+            int levelWastePixel = (int) Math.max(Math.min(wastePixels - levelBasePixel, 16), 0);
+            
+            for (ReactorFuelRodTile reactorFuelRodTile : fuelRodsByLevel.get((int) i)) {
+                BlockState state = reactorFuelRodTile.getBlockState();
+                state = state.with(ReactorFuelRod.FUEL_HEIGHT_PROPERTY, levelFuelPixel);
+                state = state.with(ReactorFuelRod.WASTE_HEIGHT_PROPERTY, levelWastePixel);
+                map.put(reactorFuelRodTile.getPos(), state);
+            }
+            
+        }
+        
+        Util.setBlockStates(map, world);
+        
+        for (long i = lowerUpdateLevel; i < upperUpdateLevel; i++) {
+            for (ReactorFuelRodTile reactorFuelRodTile : fuelRodsByLevel.get((int) i)) {
+                reactorFuelRodTile.markDirty();
+            }
+        }
+        
+        currentFuelRenderLevel = fuelPixels;
+        currentWasteRenderLevel = wastePixels;
     }
     
     private void distributeFuel() {

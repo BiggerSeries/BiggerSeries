@@ -1,0 +1,22 @@
+{
+    "textures": {
+        "0": "biggerreactors:block/fuel_rod/fuel",
+        "1": "biggerreactors:block/fuel_rod/fuel_still"
+    },
+    "elements": [
+        {
+            "from": [0.02, 0, 0.02],
+            "to": [15.98, 0.98, 15.98],
+            "rotation": {"angle": 0, "axis": "y", "origin": [4, 8, 4]},
+            "faces": {
+                "north": {"uv": [0, 0, 16, 1], "texture": "#0"},
+                "east": {"uv": [0, 0, 16, 1], "texture": "#0"},
+                "south": {"uv": [0, 0, 16, 1], "texture": "#0"},
+                "west": {"uv": [0, 0, 16, 1], "texture": "#0"},
+                "up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+                "down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+            }
+        }
+    ],
+    "display": {}
+}
