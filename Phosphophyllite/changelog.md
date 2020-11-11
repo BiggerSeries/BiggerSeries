@@ -1,3 +1,7 @@
+# 1.16.3-0.2.1
+ - Remove paused multiblock errors, don't break it
+ - Fix paused multiblock orphaning detaching incorrectly
+
 # 1.16.3-0.2.0
  - Connecting, textures, you are welcome
  - use constant vectors where applicable

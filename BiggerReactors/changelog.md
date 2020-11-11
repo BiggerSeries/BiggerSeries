@@ -1,4 +1,24 @@
+# 1.16.3-0.2.4
+Blocks and bugs
+
+## Reactor
+ - accepts uranium and blutonium blocks as fuel
+ - renders fuel, shows to accuracy of 1/16th of a block
+ - Dynamic battery size, default 10k RF per external block
+ - Steam tank size limit removed
+ 
+## Turbine
+ - Dynamic flow rate/tank size, based on blade count
+ - Dynamic battery size default 30k * (coil block count + 1)
+ - increased default max turbine length to 192
+ - Allthemodium, Vibranium, and Unobtanium added to possible coils
+
+## Misc
+ - storage block items are tagged now, should work with other recipes and mods correctly
+ - Fix CC API backwards compatibility with new battery sizes, scales it to the old sizes
+
 # 1.16.3-0.2.3
+Connecting, textures
 
 ## Reactor
  - Connecting, textures, for the glass
