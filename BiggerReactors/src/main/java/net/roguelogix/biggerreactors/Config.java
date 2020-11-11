@@ -293,6 +293,10 @@ public class Config {
             new TurbineCoilConfigValues("forge:storage_blocks/electrum", TurbineCoilConfigValues.LocationType.TAG, 0.825, 0.2, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/platinum", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.25, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/enderium", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.3, 1.02),
+            
+            new TurbineCoilConfigValues("forge:storage_blocks/allthemodium", TurbineCoilConfigValues.LocationType.TAG, 1.2, 0.4, 1.02),
+            new TurbineCoilConfigValues("forge:storage_blocks/vibranium", TurbineCoilConfigValues.LocationType.TAG, 1.35, 0.5, 1.04),
+            new TurbineCoilConfigValues("forge:storage_blocks/unobtainium", TurbineCoilConfigValues.LocationType.TAG, 1.5, 0.7, 1.06),
     };
     
     public static void loadRegistries(ITagCollection<Block> blockTags) {
