@@ -151,7 +151,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             }
             break;
             case OUTPUT_ENERGY_AMOUNT: {
-                double energyAmount = reactor.CCgetEnergyStored();
+                double energyAmount = reactor.CCgetEnergyStoredUnscaled();
                 energyAmount /= (double) reactor.CCgetMaxEnergyStored();
                 energyAmount *= 100;
                 if ((energyAmount < mainVal) == activeTriggerAboveOrBelow) {
