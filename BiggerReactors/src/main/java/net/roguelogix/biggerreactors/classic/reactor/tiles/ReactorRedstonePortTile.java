@@ -353,5 +353,6 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
         }
         // Call reverted changes to align uncommitted settings to the active ones.
         revertChanges();
+        commitChanges();
     }
 }
