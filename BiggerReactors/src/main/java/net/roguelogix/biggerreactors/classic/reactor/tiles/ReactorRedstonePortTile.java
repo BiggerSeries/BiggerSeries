@@ -288,8 +288,11 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             case "setAboveOrBelow":
                 uncommittedTriggerAboveOrBelow = (Boolean) requestData;
                 break;
-            case "setMode":
-                uncommittedMode = (Integer) requestData;
+            case "changeMode":
+                //uncommittedMode = (Integer) requestData;
+                // Change by 1, loop to 0 if too high.
+                uncommittedMode++;
+                if(uncommittedMode > 2) uncommittedMode = 0;
                 break;
             case "setMainBuffer":
                 uncommittedMainBuffer = (String) requestData;

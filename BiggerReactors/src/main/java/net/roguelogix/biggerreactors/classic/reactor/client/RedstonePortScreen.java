@@ -12,9 +12,15 @@ import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortState;
 import net.roguelogix.biggerreactors.client.GuiInputBox;
 import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneCommitButton;
+import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneModeButton;
 import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneToggles;
 import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneTriggerSelectorToggle;
 import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
+
+// Please don't look at this file. The entire thing was a quick hackjob and is horrid.
+// It really shows how bad my original GUI system was, as this file makes it bust at the seams.
+// It's bad, I feel bad, and a new system is coming. This file will look way better after.
+// In the meantime though, save your eyes from pain, and just blame gizmocodes.
 
 public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> implements IHasContainer<RedstonePortContainer> {
 
@@ -33,6 +39,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
 
     private GuiRedstoneCommitButton<RedstonePortContainer> commitButton;
     private GuiRedstoneCommitButton<RedstonePortContainer> revertButton;
+    private GuiRedstoneModeButton<RedstonePortContainer> modeButton;
 
     private GuiRedstoneToggles<RedstonePortContainer> togglePulseOrSignal;
     private GuiRedstoneToggles<RedstonePortContainer> toggleActiveAboveOrBelow;
@@ -71,9 +78,10 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
 
         commitButton = new GuiRedstoneCommitButton<>(this, 152, 30, 16, 16, true);
         revertButton = new GuiRedstoneCommitButton<>(this, 152, 50, 16, 16, false);
+        modeButton = new GuiRedstoneModeButton<>(this, 152, 92, 16, 16);
 
-        togglePulseOrSignal = new GuiRedstoneToggles<>(this, 8, 92, 16, 16, "", true);
-        toggleActiveAboveOrBelow = new GuiRedstoneToggles<>(this, 8, 92, 16, 16, "", false);
+        togglePulseOrSignal = new GuiRedstoneToggles<>(this, 8, 92, 16, 16, "tooltip.biggerreactors.buttons.redstone_port.update_trigger", true);
+        toggleActiveAboveOrBelow = new GuiRedstoneToggles<>(this, 8, 92, 16, 16, "tooltip.biggerreactors.buttons.redstone_port.update_trigger", false);
 
         textMainBuffer = new GuiInputBox<>(this, 8, 124, true, "setMainBuffer", redstonePortState.mainBuffer);
         textSecondBuffer = new GuiInputBox<>(this, 8, 154, true, "setSecondBuffer", redstonePortState.secondBuffer);
@@ -106,8 +114,10 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         switch (RedstonePortSelector.valueOf(this.redstonePortState.settingId)) {
             case INPUT_ACTIVITY:
             case INPUT_CONTROL_ROD_INSERTION: {
-                // MODE BUTTON
                 togglePulseOrSignal.mouseClicked(mouseX, mouseY, button);
+                if(!this.redstonePortState.triggerPulseOrSignal) {
+                    modeButton.mouseClicked(mouseX, mouseY, button);
+                }
                 break;
             }
             case INPUT_EJECT_WASTE: {
@@ -159,8 +169,10 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         switch (RedstonePortSelector.valueOf(this.redstonePortState.settingId)) {
             case INPUT_ACTIVITY:
             case INPUT_CONTROL_ROD_INSERTION: {
-                // MODE BUTTON
                 togglePulseOrSignal.mouseReleased(mouseX, mouseY, button);
+                if(!this.redstonePortState.triggerPulseOrSignal) {
+                    modeButton.mouseReleased(mouseX, mouseY, button);
+                }
                 textMainBuffer.mouseReleased(mouseX, mouseY, button);
                 textSecondBuffer.mouseReleased(mouseX, mouseY, button);
                 break;
@@ -243,8 +255,15 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         selectorOutputWasteAmount.drawTooltip(mStack, mouseX, mouseY);
         selectorOutputEnergyAmount.drawTooltip(mStack, mouseX, mouseY);
 
+        togglePulseOrSignal.drawTooltip(mStack, mouseX, mouseY);
+        toggleActiveAboveOrBelow.drawTooltip(mStack, mouseX, mouseY);
+
         commitButton.drawTooltip(mStack, mouseX, mouseY);
         revertButton.drawTooltip(mStack, mouseX, mouseY);
+
+        if(!this.redstonePortState.triggerPulseOrSignal) {
+            modeButton.drawTooltip(mStack, mouseX, mouseY);
+        }
     }
 
     /**
@@ -329,9 +348,19 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
             textSecondBuffer.drawPart(mStack);
             this.font.drawString(mStack, "%", 110, 158, 4210752);
         } else {
-            this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.set_on_pulse").getString(), 26, 96, 4210752);
+            if(this.redstonePortState.mode == 0) { // INSERT BY
+                this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.insert_on_pulse").getString(), 26, 96, 4210752);
+                this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.insert_by").getString(), 8, 114, 4210752);
 
-            this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.set_to").getString(), 8, 114, 4210752);
+            } else if (this.redstonePortState.mode == 1) { // RETRACT BY
+                this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.retract_on_pulse").getString(), 26, 96, 4210752);
+                this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.retract_by").getString(), 8, 114, 4210752);
+
+            } else { // SET
+                this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.set_on_pulse").getString(), 26, 96, 4210752);
+                this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.status.redstone.set_to").getString(), 8, 114, 4210752);
+            }
+            modeButton.drawPart(mStack);
             textMainBuffer.drawPart(mStack);
             this.font.drawString(mStack, "%", 110, 128, 4210752);
         }

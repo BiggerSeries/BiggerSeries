@@ -42,7 +42,7 @@ public class RedstonePortState implements GuiSync.IGUIPacket {
      * Used by:
      * - Input Control Rod Insertion: when pulseOrSignal is pulse (false).
      */
-    public int mode = 0;
+    public int mode = 2;
 
     /**
      * Text box for elements.
