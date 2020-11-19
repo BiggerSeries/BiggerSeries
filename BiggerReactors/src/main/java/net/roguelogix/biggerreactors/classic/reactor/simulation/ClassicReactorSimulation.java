@@ -176,7 +176,7 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
                 FEProducedLastTick = rfTransferred * Config.Reactor.OutputMultiplier * Config.Reactor.PassiveOutputMultiplier;
                 battery.addPower(FEProducedLastTick);
             } else {
-                rfTransferred -= coolantTank.absorbHeat(rfTransferred * Config.Reactor.OutputMultiplier * Config.Reactor.ActiveOutputMultiplier);
+                rfTransferred -= coolantTank.absorbHeat(rfTransferred * Config.Reactor.OutputMultiplier * Config.Reactor.ActiveOutputMultiplier) / (Config.Reactor.OutputMultiplier * Config.Reactor.ActiveOutputMultiplier);
                 FEProducedLastTick = coolantTank.getFluidVaporizedLastTick(); // Piggyback so we don't have useless stuff in the update packet
             }
             
