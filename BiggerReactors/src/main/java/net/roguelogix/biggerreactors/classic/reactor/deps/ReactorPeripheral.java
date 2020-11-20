@@ -61,6 +61,12 @@ public class ReactorPeripheral implements IDynamicPeripheral {
                 }
                 return MethodResult.of(0);
             });
+            methodHandlers.put("CCgetEnergyStoredUnscaled", (reactor, args) -> {
+                if (reactor != null) {
+                    return MethodResult.of(reactor.CCgetEnergyStoredUnscaled());
+                }
+                return MethodResult.of(0);
+            });
             methodHandlers.put("getMaxEnergyStored", (reactor, args) -> {
                 if (reactor != null) {
                     return MethodResult.of(reactor.CCgetMaxEnergyStored());
