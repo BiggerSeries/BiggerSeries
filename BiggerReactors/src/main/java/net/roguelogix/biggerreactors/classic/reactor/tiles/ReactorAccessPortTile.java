@@ -29,6 +29,7 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorAccessPor
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorAccessPortState;
 import net.roguelogix.biggerreactors.items.ingots.BlutoniumIngot;
 import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
+import net.roguelogix.biggerreactors.items.ingots.YelloriumIngot;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
@@ -45,14 +46,19 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
     
-    private static ResourceLocation uraniumIngotTag = new ResourceLocation("forge:ingots/uranium");
-    private static ResourceLocation uraniumBlockTag = new ResourceLocation("forge:storage_blocks/uranium");
+    private static final ResourceLocation uraniumIngotTag = new ResourceLocation("forge:ingots/uranium");
+    private static final ResourceLocation uraniumBlockTag = new ResourceLocation("forge:storage_blocks/uranium");
+    
+    public static final int FUEL_SLOT = 0;
+    public static final int WASTE_SLOT = 1;
+    public static final int FUEL_INSERT_SLOT = 2;
     
     public ReactorAccessPortTile() {
         super(TYPE);
     }
     
     private ReactorAccessPort.PortDirection direction = INLET;
+    private boolean fuelMode = false;
     
     public boolean isInlet() {
         return direction == INLET;
@@ -73,6 +79,9 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (compound.contains("direction")) {
             direction = ReactorAccessPort.PortDirection.valueOf(compound.getString("direction"));
         }
+        if (compound.contains("fuelMode")) {
+            fuelMode = compound.getBoolean("fuelMode");
+        }
     }
     
     @Override
@@ -80,6 +89,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     protected CompoundNBT writeNBT() {
         CompoundNBT NBT = new CompoundNBT();
         NBT.putString("direction", String.valueOf(direction));
+        NBT.putBoolean("fuelMode", fuelMode);
         return NBT;
     }
     
@@ -108,18 +118,23 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     @Override
     public int getSlots() {
-        return 2;
+        return 3;
     }
     
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
         ReactorMultiblockController reactor = reactor();
-        if (slot == 0 || reactor == null) {
+        if (reactor == null) {
             return ItemStack.EMPTY;
-        } else {
+        } else if (slot == WASTE_SLOT) {
             long availableIngots = reactor.CCgetWasteAmount() / Config.Reactor.FuelMBPerIngot;
             return new ItemStack(CyaniteIngot.INSTANCE, (int) availableIngots);
+        } else if (slot == FUEL_SLOT) {
+            long availableIngots = reactor.CCgetFuelAmount() / Config.Reactor.FuelMBPerIngot;
+            return new ItemStack(YelloriumIngot.INSTANCE, (int) availableIngots);
+        } else {
+            return ItemStack.EMPTY;
         }
     }
     
@@ -128,7 +143,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
         
-        if (!isInlet() || reactor == null || slot == 1) {
+        if (!isInlet() || reactor == null || slot != FUEL_INSERT_SLOT) {
             return stack;
         }
         stack = stack.copy();
@@ -156,15 +171,25 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
         
-        if (isInlet() || reactor == null || slot == 0) {
+        if (isInlet() || reactor == null || slot == FUEL_INSERT_SLOT) {
             return ItemStack.EMPTY;
         }
         
-        long maxExtractable = reactor.extractWaste(amount * Config.Reactor.FuelMBPerIngot, true);
-        long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
-        long extracted = reactor.extractWaste(toExtracted, simulate);
+        if (slot == WASTE_SLOT && !fuelMode) {
+            long maxExtractable = reactor.extractWaste(amount * Config.Reactor.FuelMBPerIngot, true);
+            long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
+            long extracted = reactor.extractWaste(toExtracted, simulate);
+            
+            return new ItemStack(CyaniteIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
+        } else if (slot == FUEL_SLOT && fuelMode) {
+            long maxExtractable = reactor.extractFuel(amount * Config.Reactor.FuelMBPerIngot, true);
+            long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
+            long extracted = reactor.extractFuel(toExtracted, simulate);
+            
+            return new ItemStack(YelloriumIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
+        }
         
-        return new ItemStack(CyaniteIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
+        return ItemStack.EMPTY;
     }
     
     @Override
@@ -176,9 +201,11 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        if (slot == 0) {
+        if (slot == FUEL_INSERT_SLOT) {
             return stack.getItem().getTags().contains(uraniumIngotTag) || stack.getItem() == BlutoniumIngot.INSTANCE
                     || stack.getItem().getTags().contains(uraniumBlockTag) || stack.getItem() == BlutoniumBlock.INSTANCE.asItem();
+        } else if (slot == FUEL_SLOT) {
+            return stack.getItem() == YelloriumIngot.INSTANCE;
         } else {
             return stack.getItem() == CyaniteIngot.INSTANCE;
         }
