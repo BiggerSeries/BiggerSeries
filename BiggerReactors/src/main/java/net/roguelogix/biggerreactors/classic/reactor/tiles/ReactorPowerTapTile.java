@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
@@ -71,11 +72,17 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
     
     @Override
     public int getEnergyStored() {
+        if(controller != null && controller instanceof ReactorMultiblockController){
+            return (int) ((ReactorMultiblockController) controller).CCgetEnergyStoredUnscaled();
+        }
         return 0;
     }
     
     @Override
     public int getMaxEnergyStored() {
+        if(controller != null && controller instanceof ReactorMultiblockController){
+            return (int) ((ReactorMultiblockController) controller).CCgetMaxEnergyStored();
+        }
         return 0;
     }
     
