@@ -110,7 +110,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.35'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.42'
 
     runtime fg.deobf('curse.maven:jei:3076673')
     runtime fg.deobf('curse.maven:prettypipes:3062663')
@@ -121,9 +121,9 @@ dependencies {
     runtime fg.deobf('curse.maven:thermalfoundation:3099202')
     runtime fg.deobf('curse.maven:thermalexpansion:3099261')
 
-    runtime fg.deobf('curse.maven:mek:3075056')
-    runtime fg.deobf('curse.maven:mek-tool:3075059')
-    runtime fg.deobf('curse.maven:mek-gen:3075058')
+    runtime fg.deobf('curse.maven:mek:3100510')
+    runtime fg.deobf('curse.maven:mek-tool:3100513')
+    runtime fg.deobf('curse.maven:mek-gen:3100512')
 
     compile fg.deobf('curse.maven:er2:3103958')
     compile fg.deobf('curse.maven:zc2:3103961')
