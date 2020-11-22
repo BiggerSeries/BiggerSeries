@@ -10,6 +10,7 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorAccessPortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorAccessPortState;
 import net.roguelogix.biggerreactors.client.GuiSymbol;
+import net.roguelogix.biggerreactors.client.ioport.GuiFuelModeToggle;
 import net.roguelogix.biggerreactors.client.ioport.GuiPortDirectionToggle;
 import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
 
@@ -19,6 +20,7 @@ public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortCont
 
     // Buttons.
     private GuiPortDirectionToggle<ReactorAccessPortContainer> ioToggle;
+    private GuiFuelModeToggle<ReactorAccessPortContainer> fuelModeToggle;
 
     // Information symbol.
     private GuiSymbol<ReactorAccessPortContainer> symbolIoState;
@@ -34,10 +36,11 @@ public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortCont
         this.updateTexture(new ResourceLocation(BiggerReactors.modid, "textures/screen/io_port.png"), 0, 0);
 
         // Initialize buttons.
-        this.ioToggle = new GuiPortDirectionToggle<>(this, 42, 25, 16, 16);
+        this.ioToggle = new GuiPortDirectionToggle<>(this, 35, 25, 16, 16);
+        this.fuelModeToggle = new GuiFuelModeToggle<>(this, 55, 25, 16, 16);
 
         // Initialize port symbols.
-        this.symbolIoState = new GuiSymbol<>(this, 62, 25, 64, 64,
+        this.symbolIoState = new GuiSymbol<>(this, 75, 25, 64, 64,
                 new TranslationTextComponent("tooltip.biggerreactors.symbols.io.state").getString());
         this.symbolGuiChange = new GuiSymbol<>(this, 104, 54, 128, 64,
                 new TranslationTextComponent("tooltip.biggerreactors.symbols.io.gui_change").getString());
@@ -55,6 +58,7 @@ public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortCont
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
         this.ioToggle.mouseClicked(mouseX, mouseY, button);
+        this.fuelModeToggle.mouseClicked(mouseX, mouseY, button);
         return true;
     }
 
@@ -67,6 +71,7 @@ public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortCont
 
         // Update buttons (that require it).
         this.ioToggle.updateState(accessPortState.inputState);
+        this.fuelModeToggle.updateState(accessPortState.fuelMode, !accessPortState.inputState);
     }
 
     /**
@@ -84,6 +89,7 @@ public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortCont
 
         // Draw buttons.
         this.ioToggle.drawTooltip(mStack, mouseX, mouseY);
+        this.fuelModeToggle.drawTooltip(mStack, mouseX, mouseY);
 
         // Draw port symbols.
         // Draw status text.
@@ -108,6 +114,7 @@ public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortCont
 
         // Draw button.
         this.ioToggle.drawPart(mStack);
+        this.fuelModeToggle.drawPart(mStack);
 
         // Draw status text.
         if (accessPortState.inputState) {

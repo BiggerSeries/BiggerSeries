@@ -16,6 +16,11 @@ public class ReactorAccessPortState implements GuiSync.IGUIPacket {
     public boolean inputState = false;
 
     /**
+     * Allows fuel or waste to be extracted. True for fuel extraction, false for waste extraction.
+     */
+    public boolean fuelMode = false;
+
+    /**
      * The tile whose information this belongs to.
      */
     ReactorAccessPortTile ioPortTile;
@@ -27,6 +32,7 @@ public class ReactorAccessPortState implements GuiSync.IGUIPacket {
     @Override
     public void read(@Nonnull Map<?, ?> data) {
         inputState = (Boolean) data.get("inputState");
+        fuelMode = (Boolean) data.get("fuelMode");
     }
 
     @Override
@@ -36,6 +42,7 @@ public class ReactorAccessPortState implements GuiSync.IGUIPacket {
         HashMap<String, Object> data = new HashMap<>();
 
         data.put("inputState", inputState);
+        data.put("fuelMode", fuelMode);
 
         return data;
     }

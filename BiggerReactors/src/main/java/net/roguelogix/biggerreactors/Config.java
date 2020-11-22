@@ -10,7 +10,7 @@ import net.roguelogix.phosphophyllite.registry.RegisterConfig;
 @RegisterConfig
 @PhosphophylliteConfig
 public class Config {
-    
+
     @PhosphophylliteConfig
     public static class WorldGen {
         @PhosphophylliteConfig.Value(min = 1)
@@ -22,7 +22,7 @@ public class Config {
         @PhosphophylliteConfig.Value
         public static boolean EnableYelloriteGeneration = true;
     }
-    
+
     @PhosphophylliteConfig
     public static class Reactor {
         //TODO: remove max, its only there because of the render system
@@ -33,7 +33,7 @@ public class Config {
         public static int MaxWidth = 64;
         @PhosphophylliteConfig.Value(min = 3, max = 256)
         public static int MaxHeight = 96;
-        
+
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelUsageMultiplier = 1;
         @PhosphophylliteConfig.Value(min = 0)
@@ -108,14 +108,14 @@ public class Config {
         public static float FuelAbsorptionScalingShiftMultiplier = 1f;
         @PhosphophylliteConfig.Value(min = 0)
         public static float FuelAbsorptionScalingRateExponentMultiplier = 2.2f;
-        
+
         @PhosphophylliteConfig
         public static class GUI {
             @PhosphophylliteConfig.Value
             public static long HeatDisplayMax = 2000;
         }
     }
-    
+
     @PhosphophylliteConfig
     public static class Turbine {
         @PhosphophylliteConfig.Value(min = 5, max = 192)
@@ -124,7 +124,7 @@ public class Config {
         public static int MaxWidth = 32;
         @PhosphophylliteConfig.Value(min = 4, max = 256)
         public static int MaxHeight = 192;
-        
+
         @PhosphophylliteConfig.Value(min = 1)
         public static long FluidPerBlade = 25;
         @PhosphophylliteConfig.Value(min = 1)
@@ -159,14 +159,14 @@ public class Config {
         @PhosphophylliteConfig.Value(min = 0, comment = "Time (in ticks) it takes to complete a job.")
         public static int TotalWorkTime = 200;
     }
-    
+
     @PhosphophylliteConfig
     public static class ReactorModeratorConfigValues {
         public enum LocationType {
             REGISTRY,
             TAG
         }
-        
+
         @PhosphophylliteConfig.Value
         public final String location;
         @PhosphophylliteConfig.Value
@@ -179,7 +179,7 @@ public class Config {
         public final float moderation;
         @PhosphophylliteConfig.Value
         public final float conductivity;
-    
+
         @SuppressWarnings("unused")
         ReactorModeratorConfigValues() {
             location = null;
@@ -189,7 +189,7 @@ public class Config {
             moderation = 0;
             conductivity = 0;
         }
-        
+
         public ReactorModeratorConfigValues(String location, LocationType locationType, float absorption, float heatEfficiency, float moderation, float conductivity) {
             this.location = location;
             this.locationType = locationType;
@@ -199,7 +199,7 @@ public class Config {
             this.conductivity = conductivity;
         }
     }
-    
+
     // todo: blocks to add
     //      brass?
     //      fluxed electrum (lemming may port RA, unsure)
@@ -209,7 +209,7 @@ public class Config {
             new ReactorModeratorConfigValues("minecraft:air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
             new ReactorModeratorConfigValues("minecraft:void_air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
             new ReactorModeratorConfigValues("minecraft:cave_air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
-            
+
             new ReactorModeratorConfigValues("minecraft:iron_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.5f, 0.75f, 1.4f, 0.6f),
             new ReactorModeratorConfigValues("minecraft:gold_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.52f, 0.8f, 1.45f, 2f),
             new ReactorModeratorConfigValues("minecraft:diamond_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 3f),
@@ -217,7 +217,7 @@ public class Config {
             new ReactorModeratorConfigValues("minecraft:glass", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.2f, 0.25f, 1.1f, 0.3f),
             new ReactorModeratorConfigValues("minecraft:ice", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.33f, 1.15f, 0.1f),
             new ReactorModeratorConfigValues("minecraft:snow_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.15f, 0.33f, 1.05f, 0.05f),
-            
+
             new ReactorModeratorConfigValues("forge:storage_blocks/copper", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.75f, 1.4f, 1f),
             new ReactorModeratorConfigValues("forge:storage_blocks/osmium", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
             new ReactorModeratorConfigValues("forge:storage_blocks/bronze", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
@@ -231,19 +231,19 @@ public class Config {
             new ReactorModeratorConfigValues("forge:storage_blocks/platinum", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.86f, 1.58f, 1.5f),
             new ReactorModeratorConfigValues("forge:storage_blocks/enderium", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.88f, 1.6f, 3f),
             new ReactorModeratorConfigValues("forge:storage_blocks/graphite", ReactorModeratorConfigValues.LocationType.TAG, 0.1f, 0.5f, 2f, 2f),
-        
+
             new ReactorModeratorConfigValues("minecraft:water", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
-            
+
     };
-    
+
     @PhosphophylliteConfig
     public static class TurbineCoilConfigValues {
-        
+
         public enum LocationType {
             REGISTRY,
             TAG
         }
-    
+
         @PhosphophylliteConfig.Value
         public final String location;
         @PhosphophylliteConfig.Value
@@ -254,7 +254,7 @@ public class Config {
         public final double extractionRate;
         @PhosphophylliteConfig.Value
         public final double bonus;
-    
+
         @SuppressWarnings("unused")
         TurbineCoilConfigValues() {
             location = null;
@@ -263,7 +263,7 @@ public class Config {
             bonus = 0;
             extractionRate = 0;
         }
-        
+
         public TurbineCoilConfigValues(String location, LocationType locationType, double efficiency, double extractionRate, double bonus) {
             this.location = location;
             this.locationType = locationType;
@@ -272,8 +272,8 @@ public class Config {
             this.bonus = bonus;
         }
     }
-    
-    
+
+
     // todo: blocks to add
     //      brass?
     //      fluxed electrum (lemming may port RA, unsure)
@@ -281,9 +281,9 @@ public class Config {
     public static TurbineCoilConfigValues[] turbineCoils = new TurbineCoilConfigValues[]{
             new TurbineCoilConfigValues("minecraft:iron_block", TurbineCoilConfigValues.LocationType.REGISTRY, 0.33, 0.1, 1),
             new TurbineCoilConfigValues("minecraft:gold_block", TurbineCoilConfigValues.LocationType.REGISTRY, 0.66, 0.175, 1),
-            
+
             new TurbineCoilConfigValues("biggerreactors:ludicrite_block", TurbineCoilConfigValues.LocationType.REGISTRY, 1.155, 0.35, 1.02),
-            
+
             new TurbineCoilConfigValues("forge:storage_blocks/copper", TurbineCoilConfigValues.LocationType.TAG, 0.396, 0.12, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/osmium", TurbineCoilConfigValues.LocationType.TAG, 0.462, 0.12, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/aluminum", TurbineCoilConfigValues.LocationType.TAG, 0.495, 0.13, 1),
@@ -293,18 +293,18 @@ public class Config {
             new TurbineCoilConfigValues("forge:storage_blocks/electrum", TurbineCoilConfigValues.LocationType.TAG, 0.825, 0.2, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/platinum", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.25, 1),
             new TurbineCoilConfigValues("forge:storage_blocks/enderium", TurbineCoilConfigValues.LocationType.TAG, 0.99, 0.3, 1.02),
-            
+
             new TurbineCoilConfigValues("forge:storage_blocks/allthemodium", TurbineCoilConfigValues.LocationType.TAG, 1.2, 0.4, 1.02),
             new TurbineCoilConfigValues("forge:storage_blocks/vibranium", TurbineCoilConfigValues.LocationType.TAG, 1.35, 0.5, 1.04),
             new TurbineCoilConfigValues("forge:storage_blocks/unobtainium", TurbineCoilConfigValues.LocationType.TAG, 1.5, 0.7, 1.06),
     };
-    
+
     public static void loadRegistries(ITagCollection<Block> blockTags) {
         ReactorModeratorRegistry.clearRegistry();
         for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
             ReactorModeratorRegistry.registerConfigValues(blockTags, reactorModerator);
         }
-        
+
         TurbineCoilRegistry.clearRegistry();
         for (TurbineCoilConfigValues turbineCoil : turbineCoils) {
             TurbineCoilRegistry.registerConfigValues(blockTags, turbineCoil);

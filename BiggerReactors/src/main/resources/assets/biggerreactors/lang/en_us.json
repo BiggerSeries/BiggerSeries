@@ -118,6 +118,9 @@
   "tooltip.biggerreactors.status.io.output": "§cProviding Output",
 
   "tooltip.biggerreactors.buttons.io": "§bToggle port I/O.",
+  "tooltip.biggerreactors.buttons.extract_fuel": "§bExtract Fuel.",
+  "tooltip.biggerreactors.buttons.extract_waste": "§bExtract Waste.",
+  "tooltip.biggerreactors.buttons.fuel_mode_inactive": "§bThis option is only available for output ports.",
 
   "tooltip.biggerreactors.symbols.io.gui_change": "§b\"This GUI is missing the input slots!\"\nThe I/O ports have been rewritten!\nTo insert/extract materials, use a\nhopper or pipe.",
   "tooltip.biggerreactors.symbols.io.input": "§bThis port is currently accepting input.",

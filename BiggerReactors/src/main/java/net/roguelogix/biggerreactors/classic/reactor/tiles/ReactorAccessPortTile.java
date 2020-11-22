@@ -298,8 +298,13 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             boolean state = (Boolean) requestData;
             this.setDirection(state ? INLET : OUTLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
-            
         }
+
+        if(requestName.equals("setFuelMode")) {
+            boolean state = (Boolean) requestData;
+            this.fuelMode = state;
+        }
+
         super.runRequest(requestName, requestData);
     }
     
@@ -324,5 +329,6 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Override
     public void updateState() {
         accessPortState.inputState = (this.direction == INLET);
+        accessPortState.fuelMode = this.fuelMode;
     }
 }
