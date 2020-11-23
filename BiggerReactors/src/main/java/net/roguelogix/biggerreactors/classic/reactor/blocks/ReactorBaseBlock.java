@@ -11,8 +11,9 @@ import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblo
 import javax.annotation.Nonnull;
 
 public class ReactorBaseBlock extends RectangularMultiblockBlock {
-    public static final Properties PROPERTIES_SOLID = Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2, 10);
-    public static final Properties PROPERTIES_GLASS = Properties.create(Material.IRON).sound(SoundType.GLASS).notSolid().hardnessAndResistance(2);
+    
+    public static final Properties PROPERTIES_SOLID = Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2, 10).setAllowsSpawn((a, b, c, d) -> false);
+    public static final Properties PROPERTIES_GLASS = Properties.create(Material.IRON).sound(SoundType.GLASS).notSolid().hardnessAndResistance(2).setAllowsSpawn((a, b, c, d) -> false);
     
     
     public ReactorBaseBlock() {
