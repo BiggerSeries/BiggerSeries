@@ -2,18 +2,22 @@
 The BiggerSeries is a series of 1 mod and 1 library mod (yes I want to do more) with one main goal with its machines, bigger than everything else.
 
 ## BiggerReactors
-BiggerReactors is based off of [the Big Reactors mod](https://github.com/erogenousbeef-zz/BigReactors).
+BiggerReactors is the official continuation of [Big Reactors](https://github.com/erogenousbeef-zz/BigReactors) by Erogenous Beef.
 Anything you know and love about BigReactors is probably still true with BiggerReactors, as the modifications are minor.
 
 Downloads can be found in the GitHub releases tab and on CurseForge [here](https://www.curseforge.com/minecraft/mc-mods/biggerreactors)
 
 ### Notable changes
  - GUI button are toggle in place, instead of discrete.
- - Reactor access ports no longer have a gui, and required items to be piped in/out (this is mostly me being lazy, but you should be doing this anyway, hopper works).
+ - Reactor access ports no longer have an intenral buffer, required items to be piped in/out (this is mostly me being lazy, but you should be doing this anyway, hopper works).
  - Overspeeding turbines no longer generates more power, the efficiency function is nerfed past about 2200RPM. They still don't break, but you have no reason to run them that fast.
  - Turbine require two rotor bearings, one at each end. Small annoyance on my part, but otherwise the rotors work the same, put the coils on either side.
  - The config can edit basically everything, re-balance the reactor to your hearts content as a modpack dev.
  - FE is the only supported energy system, but its about as widely used now as RF was then, so, shouldn't notice the change.
+ -  Reactors and Turbines now have dynamic energy buffers to support much larger reactors and turbines that could generate more than the full buffer in one tick. (CC API scales the amount as if it was a 10MiRF/1MiRF buffer, use the new methods to get actual info)
+ - Reactors no longer have a steam production limit, built them as big as you like
+ - Turbines are not limited to 2B/t, they automatically adjust their limits based on the number of blades you have
+ - The default max size limits have changed, Reactors may be built up to 64x64x96, turbines up to 32x32x192
  
  
 ## You need other mods to use it
