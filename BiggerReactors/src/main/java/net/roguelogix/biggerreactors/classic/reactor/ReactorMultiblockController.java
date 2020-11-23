@@ -109,6 +109,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorPowerTapTile> powerPorts = new HashSet<>();
     private final Set<ReactorAccessPortTile> accessPorts = new HashSet<>();
     private final Set<ReactorCoolantPortTile> coolantPorts = new HashSet<>();
+    private final Set<ReactorRedstonePortTile> redstonePorts = new HashSet<>();
     
     @Override
     protected void onPartPlaced(@Nonnull MultiblockTile placed) {
@@ -142,6 +143,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (tile instanceof ReactorCoolantPortTile) {
             coolantPorts.add((ReactorCoolantPortTile) tile);
         }
+        if (tile instanceof ReactorRedstonePortTile) {
+            redstonePorts.add((ReactorRedstonePortTile) tile);
+        }
     }
     
     @Override
@@ -172,6 +176,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof ReactorCoolantPortTile) {
             coolantPorts.remove(tile);
+        }
+        if (tile instanceof ReactorRedstonePortTile) {
+            redstonePorts.remove(tile);
         }
     }
     
@@ -240,6 +247,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
         for (ReactorAccessPortTile accessPort : accessPorts) {
             accessPort.updateOutputDirection();
+        }
+        for (ReactorRedstonePortTile redstonePort : redstonePorts) {
+            redstonePort.updateOutputDirection();
         }
         simulation.resize(maxCoord().x() - minCoord().x() - 1, maxCoord().y() - minCoord().y() - 1, maxCoord().z() - minCoord().z() - 1);
         Vector3i start = new Vector3i(1).add(minCoord());

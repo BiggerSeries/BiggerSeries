@@ -8,6 +8,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -20,6 +21,7 @@ import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortState;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.ITickableMultiblockTile;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
@@ -40,16 +42,24 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
     }
     
     private boolean isEmitting;
+    Direction powerOutputDirection = null;
     
-    public boolean isEmitting() {
+    public boolean isEmitting(Direction side) {
+        if(side.getOpposite() != powerOutputDirection){
+            return false;
+        }
         return isEmitting;
     }
     
     private boolean isPowered = false;
     private boolean wasPowered = false;
     
-    public void setPowered(boolean powered) {
-        isPowered = powered;
+    public void updatePowered() {
+        if(powerOutputDirection == null){
+            return;
+        }
+        assert world != null;
+        isPowered = world.getRedstonePower(pos.offset(powerOutputDirection), powerOutputDirection) > 0;
     }
     
     private boolean isLit = false;
@@ -172,6 +182,25 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             world.setBlockState(pos, getBlockState().with(ReactorRedstonePort.IS_LIT_BOOLEAN_PROPERTY, isLit));
         }
         this.markDirty();
+    }
+    
+    public void updateOutputDirection() {
+        if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
+            powerOutputDirection = null;
+        } else if (pos.getX() == controller.minCoord().x()) {
+            powerOutputDirection = Direction.WEST;
+        } else if (pos.getX() == controller.maxCoord().x()) {
+            powerOutputDirection = Direction.EAST;
+        } else if (pos.getY() == controller.minCoord().y()) {
+            powerOutputDirection = Direction.DOWN;
+        } else if (pos.getY() == controller.maxCoord().y()) {
+            powerOutputDirection = Direction.UP;
+        } else if (pos.getZ() == controller.minCoord().z()) {
+            powerOutputDirection = Direction.NORTH;
+        } else if (pos.getZ() == controller.maxCoord().z()) {
+            powerOutputDirection = Direction.SOUTH;
+        }
+        updatePowered();
     }
     
     @Override

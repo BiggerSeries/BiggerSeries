@@ -40,7 +40,7 @@ public class ReactorRedstonePort extends ReactorBaseBlock {
     public int getWeakPower(@Nonnull BlockState blockState, @Nonnull IBlockReader blockAccess, @Nonnull BlockPos pos, @Nonnull Direction side) {
         TileEntity tile = blockAccess.getTileEntity(pos);
         if (tile instanceof ReactorRedstonePortTile) {
-            return ((ReactorRedstonePortTile) tile).isEmitting() ? 15 : 0;
+            return ((ReactorRedstonePortTile) tile).isEmitting(side) ? 15 : 0;
         }
         return super.getWeakPower(blockState, blockAccess, pos, side);
     }
@@ -49,17 +49,16 @@ public class ReactorRedstonePort extends ReactorBaseBlock {
     public int getStrongPower(@Nonnull BlockState blockState, @Nonnull IBlockReader blockAccess, @Nonnull BlockPos pos, @Nonnull Direction side) {
         TileEntity tile = blockAccess.getTileEntity(pos);
         if (tile instanceof ReactorRedstonePortTile) {
-            return ((ReactorRedstonePortTile) tile).isEmitting() ? 15 : 0;
+            return ((ReactorRedstonePortTile) tile).isEmitting(side) ? 15 : 0;
         }
         return super.getWeakPower(blockState, blockAccess, pos, side);
     }
     
     @Override
     public void neighborChanged(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
-        boolean powered = worldIn.getRedstonePowerFromNeighbors(pos) > 0;
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof ReactorRedstonePortTile) {
-            ((ReactorRedstonePortTile) tile).setPowered(powered);
+            ((ReactorRedstonePortTile) tile).updatePowered();
         }
     }
     
