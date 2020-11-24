@@ -1,3 +1,17 @@
+# 1.16.3-0.2.5
+Redstone port bugs
+
+## Reactor
+ - fix active reactor overheating when output multiplier was > 1, and it had coolant
+ - allow power to be extracted from the power tap, not just pushed out
+ - fuel can now be extracted from a reactor 
+ - add unscaled methods to CC peripheral
+ - fix redstone port energy percent reporting incorrectly
+ - fix redstone port not recommitting values after a world reload
+ - added mode switch button for control rod insertion
+ - fix redstone port powering themselves through the reactor
+ - optimize fuel rendering updates
+
 # 1.16.3-0.2.4
 Blocks and bugs
 
