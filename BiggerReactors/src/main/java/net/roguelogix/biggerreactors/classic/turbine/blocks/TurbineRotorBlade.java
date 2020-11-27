@@ -2,6 +2,7 @@ package net.roguelogix.biggerreactors.classic.turbine.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -28,9 +29,12 @@ public class TurbineRotorBlade extends TurbineBaseBlock {
         setDefaultState(getDefaultState().with(TurbineShaftRotationState.TURBINE_SHAFT_ROTATION_STATE_ENUM_PROPERTY, Y));
     }
     
+    public static final IntegerProperty BLADE_POSITION = IntegerProperty.create("blade_position", 0, 3);
+    
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         builder.add(TurbineShaftRotationState.TURBINE_SHAFT_ROTATION_STATE_ENUM_PROPERTY);
+        builder.add(BLADE_POSITION);
         super.fillStateContainer(builder);
     }
     

@@ -14,19 +14,19 @@ import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
+import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
+import net.roguelogix.phosphophyllite.repack.org.joml.Vector4i;
 import net.roguelogix.phosphophyllite.util.Util;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 // ahh shit, here we go again
 public class TurbineMultiblockController extends RectangularMultiblockController {
@@ -64,8 +64,10 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 throw new ValidationError("multiblock.error.biggerreactors.turbine.rotor_bearing_count");
             }
             
-            TurbineRotorBearingTile bearing = rotorBearings.iterator().next();
-            BlockPos bearingPosition = bearing.getPos();
+            Iterator<TurbineRotorBearingTile> iterator = rotorBearings.iterator();
+            TurbineRotorBearingTile primaryBearing = iterator.next();
+            TurbineRotorBearingTile secondaryBearing = iterator.next();
+            BlockPos bearingPosition = primaryBearing.getPos();
             Direction marchDirection;
             if (bearingPosition.getX() == minCoord().x()) {
                 marchDirection = Direction.EAST;
@@ -166,6 +168,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                         }
                         inBlades = false;
                         switched = true;
+                        primaryBearing.isRenderBearing = true;
                     }
                     inCoil = true;
                 }
@@ -176,6 +179,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                         }
                         inCoil = false;
                         switched = true;
+                        secondaryBearing.isRenderBearing = true;
                     }
                     inBlades = true;
                 }
@@ -304,6 +308,9 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         return toAdd;
     }
     
+    public final ArrayList<Vector4i> rotorConfiguration = new ArrayList<>();
+    public net.minecraft.util.math.vector.Vector3i rotationAxis = new net.minecraft.util.math.vector.Vector3i(0, 0, 0);
+    
     private long rotorMass;
     private long bladeSurfaceArea;
     private long coilSize;
@@ -378,6 +385,55 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         flowRateLimit = bladeSurfaceArea * Config.Turbine.FluidPerBlade * Config.Turbine.BladeToFlowRateMultiplier;
         tankSize = flowRateLimit * Config.Turbine.FlowRateToTankSizeMultiplier;
         maxStoredPower = (coilSize + 1) * Config.Turbine.BatterySizePerCoilBlock;
+        
+        for (TurbineRotorBearingTile rotorBearing : rotorBearings) {
+            if (!rotorBearing.isRenderBearing) {
+                continue;
+            }
+            
+            for (Direction value : Direction.values()) {
+                BlockPos possibleRotorPos = rotorBearing.getPos().offset(value);
+                if (world.getBlockState(possibleRotorPos).getBlock() == TurbineRotorShaft.INSTANCE) {
+                    
+                    rotationAxis = value.getDirectionVec();
+                    
+                    rotorConfiguration.clear();
+                    
+                    Direction.Axis shaftAxis = value.getAxis();
+                    BlockPos currentRotorPosition = possibleRotorPos;
+                    BlockPos currentBladePosition;
+                    while (world.getBlockState(currentRotorPosition).getBlock() == TurbineRotorShaft.INSTANCE) {
+                        Vector4i shaftSectionConfiguration = new Vector4i();
+                        int i = 0;
+                        for (Direction bladeDirection : Direction.values()) {
+                            if (bladeDirection.getAxis() == shaftAxis) {
+                                continue;
+                            }
+                            
+                            int bladeCount = 0;
+                            
+                            currentBladePosition = currentRotorPosition;
+                            currentBladePosition = currentBladePosition.offset(bladeDirection);
+                            while (world.getBlockState(currentBladePosition).getBlock() == TurbineRotorBlade.INSTANCE) {
+                                bladeCount++;
+                                currentBladePosition = currentBladePosition.offset(bladeDirection);
+                            }
+                            
+                            shaftSectionConfiguration.setComponent(i, bladeCount);
+                            
+                            i++;
+                        }
+                        
+                        rotorConfiguration.add(shaftSectionConfiguration);
+                        currentRotorPosition = currentRotorPosition.offset(value);
+                    }
+                    
+                    break;
+                }
+            }
+            
+        }
+        
     }
     
     long storedPower = 0;
@@ -505,6 +561,12 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                 break;
             }
             water -= coolantPort.pushWater(water);
+        }
+        
+        if (Phosphophyllite.tickNumber() % 10 == 0) {
+            for (TurbineRotorBearingTile rotorBearing : rotorBearings) {
+                world.notifyBlockUpdate(rotorBearing.getPos(), rotorBearing.getBlockState(), rotorBearing.getBlockState(), 0);
+            }
         }
         
         markDirty();
