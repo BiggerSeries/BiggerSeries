@@ -45,7 +45,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     
     @Override
     public void updateState() {
-        controlRodState.name = "Chris Richardson";
+        controlRodState.name = name;
         controlRodState.insertionLevel = insertion;
     }
     
@@ -112,7 +112,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
         return insertion;
     }
     
-    private String name = "";
+    private String name = "Chris Richardson";
     
     public void setName(@Nonnull String name) {
         this.name = name;
@@ -128,6 +128,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     protected CompoundNBT writeNBT() {
         CompoundNBT compound = super.writeNBT();
         compound.putDouble("insertion", insertion);
+        compound.putString("name", name);
         return compound;
     }
     
@@ -136,6 +137,9 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
         super.readNBT(compound);
         if (compound.contains("insertion")) {
             insertion = compound.getDouble("insertion");
+        }
+        if (compound.contains("name")) {
+            name = compound.getString("name");
         }
     }
 }
