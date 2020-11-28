@@ -2,13 +2,13 @@
 
   "variants": {
     "assembled=false": {
-      "model": "biggerreactors:block/reactor_terminal_off"
+      "model": "biggerreactors:block/reactor/terminal/off"
     },
     "assembled=true,reactoractivity=active": {
-      "model": "biggerreactors:block/reactor_terminal_active"
+      "model": "biggerreactors:block/reactor/terminal/active"
     },
     "assembled=true,reactoractivity=inactive": {
-      "model": "biggerreactors:block/reactor_terminal_idle"
+      "model": "biggerreactors:block/reactor/terminal/idle"
     }
   }
 }

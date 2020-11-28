@@ -1,13 +1,13 @@
 {
   "variants": {
     "assembled=false": {
-      "model" : "biggerreactors:block/reactor_power_tap_disassembled"
+      "model" : "biggerreactors:block/reactor/power_tap/disassembled"
     },
     "assembled=true,connectionstate=disconnected": {
-      "model" : "biggerreactors:block/reactor_power_tap_disconnected"
+      "model" : "biggerreactors:block/reactor/power_tap/disconnected"
     },
     "assembled=true,connectionstate=connected": {
-      "model" : "biggerreactors:block/reactor_power_tap_connected"
+      "model" : "biggerreactors:block/reactor/power_tap/connected"
     }
   }
 }

@@ -260,7 +260,7 @@
 
     {
       "apply": {
-        "model": "biggerreactors:block/reactor_fuel_rod"
+        "model": "biggerreactors:block/reactor/fuel_rod"
       }
     }
   ]

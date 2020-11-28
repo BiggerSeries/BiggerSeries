@@ -1,105 +1,105 @@
 {
   "variants": {
     "assembled=false": {
-      "model": "biggerreactors:block/reactor_casing_disassembled"
+      "model": "biggerreactors:block/reactor/casing/disassembled"
     },
     "assembled=true,x_axis=lower,y_axis=lower,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
     "assembled=true,x_axis=lower,y_axis=upper,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=lower,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=upper,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
     "assembled=true,x_axis=lower,y_axis=lower,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
     "assembled=true,x_axis=lower,y_axis=upper,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=lower,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=upper,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_corner"
+      "model": "biggerreactors:block/reactor/casing/corner"
     },
 
     "assembled=true,x_axis=middle,y_axis=lower,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90,
       "y": 90
     },
     "assembled=true,x_axis=middle,y_axis=lower,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90,
       "y": 90
     },
     "assembled=true,x_axis=middle,y_axis=upper,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90,
       "y": 90
     },
     "assembled=true,x_axis=middle,y_axis=upper,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90,
       "y": 90
     },
 
     "assembled=true,x_axis=lower,y_axis=middle,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_frame"
+      "model": "biggerreactors:block/reactor/casing/frame"
     },
     "assembled=true,x_axis=lower,y_axis=middle,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_frame"
+      "model": "biggerreactors:block/reactor/casing/frame"
     },
     "assembled=true,x_axis=upper,y_axis=middle,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_frame"
+      "model": "biggerreactors:block/reactor/casing/frame"
     },
     "assembled=true,x_axis=upper,y_axis=middle,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_frame"
+      "model": "biggerreactors:block/reactor/casing/frame"
     },
 
     "assembled=true,x_axis=lower,y_axis=lower,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90
     },
     "assembled=true,x_axis=lower,y_axis=upper,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90
     },
     "assembled=true,x_axis=upper,y_axis=lower,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90
     },
     "assembled=true,x_axis=upper,y_axis=upper,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_frame",
+      "model": "biggerreactors:block/reactor/casing/frame",
       "x": 90
     },
 
     "assembled=true,x_axis=lower,y_axis=middle,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_face"
+      "model": "biggerreactors:block/reactor/casing/face"
     },
     "assembled=true,x_axis=upper,y_axis=middle,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_face"
+      "model": "biggerreactors:block/reactor/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=lower,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_face"
+      "model": "biggerreactors:block/reactor/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=upper,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_face"
+      "model": "biggerreactors:block/reactor/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=middle,z_axis=lower": {
-      "model": "biggerreactors:block/reactor_casing_face"
+      "model": "biggerreactors:block/reactor/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=middle,z_axis=upper": {
-      "model": "biggerreactors:block/reactor_casing_face"
+      "model": "biggerreactors:block/reactor/casing/face"
     },
 
     "assembled=true,x_axis=middle,y_axis=middle,z_axis=middle": {
-      "model": "biggerreactors:block/reactor_casing_disassembled"
+      "model": "biggerreactors:block/reactor/casing/disassembled"
     }
   }
 }

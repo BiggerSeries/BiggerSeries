@@ -1,56 +1,56 @@
 {
   "variants": {
     "assembled=false,turbineshaftrotation=x,blade_position=0": {
-      "model": "biggerreactors:block/turbine_rotor_blade",
+      "model": "biggerreactors:block/turbine/rotor_blade",
       "y" : 90,
       "x" : 180
     },
     "assembled=false,turbineshaftrotation=x,blade_position=1": {
-      "model": "biggerreactors:block/turbine_rotor_blade",
+      "model": "biggerreactors:block/turbine/rotor_blade",
       "y" : 90
     },
     "assembled=false,turbineshaftrotation=x,blade_position=2": {
-      "model": "biggerreactors:block/turbine_rotor_blade_z",
+      "model": "biggerreactors:block/turbine/rotor_blade_z",
       "x": 180,
       "y": 270
     },
     "assembled=false,turbineshaftrotation=x,blade_position=3": {
-      "model": "biggerreactors:block/turbine_rotor_blade_z",
+      "model": "biggerreactors:block/turbine/rotor_blade_z",
       "x": 180,
       "y": 90
     },
     "assembled=false,turbineshaftrotation=y,blade_position=0": {
-      "model": "biggerreactors:block/turbine_rotor_blade",
+      "model": "biggerreactors:block/turbine/rotor_blade",
       "x" : 90
     },
     "assembled=false,turbineshaftrotation=y,blade_position=1": {
-      "model": "biggerreactors:block/turbine_rotor_blade",
+      "model": "biggerreactors:block/turbine/rotor_blade",
       "x" : 90,
       "y" : 180
     },
     "assembled=false,turbineshaftrotation=y,blade_position=2": {
-      "model": "biggerreactors:block/turbine_rotor_blade",
+      "model": "biggerreactors:block/turbine/rotor_blade",
       "x" : 90,
       "y" : 270
     },
     "assembled=false,turbineshaftrotation=y,blade_position=3": {
-      "model": "biggerreactors:block/turbine_rotor_blade",
+      "model": "biggerreactors:block/turbine/rotor_blade",
       "x" : 90,
       "y" : 90
     },
     "assembled=false,turbineshaftrotation=z,blade_position=0": {
-      "model": "biggerreactors:block/turbine_rotor_blade",
+      "model": "biggerreactors:block/turbine/rotor_blade",
       "x": 180
     },
     "assembled=false,turbineshaftrotation=z,blade_position=1": {
-      "model": "biggerreactors:block/turbine_rotor_blade"
+      "model": "biggerreactors:block/turbine/rotor_blade"
     },
     "assembled=false,turbineshaftrotation=z,blade_position=2": {
-      "model": "biggerreactors:block/turbine_rotor_blade_z",
+      "model": "biggerreactors:block/turbine/rotor_blade_z",
       "y": 180
     },
     "assembled=false,turbineshaftrotation=z,blade_position=3": {
-      "model": "biggerreactors:block/turbine_rotor_blade_z"
+      "model": "biggerreactors:block/turbine/rotor_blade_z"
     },
     "assembled=true": {
       "model": "phosphophyllite:block/invisible"

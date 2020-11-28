@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "biggerreactors:block/turbine_rotor_bearing"
+      "model": "biggerreactors:block/turbine/rotor_bearing"
     }
   }
 }

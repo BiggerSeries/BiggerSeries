@@ -1,10 +1,10 @@
 {
   "variants": {
     "is_lit=true": {
-      "model": "biggerreactors:block/reactor_redstone_port_lit"
+      "model": "biggerreactors:block/reactor/redstone_port/lit"
     },
     "is_lit=false": {
-      "model": "biggerreactors:block/reactor_redstone_port_unlit"
+      "model": "biggerreactors:block/reactor/redstone_port/unlit"
     }
   }
 }

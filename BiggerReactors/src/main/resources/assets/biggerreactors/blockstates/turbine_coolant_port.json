@@ -1,10 +1,10 @@
 {
   "variants": {
     "portdirection=inlet": {
-      "model": "biggerreactors:block/turbine_coolant_port_inlet"
+      "model": "biggerreactors:block/turbine/coolant_port/inlet"
     },
     "portdirection=outlet": {
-      "model": "biggerreactors:block/turbine_coolant_port_outlet"
+      "model": "biggerreactors:block/turbine/coolant_port/outlet"
     }
   }
 }

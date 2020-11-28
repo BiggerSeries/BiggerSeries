@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "biggerreactors:block/reactor_computer_port"
+      "model": "biggerreactors:block/reactor/computer_port"
     }
   }
 }

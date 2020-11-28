@@ -1,3 +1,3 @@
 {
-  "parent": "biggerreactors:block/reactor_coolant_port_inlet"
+  "parent": "biggerreactors:block/reactor/coolant_port/inlet"
 }

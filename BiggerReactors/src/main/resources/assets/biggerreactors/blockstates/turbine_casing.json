@@ -1,110 +1,110 @@
 {
   "variants": {
     "assembled=false": {
-      "model": "biggerreactors:block/turbine_casing_disassembled"
+      "model": "biggerreactors:block/turbine/casing/disassembled"
     },
     "assembled=true,x_axis=lower,y_axis=lower,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
     "assembled=true,x_axis=lower,y_axis=upper,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=lower,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=upper,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
     "assembled=true,x_axis=lower,y_axis=lower,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
     "assembled=true,x_axis=lower,y_axis=upper,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=lower,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
     "assembled=true,x_axis=upper,y_axis=upper,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_corner"
+      "model": "biggerreactors:block/turbine/casing/corner"
     },
 
     "assembled=true,x_axis=middle,y_axis=lower,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": 90,
       "y": 90
     },
     "assembled=true,x_axis=middle,y_axis=lower,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": 90,
       "y": -90
     },
     "assembled=true,x_axis=middle,y_axis=upper,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": -90,
       "y": 90
     },
     "assembled=true,x_axis=middle,y_axis=upper,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": -90,
       "y": -90
     },
 
     "assembled=true,x_axis=lower,y_axis=middle,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_frame"
+      "model": "biggerreactors:block/turbine/casing/frame"
     },
     "assembled=true,x_axis=lower,y_axis=middle,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "y": -90
     },
     "assembled=true,x_axis=upper,y_axis=middle,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "y": 90
     },
     "assembled=true,x_axis=upper,y_axis=middle,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "y": 180
     },
 
     "assembled=true,x_axis=lower,y_axis=lower,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": 90
     },
     "assembled=true,x_axis=lower,y_axis=upper,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": -90
     },
     "assembled=true,x_axis=upper,y_axis=lower,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": 90,
       "y": 180
     },
     "assembled=true,x_axis=upper,y_axis=upper,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_frame",
+      "model": "biggerreactors:block/turbine/casing/frame",
       "x": -90,
       "y": 180
     },
 
     "assembled=true,x_axis=lower,y_axis=middle,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_face"
+      "model": "biggerreactors:block/turbine/casing/face"
     },
     "assembled=true,x_axis=upper,y_axis=middle,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_face"
+      "model": "biggerreactors:block/turbine/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=lower,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_face"
+      "model": "biggerreactors:block/turbine/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=upper,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_face"
+      "model": "biggerreactors:block/turbine/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=middle,z_axis=lower": {
-      "model": "biggerreactors:block/turbine_casing_face"
+      "model": "biggerreactors:block/turbine/casing/face"
     },
     "assembled=true,x_axis=middle,y_axis=middle,z_axis=upper": {
-      "model": "biggerreactors:block/turbine_casing_face"
+      "model": "biggerreactors:block/turbine/casing/face"
     },
 
     "assembled=true,x_axis=middle,y_axis=middle,z_axis=middle": {
-      "model": "biggerreactors:block/turbine_casing_disassembled"
+      "model": "biggerreactors:block/turbine/casing/disassembled"
     }
   }
 }
