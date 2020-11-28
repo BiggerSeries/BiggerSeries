@@ -1,5 +1,6 @@
 package net.roguelogix.phosphophyllite.multiblock.generic;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -7,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.PhosphophylliteConfig;
+import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockTile;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3ic;
@@ -14,10 +16,7 @@ import net.roguelogix.phosphophyllite.util.Util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class MultiblockController {
     
@@ -283,10 +282,12 @@ public class MultiblockController {
             } else {
                 onAssembled();
             }
+            assembledBlockStates();
         } else {
             if (oldState == AssemblyState.ASSEMBLED) {
                 state = AssemblyState.DISASSEMBLED;
                 onDisassembled();
+                disassembledBlockStates();
                 updateCachedNBT();
             }
         }
@@ -317,6 +318,34 @@ public class MultiblockController {
             //noinspection UnnecessaryReturnStatement
             return;
         }
+    }
+    
+    private void assembledBlockStates(){
+        final HashMap<BlockPos, BlockState> newStates = new HashMap<>();
+        blocks.forEach(tile -> {
+            if(tile.doBlockStateUpdate()){
+                BlockState state = assembledTileState(tile);
+                if(state != tile.getBlockState()){
+                    newStates.put(tile.getPos(), state);
+                }
+            }
+        });
+        Util.setBlockStates(newStates, world);
+        blocks.forEach(TileEntity::markDirty);
+    }
+    
+    private void disassembledBlockStates(){
+        final HashMap<BlockPos, BlockState> newStates = new HashMap<>();
+        blocks.forEach(tile -> {
+            if(tile.doBlockStateUpdate()){
+                BlockState state = disassembledTileState(tile);
+                if(state != tile.getBlockState()){
+                    newStates.put(tile.getPos(), state);
+                }
+            }
+        });
+        Util.setBlockStates(newStates, world);
+        blocks.forEach(TileEntity::markDirty);
     }
     
     /**
@@ -526,5 +555,13 @@ public class MultiblockController {
     @Nonnull
     protected CompoundNBT write() {
         return new CompoundNBT();
+    }
+    
+    protected BlockState assembledTileState(MultiblockTile tile){
+        return tile.getBlockState().with(MultiblockBlock.ASSEMBLED, true);
+    }
+    
+    protected BlockState disassembledTileState(MultiblockTile tile){
+        return tile.getBlockState().with(MultiblockBlock.ASSEMBLED, false);
     }
 }

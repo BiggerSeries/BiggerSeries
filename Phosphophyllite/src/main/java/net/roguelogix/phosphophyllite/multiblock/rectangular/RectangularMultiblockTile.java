@@ -8,6 +8,4 @@ public abstract class RectangularMultiblockTile extends MultiblockTile {
     public RectangularMultiblockTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
-    
-    RectangularMultiblockPositions position = RectangularMultiblockPositions.DISASSEMBLED;
 }

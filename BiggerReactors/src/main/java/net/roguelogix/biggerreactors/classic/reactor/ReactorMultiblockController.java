@@ -238,7 +238,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onAssembly() {
+    protected void onAssembled() {
         for (ReactorPowerTapTile powerPort : powerPorts) {
             powerPort.updateOutputDirection();
         }
@@ -287,12 +287,12 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onUnpause() {
-        onAssembly();
+    protected void onUnpaused() {
+        onAssembled();
     }
     
     @Override
-    protected void onDisassembly() {
+    protected void onDisassembled() {
         distributeFuel();
         setActive(ReactorActivity.INACTIVE);
         for (ReactorPowerTapTile powerPort : powerPorts) {

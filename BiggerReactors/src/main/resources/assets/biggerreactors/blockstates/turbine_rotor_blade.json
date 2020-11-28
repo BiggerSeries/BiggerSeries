@@ -1,73 +1,58 @@
 {
   "variants": {
-    "direction=disassembled,turbineshaftrotation=x,blade_position=0": {
+    "assembled=false,turbineshaftrotation=x,blade_position=0": {
       "model": "biggerreactors:block/turbine_rotor_blade",
       "y" : 90,
       "x" : 180
     },
-    "direction=disassembled,turbineshaftrotation=x,blade_position=1": {
+    "assembled=false,turbineshaftrotation=x,blade_position=1": {
       "model": "biggerreactors:block/turbine_rotor_blade",
       "y" : 90
     },
-    "direction=disassembled,turbineshaftrotation=x,blade_position=2": {
+    "assembled=false,turbineshaftrotation=x,blade_position=2": {
       "model": "biggerreactors:block/turbine_rotor_blade_z",
       "x": 180,
       "y": 270
     },
-    "direction=disassembled,turbineshaftrotation=x,blade_position=3": {
+    "assembled=false,turbineshaftrotation=x,blade_position=3": {
       "model": "biggerreactors:block/turbine_rotor_blade_z",
       "x": 180,
       "y": 90
     },
-    "direction=disassembled,turbineshaftrotation=y,blade_position=0": {
+    "assembled=false,turbineshaftrotation=y,blade_position=0": {
       "model": "biggerreactors:block/turbine_rotor_blade",
       "x" : 90
     },
-    "direction=disassembled,turbineshaftrotation=y,blade_position=1": {
+    "assembled=false,turbineshaftrotation=y,blade_position=1": {
       "model": "biggerreactors:block/turbine_rotor_blade",
       "x" : 90,
       "y" : 180
     },
-    "direction=disassembled,turbineshaftrotation=y,blade_position=2": {
+    "assembled=false,turbineshaftrotation=y,blade_position=2": {
       "model": "biggerreactors:block/turbine_rotor_blade",
       "x" : 90,
       "y" : 270
     },
-    "direction=disassembled,turbineshaftrotation=y,blade_position=3": {
+    "assembled=false,turbineshaftrotation=y,blade_position=3": {
       "model": "biggerreactors:block/turbine_rotor_blade",
       "x" : 90,
       "y" : 90
     },
-    "direction=disassembled,turbineshaftrotation=z,blade_position=0": {
+    "assembled=false,turbineshaftrotation=z,blade_position=0": {
       "model": "biggerreactors:block/turbine_rotor_blade",
       "x": 180
     },
-    "direction=disassembled,turbineshaftrotation=z,blade_position=1": {
+    "assembled=false,turbineshaftrotation=z,blade_position=1": {
       "model": "biggerreactors:block/turbine_rotor_blade"
     },
-    "direction=disassembled,turbineshaftrotation=z,blade_position=2": {
+    "assembled=false,turbineshaftrotation=z,blade_position=2": {
       "model": "biggerreactors:block/turbine_rotor_blade_z",
       "y": 180
     },
-    "direction=disassembled,turbineshaftrotation=z,blade_position=3": {
+    "assembled=false,turbineshaftrotation=z,blade_position=3": {
       "model": "biggerreactors:block/turbine_rotor_blade_z"
     },
-    "direction=corner": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=frame_x": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=frame_y": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=frame_z": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=face": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=interior": {
+    "assembled=true": {
       "model": "phosphophyllite:block/invisible"
     }
   }

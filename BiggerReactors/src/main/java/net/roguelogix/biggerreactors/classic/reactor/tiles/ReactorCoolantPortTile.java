@@ -31,8 +31,8 @@ import net.roguelogix.biggerreactors.classic.reactor.deps.ReactorGasHandler;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorCoolantPortState;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
-import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nonnull;
@@ -208,7 +208,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
                 }
             }
         }
-
+        
         connected = connected && ((steamOutput != null && steamOutput.isPresent()) || (steamGasOutput != null && steamGasOutput.isPresent()));
     }
     
@@ -242,7 +242,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         assert world != null;
-        if (world.getBlockState(pos).get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) != RectangularMultiblockPositions.DISASSEMBLED) {
+        if (world.getBlockState(pos).get(MultiblockBlock.ASSEMBLED)) {
             if (!world.isRemote) {
                 NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
             }
@@ -251,7 +251,6 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         return super.onBlockActivated(player, handIn);
     }
     
-    @SuppressWarnings("unchecked")
     @Override
     public void runRequest(String requestName, Object requestData) {
         ReactorMultiblockController reactor = reactor();

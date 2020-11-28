@@ -1,27 +1,13 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "biggerreactors:block/reactor_power_tap_disassembled"
-      }
+  "variants": {
+    "assembled=false": {
+      "model" : "biggerreactors:block/reactor_power_tap_disassembled"
     },
-    {
-      "when": {
-        "direction": "face",
-        "connectionstate": "disconnected"
-      },
-      "apply": {
-        "model": "biggerreactors:block/reactor_power_tap_disconnected"
-      }
+    "assembled=true,connectionstate=disconnected": {
+      "model" : "biggerreactors:block/reactor_power_tap_disconnected"
     },
-    {
-      "when": {
-        "direction": "face",
-        "connectionstate": "connected"
-      },
-      "apply": {
-        "model": "biggerreactors:block/reactor_power_tap_connected"
-      }
+    "assembled=true,connectionstate=connected": {
+      "model" : "biggerreactors:block/reactor_power_tap_connected"
     }
-  ]
+  }
 }

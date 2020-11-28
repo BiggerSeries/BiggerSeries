@@ -1,32 +1,17 @@
 {
   "variants": {
-    "direction=disassembled,turbineshaftrotation=x": {
+    "assembled=false,turbineshaftrotation=x": {
       "model": "biggerreactors:block/turbine_rotor_shaft",
-      "y" : 90
+      "y": 90
     },
-    "direction=disassembled,turbineshaftrotation=y": {
+    "assembled=false,turbineshaftrotation=y": {
       "model": "biggerreactors:block/turbine_rotor_shaft",
-      "x" : 90
+      "x": 90
     },
-    "direction=disassembled,turbineshaftrotation=z": {
+    "assembled=false,turbineshaftrotation=z": {
       "model": "biggerreactors:block/turbine_rotor_shaft"
     },
-    "direction=corner": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=frame_x": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=frame_y": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=frame_z": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=face": {
-      "model": "phosphophyllite:block/invisible"
-    },
-    "direction=interior": {
+    "assembled=true": {
       "model": "phosphophyllite:block/invisible"
     }
   }

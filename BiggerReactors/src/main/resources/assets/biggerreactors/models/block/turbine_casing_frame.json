@@ -1,6 +1,48 @@
 {
-  "parent": "block/cube_all",
   "textures": {
-    "all": "biggerreactors:block/turbine_casing_frame"
-  }
+    "0": "biggerreactors:block/turbine_casing_frame",
+    "particle": "biggerreactors:block/turbine_casing_frame"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#0",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#0",
+          "cullface": "up"
+        },
+        "north": {
+          "texture": "#0",
+          "cullface": "north",
+          "rotation": 180
+        },
+        "south": {
+          "texture": "#0",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#0",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#0",
+          "cullface": "east",
+          "rotation": 180
+        }
+      }
+    }
+  ]
 }

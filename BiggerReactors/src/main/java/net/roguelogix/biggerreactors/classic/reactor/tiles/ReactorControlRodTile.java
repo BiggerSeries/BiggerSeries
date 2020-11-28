@@ -18,7 +18,7 @@ import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorControlRod;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ControlRodState;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
-import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nonnull;
@@ -53,7 +53,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         assert world != null;
-        if (world.getBlockState(pos).get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) != RectangularMultiblockPositions.DISASSEMBLED) {
+        if (world.getBlockState(pos).get(MultiblockBlock.ASSEMBLED)) {
             if (!world.isRemote) {
                 NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
             }

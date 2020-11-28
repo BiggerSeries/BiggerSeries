@@ -321,17 +321,17 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     private double bladeDrag;
     
     @Override
-    protected void onAssembly() {
+    protected void onAssembled() {
         rotorMass = 0;
         bladeSurfaceArea = 0;
         coilSize = 0;
         rotorEnergy = 0;
-        onUnpause();
+        onUnpaused();
         maxFlowRate = bladeSurfaceArea * Config.Turbine.FluidPerBlade;
     }
     
     @Override
-    protected void onUnpause() {
+    protected void onUnpaused() {
         for (TurbinePowerTapTile powerPort : powerTaps) {
             powerPort.updateOutputDirection();
         }

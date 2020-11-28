@@ -17,7 +17,7 @@ import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
-import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import javax.annotation.Nonnull;
@@ -61,7 +61,7 @@ public class TurbineTerminalTile extends TurbineBaseTile implements INamedContai
         
         if (handIn == Hand.MAIN_HAND) {
             assert world != null;
-            if (world.getBlockState(pos).get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) != RectangularMultiblockPositions.DISASSEMBLED) {
+            if (world.getBlockState(pos).get(MultiblockBlock.ASSEMBLED)) {
                 if (!world.isRemote) {
                     NetworkHooks.openGui((ServerPlayerEntity) player, this, this.getPos());
                 }

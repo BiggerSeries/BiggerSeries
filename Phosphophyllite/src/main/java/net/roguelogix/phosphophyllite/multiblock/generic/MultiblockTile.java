@@ -12,17 +12,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.items.DebugTool;
-import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
-
-import static net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions.DISASSEMBLED;
 
 public abstract class MultiblockTile extends TileEntity {
     protected MultiblockController controller;
@@ -174,9 +168,7 @@ public abstract class MultiblockTile extends TileEntity {
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (handIn == Hand.MAIN_HAND) {
-            // TODO: 8/8/20 add a generic layer for this to check against
-            //              currently not a problem as a only use rectangular multiblocks
-            if (player.getHeldItemMainhand() == ItemStack.EMPTY && getBlockState().get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) == DISASSEMBLED) {
+            if (player.getHeldItemMainhand() == ItemStack.EMPTY && !getBlockState().get(MultiblockBlock.ASSEMBLED)) {
                 if (controller != null && controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
                     if (controller.lastValidationError != null) {
                         player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());

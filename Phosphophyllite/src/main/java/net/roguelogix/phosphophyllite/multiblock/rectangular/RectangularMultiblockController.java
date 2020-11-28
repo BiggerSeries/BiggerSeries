@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.util.Util;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 
 import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
 import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
+import static net.roguelogix.phosphophyllite.multiblock.rectangular.AxisPosition.*;
 
 public class RectangularMultiblockController extends MultiblockController {
     
@@ -188,107 +190,36 @@ public class RectangularMultiblockController extends MultiblockController {
         super.setAssemblyValidator(Validator.and(mainValidator, validator));
     }
     
-    private void assembledBlockStates() {
-        HashMap<BlockPos, BlockState> newStates = new HashMap<>();
-        blocks.forEach(block -> {
-            if (block instanceof RectangularMultiblockTile) {
-                BlockPos pos = block.getPos();
-                
-                int extremes = 0;
-                int frameLoc = 0;
-                if (pos.getX() == minCoord().x() || pos.getX() == maxCoord().x()) {
-                    extremes++;
-                    frameLoc += 1;
-                }
-                if (pos.getY() == minCoord().y() || pos.getY() == maxCoord().y()){
-                    extremes++;
-                    frameLoc += 2;
-                }
-                if (pos.getZ() == minCoord().z() || pos.getZ() == maxCoord().z()){
-                    extremes++;
-                    frameLoc += 4;
-                }
-                RectangularMultiblockPositions position;
-                switch (extremes) {
-                    case 3: {
-                        position = RectangularMultiblockPositions.CORNER;
-                        break;
-                    }
-                    case 2: {
-                        switch (frameLoc) {
-                            case 3: {
-                                position = RectangularMultiblockPositions.FRAME_Z;
-                                break;
-                            }
-                            default:
-                            case 5: {
-                                position = RectangularMultiblockPositions.FRAME_Y;
-                                break;
-                            }
-                            case 6: {
-                                position = RectangularMultiblockPositions.FRAME_X;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case 1: {
-                        position = RectangularMultiblockPositions.FACE;
-                        break;
-                    }
-                    default: {
-                        position = RectangularMultiblockPositions.INTERIOR;
-                        break;
-                    }
-                }
-                ((RectangularMultiblockTile) block).position = position;
-                if (block.doBlockStateUpdate()) {
-                    newStates.put(pos, block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, position));
-                }
+    @Override
+    protected BlockState assembledTileState(MultiblockTile tile) {
+        BlockState state = super.assembledTileState(tile);
+        if (tile instanceof RectangularMultiblockTile) {
+            BlockPos pos = tile.getPos();
+            
+            if (pos.getX() == minCoord().x()) {
+                state = state.with(X_AXIS_POSITION, AxisPosition.LOWER);
+            } else if (pos.getX() == maxCoord().x()) {
+                state = state.with(X_AXIS_POSITION, AxisPosition.UPPER);
+            } else {
+                state = state.with(X_AXIS_POSITION, AxisPosition.MIDDLE);
             }
-        });
-        Util.setBlockStates(newStates, world);
-        blocks.forEach(TileEntity::markDirty);
-    }
-    
-    private void disassembledBlockStates() {
-        HashMap<BlockPos, BlockState> newStates = new HashMap<>();
-        blocks.forEach(block -> {
-            if (block instanceof RectangularMultiblockTile) {
-                ((RectangularMultiblockTile) block).position = RectangularMultiblockPositions.DISASSEMBLED;
-                if (block.doBlockStateUpdate()) {
-                    newStates.put(block.getPos(), block.getBlockState().with(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY, RectangularMultiblockPositions.DISASSEMBLED));
-                }
+            
+            if (pos.getY() == minCoord().y()) {
+                state = state.with(Y_AXIS_POSITION, AxisPosition.LOWER);
+            } else if (pos.getY() == maxCoord().y()) {
+                state = state.with(Y_AXIS_POSITION, AxisPosition.UPPER);
+            } else {
+                state = state.with(Y_AXIS_POSITION, AxisPosition.MIDDLE);
             }
-        });
-        Util.setBlockStates(newStates, world);
-        blocks.forEach(TileEntity::markDirty);
-    }
-    
-    protected void onAssembly() {
-    }
-    
-    @Override
-    protected final void onAssembled() {
-        assembledBlockStates();
-        onAssembly();
-    }
-    
-    protected void onDisassembly() {
-    }
-    
-    @Override
-    protected final void onDisassembled() {
-        disassembledBlockStates();
-        onDisassembly();
-    }
-    
-    protected void onUnpause() {
-    }
-    
-    @Override
-    protected final void onUnpaused() {
-        assembledBlockStates();
-        onUnpause();
+            
+            if (pos.getZ() == minCoord().z()) {
+                state = state.with(Z_AXIS_POSITION, AxisPosition.LOWER);
+            } else if (pos.getZ() == maxCoord().z()) {
+                state = state.with(Z_AXIS_POSITION, AxisPosition.UPPER);
+            } else {
+                state = state.with(Z_AXIS_POSITION, AxisPosition.MIDDLE);
+            }
+        }
+        return state;
     }
 }

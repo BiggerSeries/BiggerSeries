@@ -12,7 +12,7 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorBlade;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorShaft;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineRotorBearingTile;
-import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockPositions;
+import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector4i;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ public class BladeRenderer extends TileEntityRenderer<TurbineRotorBearingTile> {
         // if they cant do it properly, ill just have to do it myself
         // later, im lazy right now, still, fuck this shit
         BlockState state = bearing.getBlockState();
-        if (state.get(RectangularMultiblockPositions.POSITIONS_ENUM_PROPERTY) != RectangularMultiblockPositions.DISASSEMBLED) {
+        if (state.get(MultiblockBlock.ASSEMBLED)) {
             // it is notable that this is on the client, and as a result i do not have direct access to the multiblock controller
             // so, tile entity, do your thing and just magically be updated k thx
             
