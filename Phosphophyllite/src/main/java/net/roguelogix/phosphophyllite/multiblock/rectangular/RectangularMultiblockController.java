@@ -194,30 +194,33 @@ public class RectangularMultiblockController extends MultiblockController {
     protected BlockState assembledTileState(MultiblockTile tile) {
         BlockState state = super.assembledTileState(tile);
         if (tile instanceof RectangularMultiblockTile) {
-            BlockPos pos = tile.getPos();
-            
-            if (pos.getX() == minCoord().x()) {
-                state = state.with(X_AXIS_POSITION, AxisPosition.LOWER);
-            } else if (pos.getX() == maxCoord().x()) {
-                state = state.with(X_AXIS_POSITION, AxisPosition.UPPER);
-            } else {
-                state = state.with(X_AXIS_POSITION, AxisPosition.MIDDLE);
-            }
-            
-            if (pos.getY() == minCoord().y()) {
-                state = state.with(Y_AXIS_POSITION, AxisPosition.LOWER);
-            } else if (pos.getY() == maxCoord().y()) {
-                state = state.with(Y_AXIS_POSITION, AxisPosition.UPPER);
-            } else {
-                state = state.with(Y_AXIS_POSITION, AxisPosition.MIDDLE);
-            }
-            
-            if (pos.getZ() == minCoord().z()) {
-                state = state.with(Z_AXIS_POSITION, AxisPosition.LOWER);
-            } else if (pos.getZ() == maxCoord().z()) {
-                state = state.with(Z_AXIS_POSITION, AxisPosition.UPPER);
-            } else {
-                state = state.with(Z_AXIS_POSITION, AxisPosition.MIDDLE);
+            RectangularMultiblockBlock block = (RectangularMultiblockBlock) tile.getBlockState().getBlock();
+            if (block.usesAxisPositions()) {
+                BlockPos pos = tile.getPos();
+                
+                if (pos.getX() == minCoord().x()) {
+                    state = state.with(X_AXIS_POSITION, AxisPosition.LOWER);
+                } else if (pos.getX() == maxCoord().x()) {
+                    state = state.with(X_AXIS_POSITION, AxisPosition.UPPER);
+                } else {
+                    state = state.with(X_AXIS_POSITION, AxisPosition.MIDDLE);
+                }
+                
+                if (pos.getY() == minCoord().y()) {
+                    state = state.with(Y_AXIS_POSITION, AxisPosition.LOWER);
+                } else if (pos.getY() == maxCoord().y()) {
+                    state = state.with(Y_AXIS_POSITION, AxisPosition.UPPER);
+                } else {
+                    state = state.with(Y_AXIS_POSITION, AxisPosition.MIDDLE);
+                }
+                
+                if (pos.getZ() == minCoord().z()) {
+                    state = state.with(Z_AXIS_POSITION, AxisPosition.LOWER);
+                } else if (pos.getZ() == maxCoord().z()) {
+                    state = state.with(Z_AXIS_POSITION, AxisPosition.UPPER);
+                } else {
+                    state = state.with(Z_AXIS_POSITION, AxisPosition.MIDDLE);
+                }
             }
         }
         return state;

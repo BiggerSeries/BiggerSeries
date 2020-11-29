@@ -48,11 +48,6 @@ public class ReactorFuelRod extends ReactorBaseBlock {
         return true;
     }
     
-    @Override
-    public boolean usesBlockState() {
-        return false;
-    }
-    
     public static IntegerProperty FUEL_HEIGHT_PROPERTY = IntegerProperty.create("fuel_level", 0, 16);
     public static IntegerProperty WASTE_HEIGHT_PROPERTY = IntegerProperty.create("waste_level", 0, 16);
     
@@ -61,5 +56,10 @@ public class ReactorFuelRod extends ReactorBaseBlock {
         super.fillStateContainer(builder);
         builder.add(FUEL_HEIGHT_PROPERTY);
         builder.add(WASTE_HEIGHT_PROPERTY);
+    }
+    
+    @Override
+    public boolean usesAssmeblyState() {
+        return false;
     }
 }

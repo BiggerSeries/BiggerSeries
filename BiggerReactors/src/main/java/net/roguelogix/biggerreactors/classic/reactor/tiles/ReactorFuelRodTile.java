@@ -16,11 +16,6 @@ public class ReactorFuelRodTile extends ReactorBaseTile {
         super(TYPE);
     }
     
-    @Override
-    public boolean doBlockStateUpdate() {
-        return false;
-    }
-    
     public long fuel = 0;
     public long waste = 0;
     

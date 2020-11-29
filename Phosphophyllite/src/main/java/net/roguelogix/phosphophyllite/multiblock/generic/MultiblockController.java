@@ -7,8 +7,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
-import net.roguelogix.phosphophyllite.PhosphophylliteConfig;
-import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockTile;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3ic;
@@ -320,28 +318,24 @@ public class MultiblockController {
         }
     }
     
-    private void assembledBlockStates(){
+    private void assembledBlockStates() {
         final HashMap<BlockPos, BlockState> newStates = new HashMap<>();
         blocks.forEach(tile -> {
-            if(tile.doBlockStateUpdate()){
-                BlockState state = assembledTileState(tile);
-                if(state != tile.getBlockState()){
-                    newStates.put(tile.getPos(), state);
-                }
+            BlockState state = assembledTileState(tile);
+            if (state != tile.getBlockState()) {
+                newStates.put(tile.getPos(), state);
             }
         });
         Util.setBlockStates(newStates, world);
         blocks.forEach(TileEntity::markDirty);
     }
     
-    private void disassembledBlockStates(){
+    private void disassembledBlockStates() {
         final HashMap<BlockPos, BlockState> newStates = new HashMap<>();
         blocks.forEach(tile -> {
-            if(tile.doBlockStateUpdate()){
-                BlockState state = disassembledTileState(tile);
-                if(state != tile.getBlockState()){
-                    newStates.put(tile.getPos(), state);
-                }
+            BlockState state = disassembledTileState(tile);
+            if (state != tile.getBlockState()) {
+                newStates.put(tile.getPos(), state);
             }
         });
         Util.setBlockStates(newStates, world);
@@ -557,11 +551,19 @@ public class MultiblockController {
         return new CompoundNBT();
     }
     
-    protected BlockState assembledTileState(MultiblockTile tile){
-        return tile.getBlockState().with(MultiblockBlock.ASSEMBLED, true);
+    protected BlockState assembledTileState(MultiblockTile tile) {
+        BlockState state = tile.getBlockState();
+        if (((MultiblockBlock) tile.getBlockState().getBlock()).usesAssmeblyState()) {
+            state = state.with(MultiblockBlock.ASSEMBLED, true);
+        }
+        return state;
     }
     
-    protected BlockState disassembledTileState(MultiblockTile tile){
-        return tile.getBlockState().with(MultiblockBlock.ASSEMBLED, false);
+    protected BlockState disassembledTileState(MultiblockTile tile) {
+        BlockState state = tile.getBlockState();
+        if (((MultiblockBlock) tile.getBlockState().getBlock()).usesAssmeblyState()) {
+            state = state.with(MultiblockBlock.ASSEMBLED, false);
+        }
+        return state;
     }
 }

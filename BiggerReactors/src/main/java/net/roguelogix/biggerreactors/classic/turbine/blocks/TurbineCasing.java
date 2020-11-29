@@ -23,4 +23,9 @@ public class TurbineCasing extends TurbineBaseBlock {
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new TurbineCasingTile();
     }
+    
+    @Override
+    public boolean usesAxisPositions() {
+        return true;
+    }
 }

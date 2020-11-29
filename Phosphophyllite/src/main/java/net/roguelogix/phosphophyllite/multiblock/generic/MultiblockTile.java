@@ -153,10 +153,6 @@ public abstract class MultiblockTile extends TileEntity {
         return compound;
     }
     
-    public boolean doBlockStateUpdate() {
-        return true;
-    }
-    
     
     protected void onAssemblyAttempted() {
     }

@@ -23,4 +23,9 @@ public class TurbineTerminal extends TurbineBaseBlock {
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new TurbineTerminalTile();
     }
+    
+    @Override
+    public boolean usesTurbineState() {
+        return true;
+    }
 }

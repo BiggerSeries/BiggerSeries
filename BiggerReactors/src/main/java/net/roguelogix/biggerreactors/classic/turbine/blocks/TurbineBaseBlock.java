@@ -21,9 +21,13 @@ public class TurbineBaseBlock extends RectangularMultiblockBlock {
     
     public TurbineBaseBlock(boolean solid) {
         super(solid ? PROPERTIES_SOLID : PROPERTIES_GLASS);
-        if (usesBlockState()) {
+        if (usesTurbineState()) {
             setDefaultState(getDefaultState().with(TurbineActivity.TURBINE_STATE_ENUM_PROPERTY, TurbineActivity.INACTIVE));
         }
+    }
+    
+    public boolean usesTurbineState() {
+        return false;
     }
     
     @Override
@@ -34,6 +38,8 @@ public class TurbineBaseBlock extends RectangularMultiblockBlock {
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(TurbineActivity.TURBINE_STATE_ENUM_PROPERTY);
+        if(usesTurbineState()) {
+            builder.add(TurbineActivity.TURBINE_STATE_ENUM_PROPERTY);
+        }
     }
 }

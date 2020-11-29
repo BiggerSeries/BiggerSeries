@@ -27,7 +27,9 @@ public class MultiblockBlock extends Block {
     public MultiblockBlock(Properties properties) {
         super(properties);
         BlockState defaultState = this.getDefaultState();
-        defaultState = defaultState.with(ASSEMBLED, false);
+        if(usesAssmeblyState()) {
+            defaultState = defaultState.with(ASSEMBLED, false);
+        }
         if (connectedTexture()) {
             defaultState = defaultState.with(TOP_CONNECTED_PROPERTY, false);
             defaultState = defaultState.with(BOTTOM_CONNECTED_PROPERTY, false);
@@ -39,12 +41,12 @@ public class MultiblockBlock extends Block {
         this.setDefaultState(defaultState);
     }
     
-    public boolean usesBlockState() {
-        return true;
-    }
-    
     public boolean connectedTexture() {
         return false;
+    }
+    
+    public boolean usesAssmeblyState(){
+        return true;
     }
     
     @SuppressWarnings("deprecation")
@@ -64,7 +66,9 @@ public class MultiblockBlock extends Block {
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        builder.add(ASSEMBLED);
+        if(usesAssmeblyState()) {
+            builder.add(ASSEMBLED);
+        }
         if (connectedTexture()) {
             builder.add(TOP_CONNECTED_PROPERTY);
             builder.add(BOTTOM_CONNECTED_PROPERTY);

@@ -21,4 +21,9 @@ public class ReactorTerminal extends ReactorBaseBlock {
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new ReactorTerminalTile();
     }
+    
+    @Override
+    public boolean usesReactorState() {
+        return true;
+    }
 }

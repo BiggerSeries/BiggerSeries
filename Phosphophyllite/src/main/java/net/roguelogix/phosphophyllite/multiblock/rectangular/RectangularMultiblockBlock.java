@@ -13,7 +13,7 @@ public class RectangularMultiblockBlock extends MultiblockBlock {
     
     public RectangularMultiblockBlock(@Nonnull Properties properties) {
         super(properties);
-        if (usesBlockState()) {
+        if (usesAxisPositions()) {
             setDefaultState(getDefaultState().with(X_AXIS_POSITION, MIDDLE));
             setDefaultState(getDefaultState().with(Y_AXIS_POSITION, MIDDLE));
             setDefaultState(getDefaultState().with(Z_AXIS_POSITION, MIDDLE));
@@ -23,12 +23,14 @@ public class RectangularMultiblockBlock extends MultiblockBlock {
     @Override
     protected void fillStateContainer(@Nonnull StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
-        if (usesBlockState()) {
+        if (usesAxisPositions()) {
             builder.add(X_AXIS_POSITION);
             builder.add(Y_AXIS_POSITION);
             builder.add(Z_AXIS_POSITION);
         }
     }
     
-    
+    public boolean usesAxisPositions(){
+        return false;
+    }
 }

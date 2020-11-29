@@ -23,4 +23,9 @@ public class ReactorCasing extends ReactorBaseBlock {
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new ReactorCasingTile();
     }
+    
+    @Override
+    public boolean usesAxisPositions() {
+        return true;
+    }
 }
