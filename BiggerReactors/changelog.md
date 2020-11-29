@@ -1,3 +1,9 @@
+# 1.16.3-0.2.6
+1/0 bugs
+
+## Reactor
+ - fix divide by zero bug with fuel rendering
+
 # 1.16.3-0.2.5
 Redstone port bugs
 
