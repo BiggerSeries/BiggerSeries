@@ -9,7 +9,7 @@ modLoader="javafml" #mandatory
 loaderVersion="[34,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 # The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
-license="MIT"
+license="LGPL v2.1"
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/RogueLogix/BiggerSeries/issues/" #optional
 
@@ -36,6 +36,8 @@ description='''
 Big Reactors, but even bigger
 
 Part of the BiggerSeries of mods
+
+Official continuation of Big Reactors
 '''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.

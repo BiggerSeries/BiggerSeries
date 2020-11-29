@@ -9,7 +9,7 @@ Downloads can be found in the GitHub releases tab and on CurseForge [here](https
 
 ### Notable changes
  - GUI button are toggle in place, instead of discrete.
- - Reactor access ports no longer have an intenral buffer, required items to be piped in/out (this is mostly me being lazy, but you should be doing this anyway, hopper works).
+ - Reactor access ports no longer have an internal buffer, required items to be piped in/out (this is mostly me being lazy, but you should be doing this anyway, hopper works).
  - Overspeeding turbines no longer generates more power, the efficiency function is nerfed past about 2200RPM. They still don't break, but you have no reason to run them that fast.
  - Turbine require two rotor bearings, one at each end. Small annoyance on my part, but otherwise the rotors work the same, put the coils on either side.
  - The config can edit basically everything, re-balance the reactor to your hearts content as a modpack dev.
@@ -22,7 +22,7 @@ Downloads can be found in the GitHub releases tab and on CurseForge [here](https
  
 ## You need other mods to use it
 Much like Big Reactors before it, BiggerReactors is a power generation mod *only.* You will need another mod to transport or the power.
-Dont expect to be doing much with BiggerReactors by itself.
+Don't expect to be doing much with BiggerReactors by itself.
  
  
 ## Phosphophyllite
@@ -43,16 +43,26 @@ Bugs from BigReactors are *probably* no longer valid, if you think it might be, 
 This being a full rewrite it shares almost no code with BigReactors and as a result will have its own suite of bugs.
 
 ## Licence
-I am personally *not* a fan of closed source mods, so, its not closed source. BiggerReactors is under the same MIT license as BigReactors.
+I am personally *not* a fan of closed source mods, so, its not closed source. BiggerReactors is under the LGPL v2.1.
 
-This means that you are free to
+As a TLDR, this means that you are free to
  - Use it in a modpack (please do)
  - PR bug fixes and changes in (*please do*)
  - Redistribute it (please dont)
  - Take the source code and make it your own (if im not updating it, by all means)
- - Take now your code closed source
+ - Use it as a library for your mod regardless of your license
 
-Just make sure to read LICENSE.txt, its a pretty non-restrictive license.
+However, you cannot
+ - Take your changed version closed source
+
+Just make sure to read LICENSE.txt for more details
+
+## Copyright notices
+Copyright (c) 2020 RogueLogix
+
+Copyright (c) 2020 gizmocodes
+
+Copyright (c) 2013-2015 Erogenous Beef
 \
 \
 \
