@@ -357,6 +357,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     private void updateFuelRenderingLevel(boolean forceFullUpdate) {
         
+        if(simulation.fuelTank.getCapacity() == 0){
+            return;
+        }
+        
         long rodPixels = fuelRodsByLevel.size() * 16L;
         long fuelPixels = (simulation.fuelTank.getTotalAmount() * rodPixels) / simulation.fuelTank.getCapacity();
         long wastePixels = (simulation.fuelTank.getWasteAmount() * rodPixels) / simulation.fuelTank.getCapacity();
