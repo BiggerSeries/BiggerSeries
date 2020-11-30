@@ -180,19 +180,23 @@ public class ReactorModeratorRegistry {
             
             
             if (absorption < 0.0 || absorption > 1.0) {
-                BiggerReactors.LOGGER.error("Error absorption out of range in json at " + resourceLocation.toString() + ", got " + absorption + ", valid range is [0, 1]");
+                BiggerReactors.LOGGER.error("Error absorption out of range in json at " + resourceLocation.toString() + ", got " + absorption + ", valid range is [0, 1], clamping");
+                absorption = Math.max(0.0, Math.min(1.0, absorption));
             }
             
             if (efficiency < 0.0 || efficiency > 1.0) {
-                BiggerReactors.LOGGER.error("Error efficiency out of range in json at " + resourceLocation.toString() + ", got " + efficiency + ", valid range is [0, 1]");
+                BiggerReactors.LOGGER.error("Error efficiency out of range in json at " + resourceLocation.toString() + ", got " + efficiency + ", valid range is [0, 1], clamping");
+                efficiency = Math.max(0.0, Math.min(1.0, efficiency));
             }
             
-            if (moderation < 0.0 ) {
-                BiggerReactors.LOGGER.error("Error moderation out of range in json at " + resourceLocation.toString() + ", got " + moderation + ", valid range is [0,)");
+            if (moderation < 0.0) {
+                BiggerReactors.LOGGER.error("Error moderation out of range in json at " + resourceLocation.toString() + ", got " + moderation + ", valid range is [0,), clamping");
+                moderation = Math.max(0.0, moderation);
             }
             
             if (conductivity < 0.0) {
-                BiggerReactors.LOGGER.error("Error conductivity out of range in json at " + resourceLocation.toString() + ", got " + conductivity + ", valid range is [0,)");
+                BiggerReactors.LOGGER.error("Error conductivity out of range in json at " + resourceLocation.toString() + ", got " + conductivity + ", valid range is [0,), clamping");
+                conductivity = Math.max(0.0, conductivity);
             }
             
             ModeratorProperties properties = new ModeratorProperties(absorption, efficiency, moderation, conductivity);
