@@ -190,7 +190,9 @@ public class TurbineCoilRegistry {
                     registry.put(element, properties);
                 }
             } else {
-                registry.put(ForgeRegistries.BLOCKS.getValue(location), properties);
+                if(ForgeRegistries.BLOCKS.containsKey(location)) {
+                    registry.put(ForgeRegistries.BLOCKS.getValue(location), properties);
+                }
             }
         }
         BiggerReactors.LOGGER.info("Loaded " + registry.size() + " coil entries");
