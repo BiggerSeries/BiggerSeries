@@ -164,7 +164,7 @@ public abstract class MultiblockTile extends TileEntity {
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (handIn == Hand.MAIN_HAND) {
-            if (player.getHeldItemMainhand() == ItemStack.EMPTY && !getBlockState().get(MultiblockBlock.ASSEMBLED)) {
+            if (player.getHeldItemMainhand() == ItemStack.EMPTY && (!((MultiblockBlock)getBlockState().getBlock()).usesAssmeblyState() || !getBlockState().get(MultiblockBlock.ASSEMBLED))) {
                 if (controller != null && controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
                     if (controller.lastValidationError != null) {
                         player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());
