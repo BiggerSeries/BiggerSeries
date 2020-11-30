@@ -169,6 +169,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                         inBlades = false;
                         switched = true;
                         primaryBearing.isRenderBearing = true;
+                        secondaryBearing.isRenderBearing = false;
                     }
                     inCoil = true;
                 }
@@ -179,10 +180,15 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                         }
                         inCoil = false;
                         switched = true;
+                        primaryBearing.isRenderBearing = false;
                         secondaryBearing.isRenderBearing = true;
                     }
                     inBlades = true;
                 }
+            }
+            if(!switched){
+                primaryBearing.isRenderBearing = true;
+                secondaryBearing.isRenderBearing = false;
             }
             
             int[] totalCoilBlocks = new int[]{0};
