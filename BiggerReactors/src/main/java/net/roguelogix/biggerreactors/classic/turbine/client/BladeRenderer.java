@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorBlade;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorShaft;
@@ -55,16 +56,36 @@ public class BladeRenderer extends TileEntityRenderer<TurbineRotorBearingTile> {
                 bearing.angle = angle;
             }
             
+            int blade180RotationMultiplier = ((int) -bearing.rotationAxis.getX()) | ((int) -bearing.rotationAxis.getY()) | ((int) bearing.rotationAxis.getZ());
+            if (blade180RotationMultiplier > 0) {
+                angle += 180;
+            }
+            //            blade180RotationMultiplier *= -1;
+            
             matrixStackIn.push();
             
-            matrixStackIn.translate(0.5, 0, 0.5);
+            matrixStackIn.translate(0.5, 0.5, 0.5);
             
-            matrixStackIn.rotate(new Quaternion(bearing.rotationAxis, (float) angle, true));
+            Quaternion axisRotation = null;
             
-            matrixStackIn.translate(-0.5, 0, -0.5);
+            if (bearing.rotationAxis.getX() != 0) {
+                axisRotation = new Quaternion(Vector3f.ZP, -90 * bearing.rotationAxis.getX(), true);
+                angle -= 90;
+            } else if (bearing.rotationAxis.getZ() != 0) {
+                axisRotation = new Quaternion(Vector3f.XP, 90 * bearing.rotationAxis.getZ(), true);
+            } else if (bearing.rotationAxis.getY() != 1) {
+                axisRotation = new Quaternion(Vector3f.XP, 180, true);
+            }
+            if (axisRotation != null) {
+                matrixStackIn.rotate(axisRotation);
+            }
+            matrixStackIn.rotate(new Quaternion(Vector3f.YP, (float) angle, true));
+            
+            matrixStackIn.translate(-0.5, -0.5, -0.5);
+            
             
             for (Vector4i vector4i : bearing.rotorConfiguration) {
-                matrixStackIn.translate(bearing.rotationAxis.getX(), bearing.rotationAxis.getY(), bearing.rotationAxis.getZ());
+                matrixStackIn.translate(0, 1, 0);
                 
                 Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(TurbineRotorShaft.INSTANCE.getDefaultState(), matrixStackIn, bufferIn, 0x007F007F, combinedOverlayIn, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
                 
@@ -93,17 +114,15 @@ public class BladeRenderer extends TileEntityRenderer<TurbineRotorBearingTile> {
                             break;
                         }
                     }
-                    matrixStackIn.push();
                     for (int j = 0; j < vector4i.get(i); j++) {
-                        matrixStackIn.translate(direction.getXOffset(), direction.getYOffset(), direction.getZOffset());
                         matrixStackIn.push();
-                        matrixStackIn.translate(0.5, 0, 0.5);
-                        matrixStackIn.rotate(new Quaternion(bearing.rotationAxis, (float) (180 * (i & 1) + 135 * (i & 2)), true));
-                        matrixStackIn.translate(-0.5, 0, -0.5);
+                        matrixStackIn.translate(0.5, 0.5, 0.5);
+                        matrixStackIn.rotate(new Quaternion(Vector3f.YP, (float) (180 * (i & 1) + blade180RotationMultiplier * 135 * (i & 2)), true));
+                        matrixStackIn.translate(-0.5, -0.5, -0.5);
+                        matrixStackIn.translate(0, 0, -(j + 1));
                         Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(TurbineRotorBlade.INSTANCE.getDefaultState(), matrixStackIn, bufferIn, 0x007F007F, combinedOverlayIn, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
                         matrixStackIn.pop();
                     }
-                    matrixStackIn.pop();
                     i++;
                 }
             }
