@@ -1,0 +1,7 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/steel",
+    efficiency: 0.495,
+    extractionRate: 0.13,
+    bonus: 1,
+}

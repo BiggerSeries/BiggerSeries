@@ -1,0 +1,7 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/enderium",
+    efficiency: 0.99,
+    extractionRate: 0.3,
+    bonus: 1.02,
+}

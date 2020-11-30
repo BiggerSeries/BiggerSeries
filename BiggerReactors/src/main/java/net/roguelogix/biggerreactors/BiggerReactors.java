@@ -17,6 +17,7 @@ import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocess
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import net.roguelogix.biggerreactors.classic.reactor.client.*;
 import net.roguelogix.biggerreactors.classic.reactor.containers.*;
+import net.roguelogix.biggerreactors.classic.turbine.TurbineCoilRegistry;
 import net.roguelogix.biggerreactors.classic.turbine.client.BladeRenderer;
 import net.roguelogix.biggerreactors.classic.turbine.client.TurbineCoolantPortScreen;
 import net.roguelogix.biggerreactors.classic.turbine.client.TurbineScreen;
@@ -54,8 +55,8 @@ public class BiggerReactors {
     
     
     public void onTagsUpdatedEvent(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
-        Config.loadRegistries(tagsUpdatedEvent.getTagManager().getBlockTags());
         ReactorModeratorRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
+        TurbineCoilRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
     }
     
     public void onClientSetup(final FMLClientSetupEvent e) {

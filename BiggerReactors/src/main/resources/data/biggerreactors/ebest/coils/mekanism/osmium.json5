@@ -1,0 +1,7 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/osmium",
+    efficiency: 0.462,
+    extractionRate: 0.12,
+    bonus: 1,
+}

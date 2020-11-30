@@ -1,0 +1,7 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/silver",
+    efficiency: 0.561,
+    extractionRate: 0.15,
+    bonus: 1,
+}

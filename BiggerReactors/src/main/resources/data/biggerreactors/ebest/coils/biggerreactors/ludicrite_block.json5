@@ -1,0 +1,7 @@
+{
+    type: "registry",
+    location: "biggerreactors:ludicrite_block",
+    efficiency: 1.15,
+    extractionRate: 0.35,
+    bonus: 1.02,
+}

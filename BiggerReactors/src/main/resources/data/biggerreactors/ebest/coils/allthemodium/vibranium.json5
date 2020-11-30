@@ -1,0 +1,7 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/vibranium",
+    efficiency: 1.35,
+    extractionRate: 0.5,
+    bonus: 1.04,
+}

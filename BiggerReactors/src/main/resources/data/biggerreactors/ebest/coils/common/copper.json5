@@ -1,0 +1,7 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/copper",
+    efficiency: 0.396,
+    extractionRate: 0.12,
+    bonus: 1,
+}

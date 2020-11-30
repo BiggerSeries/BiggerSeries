@@ -1,0 +1,7 @@
+{
+    type: "registry",
+    location: "minecraft:gold_block",
+    efficiency: .66,
+    extractionRate: 0.175,
+    bonus: 1,
+}

@@ -363,7 +363,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             if (block instanceof TurbineRotorBlade || block instanceof TurbineRotorShaft) {
                 rotorMass += Config.Turbine.RotorMassPerPart;
             }
-            TurbineCoilRegistry.TurbineCoilData coilData = TurbineCoilRegistry.getCoilData(block);
+            TurbineCoilRegistry.CoilData coilData = TurbineCoilRegistry.getCoilData(block);
             if (coilData != null) {
                 inductionEfficiency += coilData.efficiency;
                 inductorDragCoefficient += coilData.extractionRate;

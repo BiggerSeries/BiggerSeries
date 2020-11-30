@@ -1,0 +1,7 @@
+{
+    type: "registry",
+    location: "minecraft:iron_block",
+    efficiency: .33,
+    extractionRate: 0.1,
+    bonus: 1,
+}
