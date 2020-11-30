@@ -161,82 +161,6 @@ public class Config {
     }
 
     @PhosphophylliteConfig
-    public static class ReactorModeratorConfigValues {
-        public enum LocationType {
-            REGISTRY,
-            TAG
-        }
-
-        @PhosphophylliteConfig.Value
-        public final String location;
-        @PhosphophylliteConfig.Value
-        public final LocationType locationType;
-        @PhosphophylliteConfig.Value
-        public final float absorption;
-        @PhosphophylliteConfig.Value
-        public final float heatEfficiency;
-        @PhosphophylliteConfig.Value
-        public final float moderation;
-        @PhosphophylliteConfig.Value
-        public final float conductivity;
-
-        @SuppressWarnings("unused")
-        ReactorModeratorConfigValues() {
-            location = null;
-            locationType = null;
-            absorption = 0;
-            heatEfficiency = 0;
-            moderation = 0;
-            conductivity = 0;
-        }
-
-        public ReactorModeratorConfigValues(String location, LocationType locationType, float absorption, float heatEfficiency, float moderation, float conductivity) {
-            this.location = location;
-            this.locationType = locationType;
-            this.absorption = absorption;
-            this.heatEfficiency = heatEfficiency;
-            this.moderation = moderation;
-            this.conductivity = conductivity;
-        }
-    }
-
-    // todo: blocks to add
-    //      brass?
-    //      fluxed electrum (lemming may port RA, unsure)
-    //      thermal fluids (dont exist yet)
-    @PhosphophylliteConfig.Value
-    public static ReactorModeratorConfigValues[] reactorModerators = new ReactorModeratorConfigValues[]{
-            new ReactorModeratorConfigValues("minecraft:air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
-            new ReactorModeratorConfigValues("minecraft:void_air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
-            new ReactorModeratorConfigValues("minecraft:cave_air", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.1f, 0.25f, 1.1f, 0.05f),
-
-            new ReactorModeratorConfigValues("minecraft:iron_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.5f, 0.75f, 1.4f, 0.6f),
-            new ReactorModeratorConfigValues("minecraft:gold_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.52f, 0.8f, 1.45f, 2f),
-            new ReactorModeratorConfigValues("minecraft:diamond_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 3f),
-            new ReactorModeratorConfigValues("minecraft:emerald_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.55f, 0.85f, 1.5f, 2.5f),
-            new ReactorModeratorConfigValues("minecraft:glass", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.2f, 0.25f, 1.1f, 0.3f),
-            new ReactorModeratorConfigValues("minecraft:ice", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.33f, 1.15f, 0.1f),
-            new ReactorModeratorConfigValues("minecraft:snow_block", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.15f, 0.33f, 1.05f, 0.05f),
-
-            new ReactorModeratorConfigValues("forge:storage_blocks/copper", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.75f, 1.4f, 1f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/osmium", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/bronze", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/zinc", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.77f, 1.41f, 1f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/aluminum", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.78f, 1.42f, 0.6f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/steel", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.78f, 1.42f, 0.6f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/invar", ReactorModeratorConfigValues.LocationType.TAG, 0.5f, 0.79f, 1.43f, 0.6f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/silver", ReactorModeratorConfigValues.LocationType.TAG, 0.51f, 0.79f, 1.43f, 1.5f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/lead", ReactorModeratorConfigValues.LocationType.TAG, 0.75f, 0.75f, 1.75f, 1.5f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/electrum", ReactorModeratorConfigValues.LocationType.TAG, 0.75f, 0.75f, 1.75f, 1.5f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/platinum", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.86f, 1.58f, 1.5f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/enderium", ReactorModeratorConfigValues.LocationType.TAG, 0.53f, 0.88f, 1.6f, 3f),
-            new ReactorModeratorConfigValues("forge:storage_blocks/graphite", ReactorModeratorConfigValues.LocationType.TAG, 0.1f, 0.5f, 2f, 2f),
-
-            new ReactorModeratorConfigValues("minecraft:water", ReactorModeratorConfigValues.LocationType.REGISTRY, 0.33f, 0.5f, 1.33f, 0.1f),
-
-    };
-
-    @PhosphophylliteConfig
     public static class TurbineCoilConfigValues {
 
         public enum LocationType {
@@ -300,11 +224,6 @@ public class Config {
     };
 
     public static void loadRegistries(ITagCollection<Block> blockTags) {
-        ReactorModeratorRegistry.clearRegistry();
-        for (ReactorModeratorConfigValues reactorModerator : reactorModerators) {
-            ReactorModeratorRegistry.registerConfigValues(blockTags, reactorModerator);
-        }
-
         TurbineCoilRegistry.clearRegistry();
         for (TurbineCoilConfigValues turbineCoil : turbineCoils) {
             TurbineCoilRegistry.registerConfigValues(blockTags, turbineCoil);

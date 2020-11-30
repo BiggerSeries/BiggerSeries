@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "minecraft:gold_block",
+    absorption: 0.52,
+    efficiency: 0.8,
+    moderation: 1.45,
+    conductivity: 2,
+}

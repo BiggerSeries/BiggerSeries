@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/aluminum",
+    absorption: 0.5,
+    efficiency: 0.78,
+    moderation: 1.42,
+    conductivity: 0.6,
+}

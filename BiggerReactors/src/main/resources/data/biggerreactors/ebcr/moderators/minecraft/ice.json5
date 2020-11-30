@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "minecraft:ice",
+    absorption: 0.33,
+    efficiency: 0.33,
+    moderation: 1.15,
+    conductivity: 0.1,
+}

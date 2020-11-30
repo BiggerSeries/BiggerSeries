@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/invar",
+    absorption: 0.5,
+    efficiency: 0.79,
+    moderation: 1.43,
+    conductivity: 0.6,
+}

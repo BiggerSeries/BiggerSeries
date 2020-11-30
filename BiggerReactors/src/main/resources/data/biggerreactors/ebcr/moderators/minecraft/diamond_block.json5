@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "minecraft:diamond_block",
+    absorption: 0.55,
+    efficiency: 0.85,
+    moderation: 1.5,
+    conductivity: 3,
+}

@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "minecraft:void_air",
+    absorption: 0.1,
+    efficiency: 0.25,
+    moderation: 1.1,
+    conductivity: 0.05,
+}

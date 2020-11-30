@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "minecraft:snow_block",
+    absorption: 0.15,
+    efficiency: 0.33,
+    moderation: 1.05,
+    conductivity: 0.05,
+}

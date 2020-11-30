@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/lead",
+    absorption: 0.75,
+    efficiency: 0.75,
+    moderation: 1.75,
+    conductivity: 1.5,
+}

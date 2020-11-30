@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "minecraft:glass",
+    absorption: 0.2,
+    efficiency: 0.25,
+    moderation: 1.1,
+    conductivity: 0.3,
+}

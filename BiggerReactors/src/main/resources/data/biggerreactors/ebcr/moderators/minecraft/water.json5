@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "minecraft:water",
+    absorption: 0.33,
+    efficiency: 0.5,
+    moderation: 1.33,
+    conductivity: 0.1,
+}

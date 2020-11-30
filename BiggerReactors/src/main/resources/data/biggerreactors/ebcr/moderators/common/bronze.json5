@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/bronze",
+    absorption: 0.51,
+    efficiency: 0.77,
+    moderation: 1.41,
+    conductivity: 1,
+}

@@ -1,15 +1,20 @@
 package net.roguelogix.biggerreactors;
 
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.resources.DataPackRegistries;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.roguelogix.biggerreactors.classic.machine.client.CyaniteReprocessorScreen;
 import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import net.roguelogix.biggerreactors.classic.reactor.client.*;
 import net.roguelogix.biggerreactors.classic.reactor.containers.*;
 import net.roguelogix.biggerreactors.classic.turbine.client.BladeRenderer;
@@ -33,12 +38,24 @@ public class BiggerReactors {
     public BiggerReactors() {
         Registry.onModLoad();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
-        MinecraftForge.EVENT_BUS.addListener(this::onWorldLoad);
-        MinecraftForge.EVENT_BUS.addListener(this::onRenderWorldLast);
+        MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdatedEvent);
+        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            MinecraftForge.EVENT_BUS.addListener(this::onRenderWorldLast);
+        }
+        
     }
     
-    public void onWorldLoad(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
+    public static DataPackRegistries dataPackRegistries;
+    
+    public void onAddReloadListenerEvent(AddReloadListenerEvent serverAboutToStartEvent) {
+        dataPackRegistries = serverAboutToStartEvent.getDataPackRegistries();
+    }
+    
+    
+    public void onTagsUpdatedEvent(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
         Config.loadRegistries(tagsUpdatedEvent.getTagManager().getBlockTags());
+        ReactorModeratorRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
     }
     
     public void onClientSetup(final FMLClientSetupEvent e) {
@@ -66,7 +83,7 @@ public class BiggerReactors {
     
     public static long lastRenderTime = 0;
     
-    public void onRenderWorldLast(RenderWorldLastEvent event){
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
         lastRenderTime = System.nanoTime();
     }
     

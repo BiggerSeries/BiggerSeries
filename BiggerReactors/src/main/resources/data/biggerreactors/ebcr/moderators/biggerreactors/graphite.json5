@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/graphite",
+    absorption: 0.1,
+    efficiency: 0.5,
+    moderation: 2,
+    conductivity: 2,
+}
