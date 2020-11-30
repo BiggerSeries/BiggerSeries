@@ -45,7 +45,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
     Direction powerOutputDirection = null;
     
     public boolean isEmitting(Direction side) {
-        if(side.getOpposite() != powerOutputDirection){
+        if (side.getOpposite() != powerOutputDirection) {
             return false;
         }
         return isEmitting;
@@ -55,7 +55,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
     private boolean wasPowered = false;
     
     public void updatePowered() {
-        if(powerOutputDirection == null){
+        if (powerOutputDirection == null) {
             return;
         }
         assert world != null;
@@ -75,7 +75,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
                 shouldLight = isPowered;
                 if (activeTriggerPulseOrSignal) {
                     // signal
-                    if(wasPowered != isPowered){
+                    if (wasPowered != isPowered) {
                         reactor.setActive(isPowered ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
                     }
                 } else if (!wasPowered && isPowered) {
@@ -86,7 +86,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             case INPUT_CONTROL_ROD_INSERTION: {
                 shouldLight = isPowered;
                 if (activeTriggerPulseOrSignal) {
-                    if(wasPowered == isPowered){
+                    if (wasPowered == isPowered) {
                         break;
                     }
                     if (isPowered) {
@@ -171,13 +171,13 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             break;
         }
         shouldLight |= shouldBeEmitting;
-        wasPowered = isPowered;
-        if (shouldBeEmitting != isEmitting) {
+        if (shouldBeEmitting != isEmitting || wasPowered != isPowered) {
             isEmitting = shouldBeEmitting;
+            wasPowered = isPowered;
             assert world != null;
             world.notifyNeighborsOfStateChange(this.getPos(), this.getBlockState().getBlock());
         }
-        if(isLit != shouldLight){
+        if (isLit != shouldLight) {
             isLit = shouldLight;
             world.setBlockState(pos, getBlockState().with(ReactorRedstonePort.IS_LIT_BOOLEAN_PROPERTY, isLit));
         }
@@ -321,7 +321,9 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
                 //uncommittedMode = (Integer) requestData;
                 // Change by 1, loop to 0 if too high.
                 uncommittedMode++;
-                if(uncommittedMode > 2) uncommittedMode = 0;
+                if (uncommittedMode > 2) {
+                    uncommittedMode = 0;
+                }
                 break;
             case "setMainBuffer":
                 uncommittedMainBuffer = (String) requestData;
@@ -378,10 +380,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             activeSecondBuffer = compound.getString("secondBuffer");
         }
         if (compound.contains("isPowered")) {
-            isPowered = compound.getBoolean("isPowered");
-        }
-        if (compound.contains("isEmitting")) {
-            isEmitting = compound.getBoolean("isEmitting");
+            wasPowered = isPowered = compound.getBoolean("isPowered");
         }
         // Call reverted changes to align uncommitted settings to the active ones.
         revertChanges();
