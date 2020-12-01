@@ -147,12 +147,12 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                     Block secondaryBlock = world.getBlockState(secondaryOffsetPos).getBlock();
                     if (primaryBlock instanceof TurbineRotorBlade) {
                         isBladeShaft = true;
-                    } else if (!(primaryBlock instanceof AirBlock)) {
+                    } else if (!(primaryBlock instanceof AirBlock) && !(primaryBlock instanceof TurbineBaseBlock)) {
                         isCoilShaft = true;
                         validCoilBlocks++;
                     }
                     
-                    if (!(secondaryBlock instanceof AirBlock)) {
+                    if (!(secondaryBlock instanceof AirBlock) && !(secondaryBlock instanceof TurbineBaseBlock)) {
                         isCoilShaft = true;
                         validCoilBlocks++;
                     }
