@@ -186,7 +186,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
                     inBlades = true;
                 }
             }
-            if(!switched){
+            if (!switched) {
                 primaryBearing.isRenderBearing = true;
                 secondaryBearing.isRenderBearing = false;
             }
@@ -225,6 +225,7 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     private final Set<TurbineRotorShaftTile> rotorShafts = new HashSet<>();
     private final Set<TurbineRotorBladeTile> rotorBlades = new HashSet<>();
     private final Set<TurbinePowerTapTile> powerTaps = new HashSet<>();
+    private long glassCount = 0;
     
     @Override
     protected void onPartPlaced(@Nonnull MultiblockTile placed) {
@@ -250,6 +251,9 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof TurbinePowerTapTile) {
             powerTaps.add((TurbinePowerTapTile) tile);
+        }
+        if (tile instanceof TurbineGlassTile) {
+            glassCount++;
         }
     }
     
@@ -277,6 +281,9 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         }
         if (tile instanceof TurbinePowerTapTile) {
             powerTaps.remove(tile);
+        }
+        if (tile instanceof TurbineGlassTile) {
+            glassCount--;
         }
     }
     
@@ -392,54 +399,59 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         tankSize = flowRateLimit * Config.Turbine.FlowRateToTankSizeMultiplier;
         maxStoredPower = (coilSize + 1) * Config.Turbine.BatterySizePerCoilBlock;
         
-        for (TurbineRotorBearingTile rotorBearing : rotorBearings) {
-            if (!rotorBearing.isRenderBearing) {
-                continue;
-            }
-            
-            for (Direction value : Direction.values()) {
-                BlockPos possibleRotorPos = rotorBearing.getPos().offset(value);
-                if (world.getBlockState(possibleRotorPos).getBlock() == TurbineRotorShaft.INSTANCE) {
-                    
-                    rotationAxis = value.getDirectionVec();
-                    
-                    rotorConfiguration.clear();
-                    
-                    Direction.Axis shaftAxis = value.getAxis();
-                    BlockPos currentRotorPosition = possibleRotorPos;
-                    BlockPos currentBladePosition;
-                    while (world.getBlockState(currentRotorPosition).getBlock() == TurbineRotorShaft.INSTANCE) {
-                        Vector4i shaftSectionConfiguration = new Vector4i();
-                        int i = 0;
-                        for (Direction bladeDirection : Direction.values()) {
-                            if (bladeDirection.getAxis() == shaftAxis) {
-                                continue;
-                            }
-                            
-                            int bladeCount = 0;
-                            
-                            currentBladePosition = currentRotorPosition;
-                            currentBladePosition = currentBladePosition.offset(bladeDirection);
-                            while (world.getBlockState(currentBladePosition).getBlock() == TurbineRotorBlade.INSTANCE) {
-                                bladeCount++;
+        if (glassCount > 0) {
+            for (TurbineRotorBearingTile rotorBearing : rotorBearings) {
+                if (!rotorBearing.isRenderBearing) {
+                    continue;
+                }
+                
+                for (Direction value : Direction.values()) {
+                    BlockPos possibleRotorPos = rotorBearing.getPos().offset(value);
+                    if (world.getBlockState(possibleRotorPos).getBlock() == TurbineRotorShaft.INSTANCE) {
+                        
+                        rotationAxis = value.getDirectionVec();
+                        
+                        rotorConfiguration.clear();
+                        
+                        Direction.Axis shaftAxis = value.getAxis();
+                        BlockPos currentRotorPosition = possibleRotorPos;
+                        BlockPos currentBladePosition;
+                        while (world.getBlockState(currentRotorPosition).getBlock() == TurbineRotorShaft.INSTANCE) {
+                            Vector4i shaftSectionConfiguration = new Vector4i();
+                            int i = 0;
+                            for (Direction bladeDirection : Direction.values()) {
+                                if (bladeDirection.getAxis() == shaftAxis) {
+                                    continue;
+                                }
+                                
+                                int bladeCount = 0;
+                                
+                                currentBladePosition = currentRotorPosition;
                                 currentBladePosition = currentBladePosition.offset(bladeDirection);
+                                while (world.getBlockState(currentBladePosition).getBlock() == TurbineRotorBlade.INSTANCE) {
+                                    bladeCount++;
+                                    currentBladePosition = currentBladePosition.offset(bladeDirection);
+                                }
+                                
+                                shaftSectionConfiguration.setComponent(i, bladeCount);
+                                
+                                i++;
                             }
                             
-                            shaftSectionConfiguration.setComponent(i, bladeCount);
-                            
-                            i++;
+                            rotorConfiguration.add(shaftSectionConfiguration);
+                            currentRotorPosition = currentRotorPosition.offset(value);
                         }
                         
-                        rotorConfiguration.add(shaftSectionConfiguration);
-                        currentRotorPosition = currentRotorPosition.offset(value);
+                        break;
                     }
-                    
-                    break;
                 }
+                
             }
-            
+        } else {
+            for (TurbineRotorBearingTile rotorBearing : rotorBearings) {
+                rotorBearing.isRenderBearing = false;
+            }
         }
-        
     }
     
     long storedPower = 0;
