@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.feature.template.RuleTest;
@@ -47,6 +48,7 @@ import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.roguelogix.phosphophyllite.config.ConfigManager;
+import net.roguelogix.phosphophyllite.util.VanillaFeatureWrapper;
 import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
@@ -123,7 +125,7 @@ public class Registry {
                             if (FMLEnvironment.dist != Dist.CLIENT && className.contains("client")) {
                                 return null;
                             }
-                            if(className.contains("deps")){
+                            if (className.contains("deps")) {
                                 return null;
                             }
                             return Registry.class.getClassLoader().loadClass(className);
@@ -272,7 +274,7 @@ public class Registry {
                 public ItemStack createIcon() {
                     return new ItemStack(ForgeRegistries.ITEMS.getValue(block.getRegistryName()));
                 }
-
+                
                 @Override
                 public void fill(NonNullList<ItemStack> items) {
                     super.fill(items);
@@ -567,11 +569,15 @@ public class Registry {
                     
                     RuleTest fillerBlock = oreInfo.isNetherOre() ? OreFeatureConfig.FillerBlockType.BASE_STONE_NETHER : OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD;
                     
-                    return Feature.ORE
+                    ConfiguredFeature<?, ?> feature = Feature.ORE
                             .withConfiguration(new OreFeatureConfig(fillerBlock, finalOreInstance.getDefaultState(), oreInfo.size()))
                             .withPlacement(Placement.RANGE.configure(new TopSolidRangeConfig(oreInfo.minLevel(), 0, oreInfo.maxLevel())))
                             .square()
                             .func_242731_b(oreInfo.count());
+                    
+                    boolean doSpawn = oreInfo.doSpawn();
+    
+                    return new VanillaFeatureWrapper<>(feature, () -> doSpawn);
                 });
             } catch (NullPointerException e) {
                 e.printStackTrace();

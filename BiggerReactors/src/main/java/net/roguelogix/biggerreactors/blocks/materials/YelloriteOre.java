@@ -40,9 +40,11 @@ public class YelloriteOre extends Block implements IPhosphophylliteOre {
     
     @Override
     public String[] spawnBiomes() {
-        if(!Config.WorldGen.EnableYelloriteGeneration){
-            return new String[]{""};
-        }
         return new String[0];
+    }
+    
+    @Override
+    public boolean doSpawn() {
+        return Config.WorldGen.EnableYelloriteGeneration;
     }
 }
