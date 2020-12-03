@@ -9,9 +9,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorAccessPortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorAccessPortState;
-import net.roguelogix.biggerreactors.client.GuiSymbol;
-import net.roguelogix.biggerreactors.client.ioport.GuiFuelModeToggle;
-import net.roguelogix.biggerreactors.client.ioport.GuiPortDirectionToggle;
+import net.roguelogix.biggerreactors.client.old.GuiSymbol;
+import net.roguelogix.biggerreactors.client.old.ioport.GuiFuelModeToggle;
+import net.roguelogix.biggerreactors.client.old.ioport.GuiPortDirectionToggle;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortContainer> implements IHasContainer<ReactorAccessPortContainer> {

@@ -537,11 +537,29 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     public void runRequest(@Nonnull String requestName, @Nullable Object requestData) {
         switch (requestName) {
+            // Set the reactor to ACTIVE or INACTIVE.
+            case "setActive": {
+                setActive(ReactorActivity.fromInt((Integer) requestData));
+                return;
+            }
+            // Enable or disable waste ejection.
+            case "setAutoEject": {
+                autoEjectWaste = ((Integer) requestData != 0);
+                return;
+            }
+            // Manually eject waste.
+            case "ejectWaste": {
+                ejectWaste();
+                return;
+            }
+
+            /*
             // Reactor.
             case "setActive": {
-                boolean newState = (boolean) requestData;
-                setActive(newState ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
-                return;
+                //boolean newState = (boolean) requestData;
+                //setActive(newState ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
+                //return;
+
             }
             case "setAutoEject": {
                 autoEjectWaste = (boolean) requestData;
@@ -554,10 +572,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             // Control rod.
             case "setRodInsertion": {
                 Pair<Double, Boolean> newState = (Pair<Double, Boolean>) requestData;
-                /* TODO: Wire to control rod logic. */
                 // newState.getFirst() = Rod Insertion Level
                 // newState.getSecond() = Apply Globally
-            }
+            }*/
         }
     }
     

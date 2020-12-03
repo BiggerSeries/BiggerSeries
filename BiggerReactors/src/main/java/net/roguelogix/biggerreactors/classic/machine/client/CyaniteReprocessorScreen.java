@@ -12,9 +12,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
 import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorState;
-import net.roguelogix.biggerreactors.client.GuiEnergyTank;
-import net.roguelogix.biggerreactors.client.GuiFluidTank;
-import net.roguelogix.biggerreactors.client.GuiProgressBar;
+import net.roguelogix.biggerreactors.client.old.GuiEnergyTank;
+import net.roguelogix.biggerreactors.client.old.GuiFluidTank;
+import net.roguelogix.biggerreactors.client.old.GuiProgressBar;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 @OnlyIn(Dist.CLIENT)

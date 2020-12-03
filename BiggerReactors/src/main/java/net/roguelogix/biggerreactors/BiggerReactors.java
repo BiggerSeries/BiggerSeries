@@ -64,8 +64,6 @@ public class BiggerReactors {
         //  Since I already have the comment here, also need to do a capability registry. I have a somewhat dumb capability to register.
         ScreenManager.registerFactory(CyaniteReprocessorContainer.INSTANCE,
                 CyaniteReprocessorScreen::new);
-        ScreenManager.registerFactory(ReactorContainer.INSTANCE,
-                ReactorScreen::new);
         ScreenManager.registerFactory(ControlRodContainer.INSTANCE,
                 ControlRodScreen::new);
         ScreenManager.registerFactory(ReactorCoolantPortContainer.INSTANCE,
@@ -78,6 +76,9 @@ public class BiggerReactors {
                 TurbineScreen::new);
         ScreenManager.registerFactory(TurbineCoolantPortContainer.INSTANCE,
                 TurbineCoolantPortScreen::new);
+        // Screens below this line are on the new system:
+        ScreenManager.registerFactory(ReactorTerminalContainer.INSTANCE,
+                CommonReactorTerminalScreen::new);
         
         ClientRegistry.bindTileEntityRenderer(TurbineRotorBearingTile.TYPE, BladeRenderer::new);
     }

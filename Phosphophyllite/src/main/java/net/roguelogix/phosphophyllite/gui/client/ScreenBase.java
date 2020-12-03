@@ -2,6 +2,7 @@ package net.roguelogix.phosphophyllite.gui.client;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -79,6 +80,15 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
      */
     public int getHeight() {
         return this.ySize;
+    }
+
+    /**
+     * Get the font renderer for this screen.
+     *
+     * @return The font renderer.
+     */
+    public FontRenderer getFont() {
+        return this.font;
     }
 
     /**

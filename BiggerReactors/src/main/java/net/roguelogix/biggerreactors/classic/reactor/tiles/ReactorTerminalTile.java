@@ -13,7 +13,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
-import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorTerminalContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
@@ -82,6 +82,6 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
-        return new ReactorContainer(windowId, this.pos, player);
+        return new ReactorTerminalContainer(windowId, this.pos, player);
     }
 }

@@ -10,11 +10,11 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortState;
-import net.roguelogix.biggerreactors.client.GuiInputBox;
-import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneCommitButton;
-import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneModeButton;
-import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneToggles;
-import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneTriggerSelectorToggle;
+import net.roguelogix.biggerreactors.client.old.GuiInputBox;
+import net.roguelogix.biggerreactors.client.old.redstoneport.GuiRedstoneCommitButton;
+import net.roguelogix.biggerreactors.client.old.redstoneport.GuiRedstoneModeButton;
+import net.roguelogix.biggerreactors.client.old.redstoneport.GuiRedstoneToggles;
+import net.roguelogix.biggerreactors.client.old.redstoneport.GuiRedstoneTriggerSelectorToggle;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 // Please don't look at this file. The entire thing was a quick hackjob and is horrid.

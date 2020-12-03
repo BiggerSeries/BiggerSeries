@@ -11,10 +11,10 @@ import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
-import net.roguelogix.biggerreactors.client.GuiEnergyTank;
-import net.roguelogix.biggerreactors.client.GuiFluidTank;
-import net.roguelogix.biggerreactors.client.GuiSymbol;
-import net.roguelogix.biggerreactors.client.turbine.*;
+import net.roguelogix.biggerreactors.client.old.GuiEnergyTank;
+import net.roguelogix.biggerreactors.client.old.GuiFluidTank;
+import net.roguelogix.biggerreactors.client.old.GuiSymbol;
+import net.roguelogix.biggerreactors.client.old.turbine.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 

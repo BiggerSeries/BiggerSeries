@@ -11,10 +11,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ControlRodState;
-import net.roguelogix.biggerreactors.client.GuiSymbol;
-import net.roguelogix.biggerreactors.client.controlrod.GuiRodInsertButton;
-import net.roguelogix.biggerreactors.client.controlrod.GuiRodLevelBar;
-import net.roguelogix.biggerreactors.client.controlrod.GuiRodRetractButton;
+import net.roguelogix.biggerreactors.client.old.GuiSymbol;
+import net.roguelogix.biggerreactors.client.old.controlrod.GuiRodInsertButton;
+import net.roguelogix.biggerreactors.client.old.controlrod.GuiRodLevelBar;
+import net.roguelogix.biggerreactors.client.old.controlrod.GuiRodRetractButton;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 @OnlyIn(Dist.CLIENT)
