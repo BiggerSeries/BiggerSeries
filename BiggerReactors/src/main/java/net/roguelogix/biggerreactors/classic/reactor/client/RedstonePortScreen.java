@@ -15,7 +15,7 @@ import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneCommitButton
 import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneModeButton;
 import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneToggles;
 import net.roguelogix.biggerreactors.client.redstoneport.GuiRedstoneTriggerSelectorToggle;
-import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 // Please don't look at this file. The entire thing was a quick hackjob and is horrid.
 // It really shows how bad my original GUI system was, as this file makes it bust at the seams.

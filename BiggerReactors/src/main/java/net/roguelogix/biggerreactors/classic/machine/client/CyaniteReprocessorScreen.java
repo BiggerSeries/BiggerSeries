@@ -15,7 +15,7 @@ import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorSta
 import net.roguelogix.biggerreactors.client.GuiEnergyTank;
 import net.roguelogix.biggerreactors.client.GuiFluidTank;
 import net.roguelogix.biggerreactors.client.GuiProgressBar;
-import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 @OnlyIn(Dist.CLIENT)
 public class CyaniteReprocessorScreen extends GuiScreenBase<CyaniteReprocessorContainer> implements IHasContainer<CyaniteReprocessorContainer> {

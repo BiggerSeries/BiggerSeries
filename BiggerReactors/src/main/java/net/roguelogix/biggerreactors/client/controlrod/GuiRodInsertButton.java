@@ -2,7 +2,6 @@ package net.roguelogix.biggerreactors.client.controlrod;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
@@ -12,9 +11,9 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
-import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
-import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

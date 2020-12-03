@@ -20,7 +20,7 @@ import net.roguelogix.biggerreactors.client.GuiFluidTank;
 import net.roguelogix.biggerreactors.client.GuiSymbol;
 import net.roguelogix.biggerreactors.client.reactor.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
-import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 @OnlyIn(Dist.CLIENT)
 public class ReactorScreen extends GuiScreenBase<ReactorContainer> implements IHasContainer<ReactorContainer> {

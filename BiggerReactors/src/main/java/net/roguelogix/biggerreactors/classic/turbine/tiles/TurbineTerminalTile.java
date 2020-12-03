@@ -15,7 +15,7 @@ import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;

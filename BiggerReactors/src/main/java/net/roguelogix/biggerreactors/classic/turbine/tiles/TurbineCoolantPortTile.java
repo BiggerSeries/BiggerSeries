@@ -30,7 +30,7 @@ import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPo
 import net.roguelogix.biggerreactors.classic.turbine.deps.TurbineGasHandler;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineCoolantPortState;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;

@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui.client.api;
+package net.roguelogix.phosphophyllite.gui.old.client.api;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 

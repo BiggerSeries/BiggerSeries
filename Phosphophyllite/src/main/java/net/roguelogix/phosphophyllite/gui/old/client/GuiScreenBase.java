@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui.client;
+package net.roguelogix.phosphophyllite.gui.old.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableTexture;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableTexture;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiScreenBase<T extends Container> extends ContainerScreen<T> implements IHasUpdatableTexture {

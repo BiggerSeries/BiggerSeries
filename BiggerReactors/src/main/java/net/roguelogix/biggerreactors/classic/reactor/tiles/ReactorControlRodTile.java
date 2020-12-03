@@ -17,7 +17,7 @@ import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorControlRod;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ControlRodState;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 

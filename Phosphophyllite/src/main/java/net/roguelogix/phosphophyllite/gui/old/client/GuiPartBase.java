@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui.client;
+package net.roguelogix.phosphophyllite.gui.old.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.IGuiEventListener;

@@ -19,7 +19,7 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortCont
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortState;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.ITickableMultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;

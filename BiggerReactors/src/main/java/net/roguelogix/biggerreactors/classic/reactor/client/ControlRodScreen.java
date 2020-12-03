@@ -15,7 +15,7 @@ import net.roguelogix.biggerreactors.client.GuiSymbol;
 import net.roguelogix.biggerreactors.client.controlrod.GuiRodInsertButton;
 import net.roguelogix.biggerreactors.client.controlrod.GuiRodLevelBar;
 import net.roguelogix.biggerreactors.client.controlrod.GuiRodRetractButton;
-import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 @OnlyIn(Dist.CLIENT)
 public class ControlRodScreen extends GuiScreenBase<ControlRodContainer> implements IHasContainer<ControlRodContainer> {

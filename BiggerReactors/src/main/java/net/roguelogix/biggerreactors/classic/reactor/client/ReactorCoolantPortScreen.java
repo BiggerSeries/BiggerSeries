@@ -11,7 +11,7 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorCoolantPo
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorCoolantPortState;
 import net.roguelogix.biggerreactors.client.GuiSymbol;
 import net.roguelogix.biggerreactors.client.ioport.GuiPortDirectionToggle;
-import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 public class ReactorCoolantPortScreen extends GuiScreenBase<ReactorCoolantPortContainer> implements IHasContainer<ReactorCoolantPortContainer> {
 

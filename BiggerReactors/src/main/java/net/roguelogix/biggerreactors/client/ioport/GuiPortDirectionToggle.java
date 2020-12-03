@@ -9,11 +9,10 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPortContainer;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
-import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
-import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -69,7 +68,7 @@ public class GuiPortDirectionToggle<T extends Container> extends GuiPartBase<T> 
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            ((GuiSync.IGUIPacketProvider) this.screen.getContainer()).executeRequest("setInputState", !inputState);
+            ((GuiSync.IGUIPacketProvider) this.screen.getContainer()).executeRequest("setDirection", !inputState);
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             return true;

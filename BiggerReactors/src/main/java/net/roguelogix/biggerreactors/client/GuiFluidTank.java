@@ -11,9 +11,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.phosphophyllite.gui.client.GuiPartBase;
-import net.roguelogix.phosphophyllite.gui.client.GuiRenderHelper;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasTooltip;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
 
 public class GuiFluidTank<T extends Container> extends GuiPartBase<T> implements IHasTooltip {
     

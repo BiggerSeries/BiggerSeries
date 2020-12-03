@@ -12,7 +12,7 @@ import net.roguelogix.biggerreactors.classic.reactor.state.ReactorAccessPortStat
 import net.roguelogix.biggerreactors.client.GuiSymbol;
 import net.roguelogix.biggerreactors.client.ioport.GuiFuelModeToggle;
 import net.roguelogix.biggerreactors.client.ioport.GuiPortDirectionToggle;
-import net.roguelogix.phosphophyllite.gui.client.GuiScreenBase;
+import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
 
 public class ReactorAccessPortScreen extends GuiScreenBase<ReactorAccessPortContainer> implements IHasContainer<ReactorAccessPortContainer> {
 

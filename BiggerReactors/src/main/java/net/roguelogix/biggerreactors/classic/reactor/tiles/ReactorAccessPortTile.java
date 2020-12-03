@@ -30,7 +30,7 @@ import net.roguelogix.biggerreactors.classic.reactor.state.ReactorAccessPortStat
 import net.roguelogix.biggerreactors.items.ingots.BlutoniumIngot;
 import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
 import net.roguelogix.biggerreactors.items.ingots.YelloriumIngot;
-import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -296,7 +296,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             return;
         }
         
-        if (requestName.equals("setInputState")) {
+        if (requestName.equals("setDirection")) {
             boolean state = (Boolean) requestData;
             this.setDirection(state ? INLET : OUTLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
