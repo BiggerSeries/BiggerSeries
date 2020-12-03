@@ -57,10 +57,10 @@ public class PassiveReactorTerminalScreen extends ScreenBase<ReactorTerminalCont
      */
     private void initTooltips() {
         // (Left) RF generation rate tooltip:
-        this.addElement(new Tooltip<>(this, 8, 38, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.energy_generation_rate")));
+        this.addElement(new Tooltip<>(this, 8, 38, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.energy_generation_rate.tooltip")));
 
         // (Top) Internal battery tooltip:
-        this.addElement(new Tooltip<>(this, 152, 6, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.internal_battery")));
+        this.addElement(new Tooltip<>(this, 152, 6, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.internal_battery.tooltip")));
     }
 
     /**
@@ -97,11 +97,10 @@ public class PassiveReactorTerminalScreen extends ScreenBase<ReactorTerminalCont
         super.render(mStack, mouseX, mouseY, partialTicks);
 
         // Render the other text:
-        CommonReactorTerminalScreen.renderStatusText(mStack, this,
-                this.font, reactorState.reactorActivity, reactorState.doAutoEject,
+        CommonReactorTerminalScreen.renderStatusText(mStack, this, reactorState.reactorActivity, reactorState.doAutoEject,
                 reactorState.caseHeatStored, reactorState.fuelUsageRate, reactorState.reactivityRate);
 
         // Render text for output rate:
-        this.font.drawString(mStack, RenderHelper.formatValue(reactorState.reactorOutputRate, "RF/t"), this.getGuiLeft() + 27, this.getGuiTop() + 42, 4210752);
+        this.getFont().drawString(mStack, RenderHelper.formatValue(reactorState.reactorOutputRate, "RF/t"), this.getGuiLeft() + 27, this.getGuiTop() + 42, 4210752);
     }
 }

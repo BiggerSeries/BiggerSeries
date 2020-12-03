@@ -3,11 +3,14 @@ package net.roguelogix.phosphophyllite.gui.client.elements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.roguelogix.phosphophyllite.gui.client.ScreenBase;
 import net.roguelogix.phosphophyllite.gui.client.api.ITooltip;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Base tooltip element.
@@ -53,7 +56,7 @@ public class Tooltip<T extends Container> extends AbstractElement<T> implements 
     public void renderTooltip(@Nonnull MatrixStack mStack, int mouseX, int mouseY) {
         // Check conditions, and render tooltip.
         if (this.tooltipEnable && this.tooltip != null && this.isMouseOver(mouseX, mouseY)) {
-            this.parent.renderTooltip(mStack, this.tooltip, mouseX, mouseY);
+            this.parent.func_243308_b(mStack, Arrays.stream(tooltip.getString().split("\\n")).map(StringTextComponent::new).collect(Collectors.toList()), mouseX, mouseY);
         }
     }
 

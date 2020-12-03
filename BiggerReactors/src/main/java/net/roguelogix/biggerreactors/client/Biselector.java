@@ -60,9 +60,9 @@ public class Biselector<T extends Container> extends Button<T> {
     /**
      * Render element.
      *
-     * @param mStack       The current matrix stack.
-     * @param mouseX       The x position of the mouse.
-     * @param mouseY       The y position of the mouse.
+     * @param mStack The current matrix stack.
+     * @param mouseX The x position of the mouse.
+     * @param mouseY The y position of the mouse.
      */
     @Override
     public void render(@Nonnull MatrixStack mStack, int mouseX, int mouseY) {
@@ -72,27 +72,39 @@ public class Biselector<T extends Container> extends Button<T> {
             ResourceLocation preservedResource = RenderHelper.getCurrentResource();
             RenderHelper.bindTexture(CommonRender.COMMON_RESOURCE_TEXTURE);
             // Draw the selector frame.
-            if(this.state == 0) {
+            if (this.state == 0) {
                 // Position is 0 (left), draw left frame.
                 this.blit(mStack, 0, 64);
                 // Check where the mouse is.
-                if(this.isMouseOver(mouseX, mouseY)) {
+                if (this.isMouseOver(mouseX, mouseY)) {
                     // Draw active/hovered button.
                     this.blit(mStack, this.x + 1, this.y + 1, leftColor.uA, leftColor.vA, 14, 12);
                 } else {
                     // Draw inactive/non-hovered button.
                     this.blit(mStack, this.x + 1, this.y + 1, leftColor.uI, leftColor.vI, 14, 12);
                 }
+                // Check if the selector is enabled.
+                if (!this.actionEnable) {
+                    // Draw disabled color overlay.
+                    this.blit(mStack, this.x, this.y, 210, 0, 31, 14);
+                }
+
             } else {
                 // Position is 1 (right), draw right frame.
                 this.blit(mStack, 0, 78);
+                // Check if the selector is enabled.
                 // Check where the mouse is.
-                if(this.isMouseOver(mouseX, mouseY)) {
+                if (this.isMouseOver(mouseX, mouseY)) {
                     // Draw active/hovered button.
                     this.blit(mStack, this.x + 16, this.y + 1, rightColor.uA, rightColor.vA, 14, 12);
                 } else {
                     // Draw inactive/non-hovered button.
                     this.blit(mStack, this.x + 16, this.y + 1, rightColor.uI, rightColor.vI, 14, 12);
+                }
+                // Check if the selector is enabled.
+                if (!this.actionEnable) {
+                    // Draw disabled color overlay.
+                    this.blit(mStack, this.x, this.y, 210, 0, 31, 14);
                 }
             }
             // Reset color and restore the previously bound texture.
@@ -116,19 +128,25 @@ public class Biselector<T extends Container> extends Button<T> {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         // Check conditions.
-        if (this.isMouseOver(mouseX, mouseY) && this.actionEnable) {
+        if (this.isMouseOver(mouseX, mouseY)) {
             // Get actual x position.
             int relativeX = this.parent.getGuiLeft() + this.x;
-            // Set side depending on position of click.
-            if ((mouseX > relativeX) && (mouseX < relativeX + (int) (this.width / 2))) {
-                // Set to left position (0).
-                this.state = 0;
+            // Check if the selector is enabled.
+            if (this.actionEnable) {
+                // Set side depending on position of click.
+                if ((mouseX > relativeX) && (mouseX < relativeX + (int) (this.width / 2))) {
+                    // Set to left position (0).
+                    this.state = 0;
+                } else {
+                    // Set to right position (1).
+                    this.state = 1;
+                }
+                // Play the selection sound.
+                this.playSound(SoundEvents.UI_BUTTON_CLICK);
             } else {
-                // Set to right position (1).
-                this.state = 1;
+                // Play the "nope" sound.
+                this.playSound(SoundEvents.ENTITY_VILLAGER_NO);
             }
-            // Play the selection sound.
-            this.playSound(SoundEvents.UI_BUTTON_CLICK);
             // Trigger user-defined selection logic.
             if (this.onMouseReleased != null) {
                 this.onMouseReleased.trigger(mouseX, mouseY, button);

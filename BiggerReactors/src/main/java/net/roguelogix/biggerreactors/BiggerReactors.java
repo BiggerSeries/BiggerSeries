@@ -68,8 +68,6 @@ public class BiggerReactors {
                 ControlRodScreen::new);
         ScreenManager.registerFactory(ReactorCoolantPortContainer.INSTANCE,
                 ReactorCoolantPortScreen::new);
-        ScreenManager.registerFactory(ReactorAccessPortContainer.INSTANCE,
-                ReactorAccessPortScreen::new);
         ScreenManager.registerFactory(RedstonePortContainer.INSTANCE,
                 RedstonePortScreen::new);
         ScreenManager.registerFactory(TurbineContainer.INSTANCE,
@@ -79,6 +77,8 @@ public class BiggerReactors {
         // Screens below this line are on the new system:
         ScreenManager.registerFactory(ReactorTerminalContainer.INSTANCE,
                 CommonReactorTerminalScreen::new);
+        ScreenManager.registerFactory(ReactorAccessPortContainer.INSTANCE,
+                ReactorAccessPortScreen::new);
         
         ClientRegistry.bindTileEntityRenderer(TurbineRotorBearingTile.TYPE, BladeRenderer::new);
     }

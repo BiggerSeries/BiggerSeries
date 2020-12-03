@@ -235,7 +235,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     Direction itemOutputDirection;
     boolean connected;
     LazyOptional<IItemHandler> itemOutput = LazyOptional.empty();
-    public final ReactorAccessPortState accessPortState = new ReactorAccessPortState(this);
+    public final ReactorAccessPortState reactorAccessPortState = new ReactorAccessPortState(this);
     
     
     @SuppressWarnings("DuplicatedCode")
@@ -295,16 +295,16 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (reactor == null) {
             return;
         }
-        
+
+        // Change IO direction.
         if (requestName.equals("setDirection")) {
-            boolean state = (Boolean) requestData;
-            this.setDirection(state ? INLET : OUTLET);
+            this.setDirection(((Integer) requestData != 0) ? OUTLET : INLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
         }
-        
+
+        // Change fuel/waste ejection.
         if (requestName.equals("setFuelMode")) {
-            boolean state = (Boolean) requestData;
-            this.fuelMode = state;
+            this.fuelMode = ((Integer) requestData != 0);
         }
         
         super.runRequest(requestName, requestData);
@@ -325,12 +325,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Override
     public ReactorAccessPortState getState() {
         this.updateState();
-        return this.accessPortState;
+        return this.reactorAccessPortState;
     }
     
     @Override
     public void updateState() {
-        accessPortState.inputState = (this.direction == INLET);
-        accessPortState.fuelMode = this.fuelMode;
+        reactorAccessPortState.direction = (this.direction == INLET);
+        reactorAccessPortState.fuelMode = this.fuelMode;
     }
 }

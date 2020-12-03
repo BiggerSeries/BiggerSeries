@@ -10,7 +10,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
-import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
+import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelection;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
@@ -32,7 +32,7 @@ public class GuiRedstoneTriggerSelectorToggle<T extends Container> extends GuiPa
     // Coming soon to a JAR file near you!
 
     private String tooltipTranslationKey;
-    private RedstonePortSelector activeSelector;
+    private RedstonePortSelection activeSelector;
 
 
     /**
@@ -42,7 +42,7 @@ public class GuiRedstoneTriggerSelectorToggle<T extends Container> extends GuiPa
      * @param xSize  The width of the part.
      * @param ySize  The height of the part.
      */
-    public GuiRedstoneTriggerSelectorToggle(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize, String tooltipTranslationKey, RedstonePortSelector activeSelector) {
+    public GuiRedstoneTriggerSelectorToggle(ContainerScreen<T> screen, int xPos, int yPos, int xSize, int ySize, String tooltipTranslationKey, RedstonePortSelection activeSelector) {
         super(screen, xPos, yPos, xSize, ySize);
         this.tooltipTranslationKey = tooltipTranslationKey;
         this.activeSelector = activeSelector;
@@ -64,9 +64,9 @@ public class GuiRedstoneTriggerSelectorToggle<T extends Container> extends GuiPa
         // Draw button.
         if (this.selected) {
             // Button trigger * 16... yeah its wack but it works til rewrite.
-            GuiRenderHelper.setTextureOffset((RedstonePortSelector.valueOf(activeSelector) * 16), 96);
+            GuiRenderHelper.setTextureOffset((RedstonePortSelection.fromInt(activeSelector) * 16), 96);
         } else {
-            GuiRenderHelper.setTextureOffset((RedstonePortSelector.valueOf(activeSelector) * 16), 80);
+            GuiRenderHelper.setTextureOffset((RedstonePortSelection.fromInt(activeSelector) * 16), 80);
         }
         GuiRenderHelper.draw(mStack, this.xPos, this.yPos, this.screen.getBlitOffset(), this.xSize, this.ySize);
     }
@@ -83,7 +83,7 @@ public class GuiRedstoneTriggerSelectorToggle<T extends Container> extends GuiPa
         if (!this.isMouseOver(mouseX, mouseY)) {
             return false;
         } else {
-            ((RedstonePortContainer) this.screen.getContainer()).executeRequest("setSelectedButton", RedstonePortSelector.valueOf(activeSelector));
+            ((RedstonePortContainer) this.screen.getContainer()).executeRequest("setSelectedButton", RedstonePortSelection.fromInt(activeSelector));
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             return true;

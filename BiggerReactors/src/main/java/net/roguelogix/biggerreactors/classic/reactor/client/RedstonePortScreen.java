@@ -8,7 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
-import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
+import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelection;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortState;
 import net.roguelogix.biggerreactors.client.old.GuiInputBox;
 import net.roguelogix.biggerreactors.client.old.redstoneport.GuiRedstoneCommitButton;
@@ -58,23 +58,23 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         // Initialize selectors.
         // I reuse the translation strings for the screen.
         selectorInputActivity = new GuiRedstoneTriggerSelectorToggle<>(this, 8, 30, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_activity").getString(), RedstonePortSelector.INPUT_ACTIVITY);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_activity").getString(), RedstonePortSelection.INPUT_ACTIVITY);
         selectorInputControlRodInsertion = new GuiRedstoneTriggerSelectorToggle<>(this, 28, 30, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_control_rod_insertion").getString(), RedstonePortSelector.INPUT_CONTROL_ROD_INSERTION);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_control_rod_insertion").getString(), RedstonePortSelection.INPUT_CONTROL_ROD_INSERTION);
         selectorInputEjectWaste = new GuiRedstoneTriggerSelectorToggle<>(this, 48, 30, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_eject_waste").getString(), RedstonePortSelector.INPUT_EJECT_WASTE);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.input_eject_waste").getString(), RedstonePortSelection.INPUT_EJECT_WASTE);
         selectorOutputFuelTemp = new GuiRedstoneTriggerSelectorToggle<>(this, 68, 30, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_temp").getString(), RedstonePortSelector.OUTPUT_FUEL_TEMP);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_temp").getString(), RedstonePortSelection.OUTPUT_FUEL_TEMP);
         selectorOutputCasingTemp = new GuiRedstoneTriggerSelectorToggle<>(this, 88, 30, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_casing_temp").getString(), RedstonePortSelector.OUTPUT_CASING_TEMP);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_casing_temp").getString(), RedstonePortSelection.OUTPUT_CASING_TEMP);
         selectorOutputFuelEnrichment = new GuiRedstoneTriggerSelectorToggle<>(this, 8, 50, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_enrichment").getString(), RedstonePortSelector.OUTPUT_FUEL_ENRICHMENT);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_enrichment").getString(), RedstonePortSelection.OUTPUT_FUEL_ENRICHMENT);
         selectorOutputFuelAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 28, 50, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_amount").getString(), RedstonePortSelector.OUTPUT_FUEL_AMOUNT);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_fuel_amount").getString(), RedstonePortSelection.OUTPUT_FUEL_AMOUNT);
         selectorOutputWasteAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 48, 50, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_waste_amount").getString(), RedstonePortSelector.OUTPUT_WASTE_AMOUNT);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_waste_amount").getString(), RedstonePortSelection.OUTPUT_WASTE_AMOUNT);
         selectorOutputEnergyAmount = new GuiRedstoneTriggerSelectorToggle<>(this, 68, 50, 16, 16,
-                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_energy_amount").getString(), RedstonePortSelector.OUTPUT_ENERGY_AMOUNT);
+                new TranslationTextComponent("screen.biggerreactors.status.redstone.output_energy_amount").getString(), RedstonePortSelection.OUTPUT_ENERGY_AMOUNT);
 
         commitButton = new GuiRedstoneCommitButton<>(this, 152, 30, 16, 16, true);
         revertButton = new GuiRedstoneCommitButton<>(this, 152, 50, 16, 16, false);
@@ -111,7 +111,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         commitButton.mouseClicked(mouseX, mouseY, button);
         revertButton.mouseClicked(mouseX, mouseY, button);
 
-        switch (RedstonePortSelector.valueOf(this.redstonePortState.settingId)) {
+        switch (RedstonePortSelection.fromInt(this.redstonePortState.settingId)) {
             case INPUT_ACTIVITY:
             case INPUT_CONTROL_ROD_INSERTION: {
                 togglePulseOrSignal.mouseClicked(mouseX, mouseY, button);
@@ -166,7 +166,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         commitButton.mouseReleased(mouseX, mouseY, button);
         revertButton.mouseReleased(mouseX, mouseY, button);
 
-        switch (RedstonePortSelector.valueOf(this.redstonePortState.settingId)) {
+        switch (RedstonePortSelection.fromInt(this.redstonePortState.settingId)) {
             case INPUT_ACTIVITY:
             case INPUT_CONTROL_ROD_INSERTION: {
                 togglePulseOrSignal.mouseReleased(mouseX, mouseY, button);
@@ -218,15 +218,15 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
     public void tick() {
         this.redstonePortState = (RedstonePortState) this.getContainer().getGuiPacket();
 
-        selectorInputActivity.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.INPUT_ACTIVITY));
-        selectorInputControlRodInsertion.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.INPUT_CONTROL_ROD_INSERTION));
-        selectorInputEjectWaste.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.INPUT_EJECT_WASTE));
-        selectorOutputFuelTemp.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.OUTPUT_FUEL_TEMP));
-        selectorOutputCasingTemp.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.OUTPUT_CASING_TEMP));
-        selectorOutputFuelEnrichment.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.OUTPUT_FUEL_ENRICHMENT));
-        selectorOutputFuelAmount.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.OUTPUT_FUEL_AMOUNT));
-        selectorOutputWasteAmount.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.OUTPUT_WASTE_AMOUNT));
-        selectorOutputEnergyAmount.updateState(redstonePortState.settingId == RedstonePortSelector.valueOf(RedstonePortSelector.OUTPUT_ENERGY_AMOUNT));
+        selectorInputActivity.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.INPUT_ACTIVITY));
+        selectorInputControlRodInsertion.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.INPUT_CONTROL_ROD_INSERTION));
+        selectorInputEjectWaste.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.INPUT_EJECT_WASTE));
+        selectorOutputFuelTemp.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.OUTPUT_FUEL_TEMP));
+        selectorOutputCasingTemp.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.OUTPUT_CASING_TEMP));
+        selectorOutputFuelEnrichment.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.OUTPUT_FUEL_ENRICHMENT));
+        selectorOutputFuelAmount.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.OUTPUT_FUEL_AMOUNT));
+        selectorOutputWasteAmount.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.OUTPUT_WASTE_AMOUNT));
+        selectorOutputEnergyAmount.updateState(redstonePortState.settingId == RedstonePortSelection.fromInt(RedstonePortSelection.OUTPUT_ENERGY_AMOUNT));
 
         togglePulseOrSignal.updateState(redstonePortState.triggerPulseOrSignal);
         toggleActiveAboveOrBelow.updateState(redstonePortState.triggerAboveOrBelow);
@@ -287,7 +287,7 @@ public class RedstonePortScreen extends GuiScreenBase<RedstonePortContainer> imp
         selectorOutputWasteAmount.drawPart(mStack);
         selectorOutputEnergyAmount.drawPart(mStack);
 
-        switch (RedstonePortSelector.valueOf(this.redstonePortState.settingId)) {
+        switch (RedstonePortSelection.fromInt(this.redstonePortState.settingId)) {
             case INPUT_ACTIVITY:
                 renderInputActivityOptions(mStack);
                 break;

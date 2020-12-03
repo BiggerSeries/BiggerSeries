@@ -17,7 +17,7 @@ import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorRedstonePort;
 import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
-import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
+import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelection;
 import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortState;
 import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.ITickableMultiblockTile;
@@ -70,7 +70,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
         boolean shouldLight = false;
         ReactorMultiblockController reactor = reactor();
         assert reactor != null;
-        switch (RedstonePortSelector.valueOf(activeSettingId)) {
+        switch (RedstonePortSelection.fromInt(activeSettingId)) {
             case INPUT_ACTIVITY:
                 shouldLight = isPowered;
                 if (activeTriggerPulseOrSignal) {

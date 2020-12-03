@@ -94,7 +94,7 @@ public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
      */
     private void initSymbols() {
         // (Top) Coolant intake tank symbol:
-        Symbol<ReactorTerminalContainer> coolantIntakeTankSymbol = new Symbol<>(this, 152, 6, 16, 16, 174, 152, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.coolant_intake_tank"));
+        Symbol<ReactorTerminalContainer> coolantIntakeTankSymbol = new Symbol<>(this, 152, 6, 16, 16, 174, 152, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.coolant_intake_tank.tooltip"));
         coolantIntakeTankSymbol.onRender = (@Nonnull MatrixStack mS, int mX, int mY) -> RenderHelper.drawMaskedFluid(mS,
                 coolantIntakeTankSymbol.x, coolantIntakeTankSymbol.y, this.getBlitOffset(),
                 coolantIntakeTankSymbol.width, coolantIntakeTankSymbol.height,
@@ -102,7 +102,7 @@ public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
         this.addElement(coolantIntakeTankSymbol);
 
         // (Top) Steam exhaust tank symbol:
-        Symbol<ReactorTerminalContainer> steamExhaustTankSymbol = new Symbol<>(this, 174, 6, 16, 16, 158, 152, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.steam_exhaust_tank"));
+        Symbol<ReactorTerminalContainer> steamExhaustTankSymbol = new Symbol<>(this, 174, 6, 16, 16, 158, 152, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.steam_exhaust_tank.tooltip"));
         steamExhaustTankSymbol.onRender = (@Nonnull MatrixStack mS, int mX, int mY) -> RenderHelper.drawMaskedFluid(mS,
                 steamExhaustTankSymbol.x, steamExhaustTankSymbol.y, this.getBlitOffset(),
                 steamExhaustTankSymbol.width, steamExhaustTankSymbol.height,
@@ -110,7 +110,7 @@ public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
         this.addElement(steamExhaustTankSymbol);
 
         // (Left) Steam generation rate symbol:
-        Symbol<ReactorTerminalContainer> steamGenerationRateSymbol = new Symbol<>(this, 8, 38, 16, 16, 142, 152, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.steam_generation_rate"));
+        Symbol<ReactorTerminalContainer> steamGenerationRateSymbol = new Symbol<>(this, 8, 38, 16, 16, 142, 152, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.steam_generation_rate.tooltip"));
         steamGenerationRateSymbol.onRender = (@Nonnull MatrixStack mS, int mX, int mY) -> RenderHelper.drawMaskedFluid(mS,
                 steamGenerationRateSymbol.x, steamGenerationRateSymbol.y, this.getBlitOffset(),
                 steamGenerationRateSymbol.width, steamGenerationRateSymbol.height,
@@ -141,12 +141,11 @@ public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
         super.render(mStack, mouseX, mouseY, partialTicks);
 
         // Render the other text:
-        CommonReactorTerminalScreen.renderStatusText(mStack, this,
-                this.font, reactorState.reactorActivity, reactorState.doAutoEject,
+        CommonReactorTerminalScreen.renderStatusText(mStack, this, reactorState.reactorActivity, reactorState.doAutoEject,
                 reactorState.caseHeatStored, reactorState.fuelUsageRate, reactorState.reactivityRate);
 
         // Render text for output rate:
-        this.font.drawString(mStack, RenderHelper.formatValue((reactorState.reactorOutputRate / 1000.0), "B/t"), this.getGuiLeft() + 27, this.getGuiTop() + 42, 4210752);
+        this.getFont().drawString(mStack, RenderHelper.formatValue((reactorState.reactorOutputRate / 1000.0), "B/t"), this.getGuiLeft() + 27, this.getGuiTop() + 42, 4210752);
     }
 
     /**

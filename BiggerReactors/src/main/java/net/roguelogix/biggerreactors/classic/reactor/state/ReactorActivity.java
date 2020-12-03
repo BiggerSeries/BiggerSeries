@@ -6,8 +6,8 @@ import net.minecraft.util.IStringSerializable;
 import javax.annotation.Nonnull;
 
 public enum ReactorActivity implements IStringSerializable {
-    INACTIVE(0),
-    ACTIVE(1);
+    ACTIVE(1),
+    INACTIVE(0);
     
     public static final EnumProperty<ReactorActivity> REACTOR_ACTIVITY_ENUM_PROPERTY = EnumProperty.create("reactoractivity", ReactorActivity.class);
 
@@ -40,10 +40,10 @@ public enum ReactorActivity implements IStringSerializable {
      */
     public static ReactorActivity fromInt(int state) {
         switch (state) {
-            case 0:
-                return ReactorActivity.INACTIVE;
             case 1:
                 return ReactorActivity.ACTIVE;
+            case 0:
+                return ReactorActivity.INACTIVE;
         }
         throw new IndexOutOfBoundsException("Invalid index while deciphering reactor activity");
     }
