@@ -396,7 +396,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         long upperWasteUpdateLevel = upperWastePixel / 16 + (((upperWastePixel % 16) > 0) ? 1 : 0);
         
         HashMap<BlockPos, BlockState> newStates = new HashMap<>();
-        HashSet<Integer> updatedLevels = new HashSet<>();
+        boolean[] updatedLevels = new boolean[(int) upperFuelUpdateLevel];
         
         if (lowerFuelPixel != upperFuelPixel) {
             for (long i = lowerFuelUpdateLevel; i < upperFuelUpdateLevel; i++) {
@@ -405,9 +405,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 
                 for (ReactorFuelRodTile reactorFuelRodTile : fuelRodsByLevel.get((int) i)) {
                     BlockState state = newStates.computeIfAbsent(reactorFuelRodTile.getPos(), k -> reactorFuelRodTile.getBlockState());
-                    state = state.with(ReactorFuelRod.FUEL_HEIGHT_PROPERTY, levelFuelPixel);
-                    newStates.put(reactorFuelRodTile.getPos(), state);
-                    updatedLevels.add((int) i);
+                    BlockState newState = state.with(ReactorFuelRod.FUEL_HEIGHT_PROPERTY, levelFuelPixel);
+                    if (newState != state) {
+                        newStates.put(reactorFuelRodTile.getPos(), newState);
+                        updatedLevels[(int) i] = true;
+                    }
                 }
                 
             }
@@ -420,9 +422,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 
                 for (ReactorFuelRodTile reactorFuelRodTile : fuelRodsByLevel.get((int) i)) {
                     BlockState state = newStates.computeIfAbsent(reactorFuelRodTile.getPos(), k -> reactorFuelRodTile.getBlockState());
-                    state = state.with(ReactorFuelRod.WASTE_HEIGHT_PROPERTY, levelWastePixel);
-                    newStates.put(reactorFuelRodTile.getPos(), state);
-                    updatedLevels.add((int) i);
+                    BlockState newState = state.with(ReactorFuelRod.WASTE_HEIGHT_PROPERTY, levelWastePixel);
+                    if (newState != state) {
+                        newStates.put(reactorFuelRodTile.getPos(), newState);
+                        updatedLevels[(int) i] = true;
+                    }
                 }
                 
             }
@@ -430,8 +434,11 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         
         Util.setBlockStates(newStates, world);
         
-        for (Integer updatedLevel : updatedLevels) {
-            for (ReactorFuelRodTile reactorFuelRodTile : fuelRodsByLevel.get(updatedLevel)) {
+        for (int i = 0; i < updatedLevels.length; i++) {
+            if (!updatedLevels[i]) {
+                continue;
+            }
+            for (ReactorFuelRodTile reactorFuelRodTile : fuelRodsByLevel.get(i)) {
                 reactorFuelRodTile.updateContainingBlockInfo();
             }
         }
