@@ -17,6 +17,7 @@ import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
+import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
@@ -317,6 +318,8 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return simulation.coolantTank.extractSteam(steam, simulated);
     }
     
+    private boolean forceDirty = false;
+    
     @Override
     public void tick() {
         
@@ -348,7 +351,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         
         updateFuelRenderingLevel();
         
-        markDirty();
+        if(Phosphophyllite.tickNumber() % 2 == 0 || forceDirty){
+            forceDirty = false;
+            markDirty();
+        }
     }
     
     long currentFuelRenderLevel = 0;
@@ -474,7 +480,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 continue;
             }
             long wastePushed = accessPort.pushWaste((int) simulation.fuelTank.getWasteAmount(), false);
-            simulation.fuelTank.extractWaste(wastePushed, false);
+            forceDirty = simulation.fuelTank.extractWaste(wastePushed, false) > 0;
             
         }
         
@@ -484,7 +490,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (simulation.fuelTank.getWasteAmount() > Config.Reactor.FuelMBPerIngot) {
             for (ReactorAccessPortTile accessPort : accessPorts) {
                 long wastePushed = accessPort.pushWaste((int) simulation.fuelTank.getWasteAmount(), false);
-                simulation.fuelTank.extractWaste(wastePushed, false);
+                forceDirty = simulation.fuelTank.extractWaste(wastePushed, false) > 0;
             }
         }
     }
@@ -493,21 +499,27 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         if (assemblyState() != AssemblyState.ASSEMBLED) {
             return 0;
         }
-        return simulation.fuelTank.extractWaste(mb, simulated);
+        long wasteExtracted = simulation.fuelTank.extractWaste(mb, simulated);
+        forceDirty = wasteExtracted > 0;
+        return wasteExtracted;
     }
     
     public long extractFuel(long mb, boolean simulated) {
         if (assemblyState() != AssemblyState.ASSEMBLED) {
             return 0;
         }
-        return simulation.fuelTank.extractFuel(mb, simulated);
+        long fuelExtracted = simulation.fuelTank.extractFuel(mb, simulated);
+        forceDirty = fuelExtracted > 0;
+        return fuelExtracted;
     }
     
     public long refuel(long mb, boolean simulated) {
         if (assemblyState() != AssemblyState.ASSEMBLED) {
             return 0;
         }
-        return simulation.fuelTank.insertFuel(mb, simulated);
+        long fuelInserted = simulation.fuelTank.insertFuel(mb, simulated);
+        forceDirty = fuelInserted > 0;
+        return fuelInserted;
     }
     
     public void updateReactorState(@Nonnull ReactorState reactorState) {

@@ -587,7 +587,9 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             }
         }
         
-        markDirty();
+        if (Phosphophyllite.tickNumber() % 2 == 0) {
+            markDirty();
+        }
     }
     
     public void updateDataPacket(@Nonnull TurbineState turbineState) {
