@@ -69,7 +69,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             if (controlRods.isEmpty()) {
                 throw new ValidationError("multiblock.error.biggerreactors.no_rods");
             }
-            if(!powerPorts.isEmpty() && !coolantPorts.isEmpty()){
+            if (!powerPorts.isEmpty() && !coolantPorts.isEmpty()) {
                 throw new ValidationError("multiblock.error.biggerreactors.coolant_and_power_ports");
             }
             for (ReactorControlRodTile controlRod : controlRods) {
@@ -351,7 +351,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         
         updateFuelRenderingLevel();
         
-        if(Phosphophyllite.tickNumber() % 2 == 0 || forceDirty){
+        if (Phosphophyllite.tickNumber() % 2 == 0 || forceDirty) {
             forceDirty = false;
             markDirty();
         }
@@ -366,7 +366,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     
     private void updateFuelRenderingLevel(boolean forceFullUpdate) {
         
-        if(simulation.fuelTank.getCapacity() == 0){
+        if (simulation.fuelTank.getCapacity() == 0) {
             return;
         }
         
