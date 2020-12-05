@@ -68,6 +68,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             if (controlRods.isEmpty()) {
                 throw new ValidationError("multiblock.error.biggerreactors.no_rods");
             }
+            if(!powerPorts.isEmpty() && !coolantPorts.isEmpty()){
+                throw new ValidationError("multiblock.error.biggerreactors.coolant_and_power_ports");
+            }
             for (ReactorControlRodTile controlRod : controlRods) {
                 if (controlRod.getPos().getY() != maxCoord().y()) {
                     throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.control_rod_not_on_top", controlRod.getPos().getX(), controlRod.getPos().getY(), controlRod.getPos().getZ()));

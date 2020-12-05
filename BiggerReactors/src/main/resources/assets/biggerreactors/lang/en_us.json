@@ -51,6 +51,7 @@
   "multiblock.error.biggerreactors.fuel_rod_gap": "All fuel elements must extend from top of the reactor to the bottom (%d, %d, %d)",
   "multiblock.error.biggerreactors.no_control_rod_for_fuel_rod": "All fuel elements must be topped with a control rod (%d, %d)",
   "multiblock.error.biggerreactors.dangling_internal_part": "There appears to be another reactor inside this one, is something wrong? (%d, %d, %d)",
+  "multiblock.error.biggerreactors.coolant_and_power_ports": "Reactors can only have coolant ports or power ports, not both",
 
   "tooltip.biggerreactors.symbols.control_rod.insertion": "§bRod Insertion\nChange the control rod's insertion.\nMore insertion slows reaction rate,\nwhich reduces heat, energy,\nradiation output, and\nfuel consumption.",
 
