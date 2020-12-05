@@ -60,7 +60,7 @@ public class Phosphophyllite {
         if (!e.side.isServer()) {
             return;
         }
-        if (e.phase != TickEvent.Phase.START) {
+        if (e.phase != TickEvent.Phase.END) {
             return;
         }
         tick++;
@@ -71,7 +71,7 @@ public class Phosphophyllite {
         if (!e.side.isServer()) {
             return;
         }
-        if (e.phase != TickEvent.Phase.START) {
+        if (e.phase != TickEvent.Phase.END) {
             return;
         }
         //noinspection SuspiciousMethodCalls
