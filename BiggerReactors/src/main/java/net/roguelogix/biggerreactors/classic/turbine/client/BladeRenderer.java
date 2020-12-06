@@ -7,8 +7,10 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.LightType;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorBlade;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorShaft;
@@ -83,11 +85,18 @@ public class BladeRenderer extends TileEntityRenderer<TurbineRotorBearingTile> {
             
             matrixStackIn.translate(-0.5, -0.5, -0.5);
             
-            
+            int bearingNum = 0;
             for (Vector4i vector4i : bearing.rotorConfiguration) {
                 matrixStackIn.translate(0, 1, 0);
                 
-                Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(TurbineRotorShaft.INSTANCE.getDefaultState(), matrixStackIn, bufferIn, 0x007F007F, combinedOverlayIn, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
+                BlockPos shaftPos = bearing.getPos().add(bearing.rotationAxis.getX(), bearing.rotationAxis.getY(), bearing.rotationAxis.getZ());
+                int skyLight = bearing.getWorld().getLightFor(LightType.SKY, shaftPos);
+                int blockLight = bearing.getWorld().getLightFor(LightType.BLOCK, shaftPos);
+                int combinedLight = (skyLight << 16) | blockLight;
+                combinedLight *= 16;
+                bearingNum++;
+                
+                Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(TurbineRotorShaft.INSTANCE.getDefaultState(), matrixStackIn, bufferIn, combinedLight, 0xA0000, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
                 
                 int i = 0;
                 for (Direction direction : Direction.values()) {
@@ -120,7 +129,7 @@ public class BladeRenderer extends TileEntityRenderer<TurbineRotorBearingTile> {
                         matrixStackIn.rotate(new Quaternion(Vector3f.YP, (float) (180 * (i & 1) + blade180RotationMultiplier * 135 * (i & 2)), true));
                         matrixStackIn.translate(-0.5, -0.5, -0.5);
                         matrixStackIn.translate(0, 0, -(j + 1));
-                        Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(TurbineRotorBlade.INSTANCE.getDefaultState(), matrixStackIn, bufferIn, 0x007F007F, combinedOverlayIn, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
+                        Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(TurbineRotorBlade.INSTANCE.getDefaultState(), matrixStackIn, bufferIn, combinedLight, 0xA0000, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
                         matrixStackIn.pop();
                     }
                     i++;

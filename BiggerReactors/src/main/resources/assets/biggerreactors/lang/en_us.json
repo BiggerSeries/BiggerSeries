@@ -49,6 +49,13 @@
   "block.biggerreactors.reactor_computer_port": "Reactor Computer Port",
   "block.biggerreactors.reactor_redstone_port": "Reactor Redstone Port",
 
+  "multiblock.error.biggerreactors.no_terminal": "Reactors require at least one terminal",
+  "multiblock.error.biggerreactors.no_rods": "Reactors must have at least one fuel element",
+  "multiblock.error.biggerreactors.control_rod_not_on_top": "Control rods can only be placed on the top of the reactor (%d, %d, %d)",
+  "multiblock.error.biggerreactors.fuel_rod_gap": "All fuel elements must extend from top of the reactor to the bottom (%d, %d, %d)",
+  "multiblock.error.biggerreactors.no_control_rod_for_fuel_rod": "All fuel elements must be topped with a control rod (%d, %d)",
+  "multiblock.error.biggerreactors.dangling_internal_part": "There appears to be another reactor inside this one, is something wrong? (%d, %d, %d)",
+  "multiblock.error.biggerreactors.coolant_and_power_ports": "Reactors can only have coolant ports or power ports, not both",
   "block.biggerreactors.reactor_terminal": "Reactor Terminal",
   "screen.biggerreactors.reactor_terminal": "Reactor Info",
   "screen.biggerreactors.reactor_terminal.temperature.tooltip": "Temperature\n§7How hot the reactor is.",
@@ -155,6 +162,7 @@
   "multiblock.error.biggerreactors.turbine.mixed_blades_and_coil": "Blades and coils cannot exist at the same rotor shaft position",
   "multiblock.error.biggerreactors.turbine.multiple_groups": "Only one blade pack and one coil pack may exist at a time",
   "multiblock.error.biggerreactors.turbine.dangling_coil": "All coil blocks must be in the 8 blocks closest to the turbine shaft",
+  "multiblock.error.biggerreactors.turbine.rotor_bearing_count": "Turbines require exactly 2 rotor bearings, one at each end",
 
   "tooltip.biggerreactors.status.turbine.activity.online": "Status: §2Online",
   "tooltip.biggerreactors.status.turbine.activity.offline": "Status: §4Offline",

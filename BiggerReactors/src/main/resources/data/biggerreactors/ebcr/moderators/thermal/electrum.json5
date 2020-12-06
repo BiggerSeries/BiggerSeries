@@ -1,8 +1,8 @@
 {
     type: "tag",
     location: "forge:storage_blocks/electrum",
-    absorption: 0.75,
-    efficiency: 0.75,
-    moderation: 1.75,
-    conductivity: 1.5,
+    absorption:  0.53,
+    efficiency: 0.82,
+    moderation: 1.47,
+    conductivity: 2.2,
 }
