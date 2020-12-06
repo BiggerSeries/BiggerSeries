@@ -15,7 +15,10 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.roguelogix.biggerreactors.classic.machine.client.CyaniteReprocessorScreen;
 import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocessorContainer;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
-import net.roguelogix.biggerreactors.classic.reactor.client.*;
+import net.roguelogix.biggerreactors.classic.reactor.client.CommonReactorTerminalScreen;
+import net.roguelogix.biggerreactors.classic.reactor.client.ReactorAccessPortScreen;
+import net.roguelogix.biggerreactors.classic.reactor.client.ReactorCoolantPortScreen;
+import net.roguelogix.biggerreactors.classic.reactor.client.RedstonePortScreen;
 import net.roguelogix.biggerreactors.classic.reactor.containers.*;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineCoilRegistry;
 import net.roguelogix.biggerreactors.classic.turbine.client.BladeRenderer;
@@ -64,8 +67,7 @@ public class BiggerReactors {
         //  Since I already have the comment here, also need to do a capability registry. I have a somewhat dumb capability to register.
         ScreenManager.registerFactory(CyaniteReprocessorContainer.INSTANCE,
                 CyaniteReprocessorScreen::new);
-        ScreenManager.registerFactory(ControlRodContainer.INSTANCE,
-                ControlRodScreen::new);
+
         ScreenManager.registerFactory(RedstonePortContainer.INSTANCE,
                 RedstonePortScreen::new);
         ScreenManager.registerFactory(TurbineContainer.INSTANCE,
@@ -79,6 +81,8 @@ public class BiggerReactors {
                 ReactorCoolantPortScreen::new);
         ScreenManager.registerFactory(ReactorAccessPortContainer.INSTANCE,
                 ReactorAccessPortScreen::new);
+        ScreenManager.registerFactory(ReactorControlRodState.INSTANCE,
+                ReactorControlRodScreenZ::new);
 
         ClientRegistry.bindTileEntityRenderer(TurbineRotorBearingTile.TYPE, BladeRenderer::new);
     }

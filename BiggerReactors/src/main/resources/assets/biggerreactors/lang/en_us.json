@@ -40,7 +40,6 @@
   "block.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
   "screen.biggerreactors.cyanite_reprocessor": "Cyanite Reprocessor",
 
-  "block.biggerreactors.reactor_control_rod": "Reactor Control Rod",
   "block.biggerreactors.reactor_casing": "Reactor Casing",
   "block.biggerreactors.reactor_glass": "Reactor Glass",
   "block.biggerreactors.reactor_fuel_rod": "Reactor Fuel Rod",
@@ -70,10 +69,11 @@
   "screen.biggerreactors.reactor_terminal.auto_eject_toggle.disabled": "Waste Ejection: §4Disabled",
   "screen.biggerreactors.reactor_terminal.auto_eject_toggle.tooltip": "Toggle Waste Ejection\n§7Set whether waste will be ejected automatically.",
 
+  "block.biggerreactors.reactor_control_rod": "Reactor Control Rod",
   "screen.biggerreactors.reactor_control_rod": "Reactor Control Rod",
   "screen.biggerreactors.reactor_control_rod.name": "Name:",
-  "screen.biggerreactors.reactor_control_rod.insert_rod.tooltip": "Insert Rod\n§7More insertion reduces reaction rate.\n§8[Shift]: Insert by 10%.\n§8[Ctrl]: Insert by 50%.\n§8[Ctrl + Shift]: Insert by 100% (full insertion).\n§8[Alt]: Apply to all rods.",
-  "screen.biggerreactors.reactor_control_rod.retract_rod.tooltip": "Retract Rod\n§7More insertion reduces reaction rate.\n§8[Shift]: Retract by 10%.\n§8[Ctrl]: Retract by 50%.\n§8[Ctrl + Shift]: Retract by 100% (full retraction).\n§8[Alt]: Apply to all rods.",
+  "screen.biggerreactors.reactor_control_rod.retract_rod.tooltip": "Retract Rod\n§7More insertion reduces reaction rate.\n§8[Shift]: Retract by 10%.\n§8[Ctrl]: Retract by 50%.\n§8[Ctrl + Shift]: Max retraction.\n§8[Alt]: Apply to all rods.",
+  "screen.biggerreactors.reactor_control_rod.insert_rod.tooltip": "Insert Rod\n§7More insertion reduces reaction rate.\n§8[Shift]: Insert by 10%.\n§8[Ctrl]: Insert by 50%.\n§8[Ctrl + Shift]: Max insertion.\n§8[Alt]: Apply to all rods.",
 
   "screen.biggerreactors.reactor_coolant_port": "Reactor Coolant Port",
   "screen.biggerreactors.reactor_coolant_port.direction_toggle.input": "Direction: §3Input",

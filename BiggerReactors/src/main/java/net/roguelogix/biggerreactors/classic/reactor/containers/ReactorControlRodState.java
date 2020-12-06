@@ -13,15 +13,15 @@ import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 import javax.annotation.Nonnull;
 
 @RegisterContainer(name = "reactor_control_rod")
-public class ControlRodContainer extends Container implements GuiSync.IGUIPacketProvider {
+public class ReactorControlRodState extends Container implements GuiSync.IGUIPacketProvider {
     
     @RegisterContainer.Instance
-    public static ContainerType<ControlRodContainer> INSTANCE;
+    public static ContainerType<ReactorControlRodState> INSTANCE;
     
     private PlayerEntity player;
     private ReactorControlRodTile tileEntity;
     
-    public ControlRodContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
+    public ReactorControlRodState(int windowId, BlockPos blockPos, PlayerEntity player) {
         super(INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (ReactorControlRodTile) player.world.getTileEntity(blockPos);
@@ -33,7 +33,7 @@ public class ControlRodContainer extends Container implements GuiSync.IGUIPacket
      */
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
-        return this.tileEntity.controlRodState;
+        return this.tileEntity.reactorControlRodState;
     }
     
     @Override

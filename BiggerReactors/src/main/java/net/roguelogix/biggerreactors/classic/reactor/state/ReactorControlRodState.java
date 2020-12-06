@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ControlRodState implements GuiSync.IGUIPacket {
+public class ReactorControlRodState implements GuiSync.IGUIPacket {
     
     /**
      * The name of this control rod.
@@ -23,10 +23,10 @@ public class ControlRodState implements GuiSync.IGUIPacket {
     /**
      * The tile whose information this belongs to.
      */
-    ReactorControlRodTile controlRodTile;
+    ReactorControlRodTile reactorControlRodTile;
     
-    public ControlRodState(ReactorControlRodTile controlRodTile) {
-        this.controlRodTile = controlRodTile;
+    public ReactorControlRodState(ReactorControlRodTile reactorControlRodTile) {
+        this.reactorControlRodTile = reactorControlRodTile;
     }
     
     @Override
@@ -38,7 +38,7 @@ public class ControlRodState implements GuiSync.IGUIPacket {
     @Override
     @Nullable
     public Map<?, ?> write() {
-        controlRodTile.updateState();
+        reactorControlRodTile.updateState();
         HashMap<String, Object> data = new HashMap<>();
         
         data.put("name", name);
