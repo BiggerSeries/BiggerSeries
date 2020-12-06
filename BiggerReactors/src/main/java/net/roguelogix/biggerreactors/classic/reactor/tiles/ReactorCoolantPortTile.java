@@ -153,7 +153,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     LazyOptional<IGasHandler> steamGasOutput = null;
     FluidTank EMPTY_TANK = new FluidTank(0);
     private ReactorAccessPort.PortDirection direction = INLET;
-    public final ReactorCoolantPortState coolantPortState = new ReactorCoolantPortState(this);
+    public final ReactorCoolantPortState reactorCoolantPortState = new ReactorCoolantPortState(this);
     
     @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
@@ -257,13 +257,13 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
         if (reactor == null) {
             return;
         }
-        
-        if (requestName.equals("setInputState")) {
-            boolean state = (Boolean) requestData;
-            this.setDirection(state ? INLET : OUTLET);
+
+        // Change IO direction.
+        if (requestName.equals("setDirection")) {
+            this.setDirection(((Integer) requestData != 0) ? OUTLET : INLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
-            
         }
+
         super.runRequest(requestName, requestData);
     }
     
@@ -282,11 +282,11 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     @Nonnull
     public ReactorCoolantPortState getState() {
         this.updateState();
-        return this.coolantPortState;
+        return this.reactorCoolantPortState;
     }
     
     @Override
     public void updateState() {
-        coolantPortState.inputState = (this.direction == INLET);
+        reactorCoolantPortState.direction = (this.direction == INLET);
     }
 }

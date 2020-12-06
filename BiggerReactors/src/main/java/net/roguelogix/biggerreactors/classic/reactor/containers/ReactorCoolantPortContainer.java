@@ -33,7 +33,7 @@ public class ReactorCoolantPortContainer extends Container implements GuiSync.IG
      */
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
-        return this.tileEntity.coolantPortState;
+        return this.tileEntity.reactorCoolantPortState;
     }
 
     @Override

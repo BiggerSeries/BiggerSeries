@@ -9,10 +9,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorAccessPortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorAccessPortState;
-import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.client.Biselector;
 import net.roguelogix.biggerreactors.client.SelectorColors;
-import net.roguelogix.phosphophyllite.gui.client.RenderHelper;
 import net.roguelogix.phosphophyllite.gui.client.ScreenBase;
 import net.roguelogix.phosphophyllite.gui.client.elements.Button;
 
@@ -56,8 +54,6 @@ public class ReactorAccessPortScreen extends ScreenBase<ReactorAccessPortContain
      */
     public void initControls() {
         // (Left) Direction toggle:
-        reactorAccessPortState = (ReactorAccessPortState) this.getContainer().getGuiPacket();
-
         Biselector<ReactorAccessPortContainer> directionToggle = new Biselector<>(this, 8, 18, new TranslationTextComponent("screen.biggerreactors.reactor_access_port.direction_toggle.tooltip"),
                 reactorAccessPortState.direction ? 0 : 1, SelectorColors.YELLOW, SelectorColors.BLUE);
         directionToggle.onMouseReleased = (mX, mY, btn) -> {
@@ -132,7 +128,7 @@ public class ReactorAccessPortScreen extends ScreenBase<ReactorAccessPortContain
         }
 
         // Check if we render output type:
-        if(!reactorAccessPortState.direction) {
+        if (!reactorAccessPortState.direction) {
             // Render text for fuel/waste mode:
             if (reactorAccessPortState.fuelMode) {
                 // Text for an inlet:
