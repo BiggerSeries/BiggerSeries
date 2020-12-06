@@ -6,6 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorAccessPortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorAccessPortState;
@@ -16,6 +18,7 @@ import net.roguelogix.phosphophyllite.gui.client.elements.Button;
 
 import javax.annotation.Nonnull;
 
+@OnlyIn(Dist.CLIENT)
 public class ReactorAccessPortScreen extends ScreenBase<ReactorAccessPortContainer> {
 
     private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/reactor_access_port.png");

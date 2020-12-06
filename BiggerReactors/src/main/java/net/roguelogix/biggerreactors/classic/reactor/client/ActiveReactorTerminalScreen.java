@@ -7,6 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorTerminalContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
@@ -19,6 +21,7 @@ import net.roguelogix.phosphophyllite.gui.client.elements.Symbol;
 
 import javax.annotation.Nonnull;
 
+@OnlyIn(Dist.CLIENT)
 public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalContainer> {
 
     private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/reactor_terminal_active.png");
