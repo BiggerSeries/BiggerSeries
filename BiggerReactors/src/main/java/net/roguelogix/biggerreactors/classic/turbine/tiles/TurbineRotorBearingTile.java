@@ -40,10 +40,12 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT nbt = new CompoundNBT();
         TurbineMultiblockController turbine = turbine();
-        nbt.putDouble("speed", turbine.CCgetRotorSpeed());
-        if(sendFullUpdate){
-            sendFullUpdate = false;
-            nbt.put("config", getUpdateTag());
+        if(turbine != null) {
+            nbt.putDouble("speed", turbine.CCgetRotorSpeed());
+            if (sendFullUpdate) {
+                sendFullUpdate = false;
+                nbt.put("config", getUpdateTag());
+            }
         }
         return new SUpdateTileEntityPacket(this.getPos(), 0, nbt);
     }
@@ -51,9 +53,11 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT nbt = pkt.getNbtCompound();
-        speed = nbt.getDouble("speed");
-        if(nbt.contains("config")){
-            handleUpdateTag(getBlockState(), nbt.getCompound("config"));
+        if(nbt.contains("speed")) {
+            speed = nbt.getDouble("speed");
+            if (nbt.contains("config")) {
+                handleUpdateTag(getBlockState(), nbt.getCompound("config"));
+            }
         }
     }
     
