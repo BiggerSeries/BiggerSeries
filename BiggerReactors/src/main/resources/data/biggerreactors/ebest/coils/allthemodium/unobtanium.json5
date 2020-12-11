@@ -1,6 +1,6 @@
 {
     type: "tag",
-    location: "forge:storage_blocks/vibranium",
+    location: "forge:storage_blocks/unobtanium",
     efficiency: 1.5,
     extractionRate: 0.7,
     bonus: 1.06,

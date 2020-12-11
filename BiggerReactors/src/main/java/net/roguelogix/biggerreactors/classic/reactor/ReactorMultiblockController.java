@@ -78,7 +78,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 }
                 for (int i = 0; i < maxCoord().y() - minCoord().y() - 1; i++) {
                     if (!(world.getBlockState(controlRod.getPos().add(0, -1 - i, 0)).getBlock() instanceof ReactorFuelRod)) {
-                        throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.fuel_rod_gap", controlRod.getPos().getX(), -1 - i, controlRod.getPos().getZ()));
+                        throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.fuel_rod_gap", controlRod.getPos().getX(), controlRod.getPos().getY() + (-1 - i), controlRod.getPos().getZ()));
                     }
                 }
             }

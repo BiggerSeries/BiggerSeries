@@ -68,13 +68,12 @@ public class Phosphophyllite {
     
     @SubscribeEvent
     public void tickWorld(TickEvent.WorldTickEvent e) {
-        if (!e.side.isServer()) {
+        if (!(e.world instanceof ServerWorld)) {
             return;
         }
         if (e.phase != TickEvent.Phase.END) {
             return;
         }
-        //noinspection SuspiciousMethodCalls
         ArrayList<MultiblockController> controllersToTick = Phosphophyllite.controllersToTick.get(e.world);
         if (controllersToTick != null) {
             controllersToTick = new ArrayList<>(controllersToTick);
@@ -84,7 +83,6 @@ public class Phosphophyllite {
                 }
             }
         }
-        //noinspection SuspicitousMethodCalls
         ArrayList<MultiblockTile> tilesToAttach = Phosphophyllite.tilesToAttach.get(e.world);
         if (tilesToAttach != null) {
             Phosphophyllite.tilesToAttach.put((ServerWorld) e.world, new ArrayList<>());
