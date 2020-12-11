@@ -143,13 +143,10 @@ public class Biselector<T extends Container> extends Button<T> {
                 }
                 // Play the selection sound.
                 this.playSound(SoundEvents.UI_BUTTON_CLICK);
-            } else {
-                // Play the "nope" sound.
-                this.playSound(SoundEvents.ENTITY_VILLAGER_NO);
-            }
-            // Trigger user-defined selection logic.
-            if (this.onMouseReleased != null) {
-                this.onMouseReleased.trigger(mouseX, mouseY, button);
+                // Trigger user-defined selection logic.
+                if (this.onMouseReleased != null) {
+                    this.onMouseReleased.trigger(mouseX, mouseY, button);
+                }
             }
             // The event was consumed.
             return true;

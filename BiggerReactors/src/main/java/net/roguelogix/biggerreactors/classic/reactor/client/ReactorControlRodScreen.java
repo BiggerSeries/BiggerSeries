@@ -12,6 +12,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorControlRodState;
 import net.roguelogix.biggerreactors.client.TextBox;
 import net.roguelogix.biggerreactors.fluids.FluidYellorium;
@@ -23,13 +24,13 @@ import net.roguelogix.phosphophyllite.gui.client.elements.Symbol;
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class ReactorControlRodScreen extends ScreenBase<net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState> {
+public class ReactorControlRodScreen extends ScreenBase<ReactorControlRodContainer> {
 
     private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/reactor_control_rod.png");
 
     private ReactorControlRodState reactorControlRodState;
 
-    public ReactorControlRodScreen(net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState container, PlayerInventory playerInventory, ITextComponent title) {
+    public ReactorControlRodScreen(ReactorControlRodContainer container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, playerInventory, title, DEFAULT_TEXTURE, 136, 126);
 
         // Initialize control rod state.
@@ -62,11 +63,11 @@ public class ReactorControlRodScreen extends ScreenBase<net.roguelogix.biggerrea
      */
     public void initControls() {
         // (Top) Name text box:
-        TextBox<net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState> textBox = new TextBox<>(this, this.font, 6, 26, 96, 16, reactorControlRodState.name);
+        TextBox<ReactorControlRodContainer> textBox = new TextBox<>(this, this.font, 6, 26, 96, 16, reactorControlRodState.name);
         this.addElement(textBox);
 
         // (Top) Name text box enter button:
-        Button<net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState> textBoxEnterButton = new Button<>(this, 114, 27, 17, 14, 194, 0, new TranslationTextComponent("Apply"));
+        Button<ReactorControlRodContainer> textBoxEnterButton = new Button<>(this, 114, 27, 17, 14, 194, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.apply.tooltip"));
         textBoxEnterButton.onMouseReleased = (mX, mY, btn) -> {
             // Click logic. Extra check necessary since this is an "in-class" button.
             if (textBoxEnterButton.isMouseOver(mX, mY)) {
@@ -93,7 +94,7 @@ public class ReactorControlRodScreen extends ScreenBase<net.roguelogix.biggerrea
         this.addElement(textBoxEnterButton);
 
         // (Center) Rod retract button:
-        Button<net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState> rodRetractButton = new Button<>(this, 58, 64, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.retract_rod.tooltip"));
+        Button<ReactorControlRodContainer> rodRetractButton = new Button<>(this, 58, 64, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.retract_rod.tooltip"));
         rodRetractButton.onMouseReleased = (mX, mY, btn) -> {
             // Click logic. Extra check necessary since this is an "in-class" button.
             if (rodRetractButton.isMouseOver(mX, mY)) {
@@ -126,7 +127,7 @@ public class ReactorControlRodScreen extends ScreenBase<net.roguelogix.biggerrea
         this.addElement(rodRetractButton);
 
         // (Center) Rod insert button:
-        Button<net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState> rodInsertButton = new Button<>(this, 58, 82, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.insert_rod.tooltip"));
+        Button<ReactorControlRodContainer> rodInsertButton = new Button<>(this, 58, 82, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.insert_rod.tooltip"));
         rodInsertButton.onMouseReleased = (mX, mY, btn) -> {
             // Click logic. Extra check necessary since this is an "in-class" button.
             if (rodInsertButton.isMouseOver(mX, mY)) {
@@ -164,7 +165,7 @@ public class ReactorControlRodScreen extends ScreenBase<net.roguelogix.biggerrea
      */
     public void initGauges() {
         // (Center) Control rod insertion gauge:
-        Symbol<net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState> rodInsertionGauge = new Symbol<>(this, 36, 50, 18, 64, 0, 126, StringTextComponent.EMPTY);
+        Symbol<ReactorControlRodContainer> rodInsertionGauge = new Symbol<>(this, 36, 50, 18, 64, 0, 126, StringTextComponent.EMPTY);
         rodInsertionGauge.onRender = (@Nonnull MatrixStack mS, int mX, int mY) -> ReactorControlRodScreen.renderInsertionLevel(mS, rodInsertionGauge, this.reactorControlRodState.insertionLevel);
         this.addElement(rodInsertionGauge);
     }
@@ -195,7 +196,7 @@ public class ReactorControlRodScreen extends ScreenBase<net.roguelogix.biggerrea
      * @param symbol         The symbol to draw as.
      * @param insertionLevel How far the control rod is inserted. 0 is no insertion, 100 is full insertion.
      */
-    public static void renderInsertionLevel(@Nonnull MatrixStack mStack, @Nonnull Symbol<net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState> symbol, double insertionLevel) {
+    public static void renderInsertionLevel(@Nonnull MatrixStack mStack, @Nonnull Symbol<ReactorControlRodContainer> symbol, double insertionLevel) {
         // Render fuel background. Offset by 1, otherwise it doesn't align with the frame.
         RenderHelper.drawFluidGrid(mStack, symbol.x + 1, symbol.y, symbol.getBlitOffset(), 16, 16, FluidYellorium.INSTANCE.getStillFluid(), 1, 4);
 

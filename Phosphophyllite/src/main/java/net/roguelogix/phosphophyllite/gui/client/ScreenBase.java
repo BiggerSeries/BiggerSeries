@@ -20,8 +20,6 @@ import net.roguelogix.phosphophyllite.gui.client.elements.AbstractElement;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-
 /**
  * Base screen.
  *
@@ -58,7 +56,7 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
      * @param element The element to register.
      */
     public void addElement(AbstractElement element) {
-        if(element != null) {
+        if (element != null) {
             this.screenElements.add(element);
         }
         //this.addListener(element);
@@ -118,7 +116,7 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
         this.renderHoveredTooltip(mStack, mouseX, mouseY);
         for (AbstractElement element : this.screenElements) {
             // Check conditions, and render.
-            if(element instanceof ITooltip) {
+            if (element instanceof ITooltip) {
                 ((ITooltip) element).renderTooltip(mStack, mouseX, mouseY);
             }
         }
@@ -140,7 +138,7 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
         // Draw all of the elements that belong to this screen.
         for (AbstractElement element : this.screenElements) {
             // Check conditions, and render.
-            if(element instanceof IRender) {
+            if (element instanceof IRender) {
                 ((IRender) element).render(mStack, mouseX, mouseY);
             }
         }
@@ -168,12 +166,32 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     }
 
     /**
+     * Returns whether the mouse is over the desired area.
+     *
+     * @param mouseX The x position of the mouse.
+     * @param mouseY The y position of the mouse.
+     * @param areaX  The x position of the area you want to check for.
+     * @param areaY  The y position of the area you want to check for.
+     * @param areaWidth  The width of the area to check.
+     * @param areaHeight The height of the area to check.
+     * @return True if the mouse is over the desired area, false otherwise.
+     */
+    public boolean isMouseOver(double mouseX, double mouseY, double areaX, double areaY, int areaWidth, int areaHeight) {
+        // Get actual x and y positions.
+        int relativeX = (int) (this.getGuiLeft() + areaX);
+        int relativeY = (int) (this.getGuiTop() + areaY);
+        // Check the mouse.
+        return ((mouseX > relativeX) && (mouseX < relativeX + areaWidth)
+                && (mouseY > relativeY) && (mouseY < relativeY + areaHeight));
+    }
+
+    /**
      * Tick/update this screen.
      */
     @Override
     public void tick() {
         // Iterate through this screen's elements.
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Trigger.
             ((ITickable) element).tick();
         }
@@ -188,9 +206,9 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     @Override
     public void mouseMoved(double mouseX, double mouseY) {
         // Iterate through this screen's elements.
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 ((IGuiEventListener) element).mouseMoved(mouseX, mouseY);
             }
         }
@@ -209,9 +227,9 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // Iterate through this screen's elements.
         boolean handled = false;
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 handled = (handled || ((IGuiEventListener) element).mouseClicked(mouseX, mouseY, button));
             }
         }
@@ -230,13 +248,14 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         // Iterate through this screen's elements.
         boolean handled = false;
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 handled = (handled || ((IGuiEventListener) element).mouseReleased(mouseX, mouseY, button));
             }
         }
-        return (handled || super.mouseReleased(mouseX, mouseY, button));
+        return false;
+        //return (handled || super.mouseReleased(mouseX, mouseY, button));
     }
 
     /**
@@ -253,9 +272,9 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         // Iterate through this screen's elements.
         boolean handled = false;
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 handled = (handled || ((IGuiEventListener) element).mouseDragged(mouseX, mouseY, button, dragX, dragY));
             }
         }
@@ -274,9 +293,9 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         // Iterate through this screen's elements.
         boolean handled = false;
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 handled = (handled || ((IGuiEventListener) element).mouseScrolled(mouseX, mouseY, delta));
             }
         }
@@ -295,9 +314,9 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         // Iterate through this screen's elements.
         boolean handled = false;
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 handled = (handled || ((IGuiEventListener) element).keyPressed(keyCode, scanCode, modifiers));
             }
         }
@@ -317,9 +336,9 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         // Iterate through this screen's elements.
         boolean handled = false;
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 handled = (handled || ((IGuiEventListener) element).keyReleased(keyCode, scanCode, modifiers));
             }
         }
@@ -337,9 +356,9 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
     public boolean charTyped(char codePoint, int modifiers) {
         // Iterate through this screen's elements.
         boolean handled = false;
-        for(AbstractElement element : this.screenElements) {
+        for (AbstractElement element : this.screenElements) {
             // Check conditions, and trigger.
-            if(element instanceof IGuiEventListener) {
+            if (element instanceof IGuiEventListener) {
                 handled = (handled || ((IGuiEventListener) element).charTyped(codePoint, modifiers));
             }
         }

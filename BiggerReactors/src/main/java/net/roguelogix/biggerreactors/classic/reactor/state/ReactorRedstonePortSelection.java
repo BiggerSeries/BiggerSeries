@@ -4,7 +4,7 @@ import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nonnull;
 
-public enum RedstonePortSelection implements IStringSerializable {
+public enum ReactorRedstonePortSelection implements IStringSerializable {
     INPUT_ACTIVITY(0),
     INPUT_CONTROL_ROD_INSERTION(1),
     INPUT_EJECT_WASTE(2),
@@ -17,7 +17,7 @@ public enum RedstonePortSelection implements IStringSerializable {
 
     private final int state;
 
-    RedstonePortSelection(int state) {
+    ReactorRedstonePortSelection(int state) {
         this.state = state;
     }
 
@@ -42,7 +42,7 @@ public enum RedstonePortSelection implements IStringSerializable {
      * @param state An integer usable with ROBN.
      * @return A value representing the state.
      */
-    public static RedstonePortSelection fromInt(int state) {
+    public static ReactorRedstonePortSelection fromInt(int state) {
         switch (state) {
             case 0:
                 return INPUT_ACTIVITY;
@@ -64,9 +64,5 @@ public enum RedstonePortSelection implements IStringSerializable {
                 return OUTPUT_ENERGY_AMOUNT;
         }
         throw new IndexOutOfBoundsException("Invalid index when determining redstone port selector");
-    }
-
-    public static int fromInt(@Nonnull RedstonePortSelection state) {
-        return state.state;
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorRedstonePortContainer;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
@@ -92,9 +92,9 @@ public class GuiRedstoneToggles <T extends Container> extends GuiPartBase<T> imp
             return false;
         } else {
             if(aboveBelowOrPulseSignal) {
-                ((RedstonePortContainer) this.screen.getContainer()).executeRequest("setPulseOrSignal", !state);
+                ((ReactorRedstonePortContainer) this.screen.getContainer()).executeRequest("setPulseOrSignal", !state);
             } else {
-                ((RedstonePortContainer) this.screen.getContainer()).executeRequest("setAboveOrBelow", !state);
+                ((ReactorRedstonePortContainer) this.screen.getContainer()).executeRequest("setAboveOrBelow", !state);
             }
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);

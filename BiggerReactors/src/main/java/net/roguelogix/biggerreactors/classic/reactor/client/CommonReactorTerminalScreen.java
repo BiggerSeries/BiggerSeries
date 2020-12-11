@@ -2,7 +2,6 @@ package net.roguelogix.biggerreactors.classic.reactor.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;

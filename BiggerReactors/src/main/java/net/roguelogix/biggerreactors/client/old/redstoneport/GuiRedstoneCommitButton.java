@@ -9,7 +9,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorRedstonePortContainer;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
@@ -81,9 +81,9 @@ public class GuiRedstoneCommitButton <T extends Container> extends GuiPartBase<T
             return false;
         } else {
             if (revertOrCommit) {
-                ((RedstonePortContainer) this.screen.getContainer()).executeRequest("commitChanges", true);
+                ((ReactorRedstonePortContainer) this.screen.getContainer()).executeRequest("commitChanges", true);
             } else {
-                ((RedstonePortContainer) this.screen.getContainer()).executeRequest("revertChanges", true);
+                ((ReactorRedstonePortContainer) this.screen.getContainer()).executeRequest("revertChanges", true);
             }
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);

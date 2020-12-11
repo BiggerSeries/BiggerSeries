@@ -7,7 +7,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedConstants;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorRedstonePortContainer;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
@@ -48,7 +48,7 @@ public class GuiInputBox<T extends Container> extends GuiPartBase<T> implements 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(!this.isMouseOver(mouseX, mouseY)) {
-            ((RedstonePortContainer) this.screen.getContainer()).executeRequest(request, this.inputBuffer.toString());
+            ((ReactorRedstonePortContainer) this.screen.getContainer()).executeRequest(request, this.inputBuffer.toString());
             changeFocus(false);
             return false;
         } else {

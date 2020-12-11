@@ -13,15 +13,15 @@ import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 import javax.annotation.Nonnull;
 
 @RegisterContainer(name = "reactor_redstone_port")
-public class RedstonePortContainer extends Container implements GuiSync.IGUIPacketProvider {
+public class ReactorRedstonePortContainer extends Container implements GuiSync.IGUIPacketProvider {
 
     @RegisterContainer.Instance
-    public static ContainerType<RedstonePortContainer> INSTANCE;
+    public static ContainerType<ReactorRedstonePortContainer> INSTANCE;
 
     private PlayerEntity player;
     private ReactorRedstonePortTile tileEntity;
 
-    public RedstonePortContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
+    public ReactorRedstonePortContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
         super(INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (ReactorRedstonePortTile) player.world.getTileEntity(blockPos);
@@ -34,7 +34,7 @@ public class RedstonePortContainer extends Container implements GuiSync.IGUIPack
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
         // We gather the uncommitted port state, since we want to display live changes.
-        return this.tileEntity.uncommittedPortState;
+        return this.tileEntity.getUncommittedState();
     }
 
     @Override

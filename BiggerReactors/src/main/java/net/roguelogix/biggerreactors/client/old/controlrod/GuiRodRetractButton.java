@@ -10,7 +10,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodState;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodContainer;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiPartBase;
 import net.roguelogix.phosphophyllite.gui.old.client.GuiRenderHelper;
 import net.roguelogix.phosphophyllite.gui.old.client.api.IHasTooltip;
@@ -129,7 +129,7 @@ public class GuiRodRetractButton<T extends Container> extends GuiPartBase<T> imp
             }
             
             // Send data.
-            ((ReactorControlRodState) this.screen.getContainer()).executeRequest("changeInsertionLevel", new Pair<>(levelChange, this.alts > 0));
+            ((ReactorControlRodContainer) this.screen.getContainer()).executeRequest("changeInsertionLevel", new Pair<>(levelChange, this.alts > 0));
             assert this.screen.getMinecraft().player != null;
             this.screen.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, this.screen.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MASTER), 1.0F);
             debounce = true;

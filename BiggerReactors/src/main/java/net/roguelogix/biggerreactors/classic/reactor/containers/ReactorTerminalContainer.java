@@ -35,7 +35,7 @@ public class ReactorTerminalContainer extends Container implements GuiSync.IGUIP
     @Nullable
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
-        return this.tileEntity.reactorState;
+        return this.tileEntity.getState();
     }
     
     @Override

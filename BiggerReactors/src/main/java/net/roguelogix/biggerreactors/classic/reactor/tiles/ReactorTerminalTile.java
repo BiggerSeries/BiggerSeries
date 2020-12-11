@@ -25,30 +25,30 @@ import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_terminal")
 public class ReactorTerminalTile extends ReactorBaseTile implements INamedContainerProvider, IHasUpdatableState<ReactorState> {
-    
+
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-    
+
     public ReactorTerminalTile() {
         super(TYPE);
     }
-    
+
     public final ReactorState reactorState = new ReactorState(this);
-    
+
     @Override
     @Nonnull
     public ReactorState getState() {
         this.updateState();
         return this.reactorState;
     }
-    
+
     @Override
     public void updateState() {
         if (controller != null && controller instanceof ReactorMultiblockController) {
             ((ReactorMultiblockController) controller).updateReactorState(reactorState);
         }
     }
-    
+
     @SuppressWarnings("DuplicatedCode")
     @Override
     @Nonnull
@@ -60,7 +60,7 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
             }
             return ActionResultType.SUCCESS;
         }
-        
+
         if (handIn == Hand.MAIN_HAND) {
             assert world != null;
             if (world.getBlockState(pos).get(MultiblockBlock.ASSEMBLED)) {
@@ -72,13 +72,13 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
         }
         return ActionResultType.PASS;
     }
-    
+
     @Override
     @Nonnull
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorTerminal.INSTANCE.getTranslationKey());
     }
-    
+
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
