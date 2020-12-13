@@ -33,8 +33,8 @@ public class ReactorRedstonePortContainer extends Container implements GuiSync.I
      */
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
-        // We gather the uncommitted port state, since we want to display live changes.
-        return this.tileEntity.getUncommittedState();
+        // We gather the current changes, not the active state.
+        return this.tileEntity.getCurrentChanges();
     }
 
     @Override

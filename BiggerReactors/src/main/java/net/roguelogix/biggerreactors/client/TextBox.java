@@ -74,7 +74,6 @@ public class TextBox<T extends Container> extends Button<T> {
      * @param x         The x position of this element.
      * @param y         The y position of this element.
      * @param width     How wide this element should be.
-     * @param charCount How many characters to show at once (if scrolling).
      * @param charLimit The max number of characters to allow in this box.
      */
     public TextBox(@Nonnull ScreenBase<T> parent, @Nonnull FontRenderer fontRenderer, int x, int y, int width, int charLimit, String initialText) {
@@ -94,7 +93,11 @@ public class TextBox<T extends Container> extends Button<T> {
      * @return The current text contents.
      */
     public String getContents() {
-        return this.textBuffer.toString();
+        if(this.textBuffer.length() > 0) {
+            return this.textBuffer.toString();
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -153,12 +156,15 @@ public class TextBox<T extends Container> extends Button<T> {
         }
 
         // Check conditions.
-        if (!this.focusEnable || (this.cursorAnimationTime < (this.cursorAnimationTimeTotal / 2))) {
+        if (!this.focusEnable || !this.renderEnable || (this.cursorAnimationTime < (this.cursorAnimationTimeTotal / 2))) {
             return;
         }
 
         // Render position for the cursor.
-        int cursorRenderPos = (this.fontRenderer.getStringWidth(this.textBuffer.substring(0, this.cursorPos)) + (this.x + 2));
+        int cursorRenderPos = (this.x + 2);
+        if(this.textBuffer.length() >= this.cursorPos) {
+            cursorRenderPos = (this.fontRenderer.getStringWidth(this.textBuffer.substring(0, this.cursorPos)) + (this.x + 2));
+        }
 
         // Set up tessellator and buffer.
         Tessellator tessellator = Tessellator.getInstance();
@@ -184,12 +190,21 @@ public class TextBox<T extends Container> extends Button<T> {
      */
     private void renderSelection() {
         // Check conditions.
-        if (this.cursorPos == this.selectionPos) return;
+        if (!this.renderEnable || this.cursorPos == this.selectionPos) {
+            return;
+        }
 
         // Render position for the cursor.
-        int cursorRenderPos = (this.fontRenderer.getStringWidth(this.textBuffer.substring(0, this.cursorPos)) + (this.x + 2));
+        int cursorRenderPos = (this.x + 2);
+        if(this.textBuffer.length() >= this.cursorPos) {
+            cursorRenderPos = (this.fontRenderer.getStringWidth(this.textBuffer.substring(0, this.cursorPos)) + (this.x + 2));
+        }
+
         // Render position for the selection.
-        int selectionRenderPos = (this.fontRenderer.getStringWidth(this.textBuffer.substring(0, this.selectionPos)) + (this.x + 2));
+        int selectionRenderPos = (this.x + 2);
+        if(this.textBuffer.length() >= this.selectionPos) {
+            selectionRenderPos = (this.fontRenderer.getStringWidth(this.textBuffer.substring(0, this.selectionPos)) + (this.x + 2));
+        }
 
         // Left edge of the box.
         int leftRenderPos = (this.selectionPos > this.cursorPos) ? cursorRenderPos : selectionRenderPos;
@@ -495,14 +510,17 @@ public class TextBox<T extends Container> extends Button<T> {
     public void deleteSelection() {
         // Overarching check for OOB exceptions.
         try {
+            int charsDeleted = 0;
             // Check which way around we must delete (must delete from smallest to largest index).
             if (this.selectionPos > this.cursorPos) {
                 this.textBuffer.delete(this.cursorPos, this.selectionPos);
+                charsDeleted = this.selectionPos - this.cursorPos;
             } else {
                 this.textBuffer.delete(this.selectionPos, this.cursorPos);
+                charsDeleted = this.cursorPos - this.selectionPos;
             }
             // Update cursor and selection position.
-            this.cursorPos--;
+            this.cursorPos -= charsDeleted;
             this.selectionPos = this.cursorPos;
         } catch (StringIndexOutOfBoundsException err) {
             // Cursor out of bounds!
@@ -556,6 +574,30 @@ public class TextBox<T extends Container> extends Button<T> {
     }
 
     /**
+     * Clear the contents of the buffer.
+     */
+    public void clear() {
+        this.cursorPos = 0;
+        this.selectionPos = 0;
+        if(this.textBuffer.length() > 0) {
+            this.textBuffer.delete(0, this.textBuffer.length());
+        }
+    }
+
+    /**
+     * Set the provided text into the buffer, returning what was already existing.
+     *
+     * @param text The text to set.
+     * @return The existing/overwritten text.
+     */
+    public String set(String text) {
+        String buffer = this.textBuffer.toString();
+        this.clear();
+        this.write(text);
+        return buffer;
+    }
+
+    /**
      * Insert or append text at the cursor's position.
      *
      * @param text The text to write.
@@ -571,7 +613,7 @@ public class TextBox<T extends Container> extends Button<T> {
             // Filter out invalid characters.
             String filteredText = SharedConstants.filterAllowedCharacters(text);
             // Append or insert the text (either at the end or in the middle).
-            if (this.cursorPos >= this.textBuffer.length()) {
+            if (this.cursorPos >= this.textBuffer.length() || this.cursorPos < 0) {
                 this.textBuffer.append(filteredText);
             } else {
                 this.textBuffer.insert(this.cursorPos, filteredText);

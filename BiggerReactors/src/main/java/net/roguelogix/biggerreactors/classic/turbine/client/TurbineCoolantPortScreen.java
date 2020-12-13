@@ -1,128 +1,90 @@
 package net.roguelogix.biggerreactors.classic.turbine.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPortContainer;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineCoolantPortState;
-import net.roguelogix.biggerreactors.client.old.GuiSymbol;
-import net.roguelogix.biggerreactors.client.old.ioport.GuiPortDirectionToggle;
-import net.roguelogix.phosphophyllite.gui.old.client.GuiScreenBase;
+import net.roguelogix.biggerreactors.client.Biselector;
+import net.roguelogix.biggerreactors.client.SelectorColors;
+import net.roguelogix.phosphophyllite.gui.client.ScreenBase;
 
-public class TurbineCoolantPortScreen extends GuiScreenBase<TurbineCoolantPortContainer> implements IHasContainer<TurbineCoolantPortContainer> {
+import javax.annotation.Nonnull;
 
-    private TurbineCoolantPortState accessPortState;
+@OnlyIn(Dist.CLIENT)
+public class TurbineCoolantPortScreen extends ScreenBase<TurbineCoolantPortContainer> {
 
-    // Buttons.
-    private GuiPortDirectionToggle<TurbineCoolantPortContainer> ioToggle;
+    private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation(BiggerReactors.modid, "textures/screen/turbine_coolant_port.png");
 
-    // Information symbol.
-    private GuiSymbol<TurbineCoolantPortContainer> symbolIoState;
-    private GuiSymbol<TurbineCoolantPortContainer> symbolGuiChange;
+    private TurbineCoolantPortState turbineCoolantPortState;
 
-    public TurbineCoolantPortScreen(TurbineCoolantPortContainer container, PlayerInventory inventory, ITextComponent title) {
-        super(container, inventory, title);
-        this.accessPortState = (TurbineCoolantPortState) this.getContainer().getGuiPacket();
+    public TurbineCoolantPortScreen(TurbineCoolantPortContainer container, PlayerInventory playerInventory, ITextComponent title) {
+        super(container, playerInventory, title, DEFAULT_TEXTURE, 142, 72);
 
-        // Set textures.
-        this.xSize = 122;
-        this.ySize = 72;
-        this.updateTexture(new ResourceLocation(BiggerReactors.modid, "textures/screen/io_port.png"), 0, 0);
-
-        // Initialize buttons.
-        this.ioToggle = new GuiPortDirectionToggle<>(this, 42, 25, 16, 16);
-
-        // Initialize port symbols.
-        this.symbolIoState = new GuiSymbol<>(this, 62, 25, 96, 64,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.io.state").getString());
-        this.symbolGuiChange = new GuiSymbol<>(this, 104, 54, 128, 64,
-                new TranslationTextComponent("tooltip.biggerreactors.symbols.io.gui_change").getString());
+        // Initialize access port state.
+        turbineCoolantPortState = (TurbineCoolantPortState) this.getContainer().getGuiPacket();
     }
 
     /**
-     * Handle a mouse click.
+     * Initialize the screen.
+     */
+    @Override
+    public void init() {
+        super.init();
+
+        // Set title to be drawn in the center.
+        this.titleX = (this.getWidth() / 2) - (this.getFont().getStringPropertyWidth(this.getTitle()) / 2);
+
+        // Initialize tooltips:
+
+        // Initialize controls:
+        this.initControls();
+
+        // Initialize gauges:
+
+        // Initialize symbols:
+    }
+
+    /**
+     * Initialize controls.
+     */
+    public void initControls() {
+        // (Left) Direction toggle:
+        Biselector<TurbineCoolantPortContainer> directionToggle = new Biselector<>(this, 8, 18, new TranslationTextComponent("screen.biggerreactors.turbine_coolant_port.direction_toggle.tooltip"),
+                turbineCoolantPortState.direction ? 0 : 1, SelectorColors.RED, SelectorColors.BLUE);
+        directionToggle.onMouseReleased = (mX, mY, btn) -> {
+            // Click logic.
+            this.getContainer().executeRequest("setDirection", directionToggle.getState());
+            return true;
+        };
+        this.addElement(directionToggle);
+    }
+
+    /**
+     * Draw the status text for this screen.
      *
-     * @param mouseX The mouse X position.
-     * @param mouseY The mouse Y position.
-     * @param button The mouse button pressed.
-     * @return Whether or not the press was consumed.
+     * @param mStack       The current matrix stack.
+     * @param mouseX       The x position of the mouse.
+     * @param mouseY       The y position of the mouse.
+     * @param partialTicks Partial ticks.
      */
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
-        this.ioToggle.mouseClicked(mouseX, mouseY, button);
-        return true;
-    }
-
-    /**
-     * Update logic.
-     */
-    @Override
-    public void tick() {
-        this.accessPortState = (TurbineCoolantPortState) this.getContainer().getGuiPacket();
-
-        // Update buttons (that require it).
-        this.ioToggle.updateState(accessPortState.inputState);
-    }
-
-    /**
-     * Render tooltips.
-     *
-     * @param mouseX       X position of the mouse.
-     * @param mouseY       Y position of the mouse.
-     * @param partialTicks Good question.
-     */
-    @Override
-    public void render(MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(mStack);
+    public void render(@Nonnull MatrixStack mStack, int mouseX, int mouseY, float partialTicks) {
         super.render(mStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(mStack, mouseX, mouseY);
 
-        // Draw buttons.
-        this.ioToggle.drawTooltip(mStack, mouseX, mouseY);
+        // Render text for input/output direction:
+        if (turbineCoolantPortState.direction) {
+            // Text for an inlet:
+            this.getFont().drawString(mStack, new TranslationTextComponent("screen.biggerreactors.turbine_coolant_port.direction_toggle.input").getString(), this.getGuiLeft() + 42, this.getGuiTop() + 22, 4210752);
 
-        // Draw port symbols.
-        // Draw status text.
-        if (accessPortState.inputState) {
-            this.symbolIoState.updateTooltip(new TranslationTextComponent("tooltip.biggerreactors.symbols.io.input").getString());
         } else {
-            this.symbolIoState.updateTooltip(new TranslationTextComponent("tooltip.biggerreactors.symbols.io.output").getString());
+            // Text for an outlet:
+            this.getFont().drawString(mStack, new TranslationTextComponent("screen.biggerreactors.turbine_coolant_port.direction_toggle.output").getString(), this.getGuiLeft() + 42, this.getGuiTop() + 22, 4210752);
         }
-        this.symbolIoState.drawTooltip(mStack, mouseX, mouseY);
-        this.symbolGuiChange.drawTooltip(mStack, mouseX, mouseY);
-    }
-
-    /**
-     * Draw foreground elements.
-     *
-     * @param mouseX X position of the mouse.
-     * @param mouseY Y position of the mouse.
-     */
-    @Override
-    public void drawGuiContainerForegroundLayer(MatrixStack mStack, int mouseX, int mouseY) {
-        this.font.drawString(mStack, new TranslationTextComponent("screen.biggerreactors.turbine_coolant_port").getString(), 8, 6, 4210752);
-
-        // Draw button.
-        this.ioToggle.drawPart(mStack);
-
-        // Draw status text.
-        if (accessPortState.inputState) {
-            this.font.drawString(mStack, new TranslationTextComponent("tooltip.biggerreactors.status.io.input").getString(), 8, 56, 4210752);
-        } else {
-            this.font.drawString(mStack, new TranslationTextComponent("tooltip.biggerreactors.status.io.output").getString(), 8, 56, 4210752);
-        }
-
-        // Draw port symbols.
-        if (accessPortState.inputState) {
-            this.symbolIoState.updateTextureOffset(96, 64);
-        } else {
-            this.symbolIoState.updateTextureOffset(112, 64);
-        }
-        this.symbolIoState.drawPart(mStack);
-        this.symbolGuiChange.drawPart(mStack);
     }
 }

@@ -30,6 +30,11 @@ public abstract class AbstractElement<T extends Container> implements ITickable 
     public int width, height;
 
     /**
+     * Free state enable boolean for usage by any child classes.
+     */
+    public boolean stateEnable;
+
+    /**
      * Callback for ticks/updates.
      */
     public ICallback.OnTick onTick;

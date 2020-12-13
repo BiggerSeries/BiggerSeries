@@ -47,7 +47,7 @@ public class Triselector<T extends Container> extends Button<T> {
      * @param initialState The initial switch state to use.
      */
     public Triselector(@Nonnull ScreenBase<T> parent, int x, int y, @Nullable ITextComponent tooltip, int initialState, SelectorColors leftColor, SelectorColors centerColor, SelectorColors rightColor) {
-        super(parent, x, y, 31, 14, 0, 64, tooltip);
+        super(parent, x, y, 46, 14, 31, 64, tooltip);
         this.state = initialState;
         this.leftColor = leftColor;
         this.centerColor = centerColor;

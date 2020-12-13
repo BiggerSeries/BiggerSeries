@@ -240,11 +240,10 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
             return;
         }
 
-        if (requestName.equals("setInputState")) {
-            boolean state = (Boolean) requestData;
-            this.setDirection(state ? INLET : OUTLET);
+        // Change IO direction.
+        if (requestName.equals("setDirection")) {
+            this.setDirection(((Integer) requestData != 0) ? OUTLET : INLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
-
         }
         super.runRequest(requestName, requestData);
     }
@@ -269,6 +268,6 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
 
     @Override
     public void updateState() {
-        coolantPortState.inputState = (this.direction == INLET);
+        coolantPortState.direction = (this.direction == INLET);
     }
 }
