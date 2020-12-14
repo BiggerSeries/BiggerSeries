@@ -20,7 +20,7 @@ import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorRedstonePortSelection;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorRedstonePortState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorRedstonePortTriggers;
-import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.ITickableMultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_redstone_port")
-public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedContainerProvider, IHasUpdatableState<ReactorRedstonePortState>, ITickableMultiblockTile {
+public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedContainerProvider, ITickableMultiblockTile, IHasUpdatableState<ReactorRedstonePortState> {
 
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;

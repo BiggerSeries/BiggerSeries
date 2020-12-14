@@ -11,6 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorTerminalContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.client.CommonRender;
 import net.roguelogix.phosphophyllite.gui.client.RenderHelper;
 import net.roguelogix.phosphophyllite.gui.client.ScreenBase;
@@ -61,6 +62,13 @@ public class PassiveReactorTerminalScreen extends ScreenBase<ReactorTerminalCont
     private void initTooltips() {
         // (Left) RF generation rate tooltip:
         this.addElement(new Tooltip<>(this, 8, 38, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.energy_generation_rate.tooltip")));
+
+        // (Left) RF generation readout tooltip:
+        Tooltip<ReactorTerminalContainer> generationRateReadoutTooltip = new Tooltip<>(this, 26, 38, 53, 16, StringTextComponent.EMPTY);
+        generationRateReadoutTooltip.onTick = () -> {
+            generationRateReadoutTooltip.tooltip = new StringTextComponent(String.format("%.3f RF/t", this.reactorState.reactorOutputRate));
+        };
+        this.addElement(generationRateReadoutTooltip);
 
         // (Top) Internal battery tooltip:
         this.addElement(new Tooltip<>(this, 152, 6, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.internal_battery.tooltip")));

@@ -18,6 +18,7 @@ import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.client.RenderHelper;
 import net.roguelogix.phosphophyllite.gui.client.ScreenBase;
 import net.roguelogix.phosphophyllite.gui.client.elements.Symbol;
+import net.roguelogix.phosphophyllite.gui.client.elements.Tooltip;
 
 import javax.annotation.Nonnull;
 
@@ -47,6 +48,7 @@ public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
 
         // Initialize tooltips:
         CommonReactorTerminalScreen.initTooltips(this, reactorState);
+        this.initTooltips();
 
         // Initialize controls:
         CommonReactorTerminalScreen.initControls(this, reactorState);
@@ -58,6 +60,18 @@ public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
         // Initialize symbols:
         CommonReactorTerminalScreen.initSymbols(this, reactorState);
         this.initSymbols();
+    }
+
+    /**
+     * Initialize tooltips.
+     */
+    private void initTooltips() {
+        // (Left) Steam generation readout tooltip:
+        Tooltip<ReactorTerminalContainer> generationRateReadoutTooltip = new Tooltip<>(this, 26, 38, 53, 16, StringTextComponent.EMPTY);
+        generationRateReadoutTooltip.onTick = () -> {
+            generationRateReadoutTooltip.tooltip = new StringTextComponent(String.format("%.3f mB/t", this.reactorState.reactorOutputRate));
+        };
+        this.addElement(generationRateReadoutTooltip);
     }
 
     /**

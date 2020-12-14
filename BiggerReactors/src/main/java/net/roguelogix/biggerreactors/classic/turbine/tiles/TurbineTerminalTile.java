@@ -11,11 +11,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
-import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
+import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineTerminal;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
-import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -75,12 +75,12 @@ public class TurbineTerminalTile extends TurbineBaseTile implements INamedContai
     @Override
     @Nonnull
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent(ReactorTerminal.INSTANCE.getTranslationKey());
+        return new TranslationTextComponent(TurbineTerminal.INSTANCE.getTranslationKey());
     }
     
     @Nullable
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
-        return new TurbineContainer(windowId, this.pos, playerInventory.player);
+        return new TurbineTerminalContainer(windowId, this.pos, playerInventory.player);
     }
 }

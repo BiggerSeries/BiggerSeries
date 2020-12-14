@@ -14,6 +14,7 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorTerminalC
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.client.Biselector;
 import net.roguelogix.biggerreactors.client.SelectorColors;
 import net.roguelogix.phosphophyllite.gui.client.RenderHelper;
@@ -61,11 +62,32 @@ public class CommonReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
         // (Left) Temperature tooltip:
         screen.addElement(new Tooltip<>(screen, 8, 19, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.temperature.tooltip")));
 
+        // (Left) Temperature readout tooltip:
+        Tooltip<ReactorTerminalContainer> temperatureReadoutTooltip = new Tooltip<>(screen, 26, 19, 53, 16, StringTextComponent.EMPTY);
+        temperatureReadoutTooltip.onTick = () -> {
+            temperatureReadoutTooltip.tooltip = new StringTextComponent(String.format("%.3f \u00B0C", reactorState.caseHeatStored));
+        };
+        screen.addElement(temperatureReadoutTooltip);
+
         // (Left) Fuel consumption rate tooltip:
         screen.addElement(new Tooltip<>(screen, 8, 57, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.fuel_usage_rate.tooltip")));
 
+        // (Left) Fuel consumption readout tooltip:
+        Tooltip<ReactorTerminalContainer> fuelConsumptionReadoutTooltip = new Tooltip<>(screen, 26, 57, 53, 16, StringTextComponent.EMPTY);
+        fuelConsumptionReadoutTooltip.onTick = () -> {
+            fuelConsumptionReadoutTooltip.tooltip = new StringTextComponent(String.format("%.3f mB/t", reactorState.fuelUsageRate));
+        };
+        screen.addElement(fuelConsumptionReadoutTooltip);
+
         // (Left) Reactivity rate tooltip:
         screen.addElement(new Tooltip<>(screen, 8, 76, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.reactivity_rate.tooltip")));
+
+        // (Left) Reactivity rate readout tooltip:
+        Tooltip<ReactorTerminalContainer> reactivityRateTooltip = new Tooltip<>(screen, 26, 76, 53, 16, StringTextComponent.EMPTY);
+        reactivityRateTooltip.onTick = () -> {
+            reactivityRateTooltip.tooltip = new StringTextComponent(String.format("%.1f%%", (reactorState.reactivityRate * 100.0)));
+        };
+        screen.addElement(reactivityRateTooltip);
 
         // (Top) Fuel mix gauge tooltip:
         screen.addElement(new Tooltip<>(screen, 86, 6, 16, 16, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.fuel_mix.tooltip")));

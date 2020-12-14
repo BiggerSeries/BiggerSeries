@@ -46,7 +46,7 @@ import net.roguelogix.biggerreactors.classic.machine.containers.CyaniteReprocess
 import net.roguelogix.biggerreactors.classic.machine.state.CyaniteReprocessorState;
 import net.roguelogix.biggerreactors.classic.machine.tiles.impl.CyaniteReprocessorItemHandler;
 import net.roguelogix.biggerreactors.items.ingots.BlutoniumIngot;
-import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 

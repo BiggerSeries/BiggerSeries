@@ -17,7 +17,7 @@ import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorControlRod;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorControlRodState;
-import net.roguelogix.phosphophyllite.gui.old.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
@@ -26,29 +26,29 @@ import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_control_rod")
 public class ReactorControlRodTile extends ReactorBaseTile implements INamedContainerProvider, IHasUpdatableState<ReactorControlRodState> {
-    
+
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-    
+
     public ReactorControlRodTile() {
         super(TYPE);
     }
-    
+
     public final ReactorControlRodState reactorControlRodState = new ReactorControlRodState(this);
-    
+
     @Override
     @Nonnull
     public ReactorControlRodState getState() {
         this.updateState();
         return this.reactorControlRodState;
     }
-    
+
     @Override
     public void updateState() {
         reactorControlRodState.name = name;
         reactorControlRodState.insertionLevel = insertion;
     }
-    
+
     @Override
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
@@ -61,24 +61,24 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
         }
         return ActionResultType.PASS;
     }
-    
+
     @Override
     @Nonnull
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorControlRod.INSTANCE.getTranslationKey());
     }
-    
+
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
         return new ReactorControlRodContainer(windowId, this.pos, player);
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public void runRequest(String requestName, Object requestData) {
         ReactorMultiblockController reactor = reactor();
-        if(reactor == null){
+        if (reactor == null) {
             return;
         }
 
@@ -96,41 +96,41 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
         }
 
         // Set the name for the control rod.
-        if(requestName.equals("setName")) {
+        if (requestName.equals("setName")) {
             this.name = (String) requestData;
         }
 
         super.runRequest(requestName, requestData);
     }
-    
+
     private double insertion = 0;
-    
+
     public void setInsertion(double newLevel) {
-        if(newLevel < 0){
+        if (newLevel < 0) {
             newLevel = 0;
         }
-        if(newLevel > 100){
+        if (newLevel > 100) {
             newLevel = 100;
         }
         insertion = newLevel;
     }
-    
+
     public double getInsertion() {
         return insertion;
     }
 
     // TODO: What should the default control rod name be? I think it should be Chris Houlihan...
     private String name = "Chris Richardson";
-    
+
     public void setName(@Nonnull String name) {
         this.name = name;
     }
-    
+
     @Nonnull
     public String getName() {
         return name;
     }
-    
+
     @Override
     @Nonnull
     protected CompoundNBT writeNBT() {
@@ -139,7 +139,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
         compound.putString("name", name);
         return compound;
     }
-    
+
     @Override
     protected void readNBT(@Nonnull CompoundNBT compound) {
         super.readNBT(compound);

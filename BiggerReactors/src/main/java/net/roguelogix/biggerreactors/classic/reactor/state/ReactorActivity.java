@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 public enum ReactorActivity implements IStringSerializable {
     ACTIVE(1),
     INACTIVE(0);
-    
+
     public static final EnumProperty<ReactorActivity> REACTOR_ACTIVITY_ENUM_PROPERTY = EnumProperty.create("reactoractivity", ReactorActivity.class);
 
     private final int state;

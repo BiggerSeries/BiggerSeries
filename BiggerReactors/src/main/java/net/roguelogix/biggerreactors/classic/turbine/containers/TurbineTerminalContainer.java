@@ -13,15 +13,15 @@ import net.roguelogix.phosphophyllite.registry.RegisterContainer;
 import javax.annotation.Nullable;
 
 @RegisterContainer(name = "turbine_terminal")
-public class TurbineContainer extends Container implements GuiSync.IGUIPacketProvider {
+public class TurbineTerminalContainer extends Container implements GuiSync.IGUIPacketProvider {
     
     @RegisterContainer.Instance
-    public static ContainerType<TurbineContainer> INSTANCE;
+    public static ContainerType<TurbineTerminalContainer> INSTANCE;
     
     private PlayerEntity player;
     private TurbineTerminalTile tileEntity;
     
-    public TurbineContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
+    public TurbineTerminalContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
         super(INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (TurbineTerminalTile) player.world.getTileEntity(blockPos);

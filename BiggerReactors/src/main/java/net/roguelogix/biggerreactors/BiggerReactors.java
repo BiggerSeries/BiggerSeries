@@ -20,9 +20,9 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.*;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineCoilRegistry;
 import net.roguelogix.biggerreactors.classic.turbine.client.BladeRenderer;
 import net.roguelogix.biggerreactors.classic.turbine.client.TurbineCoolantPortScreen;
-import net.roguelogix.biggerreactors.classic.turbine.client.TurbineScreen;
-import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
+import net.roguelogix.biggerreactors.classic.turbine.client.TurbineTerminalScreen;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPortContainer;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineRotorBearingTile;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
@@ -53,7 +53,6 @@ public class BiggerReactors {
         dataPackRegistries = serverAboutToStartEvent.getDataPackRegistries();
     }
 
-
     public void onTagsUpdatedEvent(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
         ReactorModeratorRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
         TurbineCoilRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
@@ -64,11 +63,6 @@ public class BiggerReactors {
         //  Since I already have the comment here, also need to do a capability registry. I have a somewhat dumb capability to register.
         ScreenManager.registerFactory(CyaniteReprocessorContainer.INSTANCE,
                 CyaniteReprocessorScreen::new);
-        ScreenManager.registerFactory(TurbineContainer.INSTANCE,
-                TurbineScreen::new);
-
-
-        // Screens below this line are on the new GUI system:
         ScreenManager.registerFactory(ReactorTerminalContainer.INSTANCE,
                 CommonReactorTerminalScreen::new);
         ScreenManager.registerFactory(ReactorCoolantPortContainer.INSTANCE,
@@ -79,6 +73,8 @@ public class BiggerReactors {
                 ReactorControlRodScreen::new);
         ScreenManager.registerFactory(ReactorRedstonePortContainer.INSTANCE,
                 ReactorRedstonePortScreen::new);
+        ScreenManager.registerFactory(TurbineTerminalContainer.INSTANCE,
+                TurbineTerminalScreen::new);
         ScreenManager.registerFactory(TurbineCoolantPortContainer.INSTANCE,
                 TurbineCoolantPortScreen::new);
 

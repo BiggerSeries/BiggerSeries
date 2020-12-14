@@ -1,4 +1,4 @@
-package net.roguelogix.phosphophyllite.gui.old.client.api;
+package net.roguelogix.phosphophyllite.gui.client.api;
 
 import javax.annotation.Nonnull;
 
@@ -8,7 +8,7 @@ public interface IHasUpdatableState<T> {
      */
     @Nonnull
     T getState();
-    
+
     /**
      * Call for an update to the current state information.
      */
