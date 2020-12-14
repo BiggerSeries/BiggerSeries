@@ -579,29 +579,6 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 ejectWaste();
                 return;
             }
-
-            /*
-            // Reactor.
-            case "setActive": {
-                //boolean newState = (boolean) requestData;
-                //setActive(newState ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
-                //return;
-
-            }
-            case "setAutoEject": {
-                autoEjectWaste = (boolean) requestData;
-                return;
-            }
-            case "ejectWaste": {
-                ejectWaste();
-                return;
-            }
-            // Control rod.
-            case "setRodInsertion": {
-                Pair<Double, Boolean> newState = (Pair<Double, Boolean>) requestData;
-                // newState.getFirst() = Rod Insertion Level
-                // newState.getSecond() = Apply Globally
-            }*/
         }
     }
 

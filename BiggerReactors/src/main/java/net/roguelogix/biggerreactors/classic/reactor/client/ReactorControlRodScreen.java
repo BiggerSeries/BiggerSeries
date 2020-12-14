@@ -14,6 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorControlRodState;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
+import net.roguelogix.biggerreactors.client.CommonButton;
 import net.roguelogix.biggerreactors.client.TextBox;
 import net.roguelogix.biggerreactors.fluids.FluidYellorium;
 import net.roguelogix.phosphophyllite.gui.client.RenderHelper;
@@ -62,6 +64,8 @@ public class ReactorControlRodScreen extends ScreenBase<ReactorControlRodContain
      * Initialize controls.
      */
     public void initControls() {
+        System.out.println("SCRN " + reactorControlRodState.name);
+
         // (Top) Name text box:
         TextBox<ReactorControlRodContainer> textBox = new TextBox<>(this, this.font, 6, 26, 96, 16, reactorControlRodState.name);
         this.addElement(textBox);
@@ -91,7 +95,16 @@ public class ReactorControlRodScreen extends ScreenBase<ReactorControlRodContain
                 textBoxEnterButton.blit(mS, 194, 0);
             }
         });
-        this.addElement(textBoxEnterButton);
+        //this.addElement(textBoxEnterButton);
+
+        // (Top) Name text box enter button:
+        CommonButton<ReactorControlRodContainer> textEnterButton = new CommonButton<>(this, 114, 27, 17, 14, 61, 130, new TranslationTextComponent("screen.biggerreactors.reactor_redstone_port.apply.tooltip"));
+        textEnterButton.onMouseReleased = (mX, mY, btn) -> {
+            // Click logic.
+            this.getContainer().executeRequest("setName", textBox.getContents());
+            return true;
+        };
+        this.addElement(textEnterButton);
 
         // (Center) Rod retract button:
         Button<ReactorControlRodContainer> rodRetractButton = new Button<>(this, 58, 64, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.retract_rod.tooltip"));

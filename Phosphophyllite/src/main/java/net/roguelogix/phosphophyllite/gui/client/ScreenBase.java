@@ -254,8 +254,7 @@ public class ScreenBase<T extends Container> extends ContainerScreen<T> implemen
                 handled = (handled || ((IGuiEventListener) element).mouseReleased(mouseX, mouseY, button));
             }
         }
-        return false;
-        //return (handled || super.mouseReleased(mouseX, mouseY, button));
+        return (handled || super.mouseReleased(mouseX, mouseY, button));
     }
 
     /**

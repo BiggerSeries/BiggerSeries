@@ -40,6 +40,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     @Nonnull
     public ReactorControlRodState getState() {
         this.updateState();
+        System.out.println("TILE " + this.reactorControlRodState.name);
         return this.reactorControlRodState;
     }
 
@@ -97,7 +98,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
 
         // Set the name for the control rod.
         if (requestName.equals("setName")) {
-            this.name = (String) requestData;
+            this.setName((String) requestData);
         }
 
         super.runRequest(requestName, requestData);
@@ -120,7 +121,7 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     }
 
     // TODO: What should the default control rod name be? I think it should be Chris Houlihan...
-    private String name = "Chris Richardson";
+    private String name = "";
 
     public void setName(@Nonnull String name) {
         this.name = name;

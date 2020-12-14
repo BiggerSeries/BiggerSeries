@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorControlRod;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorControlRodState;
 import net.roguelogix.biggerreactors.classic.reactor.tiles.ReactorControlRodTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 import net.roguelogix.phosphophyllite.registry.RegisterContainer;
@@ -33,7 +34,7 @@ public class ReactorControlRodContainer extends Container implements GuiSync.IGU
      */
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
-        return this.tileEntity.getState();
+        return this.tileEntity.reactorControlRodState;
     }
     
     @Override
