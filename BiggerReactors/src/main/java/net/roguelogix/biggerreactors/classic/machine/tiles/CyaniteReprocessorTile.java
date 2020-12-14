@@ -56,7 +56,7 @@ import java.util.Objects;
 
 @RegisterTileEntity(name = "cyanite_reprocessor")
 public class CyaniteReprocessorTile extends LockableTileEntity implements INamedContainerProvider, ITickableTileEntity, IHasUpdatableState<CyaniteReprocessorState> {
-    
+
     @RegisterTileEntity.Type
     public static TileEntityType<CyaniteReprocessorTile> INSTANCE;
     /**
@@ -378,6 +378,10 @@ public class CyaniteReprocessorTile extends LockableTileEntity implements INamed
      * @see CyaniteReprocessorTile#tick()
      */
     private boolean canWork() {
+        // If the output slot is full, we cannot work.
+        if(this.getStackInSlot(CyaniteReprocessorItemHandler.OUTPUT_SLOT_INDEX).getCount() >= 64) {
+            return false;
+        }
         return (this.energyStorage.getEnergyStored() >= Config.CyaniteReprocessor.EnergyConsumptionPerTick
                 && this.fluidTank.getFluidAmount() >= Config.CyaniteReprocessor.WaterConsumptionPerTick);
     }
