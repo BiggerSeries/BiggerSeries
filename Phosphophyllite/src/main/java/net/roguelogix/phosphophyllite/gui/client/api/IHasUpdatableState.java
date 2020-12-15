@@ -8,7 +8,7 @@ public interface IHasUpdatableState<T> {
      */
     @Nonnull
     T getState();
-    
+
     /**
      * Call for an update to the current state information.
      */

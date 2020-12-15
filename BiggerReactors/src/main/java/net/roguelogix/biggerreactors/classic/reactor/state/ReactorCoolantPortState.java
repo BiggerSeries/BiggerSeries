@@ -11,31 +11,31 @@ import java.util.Map;
 public class ReactorCoolantPortState implements GuiSync.IGUIPacket {
 
     /**
-     * The input state of the port. True for input, false for output.
+     * The direction of the port. True for input, false for output.
      */
-    public boolean inputState = false;
+    public boolean direction = false;
 
     /**
      * The tile whose information this belongs to.
      */
-    ReactorCoolantPortTile ioPortTile;
+    ReactorCoolantPortTile reactorCoolantPortTile;
 
-    public ReactorCoolantPortState(ReactorCoolantPortTile ioPortTile) {
-        this.ioPortTile = ioPortTile;
+    public ReactorCoolantPortState(ReactorCoolantPortTile reactorCoolantPortTile) {
+        this.reactorCoolantPortTile = reactorCoolantPortTile;
     }
 
     @Override
     public void read(@Nonnull Map<?, ?> data) {
-        inputState = (Boolean) data.get("inputState");
+        direction = (Boolean) data.get("direction");
     }
 
     @Override
     @Nullable
     public Map<?, ?> write() {
-        ioPortTile.updateState();
+        reactorCoolantPortTile.updateState();
         HashMap<String, Object> data = new HashMap<>();
 
-        data.put("inputState", inputState);
+        data.put("direction", direction);
 
         return data;
     }

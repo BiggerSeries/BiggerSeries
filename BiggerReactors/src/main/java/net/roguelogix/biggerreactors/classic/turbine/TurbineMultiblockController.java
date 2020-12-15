@@ -12,6 +12,7 @@ import net.roguelogix.biggerreactors.Config;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.*;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;
+import net.roguelogix.biggerreactors.classic.turbine.state.VentState;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
@@ -617,36 +618,36 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     @SuppressWarnings("UnnecessaryReturnStatement")
     public void runRequest(@Nonnull String requestName, @Nullable Object requestData) {
         switch (requestName) {
+            // Set the turbine to ACTIVE or INACTIVE.
             case "setActive": {
-                if (!(requestData instanceof Boolean)) {
+                if (!(requestData instanceof Integer)) {
                     return;
                 }
-                boolean newState = (boolean) requestData;
-                setActive(newState ? TurbineActivity.ACTIVE : TurbineActivity.INACTIVE);
+                setActive(TurbineActivity.fromInt((Integer) requestData));
                 return;
             }
+            // Change flow rate by value.
             case "changeFlowRate": {
                 if (!(requestData instanceof Long)) {
                     return;
                 }
-                long newRate = maxFlowRate + ((long) requestData);
-                setMaxFlowRate(newRate);
+                setMaxFlowRate(maxFlowRate + ((Long) requestData));
                 return;
             }
+            // Set coils to engaged or disengaged.
             case "setCoilEngaged": {
-                if (!(requestData instanceof Boolean)) {
+                if (!(requestData instanceof Integer)) {
                     return;
                 }
-                boolean newState = (boolean) requestData;
-                setCoilEngaged(newState);
+                setCoilEngaged(((Integer) requestData != 0));
                 return;
             }
+            // Set vent state to OVERFLOW, ALL, or CLOSED.
             case "setVentState": {
                 if (!(requestData instanceof Integer)) {
                     return;
                 }
-                VentState newState = VentState.valueOf((int) requestData);
-                setVentState(newState);
+                setVentState(VentState.fromInt((int) requestData));
                 return;
             }
         }
@@ -706,7 +707,8 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             storedPower = compound.getLong("storedPower");
         }
         if (compound.contains("ventState")) {
-            ventState = VentState.valueOf(compound.getString("ventState").toUpperCase());
+            //ventState = VentState.toInt(compound.getString("ventState").toUpperCase());
+            ventState = VentState.fromInt(compound.getInt(compound.getString("ventState")));
         }
         if (compound.contains("rotorEnergy")) {
             rotorEnergy = compound.getDouble("rotorEnergy");

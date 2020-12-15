@@ -15,10 +15,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorRedstonePort;
-import net.roguelogix.biggerreactors.classic.reactor.containers.RedstonePortContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorRedstonePortContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
-import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortSelector;
-import net.roguelogix.biggerreactors.classic.reactor.state.RedstonePortState;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorRedstonePortSelection;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorRedstonePortState;
+import net.roguelogix.biggerreactors.classic.reactor.state.ReactorRedstonePortTriggers;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.multiblock.generic.ITickableMultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
@@ -29,31 +30,32 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_redstone_port")
-public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedContainerProvider, IHasUpdatableState<RedstonePortState>, ITickableMultiblockTile {
-    
+public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedContainerProvider, ITickableMultiblockTile, IHasUpdatableState<ReactorRedstonePortState> {
+
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-    
-    public final RedstonePortState redstonePortState = new RedstonePortState(this);
-    public final RedstonePortState uncommittedPortState = new RedstonePortState(this);
-    
+
+    public final ReactorRedstonePortState reactorRedstonePortState = new ReactorRedstonePortState(this);
+
     public ReactorRedstonePortTile() {
         super(TYPE);
     }
-    
+
     private boolean isEmitting;
+    double mainVal = 0;
+    double secondaryVal = 0;
     Direction powerOutputDirection = null;
-    
+
     public boolean isEmitting(Direction side) {
         if (side.getOpposite() != powerOutputDirection) {
             return false;
         }
         return isEmitting;
     }
-    
+
     private boolean isPowered = false;
     private boolean wasPowered = false;
-    
+
     public void updatePowered() {
         if (powerOutputDirection == null) {
             return;
@@ -61,19 +63,19 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
         assert world != null;
         isPowered = world.getRedstonePower(pos.offset(powerOutputDirection), powerOutputDirection) > 0;
     }
-    
+
     private boolean isLit = false;
-    
+
     @Override
     public void tick() {
         boolean shouldBeEmitting = false;
         boolean shouldLight = false;
         ReactorMultiblockController reactor = reactor();
         assert reactor != null;
-        switch (RedstonePortSelector.valueOf(activeSettingId)) {
+        switch (reactorRedstonePortState.selectedTab) {
             case INPUT_ACTIVITY:
                 shouldLight = isPowered;
-                if (activeTriggerPulseOrSignal) {
+                if (reactorRedstonePortState.triggerPS.toBool()) {
                     // signal
                     if (wasPowered != isPowered) {
                         reactor.setActive(isPowered ? ReactorActivity.ACTIVE : ReactorActivity.INACTIVE);
@@ -85,7 +87,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
                 break;
             case INPUT_CONTROL_ROD_INSERTION: {
                 shouldLight = isPowered;
-                if (activeTriggerPulseOrSignal) {
+                if (reactorRedstonePortState.triggerPS.toBool()) {
                     if (wasPowered == isPowered) {
                         break;
                     }
@@ -96,7 +98,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
                     }
                 } else {
                     if (!wasPowered && isPowered) {
-                        switch (activeMode) {
+                        switch (reactorRedstonePortState.triggerMode) {
                             case 0: {
                                 reactor.CCsetAllControlRodLevels(reactor.CCgetControlRodLevel(0) + mainVal);
                                 break;
@@ -125,14 +127,14 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             }
             case OUTPUT_FUEL_TEMP: {
                 double fuelTemp = reactor.CCgetFuelTemperature();
-                if ((fuelTemp < mainVal) == activeTriggerAboveOrBelow) {
+                if ((fuelTemp < mainVal) == reactorRedstonePortState.triggerAB.toBool()) {
                     shouldBeEmitting = true;
                 }
             }
             break;
             case OUTPUT_CASING_TEMP: {
                 double casingTemperature = reactor.CCgetCasingTemperature();
-                if ((casingTemperature < mainVal) == activeTriggerAboveOrBelow) {
+                if ((casingTemperature < mainVal) == reactorRedstonePortState.triggerAB.toBool()) {
                     shouldBeEmitting = true;
                 }
             }
@@ -141,21 +143,21 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
                 double fuelPercent = reactor.CCgetFuelAmount();
                 fuelPercent /= reactor.CCgetReactantAmount();
                 fuelPercent *= 100;
-                if ((fuelPercent < mainVal) == activeTriggerAboveOrBelow) {
+                if ((fuelPercent < mainVal) == reactorRedstonePortState.triggerAB.toBool()) {
                     shouldBeEmitting = true;
                 }
             }
             break;
             case OUTPUT_FUEL_AMOUNT: {
                 double fuelAmount = reactor.CCgetFuelAmount();
-                if ((fuelAmount < mainVal) == activeTriggerAboveOrBelow) {
+                if ((fuelAmount < mainVal) == reactorRedstonePortState.triggerAB.toBool()) {
                     shouldBeEmitting = true;
                 }
             }
             break;
             case OUTPUT_WASTE_AMOUNT: {
                 double wasteAmount = reactor.CCgetWasteAmount();
-                if ((wasteAmount < mainVal) == activeTriggerAboveOrBelow) {
+                if ((wasteAmount < mainVal) == reactorRedstonePortState.triggerAB.toBool()) {
                     shouldBeEmitting = true;
                 }
             }
@@ -164,7 +166,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
                 double energyAmount = reactor.CCgetEnergyStoredUnscaled();
                 energyAmount /= (double) reactor.CCgetMaxEnergyStored();
                 energyAmount *= 100;
-                if ((energyAmount < mainVal) == activeTriggerAboveOrBelow) {
+                if ((energyAmount < mainVal) == reactorRedstonePortState.triggerAB.toBool()) {
                     shouldBeEmitting = true;
                 }
             }
@@ -183,7 +185,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
         }
         this.markDirty();
     }
-    
+
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
             powerOutputDirection = null;
@@ -202,7 +204,7 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
         }
         updatePowered();
     }
-    
+
     @Override
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
@@ -215,175 +217,155 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
         }
         return ActionResultType.PASS;
     }
-    
+
     @Override
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorRedstonePort.INSTANCE.getTranslationKey());
     }
-    
+
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
-        return new RedstonePortContainer(windowId, this.pos, player);
+        return new ReactorRedstonePortContainer(windowId, this.pos, player);
     }
-    
-    // I could of just used States to contain these values, but that was causing an issue. This didn't solve it, but CTRL-Z doesn't have the old version in it anymore.
-    // Active variables are what are currently being used by the port.
-    private int activeSettingId = 0;
-    private boolean activeTriggerPulseOrSignal = false;
-    private boolean activeTriggerAboveOrBelow = false;
-    private int activeMode = 0;
-    private String activeMainBuffer = "";
-    private String activeSecondBuffer = "";
-    double mainVal = 0;
-    double secondaryVal = 0;
-    
-    // Uncommitted variables are what are pending to be stored, but not currently in use.
-    private int uncommittedSettingId = 0;
-    private boolean uncommittedTriggerPulseOrSignal = false;
-    private boolean uncommittedTriggerAboveOrBelow = false;
-    private int uncommittedMode = 0;
-    private String uncommittedMainBuffer = "";
-    private String uncommittedSecondBuffer = "";
-    
+
+    // Current changes/non-active. See reactorRedstonePortState to see what's actually being used for operations.
+    private final ReactorRedstonePortState currentChanges = new ReactorRedstonePortState(this);
+
+    public ReactorRedstonePortState getCurrentChanges() {
+        return this.currentChanges;
+    }
+
     @Nullable
     @Override
-    public RedstonePortState getState() {
+    public ReactorRedstonePortState getState() {
         this.updateState();
-        return this.redstonePortState;
+        return this.reactorRedstonePortState;
     }
-    
+
     @Override
     public void updateState() {
         // Update committed/active values.
-        redstonePortState.settingId = activeSettingId;
-        redstonePortState.triggerPulseOrSignal = activeTriggerPulseOrSignal;
-        redstonePortState.triggerAboveOrBelow = activeTriggerAboveOrBelow;
-        redstonePortState.mode = activeMode;
-        redstonePortState.mainBuffer = activeMainBuffer;
-        redstonePortState.secondBuffer = activeSecondBuffer;
-        // Update uncommitted values.
-        uncommittedPortState.settingId = uncommittedSettingId;
-        uncommittedPortState.triggerPulseOrSignal = uncommittedTriggerPulseOrSignal;
-        uncommittedPortState.triggerAboveOrBelow = uncommittedTriggerAboveOrBelow;
-        uncommittedPortState.mode = uncommittedMode;
-        uncommittedPortState.mainBuffer = uncommittedMainBuffer;
-        uncommittedPortState.secondBuffer = uncommittedSecondBuffer;
     }
-    
-    public void commitChanges() {
-        activeSettingId = uncommittedSettingId;
-        activeTriggerPulseOrSignal = uncommittedTriggerPulseOrSignal;
-        activeTriggerAboveOrBelow = uncommittedTriggerAboveOrBelow;
-        activeMode = uncommittedMode;
-        activeMainBuffer = uncommittedMainBuffer;
-        activeSecondBuffer = uncommittedSecondBuffer;
-        if (!activeMainBuffer.isEmpty()) {
-            mainVal = Double.parseDouble(activeMainBuffer);
-        } else {
-            mainVal = 0;
-        }
-        if (!activeSecondBuffer.isEmpty()) {
-            secondaryVal = Double.parseDouble(activeSecondBuffer);
-        } else {
-            secondaryVal = 0;
-        }
+
+    public void applyChanges() {
+        this.reactorRedstonePortState.selectedTab = this.currentChanges.selectedTab;
+        this.reactorRedstonePortState.triggerPS = this.currentChanges.triggerPS;
+        this.reactorRedstonePortState.triggerAB = this.currentChanges.triggerAB;
+        this.reactorRedstonePortState.triggerMode = this.currentChanges.triggerMode;
+        this.reactorRedstonePortState.textBufferA = this.currentChanges.textBufferA;
+        this.reactorRedstonePortState.textBufferB = this.currentChanges.textBufferB;
+
+        this.mainVal = (!this.reactorRedstonePortState.textBufferA.isEmpty()) ? Double.parseDouble(this.reactorRedstonePortState.textBufferA) : 0D;
+        this.secondaryVal = (!this.reactorRedstonePortState.textBufferB.isEmpty()) ? Double.parseDouble(this.reactorRedstonePortState.textBufferB) : 0D;
+
+        //if (!activeMainBuffer.isEmpty()) {
+        //    mainVal = Double.parseDouble(activeMainBuffer);
+        //} else {
+        //    mainVal = 0;
+        //}
+        //if (!activeSecondBuffer.isEmpty()) {
+        //    secondaryVal = Double.parseDouble(activeSecondBuffer);
+        //} else {
+        //    secondaryVal = 0;
+        //}
     }
-    
+
     public void revertChanges() {
-        uncommittedSettingId = activeSettingId;
-        uncommittedTriggerPulseOrSignal = activeTriggerPulseOrSignal;
-        uncommittedTriggerAboveOrBelow = activeTriggerAboveOrBelow;
-        uncommittedMode = activeMode;
-        uncommittedMainBuffer = activeMainBuffer;
-        uncommittedSecondBuffer = activeSecondBuffer;
+        this.currentChanges.selectedTab = this.reactorRedstonePortState.selectedTab;
+        this.currentChanges.triggerPS = this.reactorRedstonePortState.triggerPS;
+        this.currentChanges.triggerAB = this.reactorRedstonePortState.triggerAB;
+        this.currentChanges.triggerMode = this.reactorRedstonePortState.triggerMode;
+        this.currentChanges.textBufferA = this.reactorRedstonePortState.textBufferA;
+        this.currentChanges.textBufferB = this.reactorRedstonePortState.textBufferB;
     }
-    
+
     @Override
     public void runRequest(String requestName, Object requestData) {
         ReactorMultiblockController reactor = reactor();
         if (reactor == null) {
             return;
         }
-        
-        // We save changes to an uncommitted changes temp state. When commit is pressed, then we send the run requests forward.
+
+        // We save changes to an uncommitted changes temp state. When apply is pressed, then we send the run requests forward.
         switch (requestName) {
-            case "setSelectedButton":
-                uncommittedSettingId = (Integer) requestData;
+            case "setSelectedTab":
+                this.currentChanges.selectedTab = ReactorRedstonePortSelection.fromInt((Integer) requestData);
                 break;
-            case "setPulseOrSignal":
-                uncommittedTriggerPulseOrSignal = (Boolean) requestData;
+            case "setTriggerPS":
+                this.currentChanges.triggerPS = ReactorRedstonePortTriggers.fromBool((Boolean) requestData);
                 break;
-            case "setAboveOrBelow":
-                uncommittedTriggerAboveOrBelow = (Boolean) requestData;
+            case "setTriggerAB":
+                this.currentChanges.triggerAB = ReactorRedstonePortTriggers.fromBool((Boolean) requestData);
                 break;
-            case "changeMode":
-                //uncommittedMode = (Integer) requestData;
-                // Change by 1, loop to 0 if too high.
-                uncommittedMode++;
-                if (uncommittedMode > 2) {
-                    uncommittedMode = 0;
+            case "setTriggerMode":
+                int triggerMode = (Integer) requestData;
+                if (triggerMode >= 0 && triggerMode <= 2) {
+                    this.currentChanges.triggerMode = triggerMode;
+                } else {
+                    this.currentChanges.triggerMode = 2;
                 }
                 break;
-            case "setMainBuffer":
-                uncommittedMainBuffer = (String) requestData;
+            case "setTextBufferA":
+                this.currentChanges.textBufferA = (String) requestData;
                 break;
-            case "setSecondBuffer":
-                uncommittedSecondBuffer = (String) requestData;
+            case "setTextBufferB":
+                this.currentChanges.textBufferB = (String) requestData;
                 break;
             case "revertChanges":
-                revertChanges();
+                System.out.println("No longer implemented!");
+                //revertChanges();
                 break;
-            case "commitChanges":
-                commitChanges();
+            case "applyChanges":
+                this.applyChanges();
                 break;
             default:
                 super.runRequest(requestName, requestData);
                 break;
         }
     }
-    
+
     @Override
     @Nonnull
     protected CompoundNBT writeNBT() {
         CompoundNBT compound = super.writeNBT();
-        compound.putInt("settingId", activeSettingId);
-        compound.putBoolean("triggerPulseOrSignal", activeTriggerPulseOrSignal);
-        compound.putBoolean("triggerAboveOrBelow", activeTriggerAboveOrBelow);
-        compound.putInt("mode", activeMode);
-        compound.putString("mainBuffer", activeMainBuffer);
-        compound.putString("secondBuffer", activeSecondBuffer);
+        compound.putInt("settingId", reactorRedstonePortState.selectedTab.toInt());
+        compound.putBoolean("triggerPulseOrSignal", reactorRedstonePortState.triggerPS.toBool());
+        compound.putBoolean("triggerAboveOrBelow", reactorRedstonePortState.triggerAB.toBool());
+        compound.putInt("mode", reactorRedstonePortState.triggerMode);
+        compound.putString("mainBuffer", reactorRedstonePortState.textBufferA);
+        compound.putString("secondBuffer", reactorRedstonePortState.textBufferB);
         compound.putBoolean("isPowered", isPowered);
         compound.putBoolean("isEmitting", isEmitting);
         return compound;
     }
-    
+
     @Override
     protected void readNBT(@Nonnull CompoundNBT compound) {
         super.readNBT(compound);
         if (compound.contains("settingId")) {
-            activeSettingId = compound.getInt("settingId");
+            reactorRedstonePortState.selectedTab = ReactorRedstonePortSelection.fromInt(compound.getInt("settingId"));
         }
         if (compound.contains("triggerPulseOrSignal")) {
-            activeTriggerPulseOrSignal = compound.getBoolean("triggerPulseOrSignal");
+            reactorRedstonePortState.triggerPS = ReactorRedstonePortTriggers.fromBool(compound.getBoolean("triggerPulseOrSignal"));
         }
         if (compound.contains("triggerAboveOrBelow")) {
-            activeTriggerAboveOrBelow = compound.getBoolean("triggerAboveOrBelow");
+            reactorRedstonePortState.triggerAB = ReactorRedstonePortTriggers.fromBool(compound.getBoolean("triggerAboveOrBelow"));
         }
         if (compound.contains("mode")) {
-            activeMode = compound.getInt("mode");
+            reactorRedstonePortState.triggerMode = compound.getInt("mode");
         }
         if (compound.contains("mainBuffer")) {
-            activeMainBuffer = compound.getString("mainBuffer");
+            reactorRedstonePortState.textBufferA = compound.getString("mainBuffer");
         }
         if (compound.contains("secondBuffer")) {
-            activeSecondBuffer = compound.getString("secondBuffer");
+            reactorRedstonePortState.textBufferB = compound.getString("secondBuffer");
         }
         if (compound.contains("isPowered")) {
             wasPowered = isPowered = compound.getBoolean("isPowered");
         }
         // Call reverted changes to align uncommitted settings to the active ones.
         revertChanges();
-        commitChanges();
+        applyChanges();
     }
 }

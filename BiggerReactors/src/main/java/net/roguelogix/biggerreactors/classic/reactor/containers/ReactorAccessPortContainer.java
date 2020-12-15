@@ -33,7 +33,7 @@ public class ReactorAccessPortContainer extends Container implements GuiSync.IGU
      */
     @Override
     public GuiSync.IGUIPacket getGuiPacket() {
-        return this.tileEntity.accessPortState;
+        return this.tileEntity.reactorAccessPortState;
     }
 
     @Override

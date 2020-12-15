@@ -1,6 +1,5 @@
 package net.roguelogix.biggerreactors.classic.turbine.state;
 
-import net.roguelogix.biggerreactors.classic.turbine.VentState;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineTerminalTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 
@@ -86,7 +85,7 @@ public class TurbineState implements GuiSync.IGUIPacket {
     @Override
     public void read(@Nonnull Map<?, ?> data) {
         turbineActivity = ((Boolean) data.get("turbineActivity")) ? TurbineActivity.ACTIVE : TurbineActivity.INACTIVE;
-        ventState = VentState.valueOf((Integer) data.get("ventState"));
+        ventState = VentState.fromInt((Integer) data.get("ventState"));
         coilStatus = (Boolean) data.get("coilStatus");
         
         flowRate = (Long) data.get("flowRate");
@@ -114,7 +113,7 @@ public class TurbineState implements GuiSync.IGUIPacket {
         HashMap<String, Object> data = new HashMap<>();
         
         data.put("turbineActivity", turbineActivity == TurbineActivity.ACTIVE);
-        data.put("ventState", VentState.valueOf(ventState));
+        data.put("ventState", ventState.toInt());
         data.put("coilStatus", coilStatus);
         
         data.put("flowRate", flowRate);

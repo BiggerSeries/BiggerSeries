@@ -13,7 +13,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
-import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorContainer;
+import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorTerminalContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
 import net.roguelogix.phosphophyllite.items.DebugTool;
@@ -25,30 +25,30 @@ import javax.annotation.Nullable;
 
 @RegisterTileEntity(name = "reactor_terminal")
 public class ReactorTerminalTile extends ReactorBaseTile implements INamedContainerProvider, IHasUpdatableState<ReactorState> {
-    
+
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-    
+
     public ReactorTerminalTile() {
         super(TYPE);
     }
-    
+
     public final ReactorState reactorState = new ReactorState(this);
-    
+
     @Override
     @Nonnull
     public ReactorState getState() {
         this.updateState();
         return this.reactorState;
     }
-    
+
     @Override
     public void updateState() {
         if (controller != null && controller instanceof ReactorMultiblockController) {
             ((ReactorMultiblockController) controller).updateReactorState(reactorState);
         }
     }
-    
+
     @SuppressWarnings("DuplicatedCode")
     @Override
     @Nonnull
@@ -60,7 +60,7 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
             }
             return ActionResultType.SUCCESS;
         }
-        
+
         if (handIn == Hand.MAIN_HAND) {
             assert world != null;
             if (world.getBlockState(pos).get(MultiblockBlock.ASSEMBLED)) {
@@ -72,16 +72,16 @@ public class ReactorTerminalTile extends ReactorBaseTile implements INamedContai
         }
         return ActionResultType.PASS;
     }
-    
+
     @Override
     @Nonnull
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorTerminal.INSTANCE.getTranslationKey());
     }
-    
+
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
-        return new ReactorContainer(windowId, this.pos, player);
+        return new ReactorTerminalContainer(windowId, this.pos, player);
     }
 }

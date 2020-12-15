@@ -20,9 +20,9 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.*;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineCoilRegistry;
 import net.roguelogix.biggerreactors.classic.turbine.client.BladeRenderer;
 import net.roguelogix.biggerreactors.classic.turbine.client.TurbineCoolantPortScreen;
-import net.roguelogix.biggerreactors.classic.turbine.client.TurbineScreen;
-import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineContainer;
+import net.roguelogix.biggerreactors.classic.turbine.client.TurbineTerminalScreen;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPortContainer;
+import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineRotorBearingTile;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
@@ -31,11 +31,11 @@ import org.apache.logging.log4j.Logger;
 @SuppressWarnings("unused")
 @Mod(BiggerReactors.modid)
 public class BiggerReactors {
-    
+
     public static final String modid = "biggerreactors";
-    
+
     public static final Logger LOGGER = LogManager.getLogger();
-    
+
     public BiggerReactors() {
         Registry.onModLoad();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
@@ -44,48 +44,47 @@ public class BiggerReactors {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             MinecraftForge.EVENT_BUS.addListener(this::onRenderWorldLast);
         }
-        
+
     }
-    
+
     public static DataPackRegistries dataPackRegistries;
-    
+
     public void onAddReloadListenerEvent(AddReloadListenerEvent serverAboutToStartEvent) {
         dataPackRegistries = serverAboutToStartEvent.getDataPackRegistries();
     }
-    
-    
+
     public void onTagsUpdatedEvent(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
         ReactorModeratorRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
         TurbineCoilRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
     }
-    
+
     public void onClientSetup(final FMLClientSetupEvent e) {
         // TODO: 6/28/20 Registry.
         //  Since I already have the comment here, also need to do a capability registry. I have a somewhat dumb capability to register.
         ScreenManager.registerFactory(CyaniteReprocessorContainer.INSTANCE,
                 CyaniteReprocessorScreen::new);
-        ScreenManager.registerFactory(ReactorContainer.INSTANCE,
-                ReactorScreen::new);
-        ScreenManager.registerFactory(ControlRodContainer.INSTANCE,
-                ControlRodScreen::new);
+        ScreenManager.registerFactory(ReactorTerminalContainer.INSTANCE,
+                CommonReactorTerminalScreen::new);
         ScreenManager.registerFactory(ReactorCoolantPortContainer.INSTANCE,
                 ReactorCoolantPortScreen::new);
         ScreenManager.registerFactory(ReactorAccessPortContainer.INSTANCE,
                 ReactorAccessPortScreen::new);
-        ScreenManager.registerFactory(RedstonePortContainer.INSTANCE,
-                RedstonePortScreen::new);
-        ScreenManager.registerFactory(TurbineContainer.INSTANCE,
-                TurbineScreen::new);
+        ScreenManager.registerFactory(ReactorControlRodContainer.INSTANCE,
+                ReactorControlRodScreen::new);
+        ScreenManager.registerFactory(ReactorRedstonePortContainer.INSTANCE,
+                ReactorRedstonePortScreen::new);
+        ScreenManager.registerFactory(TurbineTerminalContainer.INSTANCE,
+                TurbineTerminalScreen::new);
         ScreenManager.registerFactory(TurbineCoolantPortContainer.INSTANCE,
                 TurbineCoolantPortScreen::new);
-        
+
         ClientRegistry.bindTileEntityRenderer(TurbineRotorBearingTile.TYPE, BladeRenderer::new);
     }
-    
+
     public static long lastRenderTime = 0;
-    
+
     public void onRenderWorldLast(RenderWorldLastEvent event) {
         lastRenderTime = System.nanoTime();
     }
-    
+
 }

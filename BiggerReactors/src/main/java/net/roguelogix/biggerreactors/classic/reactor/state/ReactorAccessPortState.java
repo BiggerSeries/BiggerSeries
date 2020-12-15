@@ -11,9 +11,9 @@ import java.util.Map;
 public class ReactorAccessPortState implements GuiSync.IGUIPacket {
 
     /**
-     * The input state of the port. True for input, false for output.
+     * The direction of the port. True for input, false for output.
      */
-    public boolean inputState = false;
+    public boolean direction = false;
 
     /**
      * Allows fuel or waste to be extracted. True for fuel extraction, false for waste extraction.
@@ -23,25 +23,25 @@ public class ReactorAccessPortState implements GuiSync.IGUIPacket {
     /**
      * The tile whose information this belongs to.
      */
-    ReactorAccessPortTile ioPortTile;
+    ReactorAccessPortTile reactorAccessPortTile;
 
-    public ReactorAccessPortState(ReactorAccessPortTile ioPortTile) {
-        this.ioPortTile = ioPortTile;
+    public ReactorAccessPortState(ReactorAccessPortTile reactorAccessPortTile) {
+        this.reactorAccessPortTile = reactorAccessPortTile;
     }
 
     @Override
     public void read(@Nonnull Map<?, ?> data) {
-        inputState = (Boolean) data.get("inputState");
+        direction = (Boolean) data.get("direction");
         fuelMode = (Boolean) data.get("fuelMode");
     }
 
     @Override
     @Nullable
     public Map<?, ?> write() {
-        ioPortTile.updateState();
+        reactorAccessPortTile.updateState();
         HashMap<String, Object> data = new HashMap<>();
 
-        data.put("inputState", inputState);
+        data.put("direction", direction);
         data.put("fuelMode", fuelMode);
 
         return data;
