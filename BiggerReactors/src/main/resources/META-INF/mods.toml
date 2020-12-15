@@ -30,7 +30,7 @@ logoFile="BiggerReactors.png" #optional
 # A text field displayed in the mod UI
 credits="ErogeneousBeef for the origional Big Reactors mod, that this is spirtually (and semi-literally) derived from" #optional
 # A text field displayed in the mod UI
-authors="RogueLogix, Gizmocodes" #optional
+authors="RogueLogix, gizmocodes" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Big Reactors, but even bigger
@@ -56,7 +56,7 @@ Official continuation of Big Reactors
 [[dependencies.biggerreactors]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3]"
+    versionRange="[1.16.4]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.biggerreactors]]
