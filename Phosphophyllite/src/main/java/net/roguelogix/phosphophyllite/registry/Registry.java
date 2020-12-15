@@ -47,6 +47,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.config.ConfigManager;
 import net.roguelogix.phosphophyllite.util.VanillaFeatureWrapper;
 import org.objectweb.asm.Type;
@@ -137,19 +138,24 @@ public class Registry {
                 }).filter(Objects::nonNull).collect(Collectors.toSet());
         
         classes.forEach(clazz -> {
-            for (Method declaredMethod : clazz.getDeclaredMethods()) {
-                if (Modifier.isStatic(declaredMethod.getModifiers())) {
-                    if (declaredMethod.isAnnotationPresent(OnModLoad.class)) {
-                        if (declaredMethod.getTypeParameters().length == 0) {
-                            declaredMethod.setAccessible(true);
-                            try {
-                                declaredMethod.invoke(null);
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                e.printStackTrace();
+            try {
+                for (Method declaredMethod : clazz.getDeclaredMethods()) {
+                    if (Modifier.isStatic(declaredMethod.getModifiers())) {
+                        if (declaredMethod.isAnnotationPresent(OnModLoad.class)) {
+                            if (declaredMethod.getTypeParameters().length == 0) {
+                                declaredMethod.setAccessible(true);
+                                try {
+                                    declaredMethod.invoke(null);
+                                } catch (IllegalAccessException | InvocationTargetException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
                 }
+            } catch (NoClassDefFoundError e) {
+                Phosphophyllite.LOGGER.fatal("failed to load class " + clazz.getName());
+                throw e;
             }
         });
         
@@ -528,8 +534,8 @@ public class Registry {
     }
     
     private static void onLoadComplete(final FMLLoadCompleteEvent e, String modNamespace, Set<Class<?>> classes) {
-        ConfigManager.modLoadingFinished = true;
-        ConfigManager.runPostLoads();
+//        ConfigManager.modLoadingFinished = true;
+//        ConfigManager.runPostLoads();
     }
     
     private static synchronized void registerWorldGen(String modNamespace, Set<Class<?>> classes, BiomeLoadingEvent biomeEvent) {
