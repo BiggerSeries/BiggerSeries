@@ -454,7 +454,6 @@ public class MultiblockController {
      * @param toAttach, the part that was added
      */
     protected void onPartAttached(@Nonnull MultiblockTile toAttach) {
-    
     }
     
     /**
@@ -466,7 +465,6 @@ public class MultiblockController {
      * @param toDetach, the part that was removed
      */
     protected void onPartDetached(@Nonnull MultiblockTile toDetach) {
-    
     }
     
     /**
@@ -477,7 +475,6 @@ public class MultiblockController {
      * @param placed the block that was placed
      */
     protected void onPartPlaced(@Nonnull MultiblockTile placed) {
-    
     }
     
     /**
@@ -488,7 +485,6 @@ public class MultiblockController {
      * @param broken the block that was broken
      */
     protected void onPartBroken(@Nonnull MultiblockTile broken) {
-    
     }
     
     /**
