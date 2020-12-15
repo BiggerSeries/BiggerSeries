@@ -30,7 +30,7 @@ logoFile="Phosphophyllite.png" #optional
 # A text field displayed in the mod UI
 #credits="" #optional
 # A text field displayed in the mod UI
-authors="RogueLogix, Gizmocodes" #optional
+authors="RogueLogix, gizmocodes" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Library for the BiggerSeries mods
@@ -52,6 +52,6 @@ Library for the BiggerSeries mods
 [[dependencies.phosphophyllite]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.3]"
+    versionRange="[1.16.4]"
     ordering="NONE"
     side="BOTH"
