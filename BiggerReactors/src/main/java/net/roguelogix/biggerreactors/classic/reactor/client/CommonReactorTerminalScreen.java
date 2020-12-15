@@ -14,7 +14,6 @@ import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorTerminalC
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorActivity;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorState;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorType;
-import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.client.Biselector;
 import net.roguelogix.biggerreactors.client.SelectorColors;
 import net.roguelogix.phosphophyllite.gui.client.RenderHelper;
@@ -246,12 +245,12 @@ public class CommonReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
     /**
      * Render status text.
      *
-     * @param mStack         The current matrix stack.
+     * @param mStack          The current matrix stack.
      * @param reactorActivity The reactor status to draw.
      * @param doAutoEject     The auto-eject status to draw.
-     * @param heatStored     The heat value to draw.
-     * @param fuelUsageRate  The fuel usage rate to draw.
-     * @param reactivityRate The reactivity rate to draw.
+     * @param heatStored      The heat value to draw.
+     * @param fuelUsageRate   The fuel usage rate to draw.
+     * @param reactivityRate  The reactivity rate to draw.
      * @implNote Output rate is not rendered by this function, since it changes depending on reactor type. Do that yourself.
      */
     public static void renderStatusText(@Nonnull MatrixStack mStack, @Nonnull ScreenBase<ReactorTerminalContainer> screen, ReactorActivity reactorActivity, boolean doAutoEject, double heatStored, double fuelUsageRate, double reactivityRate) {

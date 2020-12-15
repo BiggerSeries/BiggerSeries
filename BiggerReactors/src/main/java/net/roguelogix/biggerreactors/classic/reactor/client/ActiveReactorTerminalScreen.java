@@ -176,7 +176,7 @@ public class ActiveReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
      */
     private static void renderProgressBar(@Nonnull MatrixStack mStack, @Nonnull Symbol<ReactorTerminalContainer> symbol, ReactorActivity reactorActivity, int workTime, int workTimeTotal) {
         // Check that the reactor is active. If not, reset work time.
-        if(reactorActivity != ReactorActivity.ACTIVE) {
+        if (reactorActivity != ReactorActivity.ACTIVE) {
             workTime = 0;
         }
         // If there's no progress, there's no need to draw.

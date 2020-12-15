@@ -1,6 +1,5 @@
 package net.roguelogix.biggerreactors.classic.turbine.state;
 
-import net.roguelogix.biggerreactors.classic.turbine.VentState;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineTerminalTile;
 import net.roguelogix.phosphophyllite.gui.GuiSync;
 

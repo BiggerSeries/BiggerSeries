@@ -14,7 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.containers.ReactorControlRodContainer;
 import net.roguelogix.biggerreactors.classic.reactor.state.ReactorControlRodState;
-import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.client.CommonButton;
 import net.roguelogix.biggerreactors.client.TextBox;
 import net.roguelogix.biggerreactors.fluids.FluidYellorium;
@@ -64,8 +63,6 @@ public class ReactorControlRodScreen extends ScreenBase<ReactorControlRodContain
      * Initialize controls.
      */
     public void initControls() {
-        System.out.println("SCRN " + reactorControlRodState.name);
-
         // (Top) Name text box:
         TextBox<ReactorControlRodContainer> textBox = new TextBox<>(this, this.font, 6, 26, 96, 16, reactorControlRodState.name);
         this.addElement(textBox);

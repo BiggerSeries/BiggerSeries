@@ -101,9 +101,9 @@ public class CyaniteReprocessorScreen extends ScreenBase<CyaniteReprocessorConta
     /**
      * Render the progress bar.
      *
-     * @param mStack The current matrix stack.
-     * @param symbol The symbol to draw as.
-     * @param workTime The time the machine has been working.
+     * @param mStack        The current matrix stack.
+     * @param symbol        The symbol to draw as.
+     * @param workTime      The time the machine has been working.
      * @param workTimeTotal The total time needed for completion.
      */
     private static void renderProgressBar(@Nonnull MatrixStack mStack, @Nonnull Symbol<CyaniteReprocessorContainer> symbol, int workTime, int workTimeTotal) {

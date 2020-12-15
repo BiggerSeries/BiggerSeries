@@ -40,7 +40,6 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     @Nonnull
     public ReactorControlRodState getState() {
         this.updateState();
-        System.out.println("TILE " + this.reactorControlRodState.name);
         return this.reactorControlRodState;
     }
 

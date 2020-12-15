@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.roguelogix.biggerreactors.BiggerReactors;
-import net.roguelogix.biggerreactors.classic.turbine.VentState;
+import net.roguelogix.biggerreactors.classic.turbine.state.VentState;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineActivity;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineState;

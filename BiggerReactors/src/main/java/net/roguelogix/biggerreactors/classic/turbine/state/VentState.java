@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.classic.turbine;
+package net.roguelogix.biggerreactors.classic.turbine.state;
 
 import javax.annotation.Nonnull;
 

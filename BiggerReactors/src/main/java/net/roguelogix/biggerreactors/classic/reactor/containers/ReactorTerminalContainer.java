@@ -15,20 +15,20 @@ import javax.annotation.Nullable;
 
 @RegisterContainer(name = "reactor_terminal")
 public class ReactorTerminalContainer extends Container implements GuiSync.IGUIPacketProvider {
-    
+
     @RegisterContainer.Instance
     public static ContainerType<ReactorTerminalContainer> INSTANCE;
-    
+
     private PlayerEntity player;
     private ReactorTerminalTile tileEntity;
-    
+
     public ReactorTerminalContainer(int windowId, BlockPos blockPos, PlayerEntity player) {
         super(INSTANCE, windowId);
         this.player = player;
         this.tileEntity = (ReactorTerminalTile) player.world.getTileEntity(blockPos);
         this.getGuiPacket();
     }
-    
+
     /**
      * @return The current state of the machine.
      */
@@ -37,14 +37,14 @@ public class ReactorTerminalContainer extends Container implements GuiSync.IGUIP
     public GuiSync.IGUIPacket getGuiPacket() {
         return this.tileEntity.getState();
     }
-    
+
     @Override
     public boolean canInteractWith(@Nonnull PlayerEntity player) {
         assert tileEntity.getWorld() != null;
         return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()),
                 player, ReactorTerminal.INSTANCE);
     }
-    
+
     @Override
     public void executeRequest(String requestName, Object requestData) {
         assert tileEntity.getWorld() != null;
@@ -52,7 +52,7 @@ public class ReactorTerminalContainer extends Container implements GuiSync.IGUIP
             runRequest(requestName, requestData);
             return;
         }
-        
+
         tileEntity.runRequest(requestName, requestData);
     }
 }
