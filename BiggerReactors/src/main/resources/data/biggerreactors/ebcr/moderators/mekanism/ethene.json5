@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanism:ethene",
+    absorption: 0.37,
+    efficiency: 0.65,
+    moderation: 1.9,
+    conductivity: 1.5,
+}

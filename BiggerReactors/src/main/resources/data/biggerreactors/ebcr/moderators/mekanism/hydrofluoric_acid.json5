@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanism:hydrofluoric_acid",
+    absorption: 0.6,
+    efficiency: 0.45,
+    moderation: 1.4,
+    conductivity: 2.5,
+}

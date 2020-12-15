@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanism:sodium",
+    absorption: 0.23,
+    efficiency: 0.6,
+    moderation: 1.7,
+    conductivity: 1,
+}

@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanism:hydrogen_chloride",
+    absorption: 0.31,
+    efficiency: 0.65,
+    moderation: 1.7,
+    conductivity: 1,
+}

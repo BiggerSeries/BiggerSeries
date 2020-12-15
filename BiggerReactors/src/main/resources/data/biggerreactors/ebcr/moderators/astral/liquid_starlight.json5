@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "astralsorcery:liquid_starlight",
+    absorption: 0.92,
+    efficiency: 0.8,
+    moderation: 2.0,
+    conductivity: 3.0,
+}

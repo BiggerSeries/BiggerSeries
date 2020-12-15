@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "bloodmagic:life_essence_block",
+    absorption: 0.7,
+    efficiency: 0.55,
+    moderation: 1.75,
+    conductivity: 2.5,
+}
