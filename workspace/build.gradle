@@ -9,7 +9,6 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath "com.wynprice.cursemaven:CurseMaven:2.1.1"
     }
 }
 
@@ -17,12 +16,14 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: "com.wynprice.cursemaven"
 
 repositories {
     maven {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        url "https://www.cursemaven.com"
     }
 }
 
@@ -110,19 +111,24 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.42'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.13'
 
     runtime fg.deobf('curse.maven:jei-238222:3109181')
     runtime fg.deobf('curse.maven:constructionwands-399558:3103815')
 //    runtime fg.deobf('curse.maven:allthemodium-364466:3087534')
+//    runtime fg.deobf('curse.maven:bloodmagic-224791:3132991')
+
+//    runtime fg.deobf('curse.maven:astral-241721:3118119')
+//    runtime fg.deobf('curse.maven:curios-309927:3122651')
+//    runtime fg.deobf('curse.maven:observerlib-316833:3123187')
 
 //    runtime fg.deobf('curse.maven:cofhcore-69162:3099194')
 //    runtime fg.deobf('curse.maven:thermalfoundation-222880:3099202')
 //    runtime fg.deobf('curse.maven:thermalexpansion-69163:3099261')
 
-    runtime fg.deobf('curse.maven:mek-268560:3100510')
-    runtime fg.deobf('curse.maven:mek-tool-268567:3100513')
-    runtime fg.deobf('curse.maven:mek-gen-268566:3100512')
+    runtime fg.deobf('curse.maven:mek-268560:3134211')
+    runtime fg.deobf('curse.maven:mek-tool-268567:3134214')
+    runtime fg.deobf('curse.maven:mek-gen-268566:3134213')
 
 //    compile fg.deobf('curse.maven:er2-250277:3126512')
 //    compile fg.deobf('curse.maven:zc2-247921:3120031')
