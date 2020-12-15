@@ -1,6 +1,6 @@
 {
-    type: "registry",
-    location: "minecraft:iron_block",
+    type: "tag",
+    location: "forge:storage_blocks/iron",
     absorption: 0.5,
     efficiency: 0.75,
     moderation: 1.4,

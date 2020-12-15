@@ -1,6 +1,6 @@
 {
-    type: "registry",
-    location: "minecraft:emerald_block",
+    type: "tag",
+    location: "forge:storage_blocks/emerald",
     absorption: 0.55,
     efficiency: 0.85,
     moderation: 1.5,

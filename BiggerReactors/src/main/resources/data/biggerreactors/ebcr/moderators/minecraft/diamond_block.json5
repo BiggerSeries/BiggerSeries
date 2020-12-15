@@ -1,6 +1,6 @@
 {
-    type: "registry",
-    location: "minecraft:diamond_block",
+    type: "tag",
+    location: "forge:storage_blocks/diamond",
     absorption: 0.55,
     efficiency: 0.85,
     moderation: 1.5,

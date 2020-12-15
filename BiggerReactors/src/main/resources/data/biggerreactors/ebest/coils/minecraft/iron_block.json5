@@ -1,6 +1,6 @@
 {
-    type: "registry",
-    location: "minecraft:iron_block",
+    type: "tag",
+    location: "forge:storage_blocks/iron",
     efficiency: .33,
     extractionRate: 0.1,
     bonus: 1,
