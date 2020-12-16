@@ -1,3 +1,15 @@
+# 1.16.4-0.3.0
+ - blockstate reduction via more fine grained control
+ - more descriptive blockstates for rectangular multiblock locations
+ - generic multiblock controller decoupled from rectangular completely
+ - patch chunkloading bug (better fix does need to be found still)
+ - new gui system
+ - new config system
+ - toggle oregen properly
+ - failed registry class loading shouldn't crash anymore (exception is caught now)
+ - ticking is done from end of world tick
+ - 1.16.4
+
 # 1.16.3-0.2.1
  - Remove paused multiblock errors, don't break it
  - Fix paused multiblock orphaning detaching incorrectly

@@ -1,3 +1,33 @@
+# 1.16.4-0.3.0
+you spin me right round baby
+
+## Reactor
+ - new GUIs
+ - control rods can be named now
+ - give correct y level for fuel rod gaps
+ - some more moderators
+ - yellorium tag accepted for fuel
+ - errors with both coolant port and power tap
+ - moderator registry moved to datapack
+ - fix some redstone port state saving bugs
+ - minimize fuel rod updates at assembly
+ - correct getEnergyStoredUnscaled CC API name
+
+## Turbine
+ - new GUIs
+ - rotor animation, it exists now
+ - coil registry moved to datapack
+ - fix near edge rotors confusing casing/glass as coil
+ - add rotor_bearing_count error to lang file
+
+## Misc
+ - extranious blockstates reduced
+ - tag yellorite ore
+ - reprocessor also has a new GUI
+ - fix reprocessor voiding blutonium when output slot is full 
+ - LGPL v2.1 now
+ - 1.16.4
+
 # 1.16.3-0.2.6
 1/0 bugs
 
