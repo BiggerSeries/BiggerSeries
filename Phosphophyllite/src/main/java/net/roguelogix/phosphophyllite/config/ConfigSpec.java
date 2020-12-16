@@ -103,7 +103,7 @@ public class ConfigSpec {
             return new Element(Element.Type.Number, node.comment, name, String.valueOf(num.doubleValue()));
         } else if (node instanceof SpecBooleanNode) {
             Boolean bool = (Boolean) ((SpecBooleanNode) node).field.get(object);
-            return new Element(Element.Type.String, node.comment, name, bool.toString());
+            return new Element(Element.Type.Boolean, node.comment, name, bool.toString());
         }
         
         throw new DefinitionError("Unknown node type");
@@ -231,11 +231,11 @@ public class ConfigSpec {
             setNumberField(((SpecNumberNode) node).field, object, element.asDouble());
             return;
         } else if (node instanceof SpecBooleanNode) {
-            if (element.type != Element.Type.String && element.type != Element.Type.Number) {
+            if (element.type != Element.Type.String && element.type != Element.Type.Number &&  element.type != Element.Type.Boolean) {
                 throw new DefinitionError("Invalid config structure given");
             }
             boolean newVal;
-            if (element.type == Element.Type.String) {
+            if (element.type == Element.Type.String || element.type == Element.Type.Boolean) {
                 String str = element.asString();
                 newVal = Boolean.parseBoolean(str);
             } else {

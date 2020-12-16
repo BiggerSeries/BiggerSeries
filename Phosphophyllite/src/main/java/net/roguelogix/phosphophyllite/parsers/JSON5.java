@@ -23,6 +23,8 @@ public class JSON5 {
             return new Element(Element.Type.Array, null, name, subElements.toArray());
         } else if (obj instanceof String) {
             return new Element(Element.Type.String, null, name, obj);
+        } else if (obj instanceof Boolean) {
+            return new Element(Element.Type.Boolean, null, name, obj.toString());
         } else {
             return new Element(Element.Type.Number, null, name, obj.toString());
         }
@@ -72,6 +74,7 @@ public class JSON5 {
                 builder.append("\"");
                 break;
             }
+            case Boolean:
             case Number: {
                 builder.append(element.asString());
                 break;
@@ -92,7 +95,7 @@ public class JSON5 {
                 for (Element value : elements) {
                     parseElement(value, indentLevel + 1, builder, omitComments);
                 }
-                if(builder.charAt(builder.length() - 1) == ',') {
+                if (builder.charAt(builder.length() - 1) == ',') {
                     builder.setCharAt(builder.length() - 1, ' ');
                 }
                 newLine(indentLevel, builder);
