@@ -13,7 +13,7 @@ import static net.roguelogix.phosphophyllite.Phosphophyllite.modid;
 public class PhosphophylliteConfig {
     @net.roguelogix.phosphophyllite.config.PhosphophylliteConfig
     public static class GUI{
-        @net.roguelogix.phosphophyllite.config.PhosphophylliteConfig.Value(min = 50)
+        @net.roguelogix.phosphophyllite.config.PhosphophylliteConfig.Value(range = "[50,)")
         public static long UpdateIntervalMS = 200;
     }
     

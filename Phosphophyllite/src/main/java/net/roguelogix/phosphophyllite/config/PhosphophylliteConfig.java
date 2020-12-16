@@ -30,12 +30,18 @@ public @interface PhosphophylliteConfig {
         boolean commentDefaultValue() default true;
         
         // only used for numbers
-        long max() default Long.MAX_VALUE;
-        
-        long min() default Long.MIN_VALUE;
+        String range() default "(,)";
         
         // only used for enums
         String[] allowedValues() default {};
+        
+        boolean advanced() default false;
+        
+        boolean hidden() default false;
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface EnableAdvanced {
     }
     
     @Retention(RetentionPolicy.RUNTIME)

@@ -14,7 +14,7 @@ public class Element {
     
     public enum Type {
         String,
-        Value,
+        Number,
         Array,
         Section
     }

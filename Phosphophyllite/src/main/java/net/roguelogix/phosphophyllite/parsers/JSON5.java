@@ -24,7 +24,7 @@ public class JSON5 {
         } else if (obj instanceof String) {
             return new Element(Element.Type.String, null, name, obj);
         } else {
-            return new Element(Element.Type.Value, null, name, obj.toString());
+            return new Element(Element.Type.Number, null, name, obj.toString());
         }
     }
     
@@ -72,7 +72,7 @@ public class JSON5 {
                 builder.append("\"");
                 break;
             }
-            case Value: {
+            case Number: {
                 builder.append(element.asString());
                 break;
             }
