@@ -1,3 +1,6 @@
+# 1.16.4-0.3.1
+ - config system boolean handling
+
 # 1.16.4-0.3.0
  - blockstate reduction via more fine grained control
  - more descriptive blockstates for rectangular multiblock locations
