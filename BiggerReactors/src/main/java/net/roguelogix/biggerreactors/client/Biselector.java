@@ -133,14 +133,21 @@ public class Biselector<T extends Container> extends Button<T> {
             int relativeX = this.parent.getGuiLeft() + this.x;
             // Check if the selector is enabled.
             if (this.actionEnable) {
-                // Set side depending on position of click.
-                if ((mouseX > relativeX) && (mouseX < relativeX + (int) (this.width / 2))) {
-                    // Set to left position (0).
-                    this.state = 0;
-                } else {
-                    // Set to right position (1).
-                    this.state = 1;
-                }
+                // Toggle selector.
+                this.state = (this.state != 0) ? 0 : 1;
+
+                // This code block is commented out. If you desire to have the biselector move like the triselector (that is,
+                //   it moves to where you click), then re-enable this code and comment out the above code below the action
+                //   enable check.
+
+                //if ((mouseX > relativeX) && (mouseX < relativeX + (int) (this.width / 2))) {
+                //    // Set to left position (0).
+                //    this.state = 0;
+                //} else {
+                //    // Set to right position (1).
+                //    this.state = 1;
+                //}
+
                 // Play the selection sound.
                 this.playSound(SoundEvents.UI_BUTTON_CLICK);
                 // Trigger user-defined selection logic.
