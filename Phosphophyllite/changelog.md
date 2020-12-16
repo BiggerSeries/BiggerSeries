@@ -1,3 +1,6 @@
+# 1.16.4-0.3.2
+ - fix unresponsive GUI
+
 # 1.16.4-0.3.1
  - config system boolean handling
 
