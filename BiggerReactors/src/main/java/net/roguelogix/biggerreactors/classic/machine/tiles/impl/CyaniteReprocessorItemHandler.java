@@ -24,29 +24,29 @@ public class CyaniteReprocessorItemHandler extends ItemStackHandler {
         throw new IndexOutOfBoundsException();
     }
     
-    public IItemHandler pipeHandler(){
+    public IItemHandler pipeHandler() {
         final CyaniteReprocessorItemHandler realHandler = this;
         return new IItemHandler() {
             @Override
             public int getSlots() {
                 return realHandler.getSlots();
             }
-    
+            
             @Nonnull
             @Override
             public ItemStack getStackInSlot(int slot) {
                 return realHandler.getStackInSlot(slot);
             }
-    
+            
             @Nonnull
             @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
                 if (slot != INPUT_SLOT_INDEX) {
-                    return ItemStack.EMPTY;
+                    return stack;
                 }
                 return realHandler.insertItem(slot, stack, simulate);
             }
-    
+            
             @Nonnull
             @Override
             public ItemStack extractItem(int slot, int amount, boolean simulate) {
@@ -55,12 +55,12 @@ public class CyaniteReprocessorItemHandler extends ItemStackHandler {
                 }
                 return realHandler.extractItem(slot, amount, simulate);
             }
-    
+            
             @Override
             public int getSlotLimit(int slot) {
                 return realHandler.getSlotLimit(slot);
             }
-    
+            
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return realHandler.isItemValid(slot, stack);
