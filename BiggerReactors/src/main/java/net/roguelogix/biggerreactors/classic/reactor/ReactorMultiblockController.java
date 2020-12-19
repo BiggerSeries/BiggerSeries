@@ -506,7 +506,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             return 0;
         }
         long wasteExtracted = simulation.fuelTank.extractWaste(mb, simulated);
-        forceDirty = wasteExtracted > 0;
+        forceDirty = wasteExtracted > 0 && !simulated;
         return wasteExtracted;
     }
 
@@ -515,7 +515,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             return 0;
         }
         long fuelExtracted = simulation.fuelTank.extractFuel(mb, simulated);
-        forceDirty = fuelExtracted > 0;
+        forceDirty = fuelExtracted > 0 && !simulated;
         return fuelExtracted;
     }
 
@@ -524,7 +524,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             return 0;
         }
         long fuelInserted = simulation.fuelTank.insertFuel(mb, simulated);
-        forceDirty = fuelInserted > 0;
+        forceDirty = fuelInserted > 0 && !simulated;
         return fuelInserted;
     }
 
