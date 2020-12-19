@@ -71,31 +71,37 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             if (!powerPorts.isEmpty() && !coolantPorts.isEmpty()) {
                 throw new ValidationError("multiblock.error.biggerreactors.coolant_and_power_ports");
             }
+            BlockPos.Mutable mutableBlockPos = new BlockPos.Mutable();
+            
+            long tick = Phosphophyllite.tickNumber();
+            
             for (ReactorControlRodTile controlRod : controlRods) {
-                if (controlRod.getPos().getY() != maxCoord().y()) {
+                mutableBlockPos.setPos(controlRod.getPos());
+                if (mutableBlockPos.getY() != maxCoord().y()) {
                     throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.control_rod_not_on_top", controlRod.getPos().getX(), controlRod.getPos().getY(), controlRod.getPos().getZ()));
                 }
                 for (int i = 0; i < maxCoord().y() - minCoord().y() - 1; i++) {
-                    if (!(world.getBlockState(controlRod.getPos().add(0, -1 - i, 0)).getBlock() instanceof ReactorFuelRod)) {
+                    mutableBlockPos.move(0, -1, 0);
+                    MultiblockTile tile = blocks.get(mutableBlockPos);
+                    if (!(tile instanceof ReactorFuelRodTile)) {
                         throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.fuel_rod_gap", controlRod.getPos().getX(), controlRod.getPos().getY() + (-1 - i), controlRod.getPos().getZ()));
                     }
+                    ((ReactorFuelRodTile) tile).lastCheckedTick = tick;
                 }
             }
 
             for (ReactorFuelRodTile fuelRod : fuelRods) {
-                if (!(world.getBlockState(new BlockPos(fuelRod.getPos().getX(), maxCoord().y(), fuelRod.getPos().getZ())).getBlock() instanceof ReactorControlRod)) {
+                if (fuelRod.lastCheckedTick != tick) {
                     throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.no_control_rod_for_fuel_rod", fuelRod.getPos().getX(), fuelRod.getPos().getZ()));
                 }
             }
 
             Util.chunkCachedBlockStateIteration(minCoord(), maxCoord(), world, (block, pos) -> {
                 if (block.getBlock() instanceof ReactorBaseBlock) {
-                    TileEntity te = world.getTileEntity(new BlockPos(pos.x, pos.y, pos.z));
-                    if (te instanceof ReactorBaseTile) {
-                        if (!((ReactorBaseTile) te).isCurrentController(this)) {
-                            throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.dangling_internal_part", te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
-                        }
-                    }
+                    mutableBlockPos.setPos(pos.x, pos.y, pos.z);
+                    if(!blocks.containsKey(mutableBlockPos)){
+                        throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.dangling_internal_part", pos.x, pos.y, pos.z));
+                    };
                 }
             });
 
@@ -107,7 +113,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
 
     private final Set<ReactorTerminalTile> terminals = new HashSet<>();
     private final List<ReactorControlRodTile> controlRods = new ArrayList<>();
-    private final Set<ReactorFuelRodTile> fuelRods = new HashSet<>();
+    private final Set<ReactorFuelRodTile> fuelRods = new LinkedHashSet<>();
     private final ArrayList<Set<ReactorFuelRodTile>> fuelRodsByLevel = new ArrayList<>();
     private final Set<ReactorPowerTapTile> powerPorts = new HashSet<>();
     private final Set<ReactorAccessPortTile> accessPorts = new HashSet<>();

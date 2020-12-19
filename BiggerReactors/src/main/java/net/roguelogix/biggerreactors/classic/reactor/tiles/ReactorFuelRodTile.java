@@ -16,6 +16,8 @@ public class ReactorFuelRodTile extends ReactorBaseTile {
         super(TYPE);
     }
     
+    public long lastCheckedTick = 0;
+    
     public long fuel = 0;
     public long waste = 0;
     
