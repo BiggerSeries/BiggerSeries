@@ -33,6 +33,8 @@ public class MultiblockController {
     
     private final Vector3i minCoord = new Vector3i();
     private final Vector3i maxCoord = new Vector3i();
+    private final Vector3i minExtremeBlocks = new Vector3i();
+    private final Vector3i maxExtremeBlocks = new Vector3i();
     
     public enum AssemblyState {
         ASSEMBLED,
@@ -84,21 +86,39 @@ public class MultiblockController {
         for (BlockPos pos : blocks.keySet()) {
             if (pos.getX() < minX) {
                 minX = pos.getX();
+                minExtremeBlocks.x = 1;
+            } else if (pos.getX() == minX) {
+                minExtremeBlocks.x++;
             }
             if (pos.getY() < minY) {
                 minY = pos.getY();
+                minExtremeBlocks.y = 1;
+            } else if (pos.getY() == minY) {
+                minExtremeBlocks.y++;
             }
             if (pos.getZ() < minZ) {
                 minZ = pos.getZ();
+                minExtremeBlocks.z = 1;
+            } else if (pos.getZ() == minZ) {
+                minExtremeBlocks.z++;
             }
             if (pos.getX() > maxX) {
                 maxX = pos.getX();
+                maxExtremeBlocks.x = 1;
+            } else if (pos.getX() == maxX) {
+                maxExtremeBlocks.x++;
             }
             if (pos.getY() > maxY) {
                 maxY = pos.getY();
+                maxExtremeBlocks.y = 1;
+            } else if (pos.getY() == maxY) {
+                maxExtremeBlocks.y++;
             }
             if (pos.getZ() > maxZ) {
                 maxZ = pos.getZ();
+                maxExtremeBlocks.z = 1;
+            } else if (pos.getZ() == maxZ) {
+                maxExtremeBlocks.z++;
             }
         }
         minCoord.set(minX, minY, minZ);
@@ -118,12 +138,42 @@ public class MultiblockController {
         blocks.put(toAttachPos, toAttach);
         
         // update minmax
-        minCoord.x = Math.min(minCoord.x, toAttachPos.getX());
-        minCoord.y = Math.min(minCoord.y, toAttachPos.getY());
-        minCoord.z = Math.min(minCoord.z, toAttachPos.getZ());
-        maxCoord.x = Math.max(maxCoord.x, toAttachPos.getX());
-        maxCoord.x = Math.max(maxCoord.y, toAttachPos.getY());
-        maxCoord.x = Math.max(maxCoord.z, toAttachPos.getZ());
+        if (toAttachPos.getX() < minCoord.x) {
+            minCoord.x = toAttachPos.getX();
+            minExtremeBlocks.x = 1;
+        } else if (toAttachPos.getX() == minCoord.x) {
+            minExtremeBlocks.x++;
+        }
+        if (toAttachPos.getY() < minCoord.y) {
+            minCoord.y = toAttachPos.getY();
+            minExtremeBlocks.y = 1;
+        } else if (toAttachPos.getY() == minCoord.y) {
+            minExtremeBlocks.y++;
+        }
+        if (toAttachPos.getZ() < minCoord.z) {
+            minCoord.z = toAttachPos.getZ();
+            minExtremeBlocks.z = 1;
+        } else if (toAttachPos.getZ() == minCoord.z) {
+            minExtremeBlocks.z++;
+        }
+        if (toAttachPos.getX() > maxCoord.x) {
+            maxCoord.x = toAttachPos.getX();
+            maxExtremeBlocks.x = 1;
+        } else if (toAttachPos.getX() == maxCoord.x) {
+            maxExtremeBlocks.x++;
+        }
+        if (toAttachPos.getY() > maxCoord.y) {
+            maxCoord.y = toAttachPos.getY();
+            maxExtremeBlocks.y = 1;
+        } else if (toAttachPos.getY() == maxCoord.y) {
+            maxExtremeBlocks.y++;
+        }
+        if (toAttachPos.getZ() > maxCoord.z) {
+            maxCoord.z = toAttachPos.getZ();
+            maxExtremeBlocks.z = 1;
+        } else if (toAttachPos.getZ() == maxCoord.z) {
+            maxExtremeBlocks.z++;
+        }
         
         if (toAttach instanceof ITickableMultiblockTile) {
             toTick.add((ITickableMultiblockTile) toAttach);
@@ -182,11 +232,45 @@ public class MultiblockController {
         if (checkForDetachments) {
             removedBlocks.add(toDetach.getPos());
         }
+        
         BlockPos toDetachPos = toDetach.getPos();
-        if (toDetachPos.getX() == minCoord.x || toDetachPos.getY() == minCoord.y || toDetachPos.getZ() == minCoord.z ||
-                toDetachPos.getX() == maxCoord.x || toDetachPos.getY() == maxCoord.y || toDetachPos.getZ() == maxCoord.z) {
-            updateExtremes = true;
+        if (toDetachPos.getX() == minCoord.x) {
+            minExtremeBlocks.x--;
+            if(minExtremeBlocks.x == 0){
+                updateExtremes = true;
+            }
         }
+        if (toDetachPos.getY() == minCoord.y) {
+            minExtremeBlocks.y--;
+            if(minExtremeBlocks.y == 0){
+                updateExtremes = true;
+            }
+        }
+        if (toDetachPos.getZ() == minCoord.z) {
+            minExtremeBlocks.z--;
+            if(minExtremeBlocks.z == 0){
+                updateExtremes = true;
+            }
+        }
+        if (toDetachPos.getX() == maxCoord.x) {
+            maxExtremeBlocks.x--;
+            if(maxExtremeBlocks.x == 0){
+                updateExtremes = true;
+            }
+        }
+        if (toDetachPos.getY() == maxCoord.y) {
+            maxExtremeBlocks.y--;
+            if(maxExtremeBlocks.y == 0){
+                updateExtremes = true;
+            }
+        }
+        if (toDetachPos.getZ() == maxCoord.z) {
+            maxExtremeBlocks.z--;
+            if(maxExtremeBlocks.z == 0){
+                updateExtremes = true;
+            }
+        }
+        
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
     
