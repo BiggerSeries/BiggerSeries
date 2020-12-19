@@ -231,6 +231,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return 0;
     }
+    
+    public void ejectWaste(){
+        ReactorMultiblockController reactor = reactor();
+        assert reactor != null;
+        reactor.extractWaste(pushWaste((int) reactor.extractWaste(Integer.MAX_VALUE, true), false), false);
+    }
 
     Direction itemOutputDirection;
     boolean connected;
@@ -300,11 +306,18 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (requestName.equals("setDirection")) {
             this.setDirection(((Integer) requestData != 0) ? OUTLET : INLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
+            return;
         }
 
         // Change fuel/waste ejection.
         if (requestName.equals("setFuelMode")) {
             this.fuelMode = ((Integer) requestData != 0);
+            return;
+        }
+        
+        if(requestName.equals("ejectWaste")){
+            ejectWaste();
+            return;
         }
 
         super.runRequest(requestName, requestData);
