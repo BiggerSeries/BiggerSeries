@@ -10,6 +10,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
+import net.roguelogix.phosphophyllite.multiblock.generic.IAssemblyAttemptedTile;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector4i;
 
@@ -17,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @RegisterTileEntity(name = "turbine_rotor_bearing")
-public class TurbineRotorBearingTile extends TurbineBaseTile{
+public class TurbineRotorBearingTile extends TurbineBaseTile implements IAssemblyAttemptedTile {
     
     @RegisterTileEntity.Type
     public static TileEntityType<TurbineRotorBearingTile> TYPE;
@@ -40,7 +41,7 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT nbt = new CompoundNBT();
         TurbineMultiblockController turbine = turbine();
-        if(turbine != null) {
+        if (turbine != null) {
             nbt.putDouble("speed", turbine.CCgetRotorSpeed());
             if (sendFullUpdate) {
                 sendFullUpdate = false;
@@ -53,7 +54,7 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         CompoundNBT nbt = pkt.getNbtCompound();
-        if(nbt.contains("speed")) {
+        if (nbt.contains("speed")) {
             speed = nbt.getDouble("speed");
             if (nbt.contains("config")) {
                 handleUpdateTag(getBlockState(), nbt.getCompound("config"));
@@ -63,13 +64,13 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT nbt) {
-        if(nbt.contains("rotx")) {
+        if (nbt.contains("rotx")) {
             isRenderBearing = true;
-            if(rotationAxis == null){
+            if (rotationAxis == null) {
                 rotationAxis = new Vector3f();
             }
             rotationAxis.set(nbt.getFloat("rotx"), nbt.getFloat("roty"), nbt.getFloat("rotz"));
-            if(rotorConfiguration == null){
+            if (rotorConfiguration == null) {
                 rotorConfiguration = new ArrayList<>();
             }
             rotorConfiguration.clear();
@@ -83,7 +84,7 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
                 rotorConfiguration.add(vec);
             }
             AABB = new AxisAlignedBB(nbt.getInt("minx"), nbt.getInt("miny"), nbt.getInt("minz"), nbt.getInt("maxx"), nbt.getInt("maxy"), nbt.getInt("maxz"));
-        }else{
+        } else {
             isRenderBearing = false;
         }
     }
@@ -91,7 +92,7 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = super.getUpdateTag();
-        if(isRenderBearing && turbine() != null) {
+        if (isRenderBearing && turbine() != null) {
             nbt.putFloat("rotx", turbine().rotationAxis.getX());
             nbt.putFloat("roty", turbine().rotationAxis.getY());
             nbt.putFloat("rotz", turbine().rotationAxis.getZ());
@@ -115,7 +116,7 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     }
     
     @Override
-    protected void onAssemblyAttempted() {
+    public void onAssemblyAttempted() {
         assert world != null;
         sendFullUpdate = true;
     }
@@ -123,7 +124,7 @@ public class TurbineRotorBearingTile extends TurbineBaseTile{
     @OnlyIn(Dist.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        if(AABB == null){
+        if (AABB == null) {
             return INFINITE_EXTENT_AABB;
         }
         return AABB;

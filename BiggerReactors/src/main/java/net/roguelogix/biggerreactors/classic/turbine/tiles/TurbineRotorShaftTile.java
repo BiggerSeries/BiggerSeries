@@ -7,13 +7,14 @@ import net.minecraft.util.math.BlockPos;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorBlade;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorShaft;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineShaftRotationState;
+import net.roguelogix.phosphophyllite.multiblock.generic.IAssemblyAttemptedTile;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 import static net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineRotorBlade.BLADE_POSITION;
 import static net.roguelogix.biggerreactors.classic.turbine.state.TurbineShaftRotationState.*;
 
 @RegisterTileEntity(name = "turbine_rotor_shaft")
-public class TurbineRotorShaftTile extends TurbineBaseTile {
+public class TurbineRotorShaftTile extends TurbineBaseTile implements IAssemblyAttemptedTile {
     
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
@@ -23,8 +24,7 @@ public class TurbineRotorShaftTile extends TurbineBaseTile {
     }
     
     @Override
-    protected void onAssemblyAttempted() {
-        super.onAssemblyAttempted();
+    public void onAssemblyAttempted() {
         TurbineShaftRotationState newRotation = getBlockState().get(TurbineShaftRotationState.TURBINE_SHAFT_ROTATION_STATE_ENUM_PROPERTY);
         for (Direction value : Direction.values()) {
             BlockPos neighbor = getPos().offset(value);

@@ -146,15 +146,11 @@ public abstract class MultiblockTile extends TileEntity {
     @Nonnull
     public final CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
-        if (controller != null && controller.blocks.contains(this)) {
+        if (controller != null && controller.blocks.containsKey(this.getPos())) {
             compound.put("controllerData", controller.getNBT());
         }
         compound.put("userdata", writeNBT());
         return compound;
-    }
-    
-    
-    protected void onAssemblyAttempted() {
     }
     
     protected String getDebugInfo() {

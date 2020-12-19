@@ -3,6 +3,7 @@ package net.roguelogix.phosphophyllite.multiblock.generic;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -10,6 +11,7 @@ import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector2i;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3ic;
+import net.roguelogix.phosphophyllite.util.AStarList;
 import net.roguelogix.phosphophyllite.util.Util;
 
 import javax.annotation.Nonnull;
@@ -20,11 +22,14 @@ public class MultiblockController {
     
     protected final World world;
     
-    protected final Set<MultiblockTile> blocks = new HashSet<>();
+    protected final Map<BlockPos, MultiblockTile> blocks = new LinkedHashMap<>();
     protected final Set<ITickableMultiblockTile> toTick = new HashSet<>();
+    protected final Set<IAssemblyAttemptedTile> assemblyAttemptedTiles = new HashSet<>();
     private boolean checkForDetachments = false;
+    private boolean updateExtremes = true;
     private long updateAssemblyAtTick = Long.MAX_VALUE;
     protected final Set<MultiblockController> controllersToMerge = new HashSet<>();
+    protected final Set<BlockPos> removedBlocks = new HashSet<>();
     
     private final Vector3i minCoord = new Vector3i();
     private final Vector3i maxCoord = new Vector3i();
@@ -63,20 +68,20 @@ public class MultiblockController {
     
     
     private void updateMinMaxCoordinates() {
-        if (blocks.isEmpty()) {
+        if (blocks.isEmpty() || !updateExtremes) {
             return;
         }
+        updateExtremes = false;
         int minX, minY, minZ;
         int maxX, maxY, maxZ;
-        BlockPos firstPos = blocks.iterator().next().getPos();
+        BlockPos firstPos = blocks.keySet().iterator().next();
         minX = firstPos.getX();
         minY = firstPos.getY();
         minZ = firstPos.getZ();
         maxX = firstPos.getX();
         maxY = firstPos.getY();
         maxZ = firstPos.getZ();
-        for (MultiblockTile block : blocks) {
-            BlockPos pos = block.getPos();
+        for (BlockPos pos : blocks.keySet()) {
             if (pos.getX() < minX) {
                 minX = pos.getX();
             }
@@ -109,9 +114,22 @@ public class MultiblockController {
         }
         
         // ok, its a valid tile to attach, so ima attach it
-        blocks.add(toAttach);
+        BlockPos toAttachPos = toAttach.getPos();
+        blocks.put(toAttachPos, toAttach);
+        
+        // update minmax
+        minCoord.x = Math.min(minCoord.x, toAttachPos.getX());
+        minCoord.y = Math.min(minCoord.y, toAttachPos.getY());
+        minCoord.z = Math.min(minCoord.z, toAttachPos.getZ());
+        maxCoord.x = Math.max(maxCoord.x, toAttachPos.getX());
+        maxCoord.x = Math.max(maxCoord.y, toAttachPos.getY());
+        maxCoord.x = Math.max(maxCoord.z, toAttachPos.getZ());
+        
         if (toAttach instanceof ITickableMultiblockTile) {
             toTick.add((ITickableMultiblockTile) toAttach);
+        }
+        if (toAttach instanceof IAssemblyAttemptedTile) {
+            assemblyAttemptedTiles.add((IAssemblyAttemptedTile) toAttach);
         }
         toAttach.controller = this;
         if (toAttach.preExistingBlock) {
@@ -131,9 +149,16 @@ public class MultiblockController {
     }
     
     final void detach(@Nonnull MultiblockTile toDetach, boolean onChunkUnload) {
-        blocks.remove(toDetach);
+        detach(toDetach, onChunkUnload, true);
+    }
+    
+    final void detach(@Nonnull MultiblockTile toDetach, boolean onChunkUnload, boolean checkForDetachments) {
+        blocks.remove(toDetach.getPos());
         if (toDetach instanceof ITickableMultiblockTile) {
             toTick.remove(toDetach);
+        }
+        if (toDetach instanceof IAssemblyAttemptedTile) {
+            assemblyAttemptedTiles.remove(toDetach);
         }
         
         if (onChunkUnload) {
@@ -153,7 +178,15 @@ public class MultiblockController {
             }
         }
         
-        checkForDetachments = true;
+        this.checkForDetachments = this.checkForDetachments || checkForDetachments;
+        if (checkForDetachments) {
+            removedBlocks.add(toDetach.getPos());
+        }
+        BlockPos toDetachPos = toDetach.getPos();
+        if (toDetachPos.getX() == minCoord.x || toDetachPos.getY() == minCoord.y || toDetachPos.getZ() == minCoord.z ||
+                toDetachPos.getX() == maxCoord.x || toDetachPos.getY() == maxCoord.y || toDetachPos.getZ() == maxCoord.z) {
+            updateExtremes = true;
+        }
         updateAssemblyAtTick = Phosphophyllite.tickNumber() + 1;
     }
     
@@ -180,67 +213,69 @@ public class MultiblockController {
         }
         
         if (checkForDetachments) {
-            MultiblockTile firstBlock = blocks.iterator().next();
+            BlockPos.Mutable mutableBlockPos = new BlockPos.Mutable();
             
-            HashSet<MultiblockTile> toSave = new HashSet<>();
-            Stack<MultiblockTile> workingStack = new Stack<>();
-            toSave.add(firstBlock);
-            workingStack.add(firstBlock);
-            while (!workingStack.empty()) {
-                MultiblockTile tile = workingStack.pop();
-                BlockPos pos = tile.getPos();
-                BlockPos[] possiblePositions = {
-                        pos.add(1, 0, 0),
-                        pos.add(-1, 0, 0),
-                        pos.add(0, 0, 1),
-                        pos.add(0, 0, -1),
-                        pos.add(0, 1, 0),
-                        pos.add(0, -1, 0),
-                };
-                @SuppressWarnings({"DuplicatedCode", "deprecation"})
-                TileEntity[] possibleTiles = {
-                        world.isBlockLoaded(possiblePositions[0]) ? world.getTileEntity(possiblePositions[0]) : null,
-                        world.isBlockLoaded(possiblePositions[1]) ? world.getTileEntity(possiblePositions[1]) : null,
-                        world.isBlockLoaded(possiblePositions[2]) ? world.getTileEntity(possiblePositions[2]) : null,
-                        world.isBlockLoaded(possiblePositions[3]) ? world.getTileEntity(possiblePositions[3]) : null,
-                        world.isBlockLoaded(possiblePositions[4]) ? world.getTileEntity(possiblePositions[4]) : null,
-                        world.isBlockLoaded(possiblePositions[5]) ? world.getTileEntity(possiblePositions[5]) : null,
-                };
-                for (TileEntity possibleTile : possibleTiles) {
-                    if (possibleTile instanceof MultiblockTile) {
-                        if (((MultiblockTile) possibleTile).controller == this && ((MultiblockTile) possibleTile).lastSavedTick != this.lastTick) {
-                            ((MultiblockTile) possibleTile).lastSavedTick = lastTick;
-                            toSave.add((MultiblockTile) possibleTile);
-                            workingStack.push((MultiblockTile) possibleTile);
-                        }
+            AStarList aStarList = new AStarList();
+            
+            for (BlockPos removedBlock : removedBlocks) {
+                for (Direction value : Direction.values()) {
+                    mutableBlockPos.setPos(removedBlock);
+                    mutableBlockPos.move(value);
+                    MultiblockTile tile = blocks.get(mutableBlockPos);
+                    if (tile != null && tile.controller == this) {
+                        aStarList.addTarget(tile.getPos());
+                    }
+                }
+            }
+            removedBlocks.clear();
+            
+            while (!aStarList.done()) {
+                BlockPos node = aStarList.nextNode();
+                for (Direction value : Direction.values()) {
+                    mutableBlockPos.setPos(node);
+                    mutableBlockPos.move(value);
+                    MultiblockTile tile = blocks.get(mutableBlockPos);
+                    if (tile != null && tile.controller == this && tile.lastSavedTick != this.lastTick) {
+                        tile.lastSavedTick = this.lastTick;
+                        aStarList.addNode(tile.getPos());
                     }
                 }
             }
             
-            HashSet<MultiblockTile> toOrphan = new HashSet<>(blocks);
-            toOrphan.removeAll(toSave);
-            blocks.removeAll(toOrphan);
-            //noinspection SuspiciousMethodCalls
-            toTick.removeAll(toOrphan);
-            if (!toOrphan.isEmpty()) {
-                for (MultiblockTile tile : toOrphan) {
-                    detach(tile, state == AssemblyState.PAUSED);
+            if (!aStarList.foundAll()) {
+                HashSet<MultiblockTile> toOrphan = new HashSet<>();
+                for (MultiblockTile block : blocks.values()) {
+                    if (block.lastSavedTick != this.lastTick) {
+                        toOrphan.add(block);
+                    }
+                }
+                if (!toOrphan.isEmpty()) {
+                    for (MultiblockTile tile : toOrphan) {
+                        detach(tile, state == AssemblyState.PAUSED, false);
+                    }
                 }
             }
             checkForDetachments = false;
         }
-        for (MultiblockController otherController : controllersToMerge) {
-            //noinspection SuspiciousMethodCalls
-            Phosphophyllite.controllersToTick.get(world).remove(otherController);
-            otherController.controllersToMerge.clear();
-            this.onMerge(otherController);
-            this.blocks.addAll(otherController.blocks);
-            for (MultiblockTile block : otherController.blocks) {
-                block.controller = this;
-                onPartPlaced(block);
+        if (!controllersToMerge.isEmpty()) {
+            HashSet<MultiblockController> newToMerge = new HashSet<>();
+            for (MultiblockController otherController : controllersToMerge) {
+                //noinspection SuspiciousMethodCalls
+                Phosphophyllite.controllersToTick.get(world).remove(otherController);
+                otherController.controllersToMerge.remove(this);
+                newToMerge.addAll(otherController.controllersToMerge);
+                otherController.controllersToMerge.clear();
+                this.onMerge(otherController);
+                this.blocks.putAll(otherController.blocks);
+                for (MultiblockTile block : otherController.blocks.values()) {
+                    block.controller = this;
+                    onPartPlaced(block);
+                }
             }
+            controllersToMerge.clear();
+            controllersToMerge.addAll(newToMerge);
         }
-        controllersToMerge.clear();
+        
         if (state == AssemblyState.ASSEMBLED && world.isAreaLoaded(minCoord().x(), minCoord().y(), minCoord().z(), maxCoord().x(), maxCoord().y(), maxCoord().z())) {
             tick();
             toTick.forEach(ITickableMultiblockTile::tick);
@@ -248,7 +283,7 @@ public class MultiblockController {
     }
     
     public void suicide() {
-        Set<MultiblockTile> blocks = new HashSet<>(this.blocks);
+        Set<MultiblockTile> blocks = new HashSet<>(this.blocks.values());
         for (MultiblockTile block : blocks) {
             block.onChunkUnloaded();
         }
@@ -274,7 +309,7 @@ public class MultiblockController {
                 read(cachedNBT.getCompound("userdata"));
                 shouldUpdateNBT = true;
             }
-            blocks.forEach(block -> world.notifyNeighborsOfStateChange(block.getPos(), block.getBlockState().getBlock()));
+            blocks.forEach((pos, block) -> world.notifyNeighborsOfStateChange(pos, block.getBlockState().getBlock()));
             if (oldState == AssemblyState.PAUSED) {
                 onUnpaused();
             } else {
@@ -289,8 +324,8 @@ public class MultiblockController {
                 updateCachedNBT();
             }
         }
-        for (MultiblockTile block : blocks) {
-            block.onAssemblyAttempted();
+        for (IAssemblyAttemptedTile assemblyAttemptedTile : assemblyAttemptedTiles) {
+            assemblyAttemptedTile.onAssemblyAttempted();
         }
     }
     
@@ -320,26 +355,26 @@ public class MultiblockController {
     
     private void assembledBlockStates() {
         final HashMap<BlockPos, BlockState> newStates = new HashMap<>();
-        blocks.forEach(tile -> {
+        blocks.forEach((pos, tile) -> {
             BlockState state = assembledTileState(tile);
             if (state != tile.getBlockState()) {
-                newStates.put(tile.getPos(), state);
+                newStates.put(pos, state);
             }
         });
         Util.setBlockStates(newStates, world);
-        blocks.forEach(TileEntity::markDirty);
+        blocks.forEach((pos, tile) -> tile.markDirty());
     }
     
     private void disassembledBlockStates() {
         final HashMap<BlockPos, BlockState> newStates = new HashMap<>();
-        blocks.forEach(tile -> {
+        blocks.forEach((pos, tile) -> {
             BlockState state = disassembledTileState(tile);
             if (state != tile.getBlockState()) {
                 newStates.put(tile.getPos(), state);
             }
         });
         Util.setBlockStates(newStates, world);
-        blocks.forEach(TileEntity::markDirty);
+        blocks.forEach((pos, tile) -> tile.markDirty());
     }
     
     /**

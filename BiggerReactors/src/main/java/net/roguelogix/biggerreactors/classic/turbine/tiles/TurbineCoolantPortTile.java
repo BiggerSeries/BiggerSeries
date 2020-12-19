@@ -31,6 +31,7 @@ import net.roguelogix.biggerreactors.classic.turbine.deps.TurbineGasHandler;
 import net.roguelogix.biggerreactors.classic.turbine.state.TurbineCoolantPortState;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.multiblock.generic.IAssemblyAttemptedTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -41,7 +42,7 @@ import javax.annotation.Nullable;
 import static net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineCoolantPort.PortDirection.*;
 
 @RegisterTileEntity(name = "turbine_coolant_port")
-public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHandler, INamedContainerProvider, IHasUpdatableState<TurbineCoolantPortState> {
+public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHandler, INamedContainerProvider, IHasUpdatableState<TurbineCoolantPortState>, IAssemblyAttemptedTile {
 
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
@@ -214,7 +215,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     }
 
     @Override
-    protected void onAssemblyAttempted() {
+    public void onAssemblyAttempted() {
         assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
     }

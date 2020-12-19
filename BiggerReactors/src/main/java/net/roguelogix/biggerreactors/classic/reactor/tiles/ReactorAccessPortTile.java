@@ -31,6 +31,7 @@ import net.roguelogix.biggerreactors.items.ingots.BlutoniumIngot;
 import net.roguelogix.biggerreactors.items.ingots.CyaniteIngot;
 import net.roguelogix.biggerreactors.items.ingots.YelloriumIngot;
 import net.roguelogix.phosphophyllite.gui.client.api.IHasUpdatableState;
+import net.roguelogix.phosphophyllite.multiblock.generic.IAssemblyAttemptedTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
@@ -41,7 +42,7 @@ import javax.annotation.Nullable;
 import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccessPort.PortDirection.*;
 
 @RegisterTileEntity(name = "reactor_access_port")
-public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandler, INamedContainerProvider, IHasUpdatableState<ReactorAccessPortState> {
+public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandler, INamedContainerProvider, IHasUpdatableState<ReactorAccessPortState>, IAssemblyAttemptedTile {
 
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
@@ -102,7 +103,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     }
 
     @Override
-    protected void onAssemblyAttempted() {
+    public void onAssemblyAttempted() {
         assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
     }
