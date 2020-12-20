@@ -1,0 +1,15 @@
+on: 
+  push:
+    paths: 
+      - "src/main/resources/data/biggerreactors/**"
+jobs:
+  data_to_csv:
+    name: Export data to CSV
+    runs-on: Felix
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./gradlew generateCoilCsv generateModeratorCsv
+      - uses: actions/upload-artifact@v2
+        with:
+          name: CSV
+          path: BiggerReactors/build/data/*.csv
