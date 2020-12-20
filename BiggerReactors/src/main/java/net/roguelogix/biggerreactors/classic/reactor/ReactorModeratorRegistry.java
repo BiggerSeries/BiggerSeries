@@ -189,9 +189,9 @@ public class ReactorModeratorRegistry {
                 efficiency = Math.max(0.0, Math.min(1.0, efficiency));
             }
             
-            if (moderation < 0.0) {
-                BiggerReactors.LOGGER.error("Error moderation out of range in json at " + resourceLocation.toString() + ", got " + moderation + ", valid range is [0,), clamping");
-                moderation = Math.max(0.0, moderation);
+            if (moderation < 1.0) {
+                BiggerReactors.LOGGER.error("Error moderation out of range in json at " + resourceLocation.toString() + ", got " + moderation + ", valid range is [1,), clamping");
+                moderation = Math.max(1.0, moderation);
             }
             
             if (conductivity < 0.0) {
