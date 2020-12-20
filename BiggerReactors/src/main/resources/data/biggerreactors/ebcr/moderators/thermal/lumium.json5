@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/lumium",
+    absorption: 0.75,
+    efficiency: 0.55,
+    moderation: 1.5,
+    conductivity: 1.8,
+}

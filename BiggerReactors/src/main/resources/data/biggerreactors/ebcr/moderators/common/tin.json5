@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/tin",
+    absorption: 0.3,
+    efficiency: 0.7,
+    moderation: 1.35,
+    conductivity: 0.75,
+}
