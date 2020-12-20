@@ -9,7 +9,9 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.roguelogix.biggerreactors.classic.machine.client.CyaniteReprocessorScreen;
@@ -41,6 +43,7 @@ public class BiggerReactors {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         MinecraftForge.EVENT_BUS.addListener(this::onTagsUpdatedEvent);
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         if (FMLEnvironment.dist == Dist.CLIENT) {
             MinecraftForge.EVENT_BUS.addListener(this::onRenderWorldLast);
         }
@@ -49,11 +52,18 @@ public class BiggerReactors {
 
     public static DataPackRegistries dataPackRegistries;
 
-    public void onAddReloadListenerEvent(AddReloadListenerEvent serverAboutToStartEvent) {
-        dataPackRegistries = serverAboutToStartEvent.getDataPackRegistries();
+    public void onAddReloadListenerEvent(AddReloadListenerEvent reloadListenerEvent) {
+        dataPackRegistries = reloadListenerEvent.getDataPackRegistries();
+    }
+    
+    public void onServerStopped(FMLServerStoppedEvent serverStoppedEvent){
+        dataPackRegistries = null;
     }
 
     public void onTagsUpdatedEvent(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
+        if(dataPackRegistries == null){
+            return;
+        }
         ReactorModeratorRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
         TurbineCoilRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
     }
