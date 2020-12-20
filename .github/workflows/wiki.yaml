@@ -1,7 +1,7 @@
 on: 
   push:
     paths: 
-      - "src/main/resources/data/biggerreactors/**"
+      - "BiggerReactors/src/main/resources/data/biggerreactors/**"
 jobs:
   data_to_csv:
     name: Export data to CSV
