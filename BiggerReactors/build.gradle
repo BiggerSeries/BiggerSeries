@@ -222,3 +222,13 @@ task generateCoilCsv(type: net.roguelogix.Json5ToCsvTask) {
     jsonInputs = fileTree(dir: "src/main/resources/data/biggerreactors/ebest/coils/", include: "**/*.json*")
     csvOutput = file("$buildDir/data/coils.csv")
 }
+
+task generateModeratorWikimedia(type: net.roguelogix.CsvToWikimediaTask, dependsOn: generateModeratorCsv) {
+    csvInput = generateModeratorCsv.outputs.files[0]
+    txtOutput = file("$buildDir/data/moderators.txt")
+}
+
+task generateCoilWikimedia(type: net.roguelogix.CsvToWikimediaTask, dependsOn: generateCoilCsv) {
+    csvInput = generateCoilCsv.outputs.files[0]
+    txtOutput = file("$buildDir/data/coils.txt")
+}
