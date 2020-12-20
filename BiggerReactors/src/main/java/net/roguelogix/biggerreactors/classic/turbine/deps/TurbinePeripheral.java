@@ -9,6 +9,7 @@ import dan200.computercraft.api.peripheral.IDynamicPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraftforge.common.util.LazyOptional;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
+import net.roguelogix.phosphophyllite.repack.org.joml.Vector3ic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -127,11 +128,43 @@ public class TurbinePeripheral implements IDynamicPeripheral {
                 }
                 return MethodResult.of(0);
             });
+            methodHandlers.put("getNumberOfBlades", (turbine, args) -> {
+                if (turbine != null) {
+                    return MethodResult.of(turbine.CCgetNumberOfBlades());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getBladeEfficiency", (turbine, args) -> {
+                if (turbine != null) {
+                    return MethodResult.of(turbine.CCgetBladeEfficiency());
+                }
+                return MethodResult.of(0);
+            });
+            methodHandlers.put("getRotorMass", (turbine, args) -> {
+                if (turbine != null) {
+                    return MethodResult.of(turbine.CCgetRotorMass());
+                }
+                return MethodResult.of(0);
+            });
             methodHandlers.put("getInductorEngaged", (turbine, args) -> {
                 if (turbine != null) {
                     return MethodResult.of(turbine.CCgetInductorEngaged());
                 }
                 return MethodResult.of(false);
+            });
+            methodHandlers.put("getMinimumCoordinate", (turbine, args) -> {
+                if (turbine != null) {
+                    Vector3ic coord = turbine.minCoord();
+                    return MethodResult.of(coord.x(), coord.y(), coord.z());
+                }
+                return MethodResult.of(0, 0, 0);
+            });
+            methodHandlers.put("getMaximumCoordinate", (turbine, args) -> {
+                if (turbine != null) {
+                    Vector3ic coord = turbine.maxCoord();
+                    return MethodResult.of(coord.x(), coord.y(), coord.z());
+                }
+                return MethodResult.of(0, 0, 0);
             });
             methodHandlers.put("setActive", (turbine, args) -> {
                 if (turbine != null) {

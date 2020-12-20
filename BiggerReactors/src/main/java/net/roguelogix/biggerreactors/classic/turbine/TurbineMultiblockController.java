@@ -841,6 +841,18 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         return energyGeneratedLastTick;
     }
     
+    public long CCgetNumberOfBlades() {
+        return bladeSurfaceArea;
+    }
+    
+    public double CCgetBladeEfficiency() {
+        return rotorEfficiencyLastTick;
+    }
+    
+    public long CCgetRotorMass() {
+        return rotorMass;
+    }
+    
     public boolean CCgetInductorEngaged() {
         return coilEngaged;
     }
