@@ -211,13 +211,13 @@ publishing {
 ////    println(proc.getOut().toString());
 //}
 
-task generateModeratorCsv(type: net.roguelogix.Json5ToCsvTask, dependsOn: assemble) {
+task generateModeratorCsv(type: net.roguelogix.Json5ToCsvTask) {
     records = ["type", "location", "absorption", "efficiency", "moderation", "conductivity"]
     jsonInputs = fileTree(dir: "src/main/resources/data/biggerreactors/ebcr/moderators/", include: "**/*.json5")
     csvOutput = file("$buildDir/data/moderators.csv")
 }
 
-task generateCoilCsv(type: net.roguelogix.Json5ToCsvTask, dependsOn: assemble) {
+task generateCoilCsv(type: net.roguelogix.Json5ToCsvTask) {
     records = ["type", "location", "efficiency", "extractionRate", "bonus"]
     jsonInputs = fileTree(dir: "src/main/resources/data/biggerreactors/ebest/coils/", include: "**/*.json5")
     csvOutput = file("$buildDir/data/coils.csv")
