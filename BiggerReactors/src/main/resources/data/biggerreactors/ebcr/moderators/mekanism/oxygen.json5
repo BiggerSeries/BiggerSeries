@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanism:oxygen",
+    absorption: 0.01,
+    efficiency: 0.35,
+    moderation: 1.04,
+    conductivity: 0.1,
+}

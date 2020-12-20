@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanismgenerators:deuterium",
+    absorption: 0.03,
+    efficiency: 0.3,
+    moderation: 1.07,
+    conductivity: 0.1,
+}

@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanism:lithium",
+    absorption: 0.7,
+    efficiency: 0.6,
+    moderation: 1.04,
+    conductivity: 0.7,
+}

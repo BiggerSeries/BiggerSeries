@@ -1,0 +1,8 @@
+{
+    type: "tag",
+    location: "forge:storage_blocks/allthemodium",
+    absorption: 0.66,
+    efficiency: 0.9,
+    moderation: 3.5,
+    conductivity: 3.5
+}

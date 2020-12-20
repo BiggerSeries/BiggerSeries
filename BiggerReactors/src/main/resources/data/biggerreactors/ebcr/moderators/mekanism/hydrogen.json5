@@ -1,0 +1,8 @@
+{
+    type: "registry",
+    location: "mekanism:hydrogen",
+    absorption: 0.2,
+    efficiency: 0.3,
+    moderation: 1.2,
+    conductivity: 0.1,
+}
