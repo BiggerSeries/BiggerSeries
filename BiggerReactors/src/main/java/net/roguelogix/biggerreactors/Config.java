@@ -129,9 +129,9 @@ public class Config {
         @PhosphophylliteConfig.Value(range = "(0,)")
         public static long FluidPerBlade = 25;
         @PhosphophylliteConfig.Value(range = "(0,)")
-        public static long BladeToFlowRateMultiplier = 4;
+        public static long FlowRatePerBlock = 500;
         @PhosphophylliteConfig.Value(range = "(0,)")
-        public static long FlowRateToTankSizeMultiplier= 4;
+        public static long TankVolumePerBlock = 1000;
         @PhosphophylliteConfig.Value(range = "(0,)")
         public static long SteamCondensationEnergy = 10;
         @PhosphophylliteConfig.Value(range = "(0,)")

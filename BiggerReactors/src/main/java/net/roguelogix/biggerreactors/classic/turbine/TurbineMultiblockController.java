@@ -395,9 +395,19 @@ public class TurbineMultiblockController extends RectangularMultiblockController
             inductionEnergyExponentBonus = Math.max(1f, (inductionEnergyExponentBonus / coilSize));
             inductorDragCoefficient = (inductorDragCoefficient / coilSize);
         }
-        
-        flowRateLimit = bladeSurfaceArea * Config.Turbine.FluidPerBlade * Config.Turbine.BladeToFlowRateMultiplier;
-        tankSize = flowRateLimit * Config.Turbine.FlowRateToTankSizeMultiplier;
+        Vector3i internalVolume = new Vector3i().add(maxCoord()).sub(minCoord()).sub(2, 2, 2);
+        BlockPos pos = rotorBearings.iterator().next().getPos();
+        tankSize = (long) internalVolume.x * internalVolume.y * internalVolume.z * Config.Turbine.TankVolumePerBlock;
+        if(pos.getX() == minCoord().x() || pos.getX() == maxCoord().x()){
+            internalVolume.x = 1;
+        }
+        if(pos.getY() == minCoord().y() || pos.getY() == maxCoord().y()){
+            internalVolume.y = 1;
+        }
+        if(pos.getZ() == minCoord().z() || pos.getZ() == maxCoord().z()){
+            internalVolume.z = 1;
+        }
+        flowRateLimit = (long) internalVolume.x * internalVolume.y * internalVolume.z * Config.Turbine.FlowRatePerBlock;
         maxStoredPower = (coilSize + 1) * Config.Turbine.BatterySizePerCoilBlock;
         
         if (glassCount > 0) {
