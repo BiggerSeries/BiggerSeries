@@ -42,40 +42,40 @@ import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccess
 
 @RegisterTileEntity(name = "reactor_access_port")
 public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandler, INamedContainerProvider, IHasUpdatableState<ReactorAccessPortState> {
-
+    
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-
+    
     private static final ResourceLocation uraniumIngotTag = new ResourceLocation("forge:ingots/uranium");
     private static final ResourceLocation uraniumBlockTag = new ResourceLocation("forge:storage_blocks/uranium");
     private static final ResourceLocation yelloriumIngotTag = new ResourceLocation("forge:ingots/yellorium");
     private static final ResourceLocation yelloriumBlockTag = new ResourceLocation("forge:storage_blocks/yellorium");
-
+    
     public static final int FUEL_SLOT = 0;
     public static final int WASTE_SLOT = 1;
     public static final int FUEL_INSERT_SLOT = 2;
-
+    
     public ReactorAccessPortTile() {
         super(TYPE);
     }
-
+    
     private ReactorAccessPort.PortDirection direction = INLET;
     private boolean fuelMode = false;
-
+    
     public boolean isInlet() {
         return direction == INLET;
     }
-
+    
     public void setDirection(ReactorAccessPort.PortDirection direction) {
         this.direction = direction;
         this.markDirty();
     }
-
+    
     @Override
     public void onLoad() {
         super.onLoad();
     }
-
+    
     @Override
     protected void readNBT(@Nonnull CompoundNBT compound) {
         if (compound.contains("direction")) {
@@ -85,7 +85,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             fuelMode = compound.getBoolean("fuelMode");
         }
     }
-
+    
     @Override
     @Nonnull
     protected CompoundNBT writeNBT() {
@@ -94,21 +94,21 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         NBT.putBoolean("fuelMode", fuelMode);
         return NBT;
     }
-
+    
     @Override
     @Nonnull
     protected String getDebugInfo() {
         return direction.toString();
     }
-
+    
     @Override
     protected void onAssemblyAttempted() {
         assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
     }
-
+    
     LazyOptional<IItemHandler> itemStackHandler = LazyOptional.of(() -> this);
-
+    
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -117,12 +117,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return super.getCapability(cap, side);
     }
-
+    
     @Override
     public int getSlots() {
         return 3;
     }
-
+    
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
@@ -139,12 +139,12 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             return ItemStack.EMPTY;
         }
     }
-
+    
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
-
+        
         if (!isInlet() || reactor == null || slot != FUEL_INSERT_SLOT) {
             return stack;
         }
@@ -167,40 +167,40 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return stack;
     }
-
+    
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         ReactorMultiblockController reactor = reactor();
-
+        
         if (isInlet() || reactor == null || slot == FUEL_INSERT_SLOT) {
             return ItemStack.EMPTY;
         }
-
+        
         if (slot == WASTE_SLOT && !fuelMode) {
             long maxExtractable = reactor.extractWaste(amount * Config.Reactor.FuelMBPerIngot, true);
             long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
             long extracted = reactor.extractWaste(toExtracted, simulate);
-
+            
             return new ItemStack(CyaniteIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
         } else if (slot == FUEL_SLOT && fuelMode) {
             long maxExtractable = reactor.extractFuel(amount * Config.Reactor.FuelMBPerIngot, true);
             long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
             long extracted = reactor.extractFuel(toExtracted, simulate);
-
+            
             return new ItemStack(YelloriumIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
         }
-
+        
         return ItemStack.EMPTY;
     }
-
+    
     @Override
     public int getSlotLimit(int slot) {
         ReactorMultiblockController reactor = reactor();
         assert reactor != null;
         return (int) (reactor.CCgetFuelAmountMax() / Config.Reactor.FuelMBPerIngot);
     }
-
+    
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         if (slot == FUEL_INSERT_SLOT) {
@@ -212,7 +212,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
             return stack.getItem() == CyaniteIngot.INSTANCE;
         }
     }
-
+    
     public int pushWaste(int waste, boolean simulated) {
         if (itemOutput.isPresent()) {
             IItemHandler output = itemOutput.orElse(EmptyHandler.INSTANCE);
@@ -232,7 +232,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         return 0;
     }
     
-    public void ejectWaste(){
+    public void ejectWaste() {
         ReactorMultiblockController reactor = reactor();
         assert reactor != null;
         reactor.extractWaste(pushWaste((int) reactor.extractWaste(Integer.MAX_VALUE, true), false), false);
@@ -257,18 +257,18 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         return 0;
     }
     
-    public void ejectFuel(){
+    public void ejectFuel() {
         ReactorMultiblockController reactor = reactor();
         assert reactor != null;
         reactor.extractFuel(pushFuel((int) reactor.extractFuel(Integer.MAX_VALUE, true), false), false);
     }
-
+    
     Direction itemOutputDirection;
     boolean connected;
     LazyOptional<IItemHandler> itemOutput = LazyOptional.empty();
     public final ReactorAccessPortState reactorAccessPortState = new ReactorAccessPortState(this);
-
-
+    
+    
     @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
@@ -288,7 +288,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         neighborChanged();
     }
-
+    
     @SuppressWarnings("DuplicatedCode")
     public void neighborChanged() {
         itemOutput = LazyOptional.empty();
@@ -305,7 +305,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         itemOutput = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, itemOutputDirection.getOpposite());
         connected = itemOutput.isPresent();
     }
-
+    
     @Override
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
@@ -318,7 +318,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         return super.onBlockActivated(player, handIn);
     }
-
+    
     @SuppressWarnings("unchecked")
     @Override
     public void runRequest(String requestName, Object requestData) {
@@ -326,50 +326,50 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         if (reactor == null) {
             return;
         }
-
+        
         // Change IO direction.
         if (requestName.equals("setDirection")) {
             this.setDirection(((Integer) requestData != 0) ? OUTLET : INLET);
             world.setBlockState(this.pos, this.getBlockState().with(PORT_DIRECTION_ENUM_PROPERTY, direction));
             return;
         }
-
+        
         // Change fuel/waste ejection.
         if (requestName.equals("setFuelMode")) {
             this.fuelMode = ((Integer) requestData != 0);
             return;
         }
         
-        if(requestName.equals("ejectWaste")){
-            if(fuelMode){
+        if (requestName.equals("ejectWaste")) {
+            if (fuelMode) {
                 ejectFuel();
-            }else{
+            } else {
                 ejectWaste();
             }
             return;
         }
-
+        
         super.runRequest(requestName, requestData);
     }
-
+    
     @Override
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(ReactorAccessPort.INSTANCE.getTranslationKey());
     }
-
+    
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
         return new ReactorAccessPortContainer(windowId, this.pos, player);
     }
-
+    
     @Nullable
     @Override
     public ReactorAccessPortState getState() {
         this.updateState();
         return this.reactorAccessPortState;
     }
-
+    
     @Override
     public void updateState() {
         reactorAccessPortState.direction = (this.direction == INLET);
