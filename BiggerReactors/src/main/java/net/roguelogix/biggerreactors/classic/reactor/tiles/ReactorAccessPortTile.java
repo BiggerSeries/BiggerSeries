@@ -237,6 +237,31 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         assert reactor != null;
         reactor.extractWaste(pushWaste((int) reactor.extractWaste(Integer.MAX_VALUE, true), false), false);
     }
+    
+    public int pushFuel(int fuel, boolean simulated) {
+        if (itemOutput.isPresent()) {
+            IItemHandler output = itemOutput.orElse(EmptyHandler.INSTANCE);
+            fuel /= Config.Reactor.FuelMBPerIngot;
+            int fuelHandled = 0;
+            for (int i = 0; i < output.getSlots(); i++) {
+                if (fuel == 0) {
+                    break;
+                }
+                ItemStack toInsertStack = new ItemStack(YelloriumIngot.INSTANCE, fuel);
+                ItemStack remainingStack = output.insertItem(i, toInsertStack, simulated);
+                fuelHandled += toInsertStack.getCount() - remainingStack.getCount();
+                fuel -= toInsertStack.getCount() - remainingStack.getCount();
+            }
+            return (int) (fuelHandled * Config.Reactor.FuelMBPerIngot);
+        }
+        return 0;
+    }
+    
+    public void ejectFuel(){
+        ReactorMultiblockController reactor = reactor();
+        assert reactor != null;
+        reactor.extractFuel(pushFuel((int) reactor.extractFuel(Integer.MAX_VALUE, true), false), false);
+    }
 
     Direction itemOutputDirection;
     boolean connected;
@@ -316,7 +341,11 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
         }
         
         if(requestName.equals("ejectWaste")){
-            ejectWaste();
+            if(fuelMode){
+                ejectFuel();
+            }else{
+                ejectWaste();
+            }
             return;
         }
 
