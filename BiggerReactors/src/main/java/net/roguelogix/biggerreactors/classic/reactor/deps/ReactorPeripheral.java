@@ -7,8 +7,10 @@ import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IDynamicPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.LazyOptional;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorMultiblockController;
+import net.roguelogix.phosphophyllite.repack.org.joml.Vector3ic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -187,6 +189,27 @@ public class ReactorPeripheral implements IDynamicPeripheral {
                 }
                 return MethodResult.of(0);
             });
+            methodHandlers.put("getMinimumCoordinate", (reactor, args) -> {
+                if (reactor != null) {
+                    Vector3ic coord = reactor.minCoord();
+                    return MethodResult.of(coord.x(), coord.y(), coord.z());
+                }
+                return MethodResult.of(0, 0, 0);
+            });
+            methodHandlers.put("getMaximumCoordinate", (reactor, args) -> {
+                if (reactor != null) {
+                    Vector3ic coord = reactor.maxCoord();
+                    return MethodResult.of(coord.x(), coord.y(), coord.z());
+                }
+                return MethodResult.of(0, 0, 0);
+            });
+            methodHandlers.put("getControlRodLocation", (reactor, args) -> {
+                if (reactor != null) {
+                    BlockPos coord = reactor.CCgetControlRodLocation(args.getInt(0));
+                    return MethodResult.of(coord.getX(), coord.getY(), coord.getZ());
+                }
+                return MethodResult.of(0, 0, 0);
+            });
             methodHandlers.put("isActivelyCooled", (reactor, args) -> {
                 if (reactor != null) {
                     return MethodResult.of(reactor.CCisActivelyCooled());
@@ -211,9 +234,21 @@ public class ReactorPeripheral implements IDynamicPeripheral {
                 }
                 return MethodResult.of();
             });
+            methodHandlers.put("setControlRodName", (reactor, args) -> {
+                if (reactor != null) {
+                    reactor.CCsetControlRodName(args.getInt(0), args.getString(1));
+                }
+                return MethodResult.of();
+            });
             methodHandlers.put("doEjectWaste", (reactor, args) -> {
                 if (reactor != null) {
                     reactor.CCdoEjectWaste();
+                }
+                return MethodResult.of();
+            });
+            methodHandlers.put("doEjectFuel", (reactor, args) -> {
+                if (reactor != null) {
+                    reactor.CCdoEjectFuel();
                 }
                 return MethodResult.of();
             });

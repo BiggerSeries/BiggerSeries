@@ -759,6 +759,13 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         return simulation.getFuelConsumedLastTick();
     }
     
+    public BlockPos CCgetControlRodLocation(int index) {
+        if (index >= controlRods.size()) {
+            throw new RuntimeException("control rod index out of bounds");
+        }
+        return controlRods.get(index).getPos();
+    }
+    
     public boolean CCisActivelyCooled() {
         return !simulation.isPassive();
     }
@@ -781,9 +788,22 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
     }
     
+    public void CCsetControlRodName(int index, String name){
+        if (index >= controlRods.size()) {
+            throw new RuntimeException("control rod index out of bounds");
+        }
+        controlRods.get(index).setName(name);
+    }
+    
     public void CCdoEjectWaste() {
         synchronized (accessPorts) {
             ejectWaste();
+        }
+    }
+    
+    public void CCdoEjectFuel() {
+        synchronized (accessPorts) {
+//            ejectWaste();
         }
     }
     
