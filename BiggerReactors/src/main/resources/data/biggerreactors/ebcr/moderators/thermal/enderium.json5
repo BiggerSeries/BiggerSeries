@@ -1,6 +1,6 @@
 {
     type: "tag",
-    location: "forge:storage_blocks/platinum",
+    location: "forge:storage_blocks/enderium",
     absorption: 0.53,
     efficiency: 0.88,
     moderation: 1.6,
