@@ -3,6 +3,8 @@ package net.roguelogix.phosphophyllite.config;
 import mcp.MethodsReturnNonnullByDefault;
 import net.roguelogix.phosphophyllite.parsers.Element;
 import net.roguelogix.phosphophyllite.parsers.JSON5;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
@@ -18,6 +20,8 @@ import java.util.HashSet;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class ConfigManager {
+    
+    static final Logger LOGGER = LogManager.getLogger("Phosphophyllite/Config");
     
     private static final HashSet<ModConfig> modConfigs = new HashSet<>();
     
