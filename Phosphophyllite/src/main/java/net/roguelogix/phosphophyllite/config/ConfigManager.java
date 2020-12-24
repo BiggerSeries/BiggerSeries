@@ -72,6 +72,9 @@ public class ConfigManager {
                     if (EAClass != boolean.class && EAClass != Boolean.class) {
                         throw new ConfigSpec.DefinitionError("Advanced enable flag must be a boolean");
                     }
+                    if (!Modifier.isStatic(declaredField.getModifiers())) {
+                        throw new ConfigSpec.DefinitionError("Advanced enable flag must be static");
+                    }
                     break;
                 }
             }
