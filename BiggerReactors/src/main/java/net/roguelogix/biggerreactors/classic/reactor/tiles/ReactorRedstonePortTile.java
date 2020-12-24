@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -177,7 +178,9 @@ public class ReactorRedstonePortTile extends ReactorBaseTile implements INamedCo
             isEmitting = shouldBeEmitting;
             wasPowered = isPowered;
             assert world != null;
+            BlockPos updatePos = pos.offset(powerOutputDirection);
             world.notifyNeighborsOfStateChange(this.getPos(), this.getBlockState().getBlock());
+            world.notifyNeighborsOfStateChange(updatePos, world.getBlockState(updatePos).getBlock());
         }
         if (isLit != shouldLight) {
             isLit = shouldLight;
