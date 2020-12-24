@@ -14,6 +14,74 @@ import java.util.*;
 @MethodsReturnNonnullByDefault
 public class ConfigSpec {
     
+    public static class DefinitionError extends RuntimeException {
+        public DefinitionError(String message) {
+            super(message);
+        }
+    }
+    
+    private static abstract class SpecNode {
+        String comment;
+        boolean advanced = false;
+        boolean hidden = false;
+    }
+    
+    private static class SpecClazzNode extends SpecNode {
+        Class<?> clazz;
+        Map<String, SpecClazzNode> clazzNodes;
+        Map<String, SpecFieldNode> fieldNodes;
+    }
+    
+    private static class SpecFieldNode extends SpecNode {
+        Field field;
+    }
+    
+    private static class SpecObjectNode extends SpecFieldNode {
+        Class<?> clazz;
+        Map<String, SpecFieldNode> subNodes;
+    }
+    
+    private static class SpecMapNode extends SpecFieldNode {
+        Class<?> elementClass;
+        SpecFieldNode nodeType;
+        Map<String, SpecFieldNode> defaultSubNodes;
+    }
+    
+    private static class SpecListNode extends SpecFieldNode {
+        Class<?> elementClass;
+        SpecFieldNode subNodeType;
+        List<SpecFieldNode> defaultSubNodes;
+    }
+    
+    private static class SpecStringNode extends SpecFieldNode {
+        String defaultString;
+    }
+    
+    private static class SpecEnumNode extends SpecFieldNode {
+        Class<?> enumClass;
+        String defaultValue;
+        String[] allowedValues;
+    }
+    
+    private static class SpecNumberNode extends SpecFieldNode {
+        boolean integral;
+        boolean lowerInclusive;
+        double lowerBound;
+        boolean upperInclusive;
+        double upperBound;
+        double defaultValue;
+    }
+    
+    private static class SpecBooleanNode extends SpecFieldNode {
+        boolean defaultValue;
+    }
+    
+    
+    @OnModLoad
+    private static void OML() {
+        SpecClazzNode node = buildNodeForClazz(net.roguelogix.phosphophyllite.PhosphophylliteConfig.class);
+    }
+    
     final SpecClazzNode masterNode;
     
     ConfigSpec(Class<?> clazz) {
@@ -24,13 +92,13 @@ public class ConfigSpec {
         try {
             return generateElementForNode(masterNode, null, null, enableAdvanced);
         } catch (IllegalAccessException e) {
-            Phosphophyllite.LOGGER.error("Error caught reading from config");
-            Phosphophyllite.LOGGER.error(e.toString());
+            ConfigManager.LOGGER.error("Unexpected error caught reading from config");
+            ConfigManager.LOGGER.error(e.toString());
             throw new DefinitionError(e.getMessage());
         }
     }
     
-    Element generateElementForNode(SpecNode node, @Nullable Object object, @Nullable String name, boolean enableAdvanced) throws IllegalAccessException {
+    private Element generateElementForNode(SpecNode node, @Nullable Object object, @Nullable String name, boolean enableAdvanced) throws IllegalAccessException {
         if (node instanceof SpecClazzNode) {
             ArrayList<Element> subElements = new ArrayList<>();
             
@@ -106,15 +174,15 @@ public class ConfigSpec {
             return new Element(Element.Type.Boolean, node.comment, name, bool.toString());
         }
         
-        throw new DefinitionError("Unknown node type");
+        throw new DefinitionError("Attempting to generate element for unknown node type");
     }
     
     void writeElementTree(Element tree) {
         try {
             writeElementNode(tree, masterNode, null);
         } catch (IllegalAccessException e) {
-            Phosphophyllite.LOGGER.error("Error caught reading from config");
-            Phosphophyllite.LOGGER.error(e.toString());
+            ConfigManager.LOGGER.error("Unexpected error caught reading from config");
+            ConfigManager.LOGGER.error(e.toString());
             throw new DefinitionError(e.getMessage());
         }
     }
@@ -122,7 +190,9 @@ public class ConfigSpec {
     private static void writeElementNode(Element element, SpecNode node, @Nullable Object object) throws IllegalAccessException {
         if (node instanceof SpecClazzNode) {
             if (element.type != Element.Type.Section) {
-                throw new DefinitionError("Invalid config structure given");
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a Class");
+                return;
             }
             
             Element[] subElements = element.asArray();
@@ -141,7 +211,9 @@ public class ConfigSpec {
             return;
         } else if (node instanceof SpecObjectNode) {
             if (element.type != Element.Type.Section) {
-                throw new DefinitionError("Invalid config structure given");
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to an Object");
+                return;
             }
             
             Object nodeObject = createClassInstance(((SpecObjectNode) node).clazz);
@@ -161,7 +233,9 @@ public class ConfigSpec {
             return;
         } else if (node instanceof SpecMapNode) {
             if (element.type != Element.Type.Section) {
-                throw new DefinitionError("Invalid config structure given");
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a Map");
+                return;
             }
             
             @SuppressWarnings("rawtypes")
@@ -180,7 +254,9 @@ public class ConfigSpec {
             return;
         } else if (node instanceof SpecListNode) {
             if (element.type != Element.Type.Array) {
-                throw new DefinitionError("Invalid config structure given");
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to an Array");
+                return;
             }
             
             Element[] subElements = element.asArray();
@@ -213,26 +289,80 @@ public class ConfigSpec {
             return;
         } else if (node instanceof SpecStringNode) {
             if (element.type != Element.Type.String && element.type != Element.Type.Number) {
-                throw new DefinitionError("Invalid config structure given");
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a String");
+                return;
             }
             ((SpecStringNode) node).field.set(object, element.asString());
             return;
         } else if (node instanceof SpecEnumNode) {
             if (element.type != Element.Type.String) {
-                throw new DefinitionError("Invalid config structure given");
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a Enum");
+                return;
             }
             //noinspection unchecked
             ((SpecEnumNode) node).field.set(object, Enum.valueOf((Class<? extends Enum>) ((SpecEnumNode) node).enumClass, element.asString()));
             return;
         } else if (node instanceof SpecNumberNode) {
             if (element.type != Element.Type.Number) {
-                throw new DefinitionError("Invalid config structure given");
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a Number");
+                return;
             }
-            setNumberField(((SpecNumberNode) node).field, object, element.asDouble());
+            double val = element.asDouble();
+            if (isIntegral(((SpecNumberNode) node).field.getType())) {
+                long realVal = Math.round(val);
+                if (realVal < ((SpecNumberNode) node).lowerBound || realVal > ((SpecNumberNode) node).upperBound ||
+                        (realVal <= ((SpecNumberNode) node).lowerBound && !(((SpecNumberNode) node).lowerInclusive)) ||
+                        (realVal >= ((SpecNumberNode) node).upperBound && !((SpecNumberNode) node).upperInclusive)) {
+                    ConfigManager.LOGGER.warn("Number value " + element.name + " given out of range value " + realVal + ". Valid range is " +
+                            ((((SpecNumberNode) node).lowerInclusive ? "[" : "(" + ((((SpecNumberNode) node).lowerBound == Double.MIN_VALUE) ? "" : ((SpecNumberNode) node).lowerBound))) +
+                            "," +
+                            (((((SpecNumberNode) node).upperBound == Double.MAX_VALUE) ? "" : ((SpecNumberNode) node).upperBound) + (((SpecNumberNode) node).upperInclusive ? "]" : ")")) +
+                            ". Clamping to range");
+                    if (realVal <= ((SpecNumberNode) node).lowerBound) {
+                        realVal = Math.round(((SpecNumberNode) node).lowerBound);
+                        if (!((SpecNumberNode) node).lowerInclusive) {
+                            realVal++;
+                        }
+                    } else if (realVal >= ((SpecNumberNode) node).upperBound) {
+                        realVal = Math.round(((SpecNumberNode) node).upperBound);
+                        if (!((SpecNumberNode) node).upperInclusive) {
+                            realVal--;
+                        }
+                    }
+                }
+                val = realVal;
+            } else {
+                if (val < ((SpecNumberNode) node).lowerBound || val > ((SpecNumberNode) node).upperBound ||
+                        (val <= ((SpecNumberNode) node).lowerBound && !(((SpecNumberNode) node).lowerInclusive)) ||
+                        (val >= ((SpecNumberNode) node).upperBound && !((SpecNumberNode) node).upperInclusive)) {
+                    ConfigManager.LOGGER.warn("Number value " + element.name + " given out of range value " + val + ". Valid range is " +
+                            ((((SpecNumberNode) node).lowerInclusive ? "[" : "(" + ((((SpecNumberNode) node).lowerBound == Double.MIN_VALUE) ? "" : ((SpecNumberNode) node).lowerBound))) +
+                            "," +
+                            (((((SpecNumberNode) node).upperBound == Double.MAX_VALUE) ? "" : ((SpecNumberNode) node).upperBound) + (((SpecNumberNode) node).upperInclusive ? "]" : ")")) +
+                            ". Clamping to range");
+                    if (val <= ((SpecNumberNode) node).lowerBound) {
+                        val = ((SpecNumberNode) node).lowerBound;
+                        if (!((SpecNumberNode) node).lowerInclusive) {
+                            val = Math.nextAfter(val, Double.POSITIVE_INFINITY);
+                        }
+                    } else if (val >= ((SpecNumberNode) node).upperBound) {
+                        val = ((SpecNumberNode) node).upperBound;
+                        if (!((SpecNumberNode) node).upperInclusive) {
+                            val = Math.nextAfter(val, Double.NEGATIVE_INFINITY);
+                        }
+                    }
+                }
+            }
+            setNumberField(((SpecNumberNode) node).field, object, val);
             return;
         } else if (node instanceof SpecBooleanNode) {
-            if (element.type != Element.Type.String && element.type != Element.Type.Number &&  element.type != Element.Type.Boolean) {
-                throw new DefinitionError("Invalid config structure given");
+            if (element.type != Element.Type.String && element.type != Element.Type.Number && element.type != Element.Type.Boolean) {
+                ConfigManager.LOGGER.info("Invalid config structure given");
+                ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a Boolean");
+                return;
             }
             boolean newVal;
             if (element.type == Element.Type.String || element.type == Element.Type.Boolean) {
@@ -245,7 +375,8 @@ public class ConfigSpec {
             return;
         }
         
-        throw new DefinitionError("Unknown node type");
+        ConfigManager.LOGGER.warn("Invalid config structure given");
+        ConfigManager.LOGGER.warn("Attempting to write " + element.type + " to an unknown node type");
     }
     
     void writeDefaults() {
@@ -268,7 +399,8 @@ public class ConfigSpec {
             }
         } else if (node instanceof SpecObjectNode) {
             if (object == null) {
-                throw new NullPointerException("Cannot write node to null object");
+                Phosphophyllite.LOGGER.error("Error cannot write to null object");
+                return;
             }
             Object newObject = createClassInstance(((SpecObjectNode) node).clazz);
             
@@ -315,6 +447,14 @@ public class ConfigSpec {
         }
     }
     
+    private static boolean isIntegral(Class<?> numberType) {
+        return
+                numberType == Byte.class || numberType == byte.class ||
+                        numberType == Short.class || numberType == short.class ||
+                        numberType == Integer.class || numberType == int.class ||
+                        numberType == Long.class || numberType == long.class;
+    }
+    
     private static void setNumberField(Field field, @Nullable Object object, double value) throws IllegalAccessException {
         Object newVal = null;
         Class<?> numberType = field.getType();
@@ -334,73 +474,6 @@ public class ConfigSpec {
         }
         
         field.set(object, newVal);
-    }
-    
-    public static class DefinitionError extends RuntimeException {
-        public DefinitionError(String message) {
-            super(message);
-        }
-    }
-    
-    private static abstract class SpecNode {
-        String comment;
-        boolean advanced = false;
-        boolean hidden = false;
-    }
-    
-    private static class SpecClazzNode extends SpecNode {
-        Class<?> clazz;
-        Map<String, SpecClazzNode> clazzNodes;
-        Map<String, SpecFieldNode> fieldNodes;
-    }
-    
-    private static class SpecFieldNode extends SpecNode {
-        Field field;
-    }
-    
-    private static class SpecObjectNode extends SpecFieldNode {
-        Class<?> clazz;
-        Map<String, SpecFieldNode> subNodes;
-    }
-    
-    private static class SpecMapNode extends SpecFieldNode {
-        Class<?> elementClass;
-        SpecFieldNode nodeType;
-        Map<String, SpecFieldNode> defaultSubNodes;
-    }
-    
-    private static class SpecListNode extends SpecFieldNode {
-        Class<?> elementClass;
-        SpecFieldNode subNodeType;
-        List<SpecFieldNode> defaultSubNodes;
-    }
-    
-    private static class SpecStringNode extends SpecFieldNode {
-        String defaultString;
-    }
-    
-    private static class SpecEnumNode extends SpecFieldNode {
-        Class<?> enumClass;
-        String defaultValue;
-        String[] allowedValues;
-    }
-    
-    private static class SpecNumberNode extends SpecFieldNode {
-        boolean lowerInclusive;
-        double lowerBound;
-        boolean upperInclusive;
-        double upperBound;
-        double defaultValue;
-    }
-    
-    private static class SpecBooleanNode extends SpecFieldNode {
-        boolean defaultValue;
-    }
-    
-    
-    @OnModLoad
-    private static void OML() {
-        SpecClazzNode node = buildNodeForClazz(net.roguelogix.phosphophyllite.PhosphophylliteConfig.class);
     }
     
     @Nullable
