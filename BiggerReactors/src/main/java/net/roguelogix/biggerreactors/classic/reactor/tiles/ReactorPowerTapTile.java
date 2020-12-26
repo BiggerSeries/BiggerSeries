@@ -72,7 +72,7 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
     
     @Override
     public int getEnergyStored() {
-        if(controller != null && controller instanceof ReactorMultiblockController){
+        if (controller != null && controller instanceof ReactorMultiblockController) {
             return (int) ((ReactorMultiblockController) controller).CCgetEnergyStoredUnscaled();
         }
         return 0;
@@ -80,7 +80,7 @@ public class ReactorPowerTapTile extends ReactorBaseTile implements IEnergyStora
     
     @Override
     public int getMaxEnergyStored() {
-        if(controller != null && controller instanceof ReactorMultiblockController){
+        if (controller != null && controller instanceof ReactorMultiblockController) {
             return (int) ((ReactorMultiblockController) controller).CCgetMaxEnergyStored();
         }
         return 0;

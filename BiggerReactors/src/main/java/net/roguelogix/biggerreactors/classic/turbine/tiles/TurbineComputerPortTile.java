@@ -29,7 +29,7 @@ public class TurbineComputerPortTile extends TurbineBaseTile {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
         if (cap == CAPABILITY_PERIPHERAL) {
-            return TurbinePeripheral.create(this::turbine).cast();
+            return TurbinePeripheral.create(() -> controller).cast();
         }
         return LazyOptional.empty();
     }

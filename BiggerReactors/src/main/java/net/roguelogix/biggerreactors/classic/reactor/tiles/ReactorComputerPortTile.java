@@ -29,7 +29,7 @@ public class ReactorComputerPortTile extends ReactorBaseTile {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
         if (cap == CAPABILITY_PERIPHERAL) {
-            return ReactorPeripheral.create(this::reactor).cast();
+            return ReactorPeripheral.create(() -> controller).cast();
         }
         return LazyOptional.empty();
     }

@@ -43,7 +43,7 @@ public class TurbineTerminalTile extends TurbineBaseTile implements INamedContai
     
     @Override
     public void updateState() {
-        if (controller != null && controller instanceof TurbineMultiblockController) {
+        if (controller != null) {
             ((TurbineMultiblockController) controller).updateDataPacket(turbineState);
         }
     }
@@ -54,7 +54,7 @@ public class TurbineTerminalTile extends TurbineBaseTile implements INamedContai
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (player.isCrouching() && handIn == Hand.MAIN_HAND && player.getHeldItemMainhand().getItem() == DebugTool.INSTANCE) {
             if (controller != null) {
-                turbine().toggleActive();
+                controller.toggleActive();
             }
             return ActionResultType.SUCCESS;
         }

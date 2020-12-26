@@ -43,7 +43,7 @@ import static net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorAccess
 
 @RegisterTileEntity(name = "reactor_access_port")
 public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandler, INamedContainerProvider, IHasUpdatableState<ReactorAccessPortState>, IAssemblyAttemptedTile {
-
+    
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
     
@@ -127,14 +127,13 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        ReactorMultiblockController reactor = reactor();
-        if (reactor == null) {
+        if (controller == null) {
             return ItemStack.EMPTY;
         } else if (slot == WASTE_SLOT) {
-            long availableIngots = reactor.CCgetWasteAmount() / Config.Reactor.FuelMBPerIngot;
+            long availableIngots = controller.CCgetWasteAmount() / Config.Reactor.FuelMBPerIngot;
             return new ItemStack(CyaniteIngot.INSTANCE, (int) availableIngots);
         } else if (slot == FUEL_SLOT) {
-            long availableIngots = reactor.CCgetFuelAmount() / Config.Reactor.FuelMBPerIngot;
+            long availableIngots = controller.CCgetFuelAmount() / Config.Reactor.FuelMBPerIngot;
             return new ItemStack(YelloriumIngot.INSTANCE, (int) availableIngots);
         } else {
             return ItemStack.EMPTY;
@@ -144,24 +143,22 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        ReactorMultiblockController reactor = reactor();
-        
-        if (!isInlet() || reactor == null || slot != FUEL_INSERT_SLOT) {
+        if (!isInlet() || controller == null || slot != FUEL_INSERT_SLOT) {
             return stack;
         }
         stack = stack.copy();
         if (stack.getItem().getTags().contains(uraniumIngotTag) || stack.getItem().getTags().contains(yelloriumIngotTag) || stack.getItem() == BlutoniumIngot.INSTANCE) {
-            long maxAcceptable = reactor.refuel(stack.getCount() * Config.Reactor.FuelMBPerIngot, true);
+            long maxAcceptable = controller.refuel(stack.getCount() * Config.Reactor.FuelMBPerIngot, true);
             long canAccept = maxAcceptable - (maxAcceptable % Config.Reactor.FuelMBPerIngot);
-            reactor.refuel(canAccept, simulate);
+            controller.refuel(canAccept, simulate);
             if (canAccept > 0) {
                 stack.setCount(stack.getCount() - (int) (canAccept / Config.Reactor.FuelMBPerIngot));
             }
         }
         if (stack.getItem().getTags().contains(uraniumBlockTag) || stack.getItem().getTags().contains(yelloriumBlockTag) || stack.getItem() == BlutoniumBlock.INSTANCE.asItem()) {
-            long maxAcceptable = reactor.refuel(stack.getCount() * (Config.Reactor.FuelMBPerIngot * 9), true);
+            long maxAcceptable = controller.refuel(stack.getCount() * (Config.Reactor.FuelMBPerIngot * 9), true);
             long canAccept = maxAcceptable - (maxAcceptable % (Config.Reactor.FuelMBPerIngot * 9));
-            reactor.refuel(canAccept, simulate);
+            controller.refuel(canAccept, simulate);
             if (canAccept > 0) {
                 stack.setCount(stack.getCount() - (int) (canAccept / (Config.Reactor.FuelMBPerIngot * 9)));
             }
@@ -172,22 +169,20 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        ReactorMultiblockController reactor = reactor();
-        
-        if (isInlet() || reactor == null || slot == FUEL_INSERT_SLOT) {
+        if (isInlet() || controller == null || slot == FUEL_INSERT_SLOT) {
             return ItemStack.EMPTY;
         }
         
         if (slot == WASTE_SLOT && !fuelMode) {
-            long maxExtractable = reactor.extractWaste(amount * Config.Reactor.FuelMBPerIngot, true);
+            long maxExtractable = controller.extractWaste(amount * Config.Reactor.FuelMBPerIngot, true);
             long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
-            long extracted = reactor.extractWaste(toExtracted, simulate);
+            long extracted = controller.extractWaste(toExtracted, simulate);
             
             return new ItemStack(CyaniteIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
         } else if (slot == FUEL_SLOT && fuelMode) {
-            long maxExtractable = reactor.extractFuel(amount * Config.Reactor.FuelMBPerIngot, true);
+            long maxExtractable = controller.extractFuel(amount * Config.Reactor.FuelMBPerIngot, true);
             long toExtracted = maxExtractable - (maxExtractable % Config.Reactor.FuelMBPerIngot);
-            long extracted = reactor.extractFuel(toExtracted, simulate);
+            long extracted = controller.extractFuel(toExtracted, simulate);
             
             return new ItemStack(YelloriumIngot.INSTANCE, (int) Math.min(amount, extracted / Config.Reactor.FuelMBPerIngot));
         }
@@ -197,9 +192,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     @Override
     public int getSlotLimit(int slot) {
-        ReactorMultiblockController reactor = reactor();
-        assert reactor != null;
-        return (int) (reactor.CCgetFuelAmountMax() / Config.Reactor.FuelMBPerIngot);
+        return (int) (controller.CCgetFuelAmountMax() / Config.Reactor.FuelMBPerIngot);
     }
     
     @Override
@@ -234,9 +227,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     }
     
     public void ejectWaste() {
-        ReactorMultiblockController reactor = reactor();
-        assert reactor != null;
-        reactor.extractWaste(pushWaste((int) reactor.extractWaste(Integer.MAX_VALUE, true), false), false);
+        controller.extractWaste(pushWaste((int) controller.extractWaste(Integer.MAX_VALUE, true), false), false);
     }
     
     public int pushFuel(int fuel, boolean simulated) {
@@ -259,9 +250,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     }
     
     public void ejectFuel() {
-        ReactorMultiblockController reactor = reactor();
-        assert reactor != null;
-        reactor.extractFuel(pushFuel((int) reactor.extractFuel(Integer.MAX_VALUE, true), false), false);
+        controller.extractFuel(pushFuel((int) controller.extractFuel(Integer.MAX_VALUE, true), false), false);
     }
     
     Direction itemOutputDirection;
@@ -323,8 +312,7 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     @SuppressWarnings("unchecked")
     @Override
     public void runRequest(String requestName, Object requestData) {
-        ReactorMultiblockController reactor = reactor();
-        if (reactor == null) {
+        if (controller == null) {
             return;
         }
         

@@ -30,15 +30,11 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 // ahh shit, here we go again
-public class TurbineMultiblockController extends RectangularMultiblockController {
+public class TurbineMultiblockController extends RectangularMultiblockController<TurbineMultiblockController, TurbineBaseTile> {
     public TurbineMultiblockController(World world) {
-        super(world);
+        super(world, tile -> tile instanceof TurbineBaseTile);
         minSize.set(5, 4, 5);
         maxSize.set(Config.Turbine.MaxLength, Config.Turbine.MaxHeight, Config.Turbine.MaxWidth);
-        tileAttachValidator = tile -> {
-            //noinspection CodeBlock2Expr
-            return tile instanceof TurbineBaseTile;
-        };
         frameValidator = block -> {
             //noinspection CodeBlock2Expr
             return block instanceof TurbineCasing;
@@ -229,12 +225,12 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     private long glassCount = 0;
     
     @Override
-    protected void onPartPlaced(@Nonnull MultiblockTile placed) {
+    protected void onPartPlaced(@Nonnull TurbineBaseTile placed) {
         onPartAttached(placed);
     }
     
     @Override
-    protected void onPartAttached(@Nonnull MultiblockTile tile) {
+    protected void onPartAttached(@Nonnull TurbineBaseTile tile) {
         if (tile instanceof TurbineTerminalTile) {
             terminals.add((TurbineTerminalTile) tile);
         }
@@ -259,12 +255,12 @@ public class TurbineMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onPartBroken(@Nonnull MultiblockTile broken) {
+    protected void onPartBroken(@Nonnull TurbineBaseTile broken) {
         onPartDetached(broken);
     }
     
     @Override
-    protected void onPartDetached(@Nonnull MultiblockTile tile) {
+    protected void onPartDetached(@Nonnull TurbineBaseTile tile) {
         if (tile instanceof TurbineTerminalTile) {
             terminals.remove(tile);
         }
@@ -398,13 +394,13 @@ public class TurbineMultiblockController extends RectangularMultiblockController
         Vector3i internalVolume = new Vector3i().add(maxCoord()).sub(minCoord()).sub(2, 2, 2);
         BlockPos pos = rotorBearings.iterator().next().getPos();
         tankSize = (long) internalVolume.x * internalVolume.y * internalVolume.z * Config.Turbine.TankVolumePerBlock;
-        if(pos.getX() == minCoord().x() || pos.getX() == maxCoord().x()){
+        if (pos.getX() == minCoord().x() || pos.getX() == maxCoord().x()) {
             internalVolume.x = 1;
         }
-        if(pos.getY() == minCoord().y() || pos.getY() == maxCoord().y()){
+        if (pos.getY() == minCoord().y() || pos.getY() == maxCoord().y()) {
             internalVolume.y = 1;
         }
-        if(pos.getZ() == minCoord().z() || pos.getZ() == maxCoord().z()){
+        if (pos.getZ() == minCoord().z() || pos.getZ() == maxCoord().z()) {
             internalVolume.z = 1;
         }
         flowRateLimit = (long) internalVolume.x * internalVolume.y * internalVolume.z * Config.Turbine.FlowRatePerBlock;

@@ -7,19 +7,25 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.IChunk;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.items.DebugTool;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 
-public abstract class MultiblockTile extends TileEntity {
-    protected MultiblockController controller;
+public abstract class MultiblockTile<ControllerType extends MultiblockController<ControllerType, TileType>, TileType extends MultiblockTile<ControllerType, TileType>> extends TileEntity {
+    protected ControllerType controller;
+    
+    public TileType self() {
+        //noinspection unchecked
+        return (TileType) this;
+    }
     
     long lastSavedTick = 0;
     
@@ -28,15 +34,12 @@ public abstract class MultiblockTile extends TileEntity {
         attemptAttach = true;
         assert world != null;
         if (!world.isRemote) {
-            Phosphophyllite.tilesToAttach.computeIfAbsent((ServerWorld) world, k -> new ArrayList<>()).add(this);
+            Phosphophyllite.attachTile(this);
         }
     }
     
     private boolean attemptAttach = true;
     private boolean allowAttach = true;
-    
-    @SuppressWarnings("CanBeFinal")
-    protected Validator<MultiblockController> attachableControllerValidator = c -> true;
     
     public MultiblockTile(@Nonnull TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -47,42 +50,28 @@ public abstract class MultiblockTile extends TileEntity {
         if (allowAttach && attemptAttach && !world.isRemote) {
             attemptAttach = false;
             if (controller != null) {
-                controller.detach(this);
+                controller.detach(self());
                 controller = null;
             }
-            if (attachableControllerValidator != null) {
-                // at this point, i need to get or create a controller
-                BlockPos[] possiblePositions = {
-                        pos.add(-1, 0, 0),
-                        pos.add(1, 0, 0),
-                        pos.add(0, 0, -1),
-                        pos.add(0, 0, 1),
-                        pos.add(0, -1, 0),
-                        pos.add(0, 1, 0),
-                };
-                @SuppressWarnings({"DuplicatedCode", "deprecation"})
-                TileEntity[] possibleTiles = {
-                        world.isBlockLoaded(possiblePositions[0]) ? world.getTileEntity(possiblePositions[0]) : null,
-                        world.isBlockLoaded(possiblePositions[1]) ? world.getTileEntity(possiblePositions[1]) : null,
-                        world.isBlockLoaded(possiblePositions[2]) ? world.getTileEntity(possiblePositions[2]) : null,
-                        world.isBlockLoaded(possiblePositions[3]) ? world.getTileEntity(possiblePositions[3]) : null,
-                        world.isBlockLoaded(possiblePositions[4]) ? world.getTileEntity(possiblePositions[4]) : null,
-                        world.isBlockLoaded(possiblePositions[5]) ? world.getTileEntity(possiblePositions[5]) : null,
-                };
-                for (TileEntity possibleTile : possibleTiles) {
+            // at this point, i need to get or create a controller
+            BlockPos.Mutable possibleTilePos = new BlockPos.Mutable();
+            for (Direction value : Direction.values()) {
+                possibleTilePos.setPos(pos);
+                possibleTilePos.move(value);
+                IChunk chunk = world.getChunk(possibleTilePos.getX() >> 4, possibleTilePos.getZ() >> 4, ChunkStatus.FULL, false);
+                if (chunk != null) {
+                    TileEntity possibleTile = chunk.getTileEntity(possibleTilePos);
                     if (possibleTile instanceof MultiblockTile) {
-                        if (((MultiblockTile) possibleTile).controller != null) {
-                            if (attachableControllerValidator.validate(((MultiblockTile) possibleTile).controller)) {
-                                ((MultiblockTile) possibleTile).controller.attemptAttach(this);
-                            }
+                        if (((MultiblockTile<?, ?>) possibleTile).controller != null) {
+                            ((MultiblockTile<?, ?>) possibleTile).controller.attemptAttach(this);
                         } else {
-                            ((MultiblockTile) possibleTile).attemptAttach = true;
+                            ((MultiblockTile<?, ?>) possibleTile).attemptAttach = true;
                         }
                     }
                 }
             }
             if (controller == null) {
-                createController().attemptAttach(this);
+                createController().attemptAttach(self());
             }
         }
     }
@@ -101,7 +90,7 @@ public abstract class MultiblockTile extends TileEntity {
     @Override
     public final void remove() {
         if (controller != null) {
-            controller.detach(this);
+            controller.detach(self());
             allowAttach = false;
         }
         super.remove();
@@ -110,13 +99,13 @@ public abstract class MultiblockTile extends TileEntity {
     @Override
     public void onChunkUnloaded() {
         if (controller != null) {
-            controller.detach(this, true);
+            controller.detach(self(), true);
             allowAttach = false;
         }
     }
     
     @Nonnull
-    public abstract MultiblockController createController();
+    public abstract ControllerType createController();
     
     protected void readNBT(@Nonnull CompoundNBT compound) {
     }
@@ -146,7 +135,7 @@ public abstract class MultiblockTile extends TileEntity {
     @Nonnull
     public final CompoundNBT write(@Nonnull CompoundNBT compound) {
         super.write(compound);
-        if (controller != null && controller.blocks.containsKey(this.getPos())) {
+        if (controller != null && controller.blocks.containsTile(self())) {
             compound.put("controllerData", controller.getNBT());
         }
         compound.put("userdata", writeNBT());
@@ -160,7 +149,7 @@ public abstract class MultiblockTile extends TileEntity {
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (handIn == Hand.MAIN_HAND) {
-            if (player.getHeldItemMainhand() == ItemStack.EMPTY && (!((MultiblockBlock)getBlockState().getBlock()).usesAssmeblyState() || !getBlockState().get(MultiblockBlock.ASSEMBLED))) {
+            if (player.getHeldItemMainhand() == ItemStack.EMPTY && (!((MultiblockBlock) getBlockState().getBlock()).usesAssmeblyState() || !getBlockState().get(MultiblockBlock.ASSEMBLED))) {
                 if (controller != null && controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
                     if (controller.lastValidationError != null) {
                         player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());

@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 @RegisterTileEntity(name = "turbine_glass")
-public class TurbineGlassTile extends TurbineBaseTile{
+public class TurbineGlassTile extends TurbineBaseTile {
     
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;

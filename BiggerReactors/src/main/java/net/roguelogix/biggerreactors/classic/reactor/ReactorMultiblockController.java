@@ -3,7 +3,6 @@ package net.roguelogix.biggerreactors.classic.reactor;
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -18,7 +17,6 @@ import net.roguelogix.biggerreactors.classic.reactor.tiles.*;
 import net.roguelogix.biggerreactors.fluids.FluidIrradiatedSteam;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
-import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
 import net.roguelogix.phosphophyllite.multiblock.rectangular.RectangularMultiblockController;
@@ -29,16 +27,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class ReactorMultiblockController extends RectangularMultiblockController {
+public class ReactorMultiblockController extends RectangularMultiblockController<ReactorMultiblockController, ReactorBaseTile> {
     
     public ReactorMultiblockController(@Nonnull World world) {
-        super(world);
+        super(world, tile -> tile instanceof ReactorBaseTile);
         
         minSize.set(3);
         maxSize.set(Config.Reactor.MaxLength, Config.Reactor.MaxHeight, Config.Reactor.MaxWidth);
-        tileAttachValidator = tile -> {
-            return tile instanceof ReactorBaseTile;
-        };
         frameValidator = block -> {
             return block instanceof ReactorCasing;
         };
@@ -82,7 +77,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
                 }
                 for (int i = 0; i < maxCoord().y() - minCoord().y() - 1; i++) {
                     mutableBlockPos.move(0, -1, 0);
-                    MultiblockTile tile = blocks.get(mutableBlockPos);
+                    ReactorBaseTile tile = blocks.getTile(mutableBlockPos);
                     if (!(tile instanceof ReactorFuelRodTile)) {
                         throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.fuel_rod_gap", controlRod.getPos().getX(), controlRod.getPos().getY() + (-1 - i), controlRod.getPos().getZ()));
                     }
@@ -99,10 +94,9 @@ public class ReactorMultiblockController extends RectangularMultiblockController
             Util.chunkCachedBlockStateIteration(minCoord(), maxCoord(), world, (block, pos) -> {
                 if (block.getBlock() instanceof ReactorBaseBlock) {
                     mutableBlockPos.setPos(pos.x, pos.y, pos.z);
-                    if (!blocks.containsKey(mutableBlockPos)) {
+                    if (!blocks.containsPos(mutableBlockPos)) {
                         throw new ValidationError(new TranslationTextComponent("multiblock.error.biggerreactors.dangling_internal_part", pos.x, pos.y, pos.z));
                     }
-                    ;
                 }
             });
             
@@ -122,13 +116,13 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     private final Set<ReactorRedstonePortTile> redstonePorts = new HashSet<>();
     
     @Override
-    protected void onPartPlaced(@Nonnull MultiblockTile placed) {
+    protected void onPartPlaced(@Nonnull ReactorBaseTile placed) {
         onPartAttached(placed);
     }
     
     
     @Override
-    protected void onPartAttached(@Nonnull MultiblockTile tile) {
+    protected void onPartAttached(@Nonnull ReactorBaseTile tile) {
         if (tile instanceof ReactorTerminalTile) {
             terminals.add((ReactorTerminalTile) tile);
         }
@@ -159,12 +153,12 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onPartBroken(@Nonnull MultiblockTile broken) {
+    protected void onPartBroken(@Nonnull ReactorBaseTile broken) {
         onPartDetached(broken);
     }
     
     @Override
-    protected void onPartDetached(@Nonnull MultiblockTile tile) {
+    protected void onPartDetached(@Nonnull ReactorBaseTile tile) {
         if (tile instanceof ReactorTerminalTile) {
             terminals.remove(tile);
         }
@@ -239,11 +233,10 @@ public class ReactorMultiblockController extends RectangularMultiblockController
     }
     
     @Override
-    protected void onMerge(@Nonnull MultiblockController otherController) {
+    protected void onMerge(@Nonnull ReactorMultiblockController otherController) {
         setActive(ReactorActivity.INACTIVE);
         distributeFuel();
-        assert otherController instanceof ReactorMultiblockController;
-        ((ReactorMultiblockController) otherController).distributeFuel();
+        otherController.distributeFuel();
         simulation = new ClassicReactorSimulation();
     }
     
@@ -283,7 +276,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         fuelRodsByLevel.clear();
         fuelRodsByLevel.ensureCapacity(levels);
         for (int i = 0; i < levels; i++) {
-            fuelRodsByLevel.add(new HashSet<>());
+            fuelRodsByLevel.add(new LinkedHashSet<>());
         }
         
         fuelRods.forEach(rod -> {
@@ -401,7 +394,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         long lowerWasteUpdateLevel = lowerWastePixel / 16;
         long upperWasteUpdateLevel = upperWastePixel / 16 + (((upperWastePixel % 16) > 0) ? 1 : 0);
         
-        HashMap<BlockPos, BlockState> newStates = new HashMap<>();
+        HashMap<BlockPos, BlockState> newStates = new LinkedHashMap<>();
         boolean[] updatedLevels = new boolean[(int) upperFuelUpdateLevel];
         
         if (lowerFuelPixel != upperFuelPixel) {
@@ -788,7 +781,7 @@ public class ReactorMultiblockController extends RectangularMultiblockController
         }
     }
     
-    public void CCsetControlRodName(int index, String name){
+    public void CCsetControlRodName(int index, String name) {
         if (index >= controlRods.size()) {
             throw new RuntimeException("control rod index out of bounds");
         }

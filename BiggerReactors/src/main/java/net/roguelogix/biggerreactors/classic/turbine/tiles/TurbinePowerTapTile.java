@@ -50,7 +50,7 @@ public class TurbinePowerTapTile extends TurbineBaseTile implements IEnergyStora
     }
     
     LazyOptional<IEnergyStorage> energyOutput = LazyOptional.empty();
-
+    
     public long distributePower(long toDistribute, boolean simulate) {
         IEnergyStorage e = energyOutput.orElse(ENERGY_ZERO);
         if (e.canReceive()) {

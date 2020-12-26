@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 
 @RegisterTileEntity(name = "turbine_casing")
-public class TurbineCasingTile extends TurbineBaseTile{
+public class TurbineCasingTile extends TurbineBaseTile {
     
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;

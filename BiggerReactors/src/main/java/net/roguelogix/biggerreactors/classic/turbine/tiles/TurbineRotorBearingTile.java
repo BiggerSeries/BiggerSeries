@@ -9,7 +9,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.roguelogix.biggerreactors.classic.turbine.TurbineMultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.IAssemblyAttemptedTile;
 import net.roguelogix.phosphophyllite.registry.RegisterTileEntity;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector4i;
@@ -40,9 +39,8 @@ public class TurbineRotorBearingTile extends TurbineBaseTile implements IAssembl
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         CompoundNBT nbt = new CompoundNBT();
-        TurbineMultiblockController turbine = turbine();
-        if (turbine != null) {
-            nbt.putDouble("speed", turbine.CCgetRotorSpeed());
+        if (controller != null) {
+            nbt.putDouble("speed", controller.CCgetRotorSpeed());
             if (sendFullUpdate) {
                 sendFullUpdate = false;
                 nbt.put("config", getUpdateTag());
@@ -92,18 +90,18 @@ public class TurbineRotorBearingTile extends TurbineBaseTile implements IAssembl
     @Override
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = super.getUpdateTag();
-        if (isRenderBearing && turbine() != null) {
-            nbt.putFloat("rotx", turbine().rotationAxis.getX());
-            nbt.putFloat("roty", turbine().rotationAxis.getY());
-            nbt.putFloat("rotz", turbine().rotationAxis.getZ());
-            nbt.putInt("minx", turbine().minCoord().x());
-            nbt.putInt("miny", turbine().minCoord().y());
-            nbt.putInt("minz", turbine().minCoord().z());
-            nbt.putInt("maxx", turbine().maxCoord().x());
-            nbt.putInt("maxy", turbine().maxCoord().y());
-            nbt.putInt("maxz", turbine().maxCoord().z());
-            nbt.putInt("shafts", turbine().rotorConfiguration.size());
-            ArrayList<Vector4i> config = turbine().rotorConfiguration;
+        if (isRenderBearing && controller != null) {
+            nbt.putFloat("rotx", controller.rotationAxis.getX());
+            nbt.putFloat("roty", controller.rotationAxis.getY());
+            nbt.putFloat("rotz", controller.rotationAxis.getZ());
+            nbt.putInt("minx", controller.minCoord().x());
+            nbt.putInt("miny", controller.minCoord().y());
+            nbt.putInt("minz", controller.minCoord().z());
+            nbt.putInt("maxx", controller.maxCoord().x());
+            nbt.putInt("maxy", controller.maxCoord().y());
+            nbt.putInt("maxz", controller.maxCoord().z());
+            nbt.putInt("shafts", controller.rotorConfiguration.size());
+            ArrayList<Vector4i> config = controller.rotorConfiguration;
             for (int i = 0; i < config.size(); i++) {
                 Vector4i vec = config.get(i);
                 nbt.putInt("shaft" + i + "0", vec.x);

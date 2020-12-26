@@ -2,7 +2,6 @@ package net.roguelogix.phosphophyllite.multiblock.rectangular;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -10,22 +9,18 @@ import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockController;
 import net.roguelogix.phosphophyllite.multiblock.generic.MultiblockTile;
 import net.roguelogix.phosphophyllite.multiblock.generic.ValidationError;
 import net.roguelogix.phosphophyllite.multiblock.generic.Validator;
-import net.roguelogix.phosphophyllite.util.Util;
 import net.roguelogix.phosphophyllite.repack.org.joml.Vector3i;
+import net.roguelogix.phosphophyllite.util.Util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.HashMap;
-
-import static net.minecraftforge.common.util.Constants.BlockFlags.BLOCK_UPDATE;
-import static net.minecraftforge.common.util.Constants.BlockFlags.NOTIFY_NEIGHBORS;
 import static net.roguelogix.phosphophyllite.multiblock.rectangular.AxisPosition.*;
 
-public class RectangularMultiblockController extends MultiblockController {
+public class RectangularMultiblockController<ControllerType extends RectangularMultiblockController<ControllerType, TileType>, TileType extends RectangularMultiblockTile<ControllerType, TileType>> extends MultiblockController<ControllerType, TileType> {
     
-    public RectangularMultiblockController(@Nonnull World world) {
-        super(world);
+    public RectangularMultiblockController(@Nonnull World world, @Nonnull Validator<MultiblockTile<?, ?>> tileTypeValidator) {
+        super(world, tileTypeValidator);
         setAssemblyValidator(null);
     }
     
@@ -41,15 +36,7 @@ public class RectangularMultiblockController extends MultiblockController {
     protected Validator<Block> interiorValidator = null;
     protected Validator<Block> genericValidator = null;
     
-    private static final Validator<MultiblockController> mainValidator = genericController -> {
-        if (!(genericController instanceof RectangularMultiblockController)) {
-            // TODO: 6/29/20 invalid controller error
-            // if this *ever* gets hit, normally,
-            throw new ValidationError("TODO: Invalid controller error");
-        }
-        
-        RectangularMultiblockController controller = (RectangularMultiblockController) genericController;
-        
+    private final Validator<ControllerType> mainValidator = controller -> {
         int minX = controller.minCoord().x();
         int minY = controller.minCoord().y();
         int minZ = controller.minCoord().z();
@@ -182,7 +169,7 @@ public class RectangularMultiblockController extends MultiblockController {
     };
     
     @Override
-    protected final void setAssemblyValidator(@Nullable Validator<MultiblockController> validator) {
+    protected final void setAssemblyValidator(@Nullable Validator<ControllerType> validator) {
         if (validator == null) {
             super.setAssemblyValidator(mainValidator);
             return;
@@ -191,36 +178,34 @@ public class RectangularMultiblockController extends MultiblockController {
     }
     
     @Override
-    protected BlockState assembledTileState(MultiblockTile tile) {
+    protected BlockState assembledTileState(TileType tile) {
         BlockState state = super.assembledTileState(tile);
-        if (tile instanceof RectangularMultiblockTile) {
-            RectangularMultiblockBlock block = (RectangularMultiblockBlock) tile.getBlockState().getBlock();
-            if (block.usesAxisPositions()) {
-                BlockPos pos = tile.getPos();
-                
-                if (pos.getX() == minCoord().x()) {
-                    state = state.with(X_AXIS_POSITION, AxisPosition.LOWER);
-                } else if (pos.getX() == maxCoord().x()) {
-                    state = state.with(X_AXIS_POSITION, AxisPosition.UPPER);
-                } else {
-                    state = state.with(X_AXIS_POSITION, AxisPosition.MIDDLE);
-                }
-                
-                if (pos.getY() == minCoord().y()) {
-                    state = state.with(Y_AXIS_POSITION, AxisPosition.LOWER);
-                } else if (pos.getY() == maxCoord().y()) {
-                    state = state.with(Y_AXIS_POSITION, AxisPosition.UPPER);
-                } else {
-                    state = state.with(Y_AXIS_POSITION, AxisPosition.MIDDLE);
-                }
-                
-                if (pos.getZ() == minCoord().z()) {
-                    state = state.with(Z_AXIS_POSITION, AxisPosition.LOWER);
-                } else if (pos.getZ() == maxCoord().z()) {
-                    state = state.with(Z_AXIS_POSITION, AxisPosition.UPPER);
-                } else {
-                    state = state.with(Z_AXIS_POSITION, AxisPosition.MIDDLE);
-                }
+        RectangularMultiblockBlock block = (RectangularMultiblockBlock) tile.getBlockState().getBlock();
+        if (block.usesAxisPositions()) {
+            BlockPos pos = tile.getPos();
+            
+            if (pos.getX() == minCoord().x()) {
+                state = state.with(X_AXIS_POSITION, AxisPosition.LOWER);
+            } else if (pos.getX() == maxCoord().x()) {
+                state = state.with(X_AXIS_POSITION, AxisPosition.UPPER);
+            } else {
+                state = state.with(X_AXIS_POSITION, AxisPosition.MIDDLE);
+            }
+            
+            if (pos.getY() == minCoord().y()) {
+                state = state.with(Y_AXIS_POSITION, AxisPosition.LOWER);
+            } else if (pos.getY() == maxCoord().y()) {
+                state = state.with(Y_AXIS_POSITION, AxisPosition.UPPER);
+            } else {
+                state = state.with(Y_AXIS_POSITION, AxisPosition.MIDDLE);
+            }
+            
+            if (pos.getZ() == minCoord().z()) {
+                state = state.with(Z_AXIS_POSITION, AxisPosition.LOWER);
+            } else if (pos.getZ() == maxCoord().z()) {
+                state = state.with(Z_AXIS_POSITION, AxisPosition.UPPER);
+            } else {
+                state = state.with(Z_AXIS_POSITION, AxisPosition.MIDDLE);
             }
         }
         return state;

@@ -43,17 +43,17 @@ import static net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineCoolan
 
 @RegisterTileEntity(name = "turbine_coolant_port")
 public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHandler, INamedContainerProvider, IHasUpdatableState<TurbineCoolantPortState>, IAssemblyAttemptedTile {
-
+    
     @RegisterTileEntity.Type
     public static TileEntityType<?> TYPE;
-
+    
     public TurbineCoolantPortTile() {
         super(TYPE);
     }
-
+    
     @CapabilityInject(IGasHandler.class)
     public static Capability<IGasHandler> GAS_HANDLER_CAPABILITY = null;
-
+    
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -61,21 +61,21 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
             return LazyOptional.of(() -> this).cast();
         }
         if (cap == GAS_HANDLER_CAPABILITY) {
-            return TurbineGasHandler.create(this::turbine).cast();
+            return TurbineGasHandler.create(() -> controller).cast();
         }
         return super.getCapability(cap, side);
     }
-
+    
     private static final ResourceLocation steamTagLocation = new ResourceLocation("forge:steam");
-
+    
     private final FluidStack water = new FluidStack(Fluids.WATER, 0);
     private final FluidStack steam = new FluidStack(FluidIrradiatedSteam.INSTANCE, 0);
-
+    
     @Override
     public int getTanks() {
         return 2;
     }
-
+    
     @Nonnull
     @Override
     public FluidStack getFluidInTank(int tank) {
@@ -87,12 +87,12 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         }
         return FluidStack.EMPTY;
     }
-
+    
     @Override
     public int getTankCapacity(int tank) {
         return Integer.MAX_VALUE;
     }
-
+    
     @Override
     public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
         if (tank == 1 && stack.getRawFluid() == Fluids.WATER) {
@@ -100,7 +100,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         }
         return tank == 0 && stack.getRawFluid().getTags().contains(steamTagLocation);
     }
-
+    
     @Override
     public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
         if (direction == OUTLET) {
@@ -110,11 +110,11 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
             return 0;
         }
         if (controller != null) {
-            return (int) turbine().addSteam(resource.getAmount(), action.simulate());
+            return (int) controller.addSteam(resource.getAmount(), action.simulate());
         }
         return 0;
     }
-
+    
     @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action) {
@@ -123,17 +123,17 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         }
         return FluidStack.EMPTY;
     }
-
+    
     @Nonnull
     @Override
     public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
         if (direction == INLET) {
             return FluidStack.EMPTY;
         }
-        water.setAmount((int) turbine().extractWater(maxDrain, action.simulate()));
+        water.setAmount((int) controller.extractWater(maxDrain, action.simulate()));
         return water.copy();
     }
-
+    
     public long pushWater(long amount) {
         if (!connected || direction == INLET) {
             return 0;
@@ -141,14 +141,14 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         water.setAmount((int) amount);
         return waterOutput.orElse(EMPTY_TANK).fill(water, IFluidHandler.FluidAction.EXECUTE);
     }
-
+    
     private boolean connected = false;
     Direction waterOutputDirection = null;
     LazyOptional<IFluidHandler> waterOutput = null;
     FluidTank EMPTY_TANK = new FluidTank(0);
     private TurbineCoolantPort.PortDirection direction = INLET;
     public final TurbineCoolantPortState coolantPortState = new TurbineCoolantPortState(this);
-
+    
     @SuppressWarnings("DuplicatedCode")
     public void updateOutputDirection() {
         if (controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
@@ -168,7 +168,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         }
         neighborChanged();
     }
-
+    
     @SuppressWarnings("DuplicatedCode")
     public void neighborChanged() {
         waterOutput = LazyOptional.empty();
@@ -193,19 +193,19 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         }
         connected = connected && waterOutput.isPresent();
     }
-
+    
     public void setDirection(TurbineCoolantPort.PortDirection direction) {
         this.direction = direction;
         this.markDirty();
     }
-
+    
     @Override
     protected void readNBT(@Nonnull CompoundNBT compound) {
         if (compound.contains("direction")) {
             direction = TurbineCoolantPort.PortDirection.valueOf(compound.getString("direction"));
         }
     }
-
+    
     @Nonnull
     @Override
     protected CompoundNBT writeNBT() {
@@ -213,13 +213,13 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         NBT.putString("direction", String.valueOf(direction));
         return NBT;
     }
-
+    
     @Override
     public void onAssemblyAttempted() {
         assert world != null;
         world.setBlockState(pos, world.getBlockState(pos).with(PORT_DIRECTION_ENUM_PROPERTY, direction));
     }
-
+    
     @Override
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
@@ -232,15 +232,10 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         }
         return super.onBlockActivated(player, handIn);
     }
-
+    
     @SuppressWarnings("unchecked")
     @Override
     public void runRequest(String requestName, Object requestData) {
-        TurbineMultiblockController turbine = turbine();
-        if (turbine == null) {
-            return;
-        }
-
         // Change IO direction.
         if (requestName.equals("setDirection")) {
             this.setDirection(((Integer) requestData != 0) ? OUTLET : INLET);
@@ -248,25 +243,25 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
         }
         super.runRequest(requestName, requestData);
     }
-
+    
     @Override
     public ITextComponent getDisplayName() {
         return new TranslationTextComponent(TurbineCoolantPort.INSTANCE.getTranslationKey());
     }
-
+    
     @Nullable
     @Override
     public Container createMenu(int windowId, @Nonnull PlayerInventory playerInventory, @Nonnull PlayerEntity player) {
         return new TurbineCoolantPortContainer(windowId, this.pos, player);
     }
-
+    
     @Nullable
     @Override
     public TurbineCoolantPortState getState() {
         this.updateState();
         return this.coolantPortState;
     }
-
+    
     @Override
     public void updateState() {
         coolantPortState.direction = (this.direction == INLET);
