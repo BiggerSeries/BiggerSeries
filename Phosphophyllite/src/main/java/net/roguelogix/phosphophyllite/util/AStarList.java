@@ -5,7 +5,6 @@ import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.TreeSet;
 
@@ -13,14 +12,14 @@ import java.util.TreeSet;
 @MethodsReturnNonnullByDefault
 public class AStarList {
     
-    ArrayList<BlockPos> targets = new ArrayList<>();
+    TreeSet<BlockPos> targets = new TreeSet<>(this::orderingFunction);
     TreeSet<BlockPos> nodeSet = new TreeSet<>(this::orderingFunction);
     
     private int orderingFunction(BlockPos a, BlockPos b) {
         if(targets.isEmpty()){
             return 0;
         }
-        BlockPos target = targets.get(0);
+        BlockPos target = targets.first();
         double aDistance = a.distanceSq(target);
         double bDistance = b.distanceSq(target);
         int aHash = a.hashCode();
@@ -32,9 +31,7 @@ public class AStarList {
         if (targets.isEmpty()) {
             nodeSet.add(target);
         }
-        if (!targets.contains(target)) {
-            targets.add(target);
-        }
+        targets.add(target);
     }
     
     public void addNode(BlockPos node) {
