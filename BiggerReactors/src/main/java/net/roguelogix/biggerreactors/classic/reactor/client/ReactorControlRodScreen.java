@@ -104,7 +104,7 @@ public class ReactorControlRodScreen extends ScreenBase<ReactorControlRodContain
         this.addElement(textEnterButton);
 
         // (Center) Rod retract button:
-        Button<ReactorControlRodContainer> rodRetractButton = new Button<>(this, 58, 64, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.retract_rod.tooltip"));
+        Button<ReactorControlRodContainer> rodRetractButton = new Button<>(this, 58, 82, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.retract_rod.tooltip"));
         rodRetractButton.onMouseReleased = (mX, mY, btn) -> {
             // Click logic. Extra check necessary since this is an "in-class" button.
             if (rodRetractButton.isMouseOver(mX, mY)) {
@@ -137,7 +137,7 @@ public class ReactorControlRodScreen extends ScreenBase<ReactorControlRodContain
         this.addElement(rodRetractButton);
 
         // (Center) Rod insert button:
-        Button<ReactorControlRodContainer> rodInsertButton = new Button<>(this, 58, 82, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.insert_rod.tooltip"));
+        Button<ReactorControlRodContainer> rodInsertButton = new Button<>(this, 58, 64, 14, 15, 226, 0, new TranslationTextComponent("screen.biggerreactors.reactor_control_rod.insert_rod.tooltip"));
         rodInsertButton.onMouseReleased = (mX, mY, btn) -> {
             // Click logic. Extra check necessary since this is an "in-class" button.
             if (rodInsertButton.isMouseOver(mX, mY)) {
