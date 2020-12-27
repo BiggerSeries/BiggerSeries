@@ -193,7 +193,6 @@ public class MultiblockController<ControllerType extends MultiblockController<Co
         } else if (toAttachPos.getY() == maxCoord.y) {
             maxExtremeBlocks.y++;
         }
-        System.out.println(maxExtremeBlocks.y);
         if (toAttachPos.getZ() > maxCoord.z) {
             maxCoord.z = toAttachPos.getZ();
             maxExtremeBlocks.z = 1;
@@ -283,7 +282,6 @@ public class MultiblockController<ControllerType extends MultiblockController<Co
         }
         if (toDetachPos.getY() == maxCoord.y) {
             maxExtremeBlocks.y--;
-            System.out.println(maxExtremeBlocks.y);
             if (maxExtremeBlocks.y == 0) {
                 updateExtremes = true;
             }
