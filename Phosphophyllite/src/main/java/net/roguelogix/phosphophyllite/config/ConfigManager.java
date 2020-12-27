@@ -59,6 +59,18 @@ public class ConfigManager {
         }
         
         private Field enableAdvanced;
+        
+        boolean enableAdvanced(){
+            if(enableAdvanced == null){
+                return false;
+            }
+            try {
+                return enableAdvanced.getBoolean(null);
+            } catch (IllegalAccessException ignored) {
+                return false;
+            }
+        }
+        
         private final HashSet<Method> preLoads = new HashSet<>();
         private final HashSet<Method> loads = new HashSet<>();
         private final HashSet<Method> postLoads = new HashSet<>();
@@ -145,6 +157,8 @@ public class ConfigManager {
             }
             Element tree = readFile();
             spec.writeElementTree(tree);
+            tree = spec.trimAndRegenerateTree(tree, enableAdvanced());
+            writeFile(tree);
         }
         
         void findFile() {
@@ -178,7 +192,10 @@ public class ConfigManager {
         
         void generateFile() {
             spec.writeDefaults();
-            Element tree = spec.generateElementTree(false);
+            writeFile(spec.generateElementTree(false));
+        }
+        
+        void writeFile(Element tree){
             String str = null;
             switch (annotation.format()) {
                 case JSON5: {

@@ -3,7 +3,6 @@ package net.roguelogix.phosphophyllite.config;
 import mcp.MethodsReturnNonnullByDefault;
 import net.roguelogix.phosphophyllite.Phosphophyllite;
 import net.roguelogix.phosphophyllite.parsers.Element;
-import net.roguelogix.phosphophyllite.registry.OnModLoad;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -76,16 +75,415 @@ public class ConfigSpec {
         boolean defaultValue;
     }
     
-    
-    @OnModLoad
-    private static void OML() {
-        SpecClazzNode node = buildNodeForClazz(net.roguelogix.phosphophyllite.PhosphophylliteConfig.class);
-    }
-    
     final SpecClazzNode masterNode;
     
     ConfigSpec(Class<?> clazz) {
         masterNode = buildNodeForClazz(clazz);
+    }
+    
+    
+    Element trimAndRegenerateTree(Element tree, boolean enableAdvanced) {
+        return regenerateElementTree(trimElementTree(tree), enableAdvanced);
+    }
+    
+    @Nullable
+    Element trimElementTree(Element tree) {
+        return trimElementForNode(tree, masterNode);
+    }
+    
+    @Nullable
+    private Element trimElementForNode(Element element, SpecNode node) {
+        if (node instanceof SpecClazzNode) {
+            if (element.type != Element.Type.Section) {
+                return null;
+            }
+            SpecClazzNode clazzNode = (SpecClazzNode) node;
+            ArrayList<Element> trimmedElements = new ArrayList<>();
+            for (Element subElement : element.asArray()) {
+                SpecNode subNode = clazzNode.fieldNodes.get(subElement.name);
+                if (subNode == null) {
+                    subNode = clazzNode.clazzNodes.get(subElement.name);
+                }
+                if (subNode == null) {
+                    continue;
+                }
+                Element newElement = trimElementForNode(subElement, subNode);
+                if (newElement == null) {
+                    continue;
+                }
+                trimmedElements.add(newElement);
+            }
+            return new Element(Element.Type.Section, node.comment, element.name, trimmedElements.toArray());
+        } else if (node instanceof SpecObjectNode) {
+            if (element.type != Element.Type.Section) {
+                return null;
+            }
+            SpecObjectNode objectNode = (SpecObjectNode) node;
+            
+            ArrayList<Element> trimmedElements = new ArrayList<>();
+            for (Element subElement : element.asArray()) {
+                SpecNode subNode = objectNode.subNodes.get(subElement.name);
+                if (subNode == null) {
+                    continue;
+                }
+                Element newElement = trimElementForNode(subElement, subNode);
+                if (newElement == null) {
+                    continue;
+                }
+                trimmedElements.add(newElement);
+            }
+            return new Element(Element.Type.Section, node.comment, element.name, trimmedElements.toArray());
+        } else if (node instanceof SpecMapNode) {
+            if (element.type != Element.Type.Section) {
+                return null;
+            }
+            SpecNode subNode = ((SpecMapNode) node).nodeType;
+            
+            ArrayList<Element> trimmedElements = new ArrayList<>();
+            for (Element subElement : element.asArray()) {
+                Element newElement = trimElementForNode(subElement, subNode);
+                if (newElement == null) {
+                    continue;
+                }
+                trimmedElements.add(newElement);
+            }
+            
+            return new Element(Element.Type.Section, node.comment, element.name, trimmedElements.toArray());
+        } else if (node instanceof SpecListNode) {
+            if (element.type != Element.Type.Array) {
+                return null;
+            }
+            SpecNode subNode = ((SpecListNode) node).subNodeType;
+            
+            ArrayList<Element> trimmedElements = new ArrayList<>();
+            for (Element subElement : element.asArray()) {
+                Element newElement = trimElementForNode(subElement, subNode);
+                if (newElement == null) {
+                    continue;
+                }
+                trimmedElements.add(newElement);
+            }
+            
+            return new Element(Element.Type.Array, node.comment, element.name, trimmedElements.toArray());
+        } else if (node instanceof SpecStringNode) {
+            if (element.type != Element.Type.String && element.type != Element.Type.Number && element.type != Element.Type.Boolean) {
+                return null;
+            }
+            return element;
+        } else if (node instanceof SpecEnumNode) {
+            if (element.type != Element.Type.String) {
+                return null;
+            }
+            Enum<?>[] enumVals = (Enum<?>[]) ((SpecEnumNode) node).enumClass.getEnumConstants();
+            String[] enumValStrings = new String[enumVals.length];
+            for (int i = 0; i < enumVals.length; i++) {
+                enumValStrings[i] = enumVals[i].toString();
+            }
+            String nameGiven = element.asString().toLowerCase(Locale.ENGLISH);
+            Enum<?> givenVal = null;
+            for (int i = 0; i < enumValStrings.length; i++) {
+                if (nameGiven.equals(enumValStrings[i])) {
+                    for (String allowedValue : ((SpecEnumNode) node).allowedValues) {
+                        if (nameGiven.equals(allowedValue.toLowerCase(Locale.ENGLISH))) {
+                            givenVal = enumVals[i];
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (givenVal == null) {
+                return null;
+            }
+            return new Element(Element.Type.String, node.comment, element.name, givenVal.toString());
+        } else if (node instanceof SpecNumberNode) {
+            if (element.type != Element.Type.Number) {
+                return null;
+            }
+            double val = element.asDouble();
+            if (isIntegral(((SpecNumberNode) node).field.getType())) {
+                long realVal = Math.round(val);
+                if (realVal < ((SpecNumberNode) node).lowerBound || realVal > ((SpecNumberNode) node).upperBound ||
+                        (realVal <= ((SpecNumberNode) node).lowerBound && !(((SpecNumberNode) node).lowerInclusive)) ||
+                        (realVal >= ((SpecNumberNode) node).upperBound && !((SpecNumberNode) node).upperInclusive)) {
+                    if (realVal <= ((SpecNumberNode) node).lowerBound) {
+                        realVal = Math.round(((SpecNumberNode) node).lowerBound);
+                        if (!((SpecNumberNode) node).lowerInclusive) {
+                            realVal++;
+                        }
+                    } else if (realVal >= ((SpecNumberNode) node).upperBound) {
+                        realVal = Math.round(((SpecNumberNode) node).upperBound);
+                        if (!((SpecNumberNode) node).upperInclusive) {
+                            realVal--;
+                        }
+                    }
+                }
+                val = realVal;
+            } else {
+                if (val < ((SpecNumberNode) node).lowerBound || val > ((SpecNumberNode) node).upperBound ||
+                        (val <= ((SpecNumberNode) node).lowerBound && !(((SpecNumberNode) node).lowerInclusive)) ||
+                        (val >= ((SpecNumberNode) node).upperBound && !((SpecNumberNode) node).upperInclusive)) {
+                    if (val <= ((SpecNumberNode) node).lowerBound) {
+                        val = ((SpecNumberNode) node).lowerBound;
+                        if (!((SpecNumberNode) node).lowerInclusive) {
+                            val = Math.nextAfter(val, Double.POSITIVE_INFINITY);
+                        }
+                    } else if (val >= ((SpecNumberNode) node).upperBound) {
+                        val = ((SpecNumberNode) node).upperBound;
+                        if (!((SpecNumberNode) node).upperInclusive) {
+                            val = Math.nextAfter(val, Double.NEGATIVE_INFINITY);
+                        }
+                    }
+                }
+            }
+            return new Element(Element.Type.Number, node.comment, element.name, String.valueOf(val));
+        } else if (node instanceof SpecBooleanNode) {
+            if (element.type != Element.Type.String && element.type != Element.Type.Number && element.type != Element.Type.Boolean) {
+                return null;
+            }
+            boolean newVal;
+            if (element.type == Element.Type.String || element.type == Element.Type.Boolean) {
+                String str = element.asString();
+                newVal = Boolean.parseBoolean(str);
+            } else {
+                newVal = element.asDouble() != 0;
+            }
+            
+            return new Element(Element.Type.Boolean, node.comment, element.name, String.valueOf(newVal));
+        }
+        
+        return null;
+    }
+    
+    Element regenerateElementTree(@Nullable Element tree, boolean enableAdvanced) {
+        try {
+            return regenerateElementTreeForNode(tree, masterNode, null, null, enableAdvanced);
+        } catch (IllegalAccessException e) {
+            ConfigManager.LOGGER.error("Unexpected error caught regenerating config");
+            ConfigManager.LOGGER.error(e.toString());
+            throw new DefinitionError(e.getMessage());
+        }
+    }
+    
+    private Element regenerateElementTreeForNode(@Nullable Element tree, SpecNode node, @Nullable Object object, @Nullable String name, boolean enableAdvanced) throws IllegalAccessException {
+        if (tree == null) {
+            return generateElementForNode(node, object, name, enableAdvanced);
+        }
+        
+        if (node instanceof SpecClazzNode) {
+            if (tree.type != Element.Type.Section) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            
+            ArrayList<Element> subElements = new ArrayList<>();
+            
+            Element[] elements = tree.asArray();
+            
+            for (Map.Entry<String, SpecFieldNode> entry : ((SpecClazzNode) node).fieldNodes.entrySet()) {
+                nextEntry:
+                {
+                    for (Element element : elements) {
+                        if (entry.getKey().equals(element.name)) {
+                            if ((enableAdvanced || !entry.getValue().advanced) && !entry.getValue().hidden) {
+                                subElements.add(regenerateElementTreeForNode(element, entry.getValue(), null, entry.getKey(), enableAdvanced));
+                            }
+                            break nextEntry;
+                        }
+                    }
+                    if ((enableAdvanced || !entry.getValue().advanced) && !entry.getValue().hidden) {
+                        subElements.add(regenerateElementTreeForNode(null, entry.getValue(), null, entry.getKey(), enableAdvanced));
+                    }
+                }
+            }
+            
+            for (Map.Entry<String, SpecClazzNode> entry : ((SpecClazzNode) node).clazzNodes.entrySet()) {
+                nextEntry:
+                {
+                    for (Element element : elements) {
+                        if (entry.getKey().equals(element.name)) {
+                            if ((enableAdvanced || !entry.getValue().advanced) && !entry.getValue().hidden) {
+                                subElements.add(regenerateElementTreeForNode(element, entry.getValue(), null, entry.getKey(), enableAdvanced));
+                            }
+                            break nextEntry;
+                        }
+                    }
+                    if ((enableAdvanced || !entry.getValue().advanced) && !entry.getValue().hidden) {
+                        subElements.add(regenerateElementTreeForNode(null, entry.getValue(), null, entry.getKey(), enableAdvanced));
+                    }
+                }
+            }
+            
+            return new Element(Element.Type.Section, node.comment, name, subElements.toArray());
+        } else if (node instanceof SpecObjectNode) {
+            if (tree.type != Element.Type.Section) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            
+            Object nodeObject = ((SpecObjectNode) node).field.get(object);
+            
+            if (nodeObject == null) {
+                nodeObject = createClassInstance(((SpecObjectNode) node).clazz);
+            }
+            
+            ArrayList<Element> subElements = new ArrayList<>();
+            
+            Element[] elements = tree.asArray();
+            
+            for (Map.Entry<String, SpecFieldNode> entry : ((SpecObjectNode) node).subNodes.entrySet()) {
+                nextEntry:
+                {
+                    for (Element element : elements) {
+                        if (entry.getKey().equals(element.name)) {
+                            if ((enableAdvanced || !entry.getValue().advanced) && !entry.getValue().hidden) {
+                                subElements.add(regenerateElementTreeForNode(element, entry.getValue(), nodeObject, entry.getKey(), enableAdvanced));
+                            }
+                            break nextEntry;
+                        }
+                    }
+                    if ((enableAdvanced || !entry.getValue().advanced) && !entry.getValue().hidden) {
+                        subElements.add(regenerateElementTreeForNode(null, entry.getValue(), nodeObject, entry.getKey(), enableAdvanced));
+                    }
+                }
+            }
+            
+            return new Element(Element.Type.Section, node.comment, name, subElements.toArray());
+        } else if (node instanceof SpecMapNode) {
+            if (tree.type != Element.Type.Section) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            
+            ArrayList<Element> subElements = new ArrayList<>();
+            
+            Element[] elements = tree.asArray();
+            
+            Object defaultObject = createClassInstance(((SpecMapNode) node).elementClass);
+            
+            Object nodeObject = ((SpecFieldNode) node).field.get(object);
+            @SuppressWarnings("unchecked")
+            Map<String, ?> map = (Map<String, ?>) nodeObject;
+            
+            for (Element element : elements) {
+                Object elementObject = map.get(element.name);
+                if (elementObject == null) {
+                    elementObject = defaultObject;
+                }
+                subElements.add(regenerateElementTreeForNode(element, ((SpecMapNode) node).nodeType, elementObject, element.name, enableAdvanced));
+            }
+            
+            return new Element(Element.Type.Section, node.comment, name, subElements.toArray());
+        } else if (node instanceof SpecListNode) {
+            if (tree.type != Element.Type.Array) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            
+            ArrayList<Element> subElements = new ArrayList<>();
+            
+            Element[] elements = tree.asArray();
+            
+            Object defaultObject = createClassInstance(((SpecListNode) node).elementClass);
+            
+            Object nodeObject = ((SpecFieldNode) node).field.get(object);
+            List<?> list = (List<?>) nodeObject;
+            
+            for (int i = 0; i < elements.length; i++) {
+                Object elementObject = defaultObject;
+                if (i < list.size()) {
+                    elementObject = list.get(i);
+                }
+                subElements.add(regenerateElementTreeForNode(elements[i], ((SpecListNode) node).subNodeType, elementObject, null, enableAdvanced));
+            }
+            
+            return new Element(Element.Type.Array, node.comment, name, subElements.toArray());
+        } else if (node instanceof SpecEnumNode) {
+            if (tree.type != Element.Type.String) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            
+            Enum<?>[] enumVals = (Enum<?>[]) ((SpecEnumNode) node).enumClass.getEnumConstants();
+            String[] enumValStrings = new String[enumVals.length];
+            for (int i = 0; i < enumVals.length; i++) {
+                enumValStrings[i] = enumVals[i].toString();
+            }
+            String nameGiven = tree.asString().toLowerCase(Locale.ENGLISH);
+            Enum<?> givenVal = null;
+            for (int i = 0; i < enumValStrings.length; i++) {
+                if (nameGiven.equals(enumValStrings[i])) {
+                    for (String allowedValue : ((SpecEnumNode) node).allowedValues) {
+                        if (nameGiven.equals(allowedValue.toLowerCase(Locale.ENGLISH))) {
+                            givenVal = enumVals[i];
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (givenVal == null) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            return tree;
+            
+        } else if (node instanceof SpecStringNode) {
+            if (tree.type != Element.Type.String && tree.type != Element.Type.Number && tree.type != Element.Type.Boolean) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            return tree;
+        } else if (node instanceof SpecNumberNode) {
+            if (tree.type != Element.Type.Number) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            double val = tree.asDouble();
+            if (isIntegral(((SpecNumberNode) node).field.getType())) {
+                long realVal = Math.round(val);
+                if (realVal < ((SpecNumberNode) node).lowerBound || realVal > ((SpecNumberNode) node).upperBound ||
+                        (realVal <= ((SpecNumberNode) node).lowerBound && !(((SpecNumberNode) node).lowerInclusive)) ||
+                        (realVal >= ((SpecNumberNode) node).upperBound && !((SpecNumberNode) node).upperInclusive)) {
+                    if (realVal <= ((SpecNumberNode) node).lowerBound) {
+                        realVal = Math.round(((SpecNumberNode) node).lowerBound);
+                        if (!((SpecNumberNode) node).lowerInclusive) {
+                            realVal++;
+                        }
+                    } else if (realVal >= ((SpecNumberNode) node).upperBound) {
+                        realVal = Math.round(((SpecNumberNode) node).upperBound);
+                        if (!((SpecNumberNode) node).upperInclusive) {
+                            realVal--;
+                        }
+                    }
+                }
+                val = realVal;
+            } else {
+                if (val < ((SpecNumberNode) node).lowerBound || val > ((SpecNumberNode) node).upperBound ||
+                        (val <= ((SpecNumberNode) node).lowerBound && !(((SpecNumberNode) node).lowerInclusive)) ||
+                        (val >= ((SpecNumberNode) node).upperBound && !((SpecNumberNode) node).upperInclusive)) {
+                    if (val <= ((SpecNumberNode) node).lowerBound) {
+                        val = ((SpecNumberNode) node).lowerBound;
+                        if (!((SpecNumberNode) node).lowerInclusive) {
+                            val = Math.nextAfter(val, Double.POSITIVE_INFINITY);
+                        }
+                    } else if (val >= ((SpecNumberNode) node).upperBound) {
+                        val = ((SpecNumberNode) node).upperBound;
+                        if (!((SpecNumberNode) node).upperInclusive) {
+                            val = Math.nextAfter(val, Double.NEGATIVE_INFINITY);
+                        }
+                    }
+                }
+            }
+            return new Element(Element.Type.Number, node.comment, tree.name, String.valueOf(val));
+        } else if (node instanceof SpecBooleanNode) {
+            if (tree.type != Element.Type.String && tree.type != Element.Type.Number && tree.type != Element.Type.Boolean) {
+                return generateElementForNode(node, object, name, enableAdvanced);
+            }
+            boolean newVal;
+            if (tree.type == Element.Type.String || tree.type == Element.Type.Boolean) {
+                String str = tree.asString();
+                newVal = Boolean.parseBoolean(str);
+            } else {
+                newVal = tree.asDouble() != 0;
+            }
+            
+            return new Element(Element.Type.Boolean, node.comment, tree.name, String.valueOf(newVal));
+        }
+        
+        throw new DefinitionError("Attempting to regenerate element for unknown node type");
     }
     
     Element generateElementTree(boolean enableAdvanced) {
@@ -205,7 +603,7 @@ public class ConfigSpec {
                 } else if (fieldNode != null) {
                     writeElementNode(subElement, fieldNode, null);
                 } else {
-                    Phosphophyllite.LOGGER.info("Unknown config option given: " + element.name);
+                    Phosphophyllite.LOGGER.info("Unknown config option given: " + subElement.name);
                 }
             }
             return;
@@ -288,7 +686,7 @@ public class ConfigSpec {
             }
             return;
         } else if (node instanceof SpecStringNode) {
-            if (element.type != Element.Type.String && element.type != Element.Type.Number) {
+            if (element.type != Element.Type.String && element.type != Element.Type.Number && element.type != Element.Type.Boolean) {
                 ConfigManager.LOGGER.info("Invalid config structure given");
                 ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a String");
                 return;
@@ -301,8 +699,29 @@ public class ConfigSpec {
                 ConfigManager.LOGGER.info("Attempting to write " + element.type + " to a Enum");
                 return;
             }
-            //noinspection unchecked
-            ((SpecEnumNode) node).field.set(object, Enum.valueOf((Class<? extends Enum>) ((SpecEnumNode) node).enumClass, element.asString()));
+            Enum<?>[] enumVals = (Enum<?>[]) ((SpecEnumNode) node).enumClass.getEnumConstants();
+            String[] enumValStrings = new String[enumVals.length];
+            for (int i = 0; i < enumVals.length; i++) {
+                enumValStrings[i] = enumVals[i].toString();
+            }
+            String nameGiven = element.asString().toLowerCase(Locale.ENGLISH);
+            Enum<?> givenVal = null;
+            for (int i = 0; i < enumValStrings.length; i++) {
+                if (nameGiven.equals(enumValStrings[i])) {
+                    for (String allowedValue : ((SpecEnumNode) node).allowedValues) {
+                        if (nameGiven.equals(allowedValue.toLowerCase(Locale.ENGLISH))) {
+                            givenVal = enumVals[i];
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            
+            if (givenVal != null) {
+                ((SpecEnumNode) node).field.set(object, givenVal);
+            }
+            
             return;
         } else if (node instanceof SpecNumberNode) {
             if (element.type != Element.Type.Number) {
