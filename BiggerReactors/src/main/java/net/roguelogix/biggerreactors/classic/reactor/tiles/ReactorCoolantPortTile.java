@@ -88,7 +88,10 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     
     @Override
     public int getTankCapacity(int tank) {
-        return Integer.MAX_VALUE;
+        if(controller != null){
+            return (int) controller.getSteamCapacity();
+        }
+        return 0;
     }
     
     @Override
@@ -108,8 +111,7 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
             return 0;
         }
         if (controller != null) {
-            assert controller instanceof ReactorMultiblockController;
-            return (int) ((ReactorMultiblockController) controller).addCoolant(resource.getAmount(), action.simulate());
+            return (int) controller.addCoolant(resource.getAmount(), action.simulate());
         }
         return 0;
     }
@@ -126,10 +128,10 @@ public class ReactorCoolantPortTile extends ReactorBaseTile implements IFluidHan
     @Nonnull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        if (direction == INLET) {
+        if (direction == INLET || controller == null) {
             return FluidStack.EMPTY;
         }
-        steam.setAmount((int) ((ReactorMultiblockController) controller).extractSteam(maxDrain, action.simulate()));
+        steam.setAmount((int) controller.extractSteam(maxDrain, action.simulate()));
         return steam.copy();
     }
     

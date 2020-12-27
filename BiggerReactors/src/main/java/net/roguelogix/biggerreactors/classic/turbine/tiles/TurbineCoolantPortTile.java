@@ -90,7 +90,10 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     
     @Override
     public int getTankCapacity(int tank) {
-        return Integer.MAX_VALUE;
+        if(controller != null){
+            return (int) controller.getSteamCapacity();
+        }
+        return 0;
     }
     
     @Override
@@ -127,7 +130,7 @@ public class TurbineCoolantPortTile extends TurbineBaseTile implements IFluidHan
     @Nonnull
     @Override
     public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
-        if (direction == INLET) {
+        if (direction == INLET || controller == null) {
             return FluidStack.EMPTY;
         }
         water.setAmount((int) controller.extractWater(maxDrain, action.simulate()));
