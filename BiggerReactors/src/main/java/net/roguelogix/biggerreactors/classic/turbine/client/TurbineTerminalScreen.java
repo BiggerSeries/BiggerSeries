@@ -117,7 +117,7 @@ public class TurbineTerminalScreen extends ScreenBase<TurbineTerminalContainer> 
     private void initControls() {
         // (Left) Activity toggle:
         Biselector<TurbineTerminalContainer> activityToggle = new Biselector<>(this, 8, 98, new TranslationTextComponent("screen.biggerreactors.turbine_terminal.activity_toggle.tooltip"),
-                turbineState.turbineActivity.toInt(), SelectorColors.RED, SelectorColors.GREEN);
+                () -> turbineState.turbineActivity.toInt(), SelectorColors.RED, SelectorColors.GREEN);
         activityToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
             this.getContainer().executeRequest("setActive", activityToggle.getState());
@@ -127,7 +127,7 @@ public class TurbineTerminalScreen extends ScreenBase<TurbineTerminalContainer> 
 
         // (Left) Coil engage toggle:
         Biselector<TurbineTerminalContainer> coilEngageToggle = new Biselector<>(this, 8, 114, new TranslationTextComponent("screen.biggerreactors.turbine_terminal.coil_engage_toggle.tooltip"),
-                turbineState.coilStatus ? 1 : 0, SelectorColors.RED, SelectorColors.GREEN);
+                () -> turbineState.coilStatus ? 1 : 0, SelectorColors.RED, SelectorColors.GREEN);
         coilEngageToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
             this.getContainer().executeRequest("setCoilEngaged", coilEngageToggle.getState());
@@ -137,7 +137,7 @@ public class TurbineTerminalScreen extends ScreenBase<TurbineTerminalContainer> 
 
         // (Left) Vent state toggle:
         Triselector<TurbineTerminalContainer> ventStateToggle = new Triselector<>(this, 8, 130, new TranslationTextComponent("screen.biggerreactors.turbine_terminal.vent_state_toggle.tooltip"),
-                turbineState.ventState.toInt(), SelectorColors.YELLOW, SelectorColors.RED, SelectorColors.GREEN);
+                () -> turbineState.ventState.toInt(), SelectorColors.YELLOW, SelectorColors.RED, SelectorColors.GREEN);
         ventStateToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
             this.getContainer().executeRequest("setVentState", ventStateToggle.getState());

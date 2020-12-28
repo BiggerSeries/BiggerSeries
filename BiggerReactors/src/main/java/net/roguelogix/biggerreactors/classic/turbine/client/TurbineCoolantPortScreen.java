@@ -56,7 +56,7 @@ public class TurbineCoolantPortScreen extends ScreenBase<TurbineCoolantPortConta
     public void initControls() {
         // (Left) Direction toggle:
         Biselector<TurbineCoolantPortContainer> directionToggle = new Biselector<>(this, 8, 18, new TranslationTextComponent("screen.biggerreactors.turbine_coolant_port.direction_toggle.tooltip"),
-                turbineCoolantPortState.direction ? 0 : 1, SelectorColors.RED, SelectorColors.BLUE);
+                () -> turbineCoolantPortState.direction ? 0 : 1, SelectorColors.RED, SelectorColors.BLUE);
         directionToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
             this.getContainer().executeRequest("setDirection", directionToggle.getState());

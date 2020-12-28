@@ -238,16 +238,16 @@ public class ReactorRedstonePortScreen extends ScreenBase<ReactorRedstonePortCon
 
         // (Left) Trigger type toggle:
         this.triggerTypeToggle = new Biselector<>(this, 29, 42, StringTextComponent.EMPTY,
-                (this.reactorRedstonePortState.triggerPS.toBool() || this.reactorRedstonePortState.triggerAB.toBool())
+                () -> (this.reactorRedstonePortState.triggerPS.toBool() || this.reactorRedstonePortState.triggerAB.toBool())
                         ? 1 : 0, SelectorColors.YELLOW, SelectorColors.RED);
         this.triggerTypeToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic. Check if PS or AB.
             if (this.reactorRedstonePortState.isInput()) {
                 // This is an input, so update the PS value.
-                this.getContainer().executeRequest("setTriggerPS", this.triggerTypeToggle.getState() != 0);
+                this.getContainer().executeRequest("setTriggerPS", this.triggerTypeToggle.getState() == 0);
             } else {
                 // This is an output, so update the AB value.
-                this.getContainer().executeRequest("setTriggerAB", this.triggerTypeToggle.getState() != 0);
+                this.getContainer().executeRequest("setTriggerAB", this.triggerTypeToggle.getState() == 0);
             }
             return true;
         };
@@ -265,7 +265,7 @@ public class ReactorRedstonePortScreen extends ScreenBase<ReactorRedstonePortCon
 
         // (Left) Trigger mode toggle:
         this.triggerModeToggle = new Triselector<>(this, 29, 58, new TranslationTextComponent("screen.biggerreactors.reactor_terminal.auto_eject_toggle.tooltip"),
-                this.reactorRedstonePortState.triggerMode, SelectorColors.GREEN, SelectorColors.RED, SelectorColors.YELLOW);
+                () -> this.reactorRedstonePortState.triggerMode, SelectorColors.GREEN, SelectorColors.RED, SelectorColors.YELLOW);
         this.triggerModeToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
             this.getContainer().executeRequest("setTriggerMode", this.triggerModeToggle.getState());

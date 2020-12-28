@@ -13,6 +13,7 @@ import net.roguelogix.phosphophyllite.gui.client.elements.Button;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.IntSupplier;
 
 @OnlyIn(Dist.CLIENT)
 public class Biselector<T extends Container> extends Button<T> {
@@ -20,7 +21,7 @@ public class Biselector<T extends Container> extends Button<T> {
     /**
      * Selector state for the switch.
      */
-    private int state;
+    private IntSupplier state;
 
     /**
      * The color of the left selector.
@@ -41,7 +42,7 @@ public class Biselector<T extends Container> extends Button<T> {
      * @param tooltip      The tooltip for this element. If null, a tooltip will not render. If you set a tooltip later, use StringTextComponent.EMPTY.
      * @param initialState The initial switch state to use.
      */
-    public Biselector(@Nonnull ScreenBase<T> parent, int x, int y, @Nullable ITextComponent tooltip, int initialState, SelectorColors leftColor, SelectorColors rightColor) {
+    public Biselector(@Nonnull ScreenBase<T> parent, int x, int y, @Nullable ITextComponent tooltip, IntSupplier initialState, SelectorColors leftColor, SelectorColors rightColor) {
         super(parent, x, y, 31, 14, 0, 64, tooltip);
         this.state = initialState;
         this.leftColor = leftColor;
@@ -54,7 +55,7 @@ public class Biselector<T extends Container> extends Button<T> {
      * @return The current switch state.
      */
     public int getState() {
-        return this.state;
+        return this.state.getAsInt();
     }
 
     /**
@@ -72,7 +73,7 @@ public class Biselector<T extends Container> extends Button<T> {
             ResourceLocation preservedResource = RenderHelper.getCurrentResource();
             RenderHelper.bindTexture(CommonRender.COMMON_RESOURCE_TEXTURE);
             // Draw the selector frame.
-            if (this.state == 0) {
+            if (this.state.getAsInt() == 0) {
                 // Position is 0 (left), draw left frame.
                 this.blit(mStack, 0, 64);
                 // Check where the mouse is.
@@ -134,7 +135,7 @@ public class Biselector<T extends Container> extends Button<T> {
             // Check if the selector is enabled.
             if (this.actionEnable) {
                 // Toggle selector.
-                this.state = (this.state != 0) ? 0 : 1;
+//                this.state = (this.state != 0) ? 0 : 1;
 
                 // This code block is commented out. If you desire to have the biselector move like the triselector (that is,
                 //   it moves to where you click), then re-enable this code and comment out the above code below the action

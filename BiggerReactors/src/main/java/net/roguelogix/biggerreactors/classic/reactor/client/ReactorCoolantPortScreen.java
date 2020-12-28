@@ -56,10 +56,10 @@ public class ReactorCoolantPortScreen extends ScreenBase<ReactorCoolantPortConta
     public void initControls() {
         // (Left) Direction toggle:
         Biselector<ReactorCoolantPortContainer> directionToggle = new Biselector<>(this, 8, 18, new TranslationTextComponent("screen.biggerreactors.reactor_coolant_port.direction_toggle.tooltip"),
-                reactorCoolantPortState.direction ? 0 : 1, SelectorColors.CYAN, SelectorColors.RED);
+                () -> reactorCoolantPortState.direction ? 0 : 1, SelectorColors.CYAN, SelectorColors.RED);
         directionToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
-            this.getContainer().executeRequest("setDirection", directionToggle.getState());
+            this.getContainer().executeRequest("setDirection", directionToggle.getState() == 0 ? 1 : 0);
             return true;
         };
         this.addElement(directionToggle);

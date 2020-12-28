@@ -58,20 +58,20 @@ public class ReactorAccessPortScreen extends ScreenBase<ReactorAccessPortContain
     public void initControls() {
         // (Left) Direction toggle:
         Biselector<ReactorAccessPortContainer> directionToggle = new Biselector<>(this, 8, 18, new TranslationTextComponent("screen.biggerreactors.reactor_access_port.direction_toggle.tooltip"),
-                reactorAccessPortState.direction ? 0 : 1, SelectorColors.YELLOW, SelectorColors.BLUE);
+                () -> reactorAccessPortState.direction ? 0 : 1, SelectorColors.YELLOW, SelectorColors.BLUE);
         directionToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
-            this.getContainer().executeRequest("setDirection", directionToggle.getState());
+            this.getContainer().executeRequest("setDirection", directionToggle.getState() == 0 ? 1 : 0);
             return true;
         };
         this.addElement(directionToggle);
 
         // (Left) Fuel mode toggle:
         Biselector<ReactorAccessPortContainer> fuelModeToggle = new Biselector<>(this, 8, 34, new TranslationTextComponent("screen.biggerreactors.reactor_access_port.fuel_mode_toggle.tooltip"),
-                reactorAccessPortState.fuelMode ? 1 : 0, SelectorColors.CYAN, SelectorColors.YELLOW);
+                () -> reactorAccessPortState.fuelMode ? 1 : 0, SelectorColors.CYAN, SelectorColors.YELLOW);
         fuelModeToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
-            this.getContainer().executeRequest("setFuelMode", fuelModeToggle.getState());
+            this.getContainer().executeRequest("setFuelMode", fuelModeToggle.getState() == 0 ? 1 : 0);
             return true;
         };
         fuelModeToggle.onTick = () -> {

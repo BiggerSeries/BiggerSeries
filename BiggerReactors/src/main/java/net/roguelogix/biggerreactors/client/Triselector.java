@@ -13,10 +13,13 @@ import net.roguelogix.phosphophyllite.gui.client.elements.Button;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.IntSupplier;
 
 @OnlyIn(Dist.CLIENT)
 public class Triselector<T extends Container> extends Button<T> {
-
+    
+    private final IntSupplier renderState;
+    
     /**
      * Selector state for the switch.
      */
@@ -46,9 +49,10 @@ public class Triselector<T extends Container> extends Button<T> {
      * @param tooltip      The tooltip for this element. If null, a tooltip will not render. If you set a tooltip later, use StringTextComponent.EMPTY.
      * @param initialState The initial switch state to use.
      */
-    public Triselector(@Nonnull ScreenBase<T> parent, int x, int y, @Nullable ITextComponent tooltip, int initialState, SelectorColors leftColor, SelectorColors centerColor, SelectorColors rightColor) {
+    public Triselector(@Nonnull ScreenBase<T> parent, int x, int y, @Nullable ITextComponent tooltip, IntSupplier initialState, SelectorColors leftColor, SelectorColors centerColor, SelectorColors rightColor) {
         super(parent, x, y, 46, 14, 31, 64, tooltip);
-        this.state = initialState;
+        this.renderState = initialState;
+        this.state = initialState.getAsInt();
         this.leftColor = leftColor;
         this.centerColor = centerColor;
         this.rightColor = rightColor;
@@ -78,7 +82,7 @@ public class Triselector<T extends Container> extends Button<T> {
             ResourceLocation preservedResource = RenderHelper.getCurrentResource();
             RenderHelper.bindTexture(CommonRender.COMMON_RESOURCE_TEXTURE);
             // Draw the selector frame.
-            if (this.state == 0) {
+            if (this.renderState.getAsInt() == 0) {
                 // Position is 0 (left), draw left frame.
                 this.blit(mStack, 31, 64);
                 // Check where the mouse is.
@@ -94,7 +98,7 @@ public class Triselector<T extends Container> extends Button<T> {
                     // Draw disabled color overlay.
                     this.blit(mStack, this.x, this.y, 210, 0, 46, 14);
                 }
-            } else if (this.state == 1) {
+            } else if (this.renderState.getAsInt() == 1) {
                 // Position is 1 (center), draw center frame.
                 this.blit(mStack, 31, 78);
                 // Check where the mouse is.
