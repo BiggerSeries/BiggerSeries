@@ -169,6 +169,7 @@ public class GuiSync {
                 }
             }
         });
+        updateThread.setName("Phosphophyllite-GuiSync");
         updateThread.setDaemon(true);
         updateThread.start();
     }
