@@ -535,6 +535,7 @@ public class MultiblockController<ControllerType extends MultiblockController<Co
                 "Min " + minCoord.toString() + "\n" +
                 "Max " + maxCoord.toString() + "\n" +
                 "Controller: " + this + "\n" +
+                "Last Error: " + (lastValidationError == null ? "N/A" : lastValidationError.getTextComponent().getString()) + "\n" +
                 "AssemblyState: " + state + "\n";
     }
     
