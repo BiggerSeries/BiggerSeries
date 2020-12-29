@@ -28,7 +28,7 @@ public class MultiblockController<ControllerType extends MultiblockController<Co
     private boolean updateExtremes = true;
     private long updateAssemblyAtTick = Long.MAX_VALUE;
     protected final Set<ControllerType> controllersToMerge = new HashSet<>();
-    protected final Set<BlockPos> removedBlocks = new HashSet<>();
+    protected final List<BlockPos> removedBlocks = new LinkedList<>();
     
     private final Vector3i minCoord = new Vector3i();
     private final Vector3i maxCoord = new Vector3i();
