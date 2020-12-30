@@ -103,8 +103,6 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
                     ReactorModeratorRegistry.ModeratorProperties properties = moderatorProperties[controlRod.x + direction.x][i][controlRod.z + direction.y];
                     if (properties != null) {
                         fuelToReactorHeatTransferCoefficient += properties.heatConductivity;
-                    } else {
-                        fuelToReactorHeatTransferCoefficient += Config.Reactor.FuelRodHeatTransferCoefficient;
                     }
                 }
             }
