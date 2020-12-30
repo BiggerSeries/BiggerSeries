@@ -107,6 +107,10 @@ repositories {
         url = "https://minecraft.curseforge.com/api/maven/"
     }
     maven {
+        name = "JEI Maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
         url = "https://www.cursemaven.com"
     }
     maven {
@@ -144,6 +148,11 @@ dependencies {
     implementation fg.deobf("org.squiddev:cc-tweaked-1.16.3:1.93.0")
 
     compileOnly "mekanism:Mekanism:1.16.3-10.0.11.436:api"
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
 //    runtime ""
 //    runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')
