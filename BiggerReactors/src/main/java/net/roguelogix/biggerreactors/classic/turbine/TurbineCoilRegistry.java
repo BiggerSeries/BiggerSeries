@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +36,11 @@ public class TurbineCoilRegistry {
     }
     
     private static final HashMap<Block, CoilData> registry = new HashMap<>();
-    
+
+    public static Map<Block, CoilData> getImmutableRegistry() {
+        return Collections.unmodifiableMap(registry);
+    }
+
     public static synchronized boolean isBlockAllowed(Block block) {
         return registry.containsKey(block);
     }

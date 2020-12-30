@@ -175,5 +175,17 @@
   "screen.biggerreactors.turbine_coolant_port": "Turbine Coolant Port",
   "screen.biggerreactors.turbine_coolant_port.direction_toggle.input": "Direction: §cInput",
   "screen.biggerreactors.turbine_coolant_port.direction_toggle.output": "Direction: §9Output",
-  "screen.biggerreactors.turbine_coolant_port.direction_toggle.tooltip": "Toggle Direction\n§7Change which direction this port flows."
+  "screen.biggerreactors.turbine_coolant_port.direction_toggle.tooltip": "Toggle Direction\n§7Change which direction this port flows.",
+
+  "jei.biggerreactors.classic.turbine_coil_block": "Turbine Coil Blocks",
+  "jei.biggerreactors.classic.turbine_coil_bonus": "Bonus: %s",
+  "jei.biggerreactors.classic.turbine_coil_efficiency": "Efficiency: %s",
+  "jei.biggerreactors.classic.turbine_coil_extraction": "Extraction Rate: %s",
+
+  "jei.biggerreactors.classic.reactor_moderator_block": "Reactor Moderator Blocks",
+  "jei.biggerreactors.classic.reactor_moderator_fluid": "Reactor Moderator Fluids",
+  "jei.biggerreactors.classic.reactor_moderator_moderation": "Moderation: %s",
+  "jei.biggerreactors.classic.reactor_moderator_absorption": "Absorption: %s",
+  "jei.biggerreactors.classic.reactor_moderator_conductivity": "Heat Conductivity: %s",
+  "jei.biggerreactors.classic.reactor_moderator_efficiency": "Heat Efficiency: %s"
 }
