@@ -19,6 +19,8 @@ import net.roguelogix.phosphophyllite.items.DebugTool;
 
 import javax.annotation.Nonnull;
 
+import static net.roguelogix.phosphophyllite.multiblock.generic.MultiblockBlock.ASSEMBLED;
+
 public abstract class MultiblockTile<ControllerType extends MultiblockController<ControllerType, TileType>, TileType extends MultiblockTile<ControllerType, TileType>> extends TileEntity {
     protected ControllerType controller;
     
@@ -49,6 +51,9 @@ public abstract class MultiblockTile<ControllerType extends MultiblockController
         assert world != null;
         if (allowAttach && attemptAttach && !world.isRemote) {
             attemptAttach = false;
+            if(((MultiblockBlock)this.getBlockState().getBlock()).usesAssmeblyState()){
+                world.setBlockState(this.pos, this.getBlockState().with(ASSEMBLED, false));
+            }
             if (controller != null) {
                 controller.detach(self());
                 controller = null;
@@ -152,8 +157,8 @@ public abstract class MultiblockTile<ControllerType extends MultiblockController
     @Nonnull
     public ActionResultType onBlockActivated(@Nonnull PlayerEntity player, @Nonnull Hand handIn) {
         if (handIn == Hand.MAIN_HAND) {
-            if (player.getHeldItemMainhand() == ItemStack.EMPTY && (!((MultiblockBlock) getBlockState().getBlock()).usesAssmeblyState() || !getBlockState().get(MultiblockBlock.ASSEMBLED))) {
-                if (controller != null && controller.assemblyState() == MultiblockController.AssemblyState.DISASSEMBLED) {
+            if (player.getHeldItemMainhand() == ItemStack.EMPTY && (!((MultiblockBlock) getBlockState().getBlock()).usesAssmeblyState() || !getBlockState().get(ASSEMBLED))) {
+                if (controller != null && controller.assemblyState() != MultiblockController.AssemblyState.ASSEMBLED) {
                     if (controller.lastValidationError != null) {
                         player.sendMessage(controller.lastValidationError.getTextComponent(), player.getUniqueID());
                     } else {
