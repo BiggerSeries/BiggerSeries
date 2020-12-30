@@ -80,6 +80,9 @@ public abstract class MultiblockTile<ControllerType extends MultiblockController
     public void validate() {
         super.validate();
         attemptAttach();
+        if(world.isRemote){
+            controllerData = null;
+        }
     }
     
     @Override
