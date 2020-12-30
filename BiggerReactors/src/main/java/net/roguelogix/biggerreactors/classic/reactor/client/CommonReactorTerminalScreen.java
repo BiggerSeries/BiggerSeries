@@ -174,7 +174,7 @@ public class CommonReactorTerminalScreen extends ScreenBase<ReactorTerminalConta
         
         // (Top) Fuel heat gauge:
         Symbol<ReactorTerminalContainer> fuelHeatGauge = new Symbol<>(screen, 129, 25, 18, 64, 0, 152, StringTextComponent.EMPTY);
-        fuelHeatGauge.onRender = (@Nonnull MatrixStack mS, int mX, int mY) -> CommonReactorTerminalScreen.renderHeatGauge(mS, fuelHeatGauge, reactorState.caseHeatStored, Config.Reactor.GUI.HeatDisplayMax);
+        fuelHeatGauge.onRender = (@Nonnull MatrixStack mS, int mX, int mY) -> CommonReactorTerminalScreen.renderHeatGauge(mS, fuelHeatGauge, reactorState.fuelHeatStored, Config.Reactor.GUI.HeatDisplayMax);
         screen.addElement(fuelHeatGauge);
     }
     
