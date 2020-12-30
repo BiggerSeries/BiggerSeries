@@ -193,10 +193,13 @@ public class TurbineCoilRegistry {
                 }
                 for (Block element : blockTag.getAllElements()) {
                     registry.put(element, properties);
+                    BiggerReactors.LOGGER.debug("Loaded coil " + element.getRegistryName().toString());
                 }
             } else {
+                // cant check against air, because air is a valid thing to load
                 if(ForgeRegistries.BLOCKS.containsKey(location)) {
                     registry.put(ForgeRegistries.BLOCKS.getValue(location), properties);
+                    BiggerReactors.LOGGER.debug("Loaded coil " + location);
                 }
             }
         }
