@@ -151,8 +151,6 @@ dependencies {
 
     // compile against the JEI API but do not include it at runtime
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
-    // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
 //    runtime ""
 //    runtime fg.deobf('flux-networks:FluxNetworks-1.15.2:5.0.1:2')
