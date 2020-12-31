@@ -59,7 +59,7 @@ public class TurbineCoolantPortScreen extends ScreenBase<TurbineCoolantPortConta
                 () -> turbineCoolantPortState.direction ? 0 : 1, SelectorColors.RED, SelectorColors.BLUE);
         directionToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
-            this.getContainer().executeRequest("setDirection", directionToggle.getState());
+            this.getContainer().executeRequest("setDirection", directionToggle.getState() == 0 ? 1 : 0);
             return true;
         };
         this.addElement(directionToggle);

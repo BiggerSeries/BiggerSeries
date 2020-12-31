@@ -120,7 +120,7 @@ public class TurbineTerminalScreen extends ScreenBase<TurbineTerminalContainer> 
                 () -> turbineState.turbineActivity.toInt(), SelectorColors.RED, SelectorColors.GREEN);
         activityToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
-            this.getContainer().executeRequest("setActive", activityToggle.getState());
+            this.getContainer().executeRequest("setActive", activityToggle.getState() == 0 ? 1 : 0);
             return true;
         };
         this.addElement(activityToggle);
@@ -130,7 +130,7 @@ public class TurbineTerminalScreen extends ScreenBase<TurbineTerminalContainer> 
                 () -> turbineState.coilStatus ? 1 : 0, SelectorColors.RED, SelectorColors.GREEN);
         coilEngageToggle.onMouseReleased = (mX, mY, btn) -> {
             // Click logic.
-            this.getContainer().executeRequest("setCoilEngaged", coilEngageToggle.getState());
+            this.getContainer().executeRequest("setCoilEngaged", coilEngageToggle.getState() == 0 ? 1 : 0);
             return true;
         };
         this.addElement(coilEngageToggle);
