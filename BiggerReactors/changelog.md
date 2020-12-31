@@ -1,3 +1,31 @@
+# 1.16.4-0.4.0
+hotter, bigger, faster, stronger, *wait, that doesn't sound quite right*
+
+## Reactor
+ - default size limit increased to 128x128x192
+ - fixed bug with control rod heat transfer
+ - corrected fuel heat display
+ - added moderator registry JEI integration (thx MutantGumdrop)
+ - fix rare NPE with coolant port
+ - correct enderium registration
+ - send blockupdate in front of the redstone port to signal torches
+ - access port manual ejection works
+ - missing CC API functions added
+ - moderators added, check the list
+
+## Turbine
+ - added coi registry JEI integration (thx MutantGumdrop)
+ - missing CC API functions added
+ - flow rate/tank size now scales with physical turbine size, not blade count
+
+# Cyanite Reprocessor
+ - fix voiding issues
+
+## Misc
+ - config options flagged as advanced
+ - fixed GUI update bug
+ - CSV and wikimedia moderator/coil exports added to github actions (thx MutantGumdrop)
+
 # 1.16.4-0.3.0
 you spin me right round baby
 

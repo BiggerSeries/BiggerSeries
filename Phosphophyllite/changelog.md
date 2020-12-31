@@ -1,3 +1,18 @@
+# 1.16.4-0.4.0
+ - use A* for block detachment
+ - only update min/max when absolutely required
+ - only send assembly attempts to blocks that care
+ - use linked hashmap where applicable (faster to iterate over)
+ - config will correct errors when possible, and yell at you for it
+ - config trimming/regeneration, and advanced toggle works
+ - debeefer prints last error too
+ - paused multiblocks now print error message
+ - block assembly state set to false by default
+ - dont hold on to NBT client side
+ - use specialised map for tiles
+ - API uses generics now
+ - fix chunk re-loading issue
+
 # 1.16.4-0.3.2
  - fix unresponsive GUI
 
