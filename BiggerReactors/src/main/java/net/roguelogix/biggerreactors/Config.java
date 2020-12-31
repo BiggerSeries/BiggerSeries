@@ -29,11 +29,11 @@ public class Config {
         //TODO: remove max, its only there because of the render system
         //      multiblock system can take *much* larger structures
         @PhosphophylliteConfig.Value(range = "[3,192]")
-        public static int MaxLength = 64;
+        public static int MaxLength = 128;
         @PhosphophylliteConfig.Value(range = "[3,192]")
-        public static int MaxWidth = 64;
+        public static int MaxWidth = 128;
         @PhosphophylliteConfig.Value(range = "[3,256]")
-        public static int MaxHeight = 96;
+        public static int MaxHeight = 192;
 
         @PhosphophylliteConfig.Value(range = "(0,)")
         public static float FuelUsageMultiplier = 1;
