@@ -335,6 +335,9 @@ public class ClassicReactorSimulation implements INBTSerializable<CompoundNBT> {
         }
         
         fuelFertility += fuelAbsorbedRadiation;
+        if(Double.isNaN(fuelFertility)){
+            fuelFertility = 1;
+        }
         fuelTank.burn(rawFuelUsage);
         
         // back to MultiblockReactor.updateServer, after it calls RadiationHelper.radiate

@@ -104,6 +104,9 @@ public class ReactorControlRodTile extends ReactorBaseTile implements INamedCont
     private double insertion = 0;
     
     public void setInsertion(double newLevel) {
+        if(Double.isNaN(newLevel)){
+            return;
+        }
         if (newLevel < 0) {
             newLevel = 0;
         }
