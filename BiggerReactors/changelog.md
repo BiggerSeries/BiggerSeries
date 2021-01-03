@@ -1,3 +1,8 @@
+# 1.16.4-0.4.2
+
+## Reactor
+ - Fix CC Nan issue, #50
+
 # 1.16.4-0.4.1
 
 ## Turbine
