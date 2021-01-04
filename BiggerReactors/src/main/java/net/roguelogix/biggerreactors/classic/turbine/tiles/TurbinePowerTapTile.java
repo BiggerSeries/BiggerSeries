@@ -71,11 +71,17 @@ public class TurbinePowerTapTile extends TurbineBaseTile implements IEnergyStora
     
     @Override
     public int getEnergyStored() {
+        if (controller != null) {
+            return (int) controller.CCgetEnergyStoredUnscaled();
+        }
         return 0;
     }
     
     @Override
     public int getMaxEnergyStored() {
+        if (controller != null) {
+            return (int) controller.CCgetMaxEnergyStored();
+        }
         return 0;
     }
     
