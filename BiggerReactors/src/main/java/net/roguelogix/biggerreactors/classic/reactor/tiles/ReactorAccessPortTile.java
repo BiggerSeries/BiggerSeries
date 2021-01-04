@@ -192,6 +192,9 @@ public class ReactorAccessPortTile extends ReactorBaseTile implements IItemHandl
     
     @Override
     public int getSlotLimit(int slot) {
+        if(controller == null){
+            return 0;
+        }
         return (int) (controller.CCgetFuelAmountMax() / Config.Reactor.FuelMBPerIngot);
     }
     
