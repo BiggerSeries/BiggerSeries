@@ -1,4 +1,14 @@
+# 1.16.4-0.4.3
+I tip my hat to you, one legend to another
+
+## Reactor
+ - Fix NPE with access port
+
+## Turbine
+ - power port reports power 
+
 # 1.16.4-0.4.2
+I rate this bug, 0/0
 
 ## Reactor
  - Fix CC Nan issue, #50
