@@ -3,6 +3,7 @@ package net.roguelogix.biggerreactors;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -46,6 +47,7 @@ public class BiggerReactors {
         MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListenerEvent);
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopped);
         if (FMLEnvironment.dist == Dist.CLIENT) {
+            MinecraftForge.EVENT_BUS.addListener(this::onClientJoinWorld);
             MinecraftForge.EVENT_BUS.addListener(this::onRenderWorldLast);
         }
 
@@ -90,7 +92,9 @@ public class BiggerReactors {
                 TurbineCoolantPortScreen::new);
 
         ClientRegistry.bindTileEntityRenderer(TurbineRotorBearingTile.TYPE, BladeRenderer::new);
+    }
 
+    public void onClientJoinWorld(ClientPlayerNetworkEvent.LoggedInEvent event) {
         resourceManager = ClientUtils.getResourceManager();
     }
 
