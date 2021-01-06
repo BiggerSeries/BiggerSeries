@@ -1,10 +1,10 @@
-package net.roguelogix.biggerreactors.client.jei.classic.reactor;
+package net.roguelogix.biggerreactors.client.deps.jei.classic.reactor;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
 import net.roguelogix.biggerreactors.BiggerReactors;
 import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
@@ -20,12 +19,12 @@ import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import java.awt.*;
 
 
-public class FluidModeratorCategory implements IRecipeCategory<FluidModeratorCategory.Recipe> {
+public class BlockModeratorCategory implements IRecipeCategory<BlockModeratorCategory.Recipe> {
     private final IDrawable background;
     private final IDrawable icon;
-    public static final ResourceLocation UID = new ResourceLocation(BiggerReactors.modid, "classic/reactor_moderator_fluid");
+    public static final ResourceLocation UID = new ResourceLocation(BiggerReactors.modid, "classic/reactor_moderator_block");
 
-    public FluidModeratorCategory(IGuiHelper guiHelper) {
+    public BlockModeratorCategory(IGuiHelper guiHelper) {
         icon = guiHelper.createDrawableIngredient(new ItemStack(ReactorTerminal.INSTANCE));
         background = guiHelper.createDrawable(new ResourceLocation(BiggerReactors.modid, "textures/jei/common.png"), 0, 0, 144, 46);
     }
@@ -42,7 +41,7 @@ public class FluidModeratorCategory implements IRecipeCategory<FluidModeratorCat
 
     @Override
     public String getTitle() {
-        return I18n.format("jei.biggerreactors.classic.reactor_moderator_fluid");
+        return I18n.format("jei.biggerreactors.classic.reactor_moderator_block");
     }
 
     @Override
@@ -57,13 +56,13 @@ public class FluidModeratorCategory implements IRecipeCategory<FluidModeratorCat
 
     @Override
     public void setIngredients(Recipe recipe, IIngredients iIngredients) {
-        iIngredients.setInput(VanillaTypes.FLUID, recipe.getInput());
+        iIngredients.setInput(VanillaTypes.ITEM, recipe.getInput());
     }
 
     @Override
     public void setRecipe(IRecipeLayout iRecipeLayout, Recipe recipe, IIngredients iIngredients) {
-        IGuiFluidStackGroup guiItemStacks = iRecipeLayout.getFluidStacks();
-        guiItemStacks.init(0, true, 1, 15);
+        IGuiItemStackGroup guiItemStacks = iRecipeLayout.getItemStacks();
+        guiItemStacks.init(0, true, 0, 14);
 
         guiItemStacks.set(iIngredients);
     }
@@ -84,15 +83,15 @@ public class FluidModeratorCategory implements IRecipeCategory<FluidModeratorCat
     }
 
     public static class Recipe {
-        private final FluidStack input;
+        private final ItemStack input;
         private final ReactorModeratorRegistry.ModeratorProperties moderatorProperties;
 
-        public Recipe(FluidStack input, ReactorModeratorRegistry.ModeratorProperties moderatorProperties) {
+        public Recipe(ItemStack input, ReactorModeratorRegistry.ModeratorProperties moderatorProperties) {
             this.input = input;
             this.moderatorProperties = moderatorProperties;
         }
 
-        public FluidStack getInput() {
+        public ItemStack getInput() {
             return input;
         }
 

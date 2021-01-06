@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.jei.classic.turbine;
+package net.roguelogix.biggerreactors.client.deps.jei.classic.turbine;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;

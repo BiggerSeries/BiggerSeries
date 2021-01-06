@@ -1,4 +1,4 @@
-package net.roguelogix.biggerreactors.client.jei;
+package net.roguelogix.biggerreactors.client.deps.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -16,9 +16,9 @@ import net.roguelogix.biggerreactors.classic.reactor.ReactorModeratorRegistry;
 import net.roguelogix.biggerreactors.classic.reactor.blocks.ReactorTerminal;
 import net.roguelogix.biggerreactors.classic.turbine.TurbineCoilRegistry;
 import net.roguelogix.biggerreactors.classic.turbine.blocks.TurbineTerminal;
-import net.roguelogix.biggerreactors.client.jei.classic.reactor.BlockModeratorCategory;
-import net.roguelogix.biggerreactors.client.jei.classic.reactor.FluidModeratorCategory;
-import net.roguelogix.biggerreactors.client.jei.classic.turbine.CoilCategory;
+import net.roguelogix.biggerreactors.client.deps.jei.classic.reactor.BlockModeratorCategory;
+import net.roguelogix.biggerreactors.client.deps.jei.classic.reactor.FluidModeratorCategory;
+import net.roguelogix.biggerreactors.client.deps.jei.classic.turbine.CoilCategory;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
