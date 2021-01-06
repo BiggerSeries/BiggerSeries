@@ -1,7 +1,7 @@
 package net.roguelogix.biggerreactors;
 
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.resources.DataPackRegistries;
+import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,6 +26,7 @@ import net.roguelogix.biggerreactors.classic.turbine.client.TurbineTerminalScree
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineCoolantPortContainer;
 import net.roguelogix.biggerreactors.classic.turbine.containers.TurbineTerminalContainer;
 import net.roguelogix.biggerreactors.classic.turbine.tiles.TurbineRotorBearingTile;
+import net.roguelogix.biggerreactors.client.ClientUtils;
 import net.roguelogix.phosphophyllite.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,18 +51,18 @@ public class BiggerReactors {
 
     }
 
-    public static DataPackRegistries dataPackRegistries;
+    public static IResourceManager resourceManager;
 
     public void onAddReloadListenerEvent(AddReloadListenerEvent reloadListenerEvent) {
-        dataPackRegistries = reloadListenerEvent.getDataPackRegistries();
+        resourceManager = reloadListenerEvent.getDataPackRegistries().getResourceManager();
     }
     
     public void onServerStopped(FMLServerStoppedEvent serverStoppedEvent){
-        dataPackRegistries = null;
+        resourceManager = null;
     }
 
     public void onTagsUpdatedEvent(final TagsUpdatedEvent.CustomTagTypes tagsUpdatedEvent) {
-        if(dataPackRegistries == null){
+        if(resourceManager == null){
             return;
         }
         ReactorModeratorRegistry.loadRegistry(tagsUpdatedEvent.getTagManager().getBlockTags());
@@ -89,6 +90,8 @@ public class BiggerReactors {
                 TurbineCoolantPortScreen::new);
 
         ClientRegistry.bindTileEntityRenderer(TurbineRotorBearingTile.TYPE, BladeRenderer::new);
+
+        resourceManager = ClientUtils.getResourceManager();
     }
 
     public static long lastRenderTime = 0;

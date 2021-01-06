@@ -53,7 +53,7 @@ public class TurbineCoilRegistry {
         BiggerReactors.LOGGER.info("Loading turbine coils");
         registry.clear();
         // TODO: generify this code in Phosphophyllite
-        IResourceManager resourceManager = BiggerReactors.dataPackRegistries.getResourceManager();
+        IResourceManager resourceManager = BiggerReactors.resourceManager;
         Collection<ResourceLocation> resourceLocations = resourceManager.getAllResourceLocations("ebest/coils", s -> s.contains(".json"));
         
         for (ResourceLocation resourceLocation : resourceLocations) {

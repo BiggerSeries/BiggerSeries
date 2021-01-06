@@ -56,7 +56,7 @@ public class ReactorModeratorRegistry {
         BiggerReactors.LOGGER.info("Loading reactor moderators");
         registry.clear();
         // TODO: generify this code in Phosphophyllite
-        IResourceManager resourceManager = BiggerReactors.dataPackRegistries.getResourceManager();
+        IResourceManager resourceManager = BiggerReactors.resourceManager;
         Collection<ResourceLocation> resourceLocations = resourceManager.getAllResourceLocations("ebcr/moderators", s -> s.contains(".json"));
         
         for (ResourceLocation resourceLocation : resourceLocations) {
