@@ -86,7 +86,7 @@ public class TileMap<TileType extends TileEntity> {
                 return prevVal != null;
             }
         }
-        sectionArray[tilePos.getZ() & 15] = null;
+        sectionArray[tilePos.getX() & 15] = null;
         
         for (TileEntity[][] tileEntities : sectionArray) {
             if (tileEntities != null) {
