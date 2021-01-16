@@ -1,3 +1,6 @@
+# 1.16.4-0.4.1
+ - fix bug in TileMap, caused weird multiblock issues after detaching blocks from a multiblock, in some cases
+
 # 1.16.4-0.4.0
  - use A* for block detachment
  - only update min/max when absolutely required
