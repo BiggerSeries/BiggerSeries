@@ -5,6 +5,7 @@ jobs:
     runs-on: Felix
     steps:
       - uses: actions/checkout@v2
+      - run: git submodule update --init --recursive
       - run: ./gradlew clean
       - run: ./gradlew build
       - run: ./gradlew reobfJar
