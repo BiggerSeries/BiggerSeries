@@ -1,8 +1,0 @@
-{
-    type: "registry",
-    location: "biggerreactors:ludicrite_block",
-    absorption: 0.6,
-    efficiency: 0.87,
-    moderation: 3,
-    conductivity: 3,
-}

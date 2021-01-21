@@ -1,8 +1,0 @@
-{
-    type: "tag",
-    location: "forge:storage_blocks/platinum",
-    absorption: 0.53,
-    efficiency: 0.86,
-    moderation: 1.58,
-    conductivity: 2.5,
-}

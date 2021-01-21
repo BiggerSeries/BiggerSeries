@@ -1,8 +1,0 @@
-{
-  "parent": "block/orientable",
-  "textures": {
-    "top": "biggerreactors:block/reactor_casing_disassembled",
-    "front": "biggerreactors:block/cyanite_reprocessor",
-    "side": "biggerreactors:block/reactor_casing_disassembled"
-  }
-}

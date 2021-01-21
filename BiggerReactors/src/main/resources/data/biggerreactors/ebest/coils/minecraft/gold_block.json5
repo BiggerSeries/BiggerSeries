@@ -1,7 +1,0 @@
-{
-    type: "tag",
-    location: "forge:storage_blocks/gold",
-    efficiency: .66,
-    extractionRate: 0.175,
-    bonus: 1,
-}
