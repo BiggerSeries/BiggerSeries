@@ -25,6 +25,9 @@ repositories {
     maven {
         url "https://www.cursemaven.com"
     }
+    maven {
+        url 'https://squiddev.cc/maven/'
+    }
 }
 
 version = '1.0'
@@ -114,9 +117,12 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
+    runtime fg.deobf("org.squiddev:cc-tweaked-${cc_mc_version}:${cc_version}")
+
     runtime fg.deobf('curse.maven:jei-238222:3109181')
 //    runtime fg.deobf('curse.maven:blame-406201:3181314')
     runtime fg.deobf('curse.maven:constructionwands-399558:3103815')
+    runtime fg.deobf('curse.maven:compactmachines-224218:3229196')
 //    runtime fg.deobf('curse.maven:allthemodium-364466:3183391')
 //    runtime fg.deobf('curse.maven:bloodmagic-224791:3132991')
 
@@ -132,8 +138,8 @@ dependencies {
     runtime fg.deobf('curse.maven:mek-tool-268567:3134214')
     runtime fg.deobf('curse.maven:mek-gen-268566:3134213')
 
-//    compile fg.deobf('curse.maven:er2-250277:3126512')
-//    compile fg.deobf('curse.maven:zc2-247921:3120031')
+//    compile fg.deobf('curse.maven:er2-250277:3211479')
+//    compile fg.deobf('curse.maven:zc2-247921:3211476')
 
     compile project(':Phosphophyllite')
     compile project(':BiggerReactors')
