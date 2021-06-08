@@ -4,3 +4,6 @@
 [submodule "BiggerReactors"]
 	path = BiggerReactors
 	url = https://github.com/BiggerSeries/BiggerReactors
+[submodule "BiggerUtilities"]
+	path = BiggerUtilities
+	url = https://github.com/BiggerSeries/BiggerUtilities.git

@@ -63,8 +63,11 @@ minecraft {
                 Phosphophyllite {
                     source project(':Phosphophyllite').sourceSets.main
                 }
-                McJtyLib {
+                BiggerReactors {
                     source project(':BiggerReactors').sourceSets.main
+                }
+                BiggerUtilities {
+                    source project(':BiggerUtilities').sourceSets.main
                 }
             }
             properties 'mixin.env.disableRefMap': 'true'
@@ -143,6 +146,7 @@ dependencies {
 
     compile project(':Phosphophyllite')
     compile project(':BiggerReactors')
+    compile project(':BiggerUtilities')
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
