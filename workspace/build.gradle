@@ -70,7 +70,8 @@ minecraft {
                     source project(':BiggerUtilities').sourceSets.main
                 }
             }
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         server {
