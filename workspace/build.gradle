@@ -123,6 +123,10 @@ dependencies {
 
     runtime fg.deobf("org.squiddev:cc-tweaked-${cc_mc_version}:${cc_version}")
 
+//    runtime fg.deobf('curse.maven:tita-287342:3346366')
+//    runtime fg.deobf('curse.maven:ifag-266515:3386008')
+//    runtime fg.deobf('curse.maven:patc-306770:3374063')
+
     runtime fg.deobf('curse.maven:jei-238222:3109181')
 //    runtime fg.deobf('curse.maven:blame-406201:3181314')
     runtime fg.deobf('curse.maven:constructionwands-399558:3103815')
