@@ -1,40 +1,25 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        jcenter()
+        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
-
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-repositories {
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
-    maven {
-        url "https://www.cursemaven.com"
-    }
-    maven {
-        url 'https://squiddev.cc/maven/'
-    }
-}
-
 version = '1.0'
 group = 'com.yourname.modid' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'modid'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
@@ -42,7 +27,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: "${forge_mappings}"
+    mappings channel: 'official', version: "${mc_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
@@ -53,65 +38,54 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            // property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
 
             mods {
+//                workspace {
+//                    source sourceSets.main
+//                }
                 Phosphophyllite {
                     source project(':Phosphophyllite').sourceSets.main
                 }
                 BiggerReactors {
                     source project(':BiggerReactors').sourceSets.main
                 }
-                BiggerUtilities {
-                    source project(':BiggerUtilities').sourceSets.main
-                }
+//                BiggerUtilities {
+//                    source project(':BiggerUtilities').sourceSets.main
+//                }
             }
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+//            property 'mixin.env.remapRefMap', 'true'
+//            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
-        server {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            // property 'forge.logging.console.level', 'debug'
-
-            mods {
-                Phosphophyllite {
-                    source project(':Phosphophyllite').sourceSets.main
-                }
-                BiggerReactors {
-                    source project(':BiggerReactors').sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
-            // property 'forge.logging.console.level', 'debug'
-            args '--all', '--output', file('src/generated/resources/'), '--existing', sourceSets.main.resources.srcDirs[0]
-
-            mods {
-                Phosphophyllite {
-                    source project(':Phosphophyllite').sourceSets.main
-                }
-                BiggerReactors {
-                    source project(':BiggerReactors').sourceSets.main
-                }
-            }
-        }
+//        server {
+//            workingDirectory project.file('run')
+//
+//            mods {
+////                Phosphophyllite {
+////                    source project(':Phosphophyllite').sourceSets.main
+////                }
+////                BiggerReactors {
+////                    source project(':BiggerReactors').sourceSets.main
+////                }
+//            }
+//        }
+//
+//        data {
+//            workingDirectory project.file('run')
+//
+//            args '--all', '--output', file('src/generated/resources/'), '--existing', sourceSets.main.resources.srcDirs[0]
+//
+//            mods {
+////                Phosphophyllite {
+////                    source project(':Phosphophyllite').sourceSets.main
+////                }
+////                BiggerReactors {
+////                    source project(':BiggerReactors').sourceSets.main
+////                }
+//            }
+//        }
     }
 }
 
@@ -121,16 +95,16 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    runtime fg.deobf("org.squiddev:cc-tweaked-${cc_mc_version}:${cc_version}")
+//    runtime fg.deobf("org.squiddev:cc-tweaked-${cc_mc_version}:${cc_version}")
 
 //    runtime fg.deobf('curse.maven:tita-287342:3346366')
 //    runtime fg.deobf('curse.maven:ifag-266515:3386008')
 //    runtime fg.deobf('curse.maven:patc-306770:3374063')
 
-    runtime fg.deobf('curse.maven:jei-238222:3109181')
+//    runtime fg.deobf('curse.maven:jei-238222:3109181')
 //    runtime fg.deobf('curse.maven:blame-406201:3181314')
-    runtime fg.deobf('curse.maven:constructionwands-399558:3103815')
-    runtime fg.deobf('curse.maven:compactmachines-224218:3229196')
+//    runtime fg.deobf('curse.maven:constructionwands-399558:3103815')
+//    runtime fg.deobf('curse.maven:compactmachines-224218:3229196')
 //    runtime fg.deobf('curse.maven:allthemodium-364466:3183391')
 //    runtime fg.deobf('curse.maven:bloodmagic-224791:3132991')
 
@@ -142,70 +116,14 @@ dependencies {
 //    runtime fg.deobf('curse.maven:thermalfoundation-222880:3099202')
 //    runtime fg.deobf('curse.maven:thermalexpansion-69163:3099261')
 
-    runtime fg.deobf('curse.maven:mek-268560:3134211')
-    runtime fg.deobf('curse.maven:mek-tool-268567:3134214')
-    runtime fg.deobf('curse.maven:mek-gen-268566:3134213')
+//    runtime fg.deobf('curse.maven:mek-268560:3134211')
+//    runtime fg.deobf('curse.maven:mek-tool-268567:3134214')
+//    runtime fg.deobf('curse.maven:mek-gen-268566:3134213')
 
 //    compile fg.deobf('curse.maven:er2-250277:3211479')
 //    compile fg.deobf('curse.maven:zc2-247921:3211476')
 
-    compile project(':Phosphophyllite')
-    compile project(':BiggerReactors')
-    compile project(':BiggerUtilities')
-
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-}
-
-// Example for how to get properties into the manifest for reading by the runtime..
-jar {
-    manifest {
-        attributes([
-                "Specification-Title": "examplemod",
-                "Specification-Vendor": "examplemodsareus",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"examplemodsareus",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-}
-
-// Example configuration to allow publishing using the maven-publish task
-// we define a custom artifact that is sourced from the reobfJar output task
-// and then declare that to be published
-// Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact reobfArtifact
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
-    }
+    compileOnly project(':Phosphophyllite')
+    compileOnly project(':BiggerReactors')
+//    implementation project(':BiggerUtilities')
 }

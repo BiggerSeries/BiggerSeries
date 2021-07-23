@@ -1,6 +1,6 @@
 rootProject.name = 'BiggerSeries'
 include 'Phosphophyllite'
 include 'BiggerReactors'
-include 'BiggerUtilities'
+//include 'BiggerUtilities'
 
 include 'workspace'
