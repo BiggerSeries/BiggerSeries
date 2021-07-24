@@ -8,12 +8,11 @@ jobs:
       - run: git submodule update --init --recursive
       - run: ./gradlew clean
       - run: ./gradlew build
-      - run: ./gradlew reobfJar
-      - run: mkdir reobfJars
-      - run: mv BiggerReactors/build/reobfJar/output.jar reobfJars/biggerreactors-${GITHUB_SHA::8}-reobfJar.jar
-#      - run: mv BiggerUtilities/build/reobfJar/output.jar reobfJars/biggerutilities-${GITHUB_SHA::8}-reobfJar.jar
-      - run: mv Phosphophyllite/build/reobfJar/output.jar reobfJars/phosphophyllite-${GITHUB_SHA::8}-reobfJar.jar
+      - run: ./gradlew publish
+      - run: mkdir jars
+      - run: mv BiggerReactors/build/libs/biggerreactors-* jars/
+      - run: mv Phosphophyllite/build/libs/phosphophyllite-* jars/
       - uses: actions/upload-artifact@v2
         with:
-          name: reobfJar
-          path: reobfJars/*
+          name: jars
+          path: jars/*
