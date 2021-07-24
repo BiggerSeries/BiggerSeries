@@ -95,9 +95,6 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    // Fixes ResolutionException. See https://github.com/MinecraftForge/MinecraftForge/issues/7893.
-    implementation('cpw.mods:securejarhandler') { version { strictly '0.9.45' } }
-
 //    runtime fg.deobf("org.squiddev:cc-tweaked-${cc_mc_version}:${cc_version}")
 
 //    runtime fg.deobf('curse.maven:tita-287342:3346366')
