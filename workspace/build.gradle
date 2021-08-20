@@ -89,13 +89,19 @@ minecraft {
     }
 }
 
+repositories {
+    maven {
+        url 'https://squiddev.cc/maven/'
+    }
+}
+
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-//    runtime fg.deobf("org.squiddev:cc-tweaked-${cc_mc_version}:${cc_version}")
+    runtimeOnly fg.deobf("org.squiddev:cc-tweaked-${cc_mc_version}:${cc_version}")
 
 //    runtime fg.deobf('curse.maven:tita-287342:3346366')
 //    runtime fg.deobf('curse.maven:ifag-266515:3386008')
