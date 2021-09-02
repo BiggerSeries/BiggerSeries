@@ -96,6 +96,12 @@ repositories {
     maven {
         url 'https://squiddev.cc/maven/'
     }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -112,7 +118,7 @@ dependencies {
 
 //    runtime fg.deobf('curse.maven:jei-238222:3109181')
 //    runtime fg.deobf('curse.maven:blame-406201:3181314')
-//    runtime fg.deobf('curse.maven:constructionwands-399558:3103815')
+    runtimeOnly fg.deobf('curse.maven:constructionwands-399558:3433377')
 //    runtime fg.deobf('curse.maven:compactmachines-224218:3229196')
 //    runtime fg.deobf('curse.maven:allthemodium-364466:3183391')
 //    runtime fg.deobf('curse.maven:bloodmagic-224791:3132991')
